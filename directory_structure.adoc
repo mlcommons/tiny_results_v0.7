@@ -1,0 +1,48 @@
+# Tiny MLPerf Example Directory structure
+
+A submission is for one code base for the benchmarks submitted. An org may make multiple submissions. A submission should take the form of a directory with the following structure. The structure must be followed regardless of the actual location of the actual code, e.g. in the MLPerf repo or an external code host site.
+
+```
+<division>
+└── <submitting_organization>
+    ├── systems
+    │   ├── <system_desc_id>.json #combines hardware and software stack information
+    │   ├── TinyMLPerf_v0.1_Submission_Checklist.pdf
+    │   └── Energy-Hookup.pdf #image or text description how to reproduce energy configuration and measurment if submitting energy results
+    ├── code
+    │   └── <benchmark_name per reference>
+    │       └── <implementation_id>
+    │           └── <Code interface with runner and other arbitrary stuff>
+    └── results
+        └── <system_desc_id>
+            └── <benchmark>
+                ├── performance
+                │   ├── performance_log.txt #log produced by runner after performance test
+                │   └── performance_script.async #script file produced by runner after performance test
+                ├── accuracy
+                │   ├── accuracy_log.txt #log produced by runner after accuracy test
+                │   └── accuracy_script.async #script file produced by runner after accuracy test
+                └── energy #if submitting energy results
+                    ├── energy_log.txt #log produced by runner after accuracy test
+                    └── energy_script.async #script file produced by runner after accuracy test
+```
+
+
+System names and implementation names may be arbitrary.
+
+<division> must be one of {closed, open}.
+
+<benchmark> must be one of {vww, ic, kws, ad}.
+
+Here is the list of mandatory files for all submissions in any division/category. However, your submission should still include all software information and related information for results replication.
+
+* performance_log.txt
+* performance_script.async
+* accuracy_log.txt
+* accuracy_script.async
+* calibration or weight transformation related code if the original MLPerf models are not used
+* actual models if the models are not deterministically generated
+* READMEs to enable users to replicate performance results
+* code which interfaces with the runner
+* <system_desc_id>.json
+* TinyMLPerf_v0.1_Submission_Checklist.pdf
