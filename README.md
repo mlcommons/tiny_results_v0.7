@@ -3,14 +3,14 @@
 ## Submit Results
 Before Submitting your code and results to this GitHub page, you must email your results to the Chairs (please include *both* csaba@mlcommons.org and jeremy@mlcommons.org).
 
-At 1 pm PT on Feb 25th, you must:
+At 1 pm PT on March 4th, you must:
 * Make a copy of the [results template](https://docs.google.com/spreadsheets/d/1M5oa12XjlobhcvuXaDmT42tVv6yY9O3OVSJ3sSDYKZ0/edit?usp=sharing)
 * Remove the example results
 * Enter **all** of your results
 * Email your copy of the results table to the chairs (csaba@mlcommons.org and jeremy@mlcommons.org)
 
 ## GitHub Submission HOWTO
-At 1:30 pm PT on Feb 25th, you must submit a pull request with all of the required components.
+At 1:30 pm PT on March 4th, you must submit a pull request with all of the required components.
 
 ### Clone the MLPerf™ Tiny v0.7 submission tree
 
