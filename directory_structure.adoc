@@ -19,12 +19,15 @@ In case of submission of results for multiple systems, please use <system_desc.i
         └── <system_desc_id> # (one folder for each system benchmarked)
             └── <benchmark>
                 ├── performance
-                │   ├── performance_log.txt #log produced by runner after performance test
+                │   ├── performance_result.txt #results summary produced by runner after performance test
+                │   ├── performance_log.txt #log produced by runner after performance test                
                 │   └── performance_script.async #script file produced by runner after performance test
                 ├── accuracy
+                │   ├── accuracy_result.txt #results summmary produced by runner after accuracy test
                 │   ├── accuracy_log.txt #log produced by runner after accuracy test
                 │   └── accuracy_script.async #script file produced by runner after accuracy test
                 └── energy #if submitting energy results
+                │   ├── energy_result.txt #results summmary produced by runner after accuracy test
                     ├── energy_log.txt #log produced by runner after accuracy test
                     └── energy_script.async #script file produced by runner after accuracy test
 ```
@@ -38,8 +41,10 @@ System names and implementation names may be arbitrary.
 
 Here is the list of mandatory files for all submissions in any division/category. However, your submission should still include all software information and related information for results replication.
 
+* performance_result.txt (optional, but please check in if available)
 * performance_log.txt
 * performance_script.async
+* accuracy_results.txt (optional, but please check in if available
 * accuracy_log.txt
 * accuracy_script.async
 * calibration or weight transformation related code if the original MLPerf models are not used
