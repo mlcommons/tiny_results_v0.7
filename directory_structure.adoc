@@ -2,11 +2,13 @@
 
 A submission is for one code base for the benchmarks submitted. An org may make multiple submissions. A submission should take the form of a directory with the following structure. The structure must be followed regardless of the actual location of the actual code, e.g. in the MLPerf repo or an external code host site.
 
+In case of submission of results for multiple systems, please use <system_desc.id> to differentiate these. System names may be arbitrary. We recognize implementatations for multiple systems of the same organization could have different dependencies on a common code base and on each other. When submitting the code, please organize the code as much as possible following a logical structure that makes it possible to reproduce the results, and accompany it with scripts and a README that explains the process. You can use multiple <implementation_id>s to structure your submission. While we do not have many examples in Tiny yet, you can refer to https://github.com/mlcommons/inference_results_v1.1/tree/main/closed for inspiration.
+
 ```
 <division>
 └── <submitting_organization>
     ├── systems
-    │   ├── <system_desc_id>.json #combines hardware and software stack information
+    │   ├── <system_desc_id>.json #combines hardware and software stack information (one file for each system benchmarked)
     │   ├── TinyMLPerf_v0.1_Submission_Checklist.pdf
     │   └── Energy-Hookup.pdf #image or text description how to reproduce energy configuration and measurment if submitting energy results
     ├── code
@@ -14,7 +16,7 @@ A submission is for one code base for the benchmarks submitted. An org may make 
     │       └── <implementation_id>
     │           └── <Code interface with runner and other arbitrary stuff>
     └── results
-        └── <system_desc_id>
+        └── <system_desc_id> # (one folder for each system benchmarked)
             └── <benchmark>
                 ├── performance
                 │   ├── performance_log.txt #log produced by runner after performance test
