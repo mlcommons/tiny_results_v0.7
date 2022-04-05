@@ -1,0 +1,38 @@
+{
+	"Submitter": "Andes Technology Corporation",
+	"Division": "Closed",
+	"Status": "Available",
+
+	"Board Name": "Xilinx FPGA board VCU118 and Andes FMC-Debug expansion board",
+	"Board Memory capacity (not including SoC, processor, or accelerator)": "Dual 4GB",
+	"Board Memory type": "DDR4 SDRAM",
+	"Board storage capacity": "",
+	"Board storage type": "",
+	"SoC Name": "AE350 Platform SoC with AndesCore™ processor",
+	"SoC Memory capacity (not including processor or accelerator)": "",
+	"SoC Memory type": "",
+	"SoC storage capacity": "",
+	"SoC storage type": "",
+	"Processor(s) Name": "AndesCore™ NX27V, 5-stage, single-issue, RV64 IMACV, RVV(VLEN, SIMD, BIU)=(128, 128, 128)",
+	"Processor(s) Frequencies": "60MHz",
+	"Processor memory type and capacity": "",
+	"Processor storage type and capacity": "",
+	"Accelerator": "",
+	"Accelerator(s) Frequencies": "",
+	"Accelerator memory type and capacity": "",
+	"Accelerator storage type and capacity": "",
+	"Hardware Notes": "Requirements: Andes FMC-Debug expansion board and FPGA bitstream. For the board VCU118, purchase it from Xilinx website.",
+
+	"Inference Framework": "tflite-micro, https://github.com/tensorflow/tflite-micro.git, commit_id:a30942eb03efc379e9e80279a44e39078344e5fa",
+	"Software Libraries": "Andes NN Library special edition for MLPerf",
+	"Operating System ": "bare-mental",
+	"Other Software Stack": "",
+	"Software Notes": "",
+
+	"Quantization Method": "",
+	"Training framework (open division)": "",
+	"ML Model Compiler(s)": "",
+	"General Compiler(s)": "",
+	"Other Software": "",
+	"Training and Quantization Notes": ""
+}

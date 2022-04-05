@@ -1,0 +1,38 @@
+{
+	"Submitter": "Andes Technology Corporation",
+	"Division": "Closed",
+	"Status": "Available",
+
+	"Board Name": "ADP-XC7K160/410",
+	"Board Memory capacity (not including SoC, processor, or accelerator)": "1GB",
+	"Board Memory type": "DDR3*-800 SDRAM",
+	"Board storage capacity": "128MB",
+	"Board storage type": "NOR flash",
+	"SoC Name": "AE350 Platform SoC with AndesCore™ processor",
+	"SoC Memory capacity (not including processor or accelerator)": "",
+	"SoC Memory type": "",
+	"SoC storage capacity": "",
+	"SoC storage type": "",
+	"Processor(s) Name": "AndesCore™ D45, 8-stage, dual-issue, RV32 IMACP",
+	"Processor(s) Frequencies": "60MHz",
+	"Processor memory type and capacity": "",
+	"Processor storage type and capacity": "",
+	"Accelerator": "",
+	"Accelerator(s) Frequencies": "",
+	"Accelerator memory type and capacity": "",
+	"Accelerator storage type and capacity": "",
+	"Hardware Notes": "Requirements: Andes FPGA board ADP-XC7K160/410 pre-integrated with AndesCore D45",
+
+	"Inference Framework": "tflite-micro, https://github.com/tensorflow/tflite-micro.git, commit_id:a30942eb03efc379e9e80279a44e39078344e5fa",
+	"Software Libraries": "Andes NN Library special edition for MLPerf",
+	"Operating System ": "bare-mental",
+	"Other Software Stack": "",
+	"Software Notes": "",
+
+	"Quantization Method": "",
+	"Training framework (open division)": "",
+	"ML Model Compiler(s)": "",
+	"General Compiler(s)": "",
+	"Other Software": "",
+	"Training and Quantization Notes": ""
+}

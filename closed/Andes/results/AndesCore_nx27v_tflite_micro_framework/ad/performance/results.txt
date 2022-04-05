@@ -1,0 +1,145 @@
+80288.848 ulp-mlperf: Performance results for window 2:
+80288.848 ulp-mlperf: Performance results for window 2:
+80288.848 ulp-mlperf: Performance results for window 2:
+80288.848 ulp-mlperf: Performance results for window 2:
+80288.848 ulp-mlperf: Performance results for window 2:
+80288.849 ulp-mlperf:   # Inferences :         3000
+80288.849 ulp-mlperf:   # Inferences :         3000
+80288.849 ulp-mlperf:   # Inferences :         3000
+80288.849 ulp-mlperf:   # Inferences :         3000
+80288.849 ulp-mlperf:   # Inferences :         3000
+80288.850 ulp-mlperf:   Runtime      :       12.279 sec.
+80288.850 ulp-mlperf:   Runtime      :       12.279 sec.
+80288.850 ulp-mlperf:   Runtime      :       12.279 sec.
+80288.850 ulp-mlperf:   Runtime      :       12.279 sec.
+80288.850 ulp-mlperf:   Runtime      :       12.279 sec.
+80288.851 ulp-mlperf:   Throughput   :      244.311 inf./sec.
+80288.851 ulp-mlperf:   Throughput   :      244.311 inf./sec.
+80288.851 ulp-mlperf:   Throughput   :      244.311 inf./sec.
+80288.851 ulp-mlperf:   Throughput   :      244.311 inf./sec.
+80288.851 ulp-mlperf:   Throughput   :      244.311 inf./sec.
+80288.851 ulp-mlperf: Runtime requirements have been met.
+80288.851 ulp-mlperf: Runtime requirements have been met.
+80288.851 ulp-mlperf: Runtime requirements have been met.
+80288.851 ulp-mlperf: Runtime requirements have been met.
+80288.851 ulp-mlperf: Runtime requirements have been met.
+80288.851 ulp-mlperf: Performance results for window 4:
+80288.851 ulp-mlperf: Performance results for window 4:
+80288.851 ulp-mlperf: Performance results for window 4:
+80288.851 ulp-mlperf: Performance results for window 4:
+80288.851 ulp-mlperf: Performance results for window 4:
+80288.851 ulp-mlperf:   # Inferences :         3000
+80288.851 ulp-mlperf:   # Inferences :         3000
+80288.851 ulp-mlperf:   # Inferences :         3000
+80288.851 ulp-mlperf:   # Inferences :         3000
+80288.851 ulp-mlperf:   # Inferences :         3000
+80288.852 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.852 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.852 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.852 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.852 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.852 ulp-mlperf:   Throughput   :      244.344 inf./sec.
+80288.852 ulp-mlperf:   Throughput   :      244.344 inf./sec.
+80288.852 ulp-mlperf:   Throughput   :      244.344 inf./sec.
+80288.852 ulp-mlperf:   Throughput   :      244.344 inf./sec.
+80288.852 ulp-mlperf:   Throughput   :      244.344 inf./sec.
+80288.852 ulp-mlperf: Runtime requirements have been met.
+80288.852 ulp-mlperf: Runtime requirements have been met.
+80288.852 ulp-mlperf: Runtime requirements have been met.
+80288.852 ulp-mlperf: Runtime requirements have been met.
+80288.852 ulp-mlperf: Runtime requirements have been met.
+80288.852 ulp-mlperf: Performance results for window 6:
+80288.852 ulp-mlperf: Performance results for window 6:
+80288.852 ulp-mlperf: Performance results for window 6:
+80288.852 ulp-mlperf: Performance results for window 6:
+80288.852 ulp-mlperf: Performance results for window 6:
+80288.853 ulp-mlperf:   # Inferences :         3000
+80288.853 ulp-mlperf:   # Inferences :         3000
+80288.853 ulp-mlperf:   # Inferences :         3000
+80288.853 ulp-mlperf:   # Inferences :         3000
+80288.853 ulp-mlperf:   # Inferences :         3000
+80288.853 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.853 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.853 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.853 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.853 ulp-mlperf:   Runtime      :       12.278 sec.
+80288.853 ulp-mlperf:   Throughput   :      244.345 inf./sec.
+80288.853 ulp-mlperf:   Throughput   :      244.345 inf./sec.
+80288.853 ulp-mlperf:   Throughput   :      244.345 inf./sec.
+80288.853 ulp-mlperf:   Throughput   :      244.345 inf./sec.
+80288.853 ulp-mlperf:   Throughput   :      244.345 inf./sec.
+80288.853 ulp-mlperf: Runtime requirements have been met.
+80288.853 ulp-mlperf: Runtime requirements have been met.
+80288.853 ulp-mlperf: Runtime requirements have been met.
+80288.853 ulp-mlperf: Runtime requirements have been met.
+80288.853 ulp-mlperf: Runtime requirements have been met.
+80288.854 ulp-mlperf: Performance results for window 8:
+80288.854 ulp-mlperf: Performance results for window 8:
+80288.854 ulp-mlperf: Performance results for window 8:
+80288.854 ulp-mlperf: Performance results for window 8:
+80288.854 ulp-mlperf: Performance results for window 8:
+80288.854 ulp-mlperf:   # Inferences :         3000
+80288.854 ulp-mlperf:   # Inferences :         3000
+80288.854 ulp-mlperf:   # Inferences :         3000
+80288.854 ulp-mlperf:   # Inferences :         3000
+80288.854 ulp-mlperf:   # Inferences :         3000
+80288.854 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.854 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.854 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.854 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.854 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.854 ulp-mlperf:   Throughput   :      244.420 inf./sec.
+80288.854 ulp-mlperf:   Throughput   :      244.420 inf./sec.
+80288.854 ulp-mlperf:   Throughput   :      244.420 inf./sec.
+80288.854 ulp-mlperf:   Throughput   :      244.420 inf./sec.
+80288.854 ulp-mlperf:   Throughput   :      244.420 inf./sec.
+80288.854 ulp-mlperf: Runtime requirements have been met.
+80288.854 ulp-mlperf: Runtime requirements have been met.
+80288.854 ulp-mlperf: Runtime requirements have been met.
+80288.854 ulp-mlperf: Runtime requirements have been met.
+80288.854 ulp-mlperf: Runtime requirements have been met.
+80288.855 ulp-mlperf: Performance results for window 10:
+80288.855 ulp-mlperf: Performance results for window 10:
+80288.855 ulp-mlperf: Performance results for window 10:
+80288.855 ulp-mlperf: Performance results for window 10:
+80288.855 ulp-mlperf: Performance results for window 10:
+80288.855 ulp-mlperf:   # Inferences :         3000
+80288.855 ulp-mlperf:   # Inferences :         3000
+80288.855 ulp-mlperf:   # Inferences :         3000
+80288.855 ulp-mlperf:   # Inferences :         3000
+80288.855 ulp-mlperf:   # Inferences :         3000
+80288.855 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.855 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.855 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.855 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.855 ulp-mlperf:   Runtime      :       12.274 sec.
+80288.855 ulp-mlperf:   Throughput   :      244.426 inf./sec.
+80288.855 ulp-mlperf:   Throughput   :      244.426 inf./sec.
+80288.855 ulp-mlperf:   Throughput   :      244.426 inf./sec.
+80288.855 ulp-mlperf:   Throughput   :      244.426 inf./sec.
+80288.855 ulp-mlperf:   Throughput   :      244.426 inf./sec.
+80288.856 ulp-mlperf: Runtime requirements have been met.
+80288.856 ulp-mlperf: Runtime requirements have been met.
+80288.856 ulp-mlperf: Runtime requirements have been met.
+80288.856 ulp-mlperf: Runtime requirements have been met.
+80288.856 ulp-mlperf: Runtime requirements have been met.
+80288.856 ulp-mlperf: ---------------------------------------------------------
+80288.856 ulp-mlperf: ---------------------------------------------------------
+80288.856 ulp-mlperf: ---------------------------------------------------------
+80288.856 ulp-mlperf: ---------------------------------------------------------
+80288.856 ulp-mlperf: ---------------------------------------------------------
+80288.858 ulp-mlperf: Median throughput is 244.345 inf./sec.
+80288.858 ulp-mlperf: Median throughput is 244.345 inf./sec.
+80288.858 ulp-mlperf: Median throughput is 244.345 inf./sec.
+80288.858 ulp-mlperf: Median throughput is 244.345 inf./sec.
+80288.858 ulp-mlperf: Median throughput is 244.345 inf./sec.
+80288.858 ulp-mlperf: ---------------------------------------------------------
+80288.858 ulp-mlperf: ---------------------------------------------------------
+80288.858 ulp-mlperf: ---------------------------------------------------------
+80288.858 ulp-mlperf: ---------------------------------------------------------
+80288.858 ulp-mlperf: ---------------------------------------------------------
+80288.859 ulp-mlperf: Cannot compute accuracy metrics in single-run mode.
+80288.859 ulp-mlperf: Cannot compute accuracy metrics in single-run mode.
+80288.859 ulp-mlperf: Cannot compute accuracy metrics in single-run mode.
+80288.859 ulp-mlperf: Cannot compute accuracy metrics in single-run mode.
+80288.859 ulp-mlperf: Cannot compute accuracy metrics in single-run mode.
