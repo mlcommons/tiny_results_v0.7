@@ -1,0 +1,68 @@
+[
+    {
+        cmd: 'umount'
+    },
+    {
+        cmd: 'mountc dut dut'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'version'
+    },
+    {
+        cmd: 'bm cfg ulp-mlperf'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'dut timestamp'
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lippizaner_s_000613.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 150 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\toy_spaniel_s_000285.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 150 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_domesticus_s_000074.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 150 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\mackinaw_boat_s_000354.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 150 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\passenger_ship_s_000578.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 150 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    }
+]

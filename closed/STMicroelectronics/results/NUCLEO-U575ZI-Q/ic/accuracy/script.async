@@ -1,0 +1,1823 @@
+[
+    {
+        cmd: 'umount'
+    },
+    {
+        cmd: 'mountc dut dut'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'version'
+    },
+    {
+        cmd: 'bm cfg ulp-mlperf'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'dut timestamp'
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lippizaner_s_000613.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\toy_spaniel_s_000285.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_domesticus_s_000074.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\mackinaw_boat_s_000354.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\passenger_ship_s_000578.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\dive_bomber_s_001256.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\estate_car_s_000684.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\domestic_cat_s_000473.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\wagtail_s_001621.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tabby_s_000171.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\racing_boat_s_000124.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\toy_dog_s_000948.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\broodmare_s_001856.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\aerial_ladder_truck_s_000162.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\dump_truck_s_002118.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_domesticus_s_000278.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tomcat_s_000128.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bufo_viridis_s_001495.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\ship_s_000352.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\attack_aircraft_s_001547.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tipper_lorry_s_000475.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\propeller_plane_s_001707.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\odocoileus_hemionus_s_001104.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\mongrel_s_001240.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\broodmare_s_000457.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lipizzan_s_001200.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\green_frog_s_001451.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\delivery_truck_s_000162.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\emu_s_002027.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\hydrofoil_s_000784.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\gelding_s_001328.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tabby_s_001060.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\domestic_cat_s_000825.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\dump_truck_s_001017.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\domestic_cat_s_001647.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\dog_s_002298.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\dunnock_s_001076.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\coupe_s_000007.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\honey_eater_s_000628.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\domestic_cat_s_001722.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tipper_truck_s_000325.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tipper_s_000338.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\fallow_deer_s_000481.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\garbage_truck_s_001400.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bufo_americanus_s_001113.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\trailer_truck_s_000437.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bird_s_001257.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\motorcar_s_001346.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lippizan_s_001138.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\quarter_horse_s_000682.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\mongrel_s_002045.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\station_wagon_s_002539.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\blenheim_spaniel_s_000781.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\truck_s_000145.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\spadefoot_s_000154.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tabby_cat_s_000472.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\container_vessel_s_001096.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tennessee_walking_horse_s_000510.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\grass_frog_s_000060.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\jumbo_jet_s_000272.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\passerine_s_000477.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\canal_boat_s_000032.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_catus_s_001318.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bird_s_000650.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\apteryx_s_000295.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lark_s_001127.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cervus_unicolor_s_000044.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\true_frog_s_000294.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\airliner_s_001545.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\canis_familiaris_s_000171.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\dama_dama_s_000412.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\nandu_s_000703.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\coupe_s_001679.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\walking_horse_s_002036.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\roe_deer_s_000985.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\quarter_horse_s_000913.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\sparrow_s_002280.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\jumbojet_s_001264.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\jumbo_jet_s_001151.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\truck_s_002318.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bufo_calamita_s_000843.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\twinjet_s_000970.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\jetliner_s_001590.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\guard_boat_s_000208.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\ostrich_s_002173.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tomcat_s_000773.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\rangifer_caribou_s_000065.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\frog_s_002032.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_catus_s_001276.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\ostrich_s_001177.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\passenger_ship_s_001774.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\boat_s_002757.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\sambar_s_000481.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\capreolus_capreolus_s_000382.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bufo_s_000324.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\fire_truck_s_000771.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lightship_s_000823.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\freighter_s_002066.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_domesticus_s_000546.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\puppy_s_000172.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\natterjack_s_000960.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\finch_s_000646.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\dump_truck_s_001515.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\spadefoot_s_000812.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\wrecker_s_000932.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lorry_s_000844.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\prunella_modularis_s_000006.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\alces_alces_s_000279.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cargo_vessel_s_001797.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\struthio_camelus_s_000751.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\hedge_sparrow_s_000171.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\multiengine_airplane_s_000182.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cat_s_000526.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\automobile_s_001643.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\trucking_rig_s_000980.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\puppy_s_000035.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tabby_cat_s_002684.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\chihuahua_s_000487.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\auto_s_000495.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cervus_elaphus_s_001261.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\plantation_walking_horse_s_000189.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cargo_vessel_s_001909.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bird_s_001740.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bird_s_000010.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\domestic_cat_s_000516.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pekingese_s_001472.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\barking_frog_s_000722.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tennessee_walker_s_000827.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bomber_s_000026.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\flying_bird_s_000001.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\chihuahua_s_000591.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\biplane_s_000439.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lipizzan_s_001314.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\car_s_001440.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\automobile_s_002547.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\biplane_s_000294.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\chihuahua_s_001839.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\sparrow_s_001538.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\accentor_s_000166.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pekingese_s_001307.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\quarter_horse_s_001425.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\king_charles_spaniel_s_000293.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\convertible_s_000056.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pekingese_s_001399.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\struthio_camelus_s_001293.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\gondola_s_000055.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\stealth_bomber_s_000627.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\wapiti_s_000565.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\powerboat_s_002244.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\appaloosa_s_000279.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pekingese_s_001147.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\shooting_brake_s_001237.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\jumbojet_s_000222.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pilot_boat_s_001085.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\stealth_fighter_s_000873.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tabby_cat_s_002450.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\reconnaissance_plane_s_000441.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\passenger_ship_s_000580.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_catus_s_001382.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pilot_boat_s_001635.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\automobile_s_001333.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cabin_cruiser_s_001162.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tomcat_s_001045.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\bird_s_001330.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cargo_ship_s_000882.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\mongrel_s_002015.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\toy_dog_s_000794.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\airbus_s_002266.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\attack_aircraft_s_000368.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\containership_s_000689.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\elk_s_001728.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_catus_s_000316.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tabby_s_000214.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\domestic_cat_s_000625.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cargo_ship_s_001066.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\gelding_s_000407.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\puppy_s_000761.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\hospital_ship_s_001788.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pekingese_s_000021.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\powerboat_s_000032.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\car_s_001583.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\toy_s_002487.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\convertible_s_002373.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\fighter_aircraft_s_000288.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\spring_frog_s_001471.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\lipizzan_s_001437.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\tabby_cat_s_000196.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\fighter_s_000908.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\pipit_s_001095.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\sika_s_001719.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\cabin_cruiser_s_000748.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\rhea_americana_s_000047.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\wapiti_s_000930.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\estate_car_s_001589.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\sparrow_s_000281.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\wagtail_s_002013.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\true_frog_s_000424.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\motorcar_s_000579.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\car_s_000012.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\mahdi chtourou\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ic01\\felis_catus_s_001124.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 1 0',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    }
+]

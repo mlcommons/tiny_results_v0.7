@@ -1,0 +1,2 @@
+36857.629 ulp-mlperf: Top-1: 77.8%
+36857.635 ulp-mlperf: AUC: 0.86
