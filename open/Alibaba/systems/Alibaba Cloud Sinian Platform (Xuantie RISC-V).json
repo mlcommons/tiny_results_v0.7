@@ -1,0 +1,39 @@
+{
+	"Submitter": "Alibaba",
+	"Division": "Open",
+	"Status": "Available",
+
+	"Board Name": "Nezha",
+	"Board Memory capacity (not including SoC, processor, or accelerator)": "1G",
+	"Board Memory type": "DDR3",
+	"Board storage capacity": "256M",
+	"Board storage type": "SPI NAND Flash",
+	"SoC Name": "D1",
+	"SoC Memory capacity (not including processor or accelerator)": "",
+	"SoC Memory type": "",
+	"SoC storage capacity": "",
+	"SoC storage type": "",
+	"Processor(s) Name": "XuanTie C906 RISC-V",
+	"Processor(s) Frequencies": "1Ghz",
+	"Processor memory type and capacity": "32KB I-cache + 32KB D-cache",
+	"Processor storage type and capacity": "",
+	"Accelerator": "",
+	"Accelerator(s) Frequencies": "",
+	"Accelerator memory type and capacity": "",
+	"Accelerator storage type and capacity": "",
+	"Hardware Notes": "https://www.allwinnertech.com/index.php?c=product&a=index&id=97; https://www.t-head.cn/product/C906?lang=en",
+
+	"Inference Framework": "Sinian/CSI-NN2",
+	"Software Libraries": "Sinian/CSI-NN2",
+	"Operating System ": "TinaLinux 5.4.61 riscv64 GNU/Linux",
+	"Other Software Stack": "",
+	"Software Notes": "https://github.com/T-head-Semi/csi-nn2",
+
+	"Quantization Method": "FP16",
+	"Training framework (open division)": "SinianML/autoSinian",
+	"ML Model Compiler(s)": "Heterogeneous Honey Badger(HHB)",
+	"General Compiler(s)": "Xuantie-900-gcc-linux-5.10.4-glibc-x86_64-V2.2.3",
+	"Other Software": "",
+	"Training and Quantization Notes": ""
+}
+

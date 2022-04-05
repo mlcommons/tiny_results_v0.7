@@ -1,0 +1,12 @@
+/* These are the three common functions for all IoTConnect f/w. */
+"help         : Print this information\r\n"
+"name         : Print the name of the device\r\n"
+"timestsamp   : Generate a timetsamp\r\n"
+
+/* These are profile-specific commands. */
+"db SUBCMD    : Manipulate a generic byte buffer\r\n"
+"   load N       : Allocate N bytes and set load counter\r\n"
+"   db HH[HH]*   : Load 8-bit hex byte(s) until N bytes\r\n"
+"   print [N=16] [offset=0]: Print N bytes at offset as hex"
+"infer N [W=0]: Load input, execute N inferences after W warmup loops\r\n"
+"results      : Return the result fp32 vector\r\n"

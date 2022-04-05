@@ -1,0 +1,1 @@
+riscv64-unknown-linux-gnu-gcc -O0 -g3 -I. -I../../../install_nn2/include -o c_runtime  main.cpp model.c io.c submitter_implemented.cpp api/internally_implemented.cpp -L../../../install_nn2/lib -lstdc++ -lcsi_nn2_c906 -lm -static
