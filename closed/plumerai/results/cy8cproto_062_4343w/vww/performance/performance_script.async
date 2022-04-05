@@ -1,0 +1,68 @@
+[
+    {
+        cmd: 'umount'
+    },
+    {
+        cmd: 'mountc dut dut'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'version'
+    },
+    {
+        cmd: 'bm cfg ulp-mlperf'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'dut timestamp'
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/vww01/000000343218.bin"',
+        ms: 442368
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/vww01/000000332570.bin"',
+        ms: 442368
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/vww01/000000352684.bin"',
+        ms: 442368
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/vww01/000000003934.bin"',
+        ms: 442368
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/vww01/000000272566.bin"',
+        ms: 442368
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    }
+]

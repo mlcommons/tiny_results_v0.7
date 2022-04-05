@@ -1,0 +1,38 @@
+{
+  "Submitter": "Plumerai",
+  "Division": "Closed",
+  "Status": "Available",
+
+  "Board Name": "DISCO-F746NG",
+  "Board Memory capacity (not including SoC, processor, or accelerator)": "",
+  "Board Memory type": "",
+  "Board storage capacity": "",
+  "Board storage type": "",
+  "SoC Name": "STM32F746NG",
+  "SoC Memory capacity (not including processor or accelerator)": "320KB",
+  "SoC Memory type": "SRAM",
+  "SoC storage capacity": "1MB",
+  "SoC storage type": "flash",
+  "Processor(s) Name": "ARM Cortex-M7 with FPU",
+  "Processor(s) Frequencies": "216 MHz",
+  "Processor memory type and capacity": "",
+  "Processor storage type and capacity": "",
+  "Accelerator": "",
+  "Accelerator(s) Frequencies": "",
+  "Accelerator memory type and capacity": "",
+  "Accelerator storage type and capacity": "",
+  "Hardware Notes": "",
+
+  "Inference Framework": "Plumerai Inference Engine",
+  "Software Libraries": "",
+  "Operating System ": "mbed-os bare metal",
+  "Other Software Stack": "",
+  "Software Notes": "",
+
+  "Quantization Method": "",
+  "Training framework (open division)": "",
+  "ML Model Compiler(s)": "",
+  "General Compiler(s)": "GCC ARM (gcc-arm-none-eabi-10-2020-q4-major)",
+  "Other Software": "",
+  "Training and Quantization Notes": ""
+}

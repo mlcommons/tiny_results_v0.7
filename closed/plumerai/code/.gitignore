@@ -1,0 +1,12 @@
+# Plumerai library
+libPlumerai.a*
+
+# MBed build files
+BUILD
+.mbed
+mbed-os.lib
+mbed_settings.py
+mbed-os
+
+# Python cache
+__pycache__

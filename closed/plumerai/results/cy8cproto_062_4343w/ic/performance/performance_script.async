@@ -1,0 +1,68 @@
+[
+    {
+        cmd: 'umount'
+    },
+    {
+        cmd: 'mountc dut dut'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'version'
+    },
+    {
+        cmd: 'bm cfg ulp-mlperf'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'dut timestamp'
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/ic01/emu_s_002009.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/ic01/taxi_s_001241.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/ic01/accentor_s_001031.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/ic01/mongrel_s_000686.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "/home/cnugteren/eembc/runner/benchmarks/ulp-mlperf/datasets/ic01/stealth_bomber_s_002204.bin"',
+        ms: 49152
+    },
+    {
+        cmd: 'dut infer 60 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    }
+]
