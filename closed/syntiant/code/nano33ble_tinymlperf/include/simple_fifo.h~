@@ -1,0 +1,8 @@
+#define FIFO_LEN 200
+char g_ch_fifo[FIFO_LEN];
+int g_ix_fifo_in;  // location for next write to FIFO
+int g_ix_fifo_out;  // location for next read from FIFO
+int g_fifo_full;
+int g_fifo_empty;
+int g_fifo_underflow;  // flag indicating an underflow has happend (too many reads)
+int g_fifo_overflow;  // flag indicating an overflow has happend (too many writes)
