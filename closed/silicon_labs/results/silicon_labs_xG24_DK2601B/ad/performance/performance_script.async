@@ -1,0 +1,68 @@
+[
+    {
+        cmd: 'umount'
+    },
+    {
+        cmd: 'mountc dut dut'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'version'
+    },
+    {
+        cmd: 'bm cfg ulp-mlperf'
+    },
+    {
+        cmd: 'dut profile'
+    },
+    {
+        cmd: 'dut timestamp'
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000003_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000013_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000023_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000033_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bload dut "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000043_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    }
+]

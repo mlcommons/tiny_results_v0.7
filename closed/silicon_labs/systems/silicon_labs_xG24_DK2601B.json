@@ -1,0 +1,38 @@
+{
+	"Submitter": "Silicon Labs",
+	"Division": "Closed",
+	"Status": "Preview",
+
+	"Board Name": "xG24-DK2601B",
+	"Board Memory capacity (not including SoC, processor, or accelerator)": "",
+	"Board Memory type": "",
+	"Board storage capacity": "4MB",
+	"Board storage type": "SPI Flash",
+	"SoC Name": "EFR32MG24B310F1536IM48",
+	"SoC Memory capacity (not including processor or accelerator)": "256kB", 
+	"SoC Memory type": "SRAM",
+	"SoC storage capacity": "1536kB", 
+	"SoC storage type": "eFlash",
+	"Processor(s) Name": "ARM Cortex-M33 CPU with FPU, DSP and TrustZone",
+	"Processor(s) Frequencies": "78 MHz", 
+	"Processor memory type and capacity": "",
+	"Processor storage type and capacity": "",
+	"Accelerator": "Silicon Labs MVP",
+	"Accelerator(s) Frequencies": "78 MHz",
+	"Accelerator memory type and capacity": "",
+	"Accelerator storage type and capacity": "",
+	"Hardware Notes": "Operating at 1.8V supply", 
+
+	"Inference Framework": "TensorFlow Lite for Microcontrollers='https://github.com/tensorflow/tflite-micro/tree/3e190e5389be49c94475e509452bdae245bd4fa6'", 
+	"Software Libraries": "Silicon Labs Gecko SDK='https://github.com/SiliconLabs/gecko_sdk/tree/9e70b13fc4701459c5f8a8f5e8918ec3f5ea8903'",
+	"Operating System ": "bare-metal", 
+	"Other Software Stack": "",
+	"Software Notes": "",
+
+	"Quantization Method": "",
+	"Training framework (open division)": "",
+	"ML Model Compiler(s)": "",
+	"General Compiler(s)": "arm-none-eabi-gcc (GNU Arm Embedded Toolchain 10-2020-q4-major) 10.2.1 20201103 (release)",
+	"Other Software": "",
+	"Training and Quantization Notes": "MLPerf reference quantized models were used, quantization scripts at https://github.com/mlcommons/tiny/tree/19d14c280b14c5cb3e302f104e12466d78ccb70d/benchmark/training"
+}

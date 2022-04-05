@@ -1,0 +1,53 @@
+project_name: mlperf_tiny_ad
+quality: internal
+label: MLPerf Tiny Anomaly Detection 
+description: This app builds the firmware required to run the MLPerf Tiny benchmark with the AD model.
+category: Example|Platform
+include:
+  - path: .
+    file_list:
+      - path: app.h
+      - path: api/internally_implemented.h
+      - path: api/submitter_implemented.h
+      - path: ad/micro_model_settings.h
+      - path: util/quantization_helpers.h
+source: 
+  - path: main.c
+  - path: app.cc
+  - path: api/internally_implemented.cpp
+  - path: submitter_implemented.cpp
+config_file: 
+  - path: ad/ad01_int8.tflite
+    file_id: flatbuffer_file_id
+    directory: "tflite"
+  - path: ad/benchmark_config.h
+component:
+  - id: sl_system
+  - id: device_init
+  - id: iostream_retarget_stdio
+  - id: iostream_usart
+    instance:
+      - vcom
+  - id: sleeptimer
+  - id: tensorflow_lite_micro
+  - id: emlib_gpio 
+  - id: emlib_cmu
+  - id: udelay
+  - id: device_init_dpll
+  - id: printf
+configuration:
+  - name: SL_BOARD_ENABLE_VCOM
+    value: "1"
+  - name: SL_DEVICE_INIT_DCDC_ENABLE
+    value: "0"
+  - name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
+    value: "usartHwFlowControlNone"
+  - name: SL_TFLITE_MICRO_INTERPRETER_INIT_ENABLE
+    value: "0"
+  - name: SL_MVP_POWER_MODE
+    value: "1"
+toolchain_settings:
+  - option: gcc_compiler_option
+    value: "-Wno-unused-parameter"
+  - option: optimize
+    value: speed 

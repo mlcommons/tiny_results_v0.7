@@ -1,0 +1,133 @@
+[
+    {
+        cmd: 'umount'
+    },
+    {
+        cmd: 'mountc emon emon'
+    },
+    {
+        cmd: 'mountc io ioman',
+        ack: /io: m-ready/
+    },
+    {
+        cmd: 'io version'
+    },
+    {
+        cmd: 'emon voltage 3000'
+    },
+    {
+        cmd: 'emon power on',
+        ack: /dut.: m-ready/
+    },
+    {
+        cmd: 'io dut profile',
+        ack: /dut.: m-ready/
+    },
+    {
+        cmd: 'emon power off'
+    },
+    {
+        cmd: 'echo pwr 2000',
+        ack: /echo-message\[pwr\]/,
+        ms: 2500
+    },
+    {
+        cmd: 'version'
+    },
+    {
+        cmd: 'bm cfg ulp-ml'
+    },
+    {
+        cmd: 'emon power on',
+        ack: /dut.: m-ready/
+    },
+    {
+        cmd: 'io dut profile',
+        ack: /dut.: m-ready/
+    },
+    {
+        cmd: 'io tm 0'
+    },
+    {
+        cmd: 'io enable-timer'
+    },
+    {
+        cmd: 'emon timer on'
+    },
+    {
+        cmd: 'emon trace on trace1'
+    },
+    {
+        cmd: 'io dut timestamp',
+        ack: /dut.: m-ready/
+    },
+    {
+        cmd: 'echo head 1000',
+        ack: /echo-message\[head\]/
+    },
+    {
+        cmd: 'bloadp "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000003_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'io dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bloadp "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000013_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'io dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bloadp "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000023_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'io dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bloadp "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000033_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'io dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'bloadp "C:\\Users\\elarians\\eembc\\runner\\benchmarks\\ulp-mlperf\\datasets\\ad01\\normal_id_01_00000043_hist_librosa.bin" 0 2560',
+        ms: 1638400
+    },
+    {
+        cmd: 'io dut infer 2000 1',
+        ms: -1,
+        ack: /dut.?: m-ready/
+    },
+    {
+        cmd: 'echo tail 1000',
+        ack: /echo-message\[tail\]/
+    },
+    {
+        cmd: 'emon trace off',
+        ms: -1
+    },
+    {
+        cmd: 'emon timer off'
+    },
+    {
+        cmd: 'io disable-timer'
+    },
+    {
+        cmd: 'emon voltage'
+    },
+    {
+        cmd: 'emon power off'
+    }
+]
