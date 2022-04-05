@@ -1,0 +1,1442 @@
+   1                             		.file	"arm_convolve_HWC_q7_fast.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_convolve_HWC_q7_fast,"ax",@progbits
+   5                             		.global	_arm_convolve_HWC_q7_fast
+   7                             	_arm_convolve_HWC_q7_fast:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c"
+   1:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** /*
+   2:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+   4:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+   6:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  10:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  12:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  */
+  18:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+  19:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * Title:        arm_convolve_HWC_q7_fast.c
+  22:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * Description:  Fast Q7 version of convolution
+  23:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  24:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * $Date:        January 26, 2021
+  25:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * $Revision:    V.1.0.2
+  26:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  27:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  29:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+  31:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+  34:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** /**
+  35:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *  @ingroup groupNN
+  36:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  */
+  37:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+  38:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** /**
+  39:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @addtogroup NNConv
+  40:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @{
+  41:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  */
+  42:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+  43:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** /**
+  44:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @brief Fast Q7 convolution function
+  45:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       Im_in       pointer to input tensor
+  46:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       dim_im_in   input tensor dimention
+  47:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       ch_im_in    number of input tensor channels
+  48:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       wt          pointer to kernel weights
+  49:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       ch_im_out   number of filters, i.e., output tensor channels
+  50:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       dim_kernel  filter kernel size
+  51:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       padding     padding sizes
+  52:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       stride      convolution stride
+  53:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       bias        pointer to bias
+  54:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       bias_shift  amount of left-shift for bias
+  55:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       out_shift   amount of right-shift for output
+  56:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in,out]   Im_out      pointer to output tensor
+  57:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in]       dim_im_out  output tensor dimension
+  58:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in,out]   bufferA     pointer to buffer space for input
+  59:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @param[in,out]   bufferB     pointer to buffer space for output
+  60:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @return     The function returns either
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * <code>ARM_MATH_SIZE_MISMATCH</code> or <code>ARM_MATH_SUCCESS</code> based on the outcome of siz
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * @details
+  64:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * <b>Buffer size:</b>
+  66:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  67:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * bufferA size: 2*ch_im_in*dim_kernel*dim_kernel
+  68:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  69:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * bufferB size: 0
+  70:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  71:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * <b>Input dimension constraints:</b>
+  72:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  73:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * ch_im_in is multiple of 4    ( because of the SIMD32 read and swap )
+  74:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  75:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * ch_im_out is multiple of 2    ( bacause 2x2 mat_mult kernel )
+  76:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  77:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * The im2col converts the Q7 tensor input into Q15 column, which is stored in
+  78:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * bufferA. There is reordering happenning during this im2col process with
+  79:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * arm_q7_to_q15_reordered_no_shift. For every four elements, the second and
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * third elements are swapped.
+  81:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  82:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * The computation kernel arm_nn_mat_mult_kernel_q7_q15_reordered does the
+  83:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * GEMM computation with the reordered columns.
+  84:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  *
+  85:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * To speed-up the determination of the padding condition, we split the
+  86:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * computation into 3x3 parts, i.e., {top, mid, bottom} X {left, mid, right}.
+  87:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * This reduces the total number of boundary condition checks and improves
+  88:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  * the data copying performance.
+  89:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****  */
+  90:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+  91:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** arm_status arm_convolve_HWC_q7_fast(const q7_t *Im_in,
+  92:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t dim_im_in,
+  93:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t ch_im_in,
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const q7_t *wt,
+  95:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t ch_im_out,
+  96:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t dim_kernel,
+  97:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t padding,
+  98:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t stride,
+  99:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const q7_t *bias,
+ 100:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t bias_shift,
+ 101:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t out_shift,
+ 102:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     q7_t *Im_out,
+ 103:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     const uint16_t dim_im_out,
+ 104:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     q15_t *bufferA,
+ 105:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     q7_t *bufferB)
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** {
+  10                             		.loc 1 106 1
+  11                             	.LVL0:
+  12 0000 6E 6D                   		pushm	r6-r13
+  13                             	.LCFI0:
+  14 0002 72 00 74 FF             		add	#-140, r0
+  15                             	.LCFI1:
+  16                             		.loc 1 106 1 is_stmt 0
+  17 0006 75 47 B0                		mov.L	#0xb0, r7
+  18 0009 4B 07                   		add	r0, r7
+  19 000b DF 3A                   		mov.W	r3, r10
+  20 000d DC 79                   		mov.W	[r7], r9
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     (void)bufferB;
+ 108:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** #if defined(ARM_MATH_DSP)
+ 109:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /* Run the following code for Cortex-M4 and Cortex-M7 */
+ 110:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 111:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     int16_t i_out_y, i_out_x, i_ker_y, i_ker_x;
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /*
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      *  Here we use bufferA as q15_t internally as computation are done with q15_t level
+ 115:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      *  im2col are done to output in q15_t format from q7_t input
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      */
+ 117:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 118:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     q15_t *pBuffer = bufferA;
+ 119:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     q7_t *pOut = Im_out;
+ 120:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     if (ch_im_in % 4 != 0 || ch_im_out % 2 != 0)
+ 122:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 123:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         /* check if the input dimension meets the constraints */
+ 124:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         return ARM_MATH_SIZE_MISMATCH;
+ 125:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 126:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 127:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /*
+ 128:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      *  Here we split the entire matrix into three regions depending on the padding situation
+ 129:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      *    Top: i_out_y from 0 to padding - 1
+ 130:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      * Middle: i_out_y from padding to dim_im_out-padding-1
+ 131:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      * Bottom: i_out_y from dim_im_out-padding to dim_im_out-1
+ 132:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****      */
+ 133:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 134:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /* top part */
+ 135:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     for (i_out_y = 0; i_out_y < padding; i_out_y++)
+ 136:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 137:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         for (i_out_x = 0; i_out_x < dim_im_out; i_out_x++)
+ 138:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 139:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             /* This part implements the im2col function */
+ 140:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             for (i_ker_y = i_out_y * stride - padding; i_ker_y < i_out_y * stride - padding + dim_k
+ 141:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 142:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 for (i_ker_x = i_out_x * stride - padding; i_ker_x < i_out_x * stride - padding + d
+ 143:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 {
+ 144:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     if (i_ker_y < 0 || i_ker_y >= dim_im_in || i_ker_x < 0 || i_ker_x >= dim_im_in)
+ 145:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 146:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         /* arm_fill_q15(0, pBuffer, ch_im_in); */
+ 147:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         memset(pBuffer, 0, sizeof(q15_t) * ch_im_in);
+ 148:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 149:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     else
+ 150:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 151:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         arm_q7_to_q15_reordered_no_shift(
+ 152:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             (q7_t *)Im_in + (i_ker_y * dim_im_in + i_ker_x) * ch_im_in, pBuffer, ch
+ 153:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 154:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     pBuffer += ch_im_in;
+ 155:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 }
+ 156:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 157:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 158:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             if (pBuffer == bufferA + 2 * ch_im_in * dim_kernel * dim_kernel)
+ 159:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 160:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pOut = arm_nn_mat_mult_kernel_q7_q15_reordered(
+ 161:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     wt, bufferA, ch_im_out, ch_im_in * dim_kernel * dim_kernel, bias_shift, out_shi
+ 162:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 /* counter reset */
+ 163:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pBuffer = bufferA;
+ 164:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 165:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         }
+ 166:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 167:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 168:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /* middle part, here we also divide the x into left, mid and right */
+ 169:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     for (; i_out_y < dim_im_out - padding; i_out_y++)
+ 170:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 171:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 172:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         /* left part */
+ 173:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         for (i_out_x = 0; i_out_x < padding; i_out_x++)
+ 174:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 175:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             /* This part implements the im2col function */
+ 176:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             for (i_ker_y = i_out_y * stride - padding; i_ker_y < i_out_y * stride - padding + dim_k
+ 177:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 178:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 for (i_ker_x = i_out_x * stride - padding; i_ker_x < i_out_x * stride - padding + d
+ 179:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 {
+ 180:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     if (i_ker_x < 0 || i_ker_x >= dim_im_in)
+ 181:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 182:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         /* arm_fill_q15(0, pBuffer, ch_im_in); */
+ 183:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         memset(pBuffer, 0, sizeof(q15_t) * ch_im_in);
+ 184:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 185:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     else
+ 186:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 187:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         arm_q7_to_q15_reordered_no_shift(
+ 188:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             (q7_t *)Im_in + (i_ker_y * dim_im_in + i_ker_x) * ch_im_in, pBuffer, ch
+ 189:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 190:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     pBuffer += ch_im_in;
+ 191:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 }
+ 192:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 193:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 194:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             if (pBuffer == bufferA + 2 * ch_im_in * dim_kernel * dim_kernel)
+ 195:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 196:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pOut = arm_nn_mat_mult_kernel_q7_q15_reordered(
+ 197:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     wt, bufferA, ch_im_out, ch_im_in * dim_kernel * dim_kernel, bias_shift, out_shi
+ 198:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 /* counter reset */
+ 199:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pBuffer = bufferA;
+ 200:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 201:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         }
+ 202:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 203:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         /* mid part */
+ 204:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         for (; i_out_x < dim_im_out - padding; i_out_x++)
+ 205:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 206:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             /* This part implements the im2col function */
+ 207:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             for (i_ker_y = i_out_y * stride - padding; i_ker_y < i_out_y * stride - padding + dim_k
+ 208:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 209:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 arm_q7_to_q15_reordered_no_shift((q7_t *)Im_in +
+ 210:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                                      (i_ker_y * dim_im_in + i_out_x * stride - padd
+ 211:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                                  pBuffer,
+ 212:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                                  ch_im_in * dim_kernel);
+ 213:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pBuffer += ch_im_in * dim_kernel;
+ 214:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 215:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 216:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             if (pBuffer == bufferA + 2 * ch_im_in * dim_kernel * dim_kernel)
+ 217:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 218:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pOut = arm_nn_mat_mult_kernel_q7_q15_reordered(
+ 219:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     wt, bufferA, ch_im_out, ch_im_in * dim_kernel * dim_kernel, bias_shift, out_shi
+ 220:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 /* counter reset */
+ 221:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pBuffer = bufferA;
+ 222:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 223:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         }
+ 224:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 225:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         /* right part */
+ 226:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         for (; i_out_x < dim_im_out; i_out_x++)
+ 227:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 228:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             /* This part implements the im2col function */
+ 229:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             for (i_ker_y = i_out_y * stride - padding; i_ker_y < i_out_y * stride - padding + dim_k
+ 230:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 231:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 for (i_ker_x = i_out_x * stride - padding; i_ker_x < i_out_x * stride - padding + d
+ 232:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 {
+ 233:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     if (i_ker_x < 0 || i_ker_x >= dim_im_in)
+ 234:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 235:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         /* arm_fill_q15(0, pBuffer, ch_im_in); */
+ 236:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         memset(pBuffer, 0, sizeof(q15_t) * ch_im_in);
+ 237:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 238:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     else
+ 239:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 240:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         arm_q7_to_q15_reordered_no_shift(
+ 241:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             (q7_t *)Im_in + (i_ker_y * dim_im_in + i_ker_x) * ch_im_in, pBuffer, ch
+ 242:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 243:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     pBuffer += ch_im_in;
+ 244:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 }
+ 245:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 246:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 247:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             if (pBuffer == bufferA + 2 * ch_im_in * dim_kernel * dim_kernel)
+ 248:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 249:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pOut = arm_nn_mat_mult_kernel_q7_q15_reordered(
+ 250:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     wt, bufferA, ch_im_out, ch_im_in * dim_kernel * dim_kernel, bias_shift, out_shi
+ 251:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 /* counter reset */
+ 252:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pBuffer = bufferA;
+ 253:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 254:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         }
+ 255:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 256:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 257:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     for (; i_out_y < dim_im_out; i_out_y++)
+ 258:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 259:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         for (i_out_x = 0; i_out_x < dim_im_out; i_out_x++)
+ 260:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 261:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             /* This part implements the im2col function */
+ 262:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             for (i_ker_y = i_out_y * stride - padding; i_ker_y < i_out_y * stride - padding + dim_k
+ 263:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 264:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 for (i_ker_x = i_out_x * stride - padding; i_ker_x < i_out_x * stride - padding + d
+ 265:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 {
+ 266:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     if (i_ker_y < 0 || i_ker_y >= dim_im_in || i_ker_x < 0 || i_ker_x >= dim_im_in)
+ 267:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 268:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         /* arm_fill_q15(0, pBuffer, ch_im_in); */
+ 269:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         memset(pBuffer, 0, sizeof(q15_t) * ch_im_in);
+ 270:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 271:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     else
+ 272:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 273:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         arm_q7_to_q15_reordered_no_shift(
+ 274:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             (q7_t *)Im_in + (i_ker_y * dim_im_in + i_ker_x) * ch_im_in, pBuffer, ch
+ 275:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 276:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     pBuffer += ch_im_in;
+ 277:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 }
+ 278:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 279:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 280:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             if (pBuffer == bufferA + 2 * ch_im_in * dim_kernel * dim_kernel)
+ 281:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 282:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pOut = arm_nn_mat_mult_kernel_q7_q15_reordered(
+ 283:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     wt, bufferA, ch_im_out, ch_im_in * dim_kernel * dim_kernel, bias_shift, out_shi
+ 284:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 /* counter reset */
+ 285:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pBuffer = bufferA;
+ 286:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 287:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         }
+ 288:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 289:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 290:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /* check if there is left-over for compute */
+ 291:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     if (pBuffer != bufferA)
+ 292:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 293:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         const q7_t *pA = wt;
+ 294:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         int i;
+ 295:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 296:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         for (i = 0; i < ch_im_out; i++)
+ 297:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 298:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             q31_t sum = ((q31_t)bias[i] << bias_shift) + NN_ROUND(out_shift);
+ 299:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             const q15_t *pB = bufferA;
+ 300:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             /* each time it process 4 entries */
+ 301:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             uint16_t colCnt = ch_im_in * dim_kernel * dim_kernel >> 2;
+ 302:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 303:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             while (colCnt)
+ 304:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 305:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 306:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 q31_t inA1, inA2;
+ 307:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 q31_t inB1, inB2;
+ 308:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 309:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 pA = read_and_pad_reordered(pA, &inA1, &inA2);
+ 310:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 311:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 inB1 = arm_nn_read_q15x2_ia(&pB);
+ 312:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 sum = __SMLAD(inA1, inB1, sum);
+ 313:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 inB2 = arm_nn_read_q15x2_ia(&pB);
+ 314:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 sum = __SMLAD(inA2, inB2, sum);
+ 315:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 316:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 colCnt--;
+ 317:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 318:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             colCnt = ch_im_in * dim_kernel * dim_kernel & 0x3;
+ 319:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             while (colCnt)
+ 320:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 321:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 q7_t inA1 = *pA++;
+ 322:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 q15_t inB1 = *pB++;
+ 323:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 sum += inA1 * inB1;
+ 324:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 colCnt--;
+ 325:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 326:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             *pOut = (q7_t)__SSAT((sum >> out_shift), 8);
+ 327:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             pOut++;
+ 328:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         }
+ 329:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 330:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** #else
+ 331:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     (void)bufferA;
+ 332:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /* Run the following code as reference implementation for Cortex-M0 and Cortex-M3 */
+ 333:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     int i, j, k, l, m, n;
+ 334:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     int conv_out;
+ 335:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     int in_row, in_col;
+ 336:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 337:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     if (ch_im_in % 4 != 0 || ch_im_out % 2 != 0)
+  21                             		.loc 1 337 22
+  22 000f EF A5                   		mov.L	r10, r5
+  23 0011 64 35                   		and #3, r5
+  24                             		.loc 1 337 44
+  25 0013 66 1E                   		mov.L	#1, r14
+  26 0015 53 9E                   		and	r9, r14
+  27                             		.loc 1 337 27
+  28 0017 57 5E                   		or	r5, r14
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     (void)bufferB;
+  29                             		.loc 1 106 1
+  30 0019 DD 7B 01                		mov.W	2[r7], r11
+  31 001c 98 F3                   		mov.W	4[r7], r3
+  32                             	.LVL1:
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     (void)bufferB;
+  33                             		.loc 1 107 5 is_stmt 1
+ 331:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /* Run the following code as reference implementation for Cortex-M0 and Cortex-M3 */
+  34                             		.loc 1 331 5
+ 333:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     int conv_out;
+  35                             		.loc 1 333 5
+ 334:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     int in_row, in_col;
+  36                             		.loc 1 334 5
+ 335:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+  37                             		.loc 1 335 5
+  38                             		.loc 1 337 5
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     (void)bufferB;
+  39                             		.loc 1 106 1 is_stmt 0
+  40 001e 98 FD                   		mov.W	6[r7], r5
+  41 0020 A8 F6                   		mov.L	8[r7], r6
+  42 0022 DD 7F 06                		mov.W	12[r7], r15
+  43 0025 DD 7D 07                		mov.W	14[r7], r13
+  44 0028 E5 70 04 1A             		mov.L	16[r7], 104[r0]
+  45 002c DD 78 0A                		mov.W	20[r7], r8
+  46                             		.loc 1 337 27
+  47 002f 61 0E                   		cmp	#0, r14
+  48 0031 3B A9 01                		bne	.L14
+  49                             	.LVL2:
+ 338:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 339:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         /* check if the input dimension meets the constraints */
+ 340:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         return ARM_MATH_SIZE_MISMATCH;
+ 341:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 342:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 343:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     for (i = 0; i < ch_im_out; i++)
+  50                             		.loc 1 343 19
+  51 0034 5F 99                   		movu.W	r9, r9
+  52 0036 E7 09 08                		mov.L	r9, 32[r0]
+  53                             		.loc 1 343 5
+  54 0039 61 09                   		cmp	#0, r9
+  55 003b 3A 9A 01                		beq	.L13
+ 344:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 345:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         for (j = 0; j < dim_im_out; j++)
+ 346:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 347:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             for (k = 0; k < dim_im_out; k++)
+ 348:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 349:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 conv_out = (bias[i] << bias_shift) + NN_ROUND(out_shift);
+  56                             		.loc 1 349 54
+  57 003e 5F DD                   		movu.W	r13, r13
+  58 0040 E7 0D 0B                		mov.L	r13, 44[r0]
+  59 0043 66 17                   		mov.L	#1, r7
+  60 0045 FD 62 D7                		shll	r13, r7
+ 345:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+  61                             		.loc 1 345 23
+  62 0048 5F 88                   		movu.W	r8, r8
+  63 004a E7 08 0A                		mov.L	r8, 40[r0]
+  64                             		.loc 1 349 54
+  65 004d 68 17                   		shlr	#1, r7
+  66 004f A3 87                   		mov.L	r7, 56[r0]
+  67 0051 61 08                   		cmp	#0, r8
+  68 0053 3A 82 01                		beq	.L13
+  69 0056 5F 37                   		movu.W	r3, r7
+  70 0058 5F 2C                   		movu.W	r2, r12
+  71 005a FF 33 C7                		mul	r12, r7, r3
+  72 005d 5F AD                   		movu.W	r10, r13
+  73 005f 7E 13                   		neg	r3
+  74 0061 5F BB                   		movu.W	r11, r11
+  75 0063 E7 0B 07                		mov.L	r11, 28[r0]
+  76 0066 5F 55                   		movu.W	r5, r5
+  77 0068 A1 0D                   		mov.L	r5, 20[r0]
+  78 006a 43 73                   		sub	r7, r3
+  79 006c EF B5                   		mov.L	r11, r5
+  80 006e 4F B5                   		mul	r11, r5
+  81 0070 ED 0A 05                		mov.L	20[r0], r10
+  82                             	.LVL3:
+  83 0073 4F CA                   		mul	r12, r10
+  84 0075 4F D3                   		mul	r13, r3
+  85 0077 A2 0E                   		mov.L	r6, 36[r0]
+  86 0079 4F D5                   		mul	r13, r5
+  87 007b A6 0D                   		mov.L	r5, 100[r0]
+  88 007d 43 D4                   		sub	r13, r4
+  89                             	.LVL4:
+  90 007f A3 0C                   		mov.L	r4, 52[r0]
+  91 0081 FF 34 DA                		mul	r13, r10, r4
+  92 0084 A5 8C                   		mov.L	r4, 92[r0]
+  93 0086 FC 07 75                		neg	r7, r5
+  94 0089 A5 85                   		mov.L	r5, 88[r0]
+  95 008b 4B 13                   		add	r1, r3
+  96 008d A6 03                   		mov.L	r3, 96[r0]
+  97 008f ED 0A 05                		mov.L	20[r0], r10
+  98 0092 4F DA                   		mul	r13, r10
+  99 0094 E7 0A 0F                		mov.L	r10, 60[r0]
+ 100 0097 FF 34 CD                		mul	r12, r13, r4
+ 101 009a A0 84                   		mov.L	r4, 8[r0]
+ 102 009c EF B5                   		mov.L	r11, r5
+ 103 009e 4F D5                   		mul	r13, r5
+ 104 00a0 A0 0D                   		mov.L	r5, 4[r0]
+ 343:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 105                             		.loc 1 343 12
+ 106 00a2 3E 81 00                		mov.L	#0, 68[r0]
+ 107 00a5 5F FF                   		movu.W	r15, r15
+ 108 00a7 E7 0F 10                		mov.L	r15, 64[r0]
+ 109 00aa EF BA                   		mov.L	r11, r10
+ 110 00ac 43 7A                   		sub	r7, r10
+ 111 00ae E7 0A 15                		mov.L	r10, 84[r0]
+ 112 00b1 EF CE                   		mov.L	r12, r14
+ 113 00b3 EF DF                   		mov.L	r13, r15
+ 114                             	.LVL5:
+ 115                             		.balign 8,3,1
+ 116                             	.L5:
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     (void)bufferB;
+ 117                             		.loc 1 106 1
+ 118 00b5 E5 00 16 0C             		mov.L	88[r0], 48[r0]
+ 119 00b9 ED 08 15                		mov.L	84[r0], r8
+ 120 00bc E5 00 18 14             		mov.L	96[r0], 80[r0]
+ 121 00c0 3E 83 00                		mov.L	#0, 76[r0]
+ 345:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 122                             		.loc 1 345 16
+ 123 00c3 3E 82 00                		mov.L	#0, 72[r0]
+ 124                             	.LVL6:
+ 125                             		.balign 8,3,1
+ 126                             	.L12:
+ 127 00c6 AC 8F                   		mov.L	76[r0], r7
+ 128 00c8 ED 0C 08                		mov.L	32[r0], r12
+ 129 00cb 4F C7                   		mul	r12, r7
+ 130 00cd E5 00 14 04             		mov.L	80[r0], 16[r0]
+ 131 00d1 06 89 07 11             		add	68[r0], r7
+ 132 00d5 ED 0D 16                		mov.L	88[r0], r13
+ 133 00d8 06 89 07 1A             		add	104[r0], r7
+ 134 00dc A0 8F                   		mov.L	r7, 12[r0]
+ 135 00de AD 0A                   		mov.L	84[r0], r2
+ 347:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 136                             		.loc 1 347 20
+ 137 00e0 3E 06 00                		mov.L	#0, 24[r0]
+ 138                             		.balign 8,3,1
+ 139                             	.L11:
+ 140                             	.LVL7:
+ 141                             		.loc 1 349 17 is_stmt 1
+ 142                             		.loc 1 349 33 is_stmt 0
+ 143 00e3 AA 0C                   		mov.L	36[r0], r4
+ 144 00e5 CC 41                   		mov.B	[r4], r1
+ 145                             		.loc 1 349 37
+ 146 00e7 AC 05                   		mov.L	64[r0], r5
+ 147 00e9 FD 62 51                		shll	r5, r1
+ 148                             		.loc 1 349 52
+ 149 00ec 06 89 01 0E             		add	56[r0], r1
+ 150                             	.LVL8:
+ 350:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 for (m = 0; m < dim_kernel; m++)
+ 151                             		.loc 1 350 17 is_stmt 1
+ 152 00f0 A9 8F                   		mov.L	28[r0], r7
+ 153 00f2 61 07                   		cmp	#0, r7
+ 154 00f4 20 3C                   		beq	.L6
+ 155 00f6 ED 09 0D                		mov.L	52[r0], r9
+ 156 00f9 AB 05                   		mov.L	48[r0], r5
+ 157 00fb ED 0C 04                		mov.L	16[r0], r12
+ 158                             	.LVL9:
+ 159 00fe EF 00                   		.balign 8,3,2
+ 160                             	.L10:
+ 161 0100 FF 2A FC                		add	r15, r12, r10
+ 162 0103 EF D7                   		mov.L	r13, r7
+ 163 0105 FF 04 C9                		sub	r12, r9, r4
+ 164 0108 E3 04                   		mov.L	r4, [r0]
+ 165                             		.balign 8,3,1
+ 166                             	.L9:
+ 167                             	.LVL10:
+ 351:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 {
+ 352:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     for (n = 0; n < dim_kernel; n++)
+ 353:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 354:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         // if-for implementation
+ 355:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         in_row = stride * j + m - padding;
+ 168                             		.loc 1 355 25
+ 356:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         in_col = stride * k + n - padding;
+ 169                             		.loc 1 356 25
+ 357:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         if (in_row >= 0 && in_col >= 0 && in_row < dim_im_in && in_col < dim_im_in)
+ 170                             		.loc 1 357 25
+ 171                             		.loc 1 357 28 is_stmt 0
+ 172 010a 61 05                   		cmp	#0, r5
+ 173 010c 29 0E                   		blt	.L7
+ 174                             		.loc 1 357 41 discriminator 1
+ 175 010e 61 07                   		cmp	#0, r7
+ 176 0110 29 0A                   		blt	.L7
+ 177                             		.loc 1 357 56 discriminator 2
+ 178 0112 47 E5                   		cmp	r14, r5
+ 179 0114 28 06                   		bge	.L7
+ 180                             		.loc 1 357 78 discriminator 3
+ 181 0116 47 E7                   		cmp	r14, r7
+ 182 0118 29 52                   		blt	.L32
+ 183                             		.balign 8,3,1
+ 184                             	.L7:
+ 185                             	.LVL11:
+ 186 011a 62 17                   		add	#1, r7
+ 187                             	.LVL12:
+ 188 011c 4B FA                   		add	r15, r10
+ 352:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     {
+ 189                             		.loc 1 352 21 discriminator 2
+ 190 011e 47 72                   		cmp	r7, r2
+ 191 0120 21 EA                   		bne	.L9
+ 192                             	.LVL13:
+ 193 0122 62 15                   		add	#1, r5
+ 194                             	.LVL14:
+ 195 0124 06 89 0C 02             		add	8[r0], r12
+ 196 0128 06 89 09 01             		add	4[r0], r9
+ 350:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 {
+ 197                             		.loc 1 350 17 discriminator 2
+ 198 012c 47 58                   		cmp	r5, r8
+ 199 012e 21 D2                   		bne	.L10
+ 200                             	.LVL15:
+ 201                             		.balign 8,3,1
+ 202                             	.L6:
+ 358:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         {
+ 359:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             for (l = 0; l < ch_im_in; l++)
+ 360:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             {
+ 361:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                 conv_out += Im_in[(in_row * dim_im_in + in_col) * ch_im_in + l] *
+ 362:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     wt[i * ch_im_in * dim_kernel * dim_kernel + (m * dim_kernel + n
+ 363:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             }
+ 364:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                         }
+ 365:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                     }
+ 366:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 }
+ 367:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                 Im_out[i + (j * dim_im_out + k) * ch_im_out] = (q7_t)__SSAT((conv_out >> out_shift)
+ 203                             		.loc 1 367 17 is_stmt 1 discriminator 2
+ 204                             		.file 2 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**************************************************************************//**
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @version  V5.4.1
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @date     27. May 2021
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  ******************************************************************************/
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /*
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Copyright (c) 2009-2021 Arm Limited. All rights reserved.
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * limitations under the License.
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __has_builtin
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __ASM
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __INLINE
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __INLINE                               inline
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE
+  50:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  52:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  55:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __USED
+  56:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  58:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __WEAK
+  59:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  61:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __PACKED
+  62:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  64:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  67:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  70:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  78:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  86:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  94:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 102:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 110:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 113:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 116:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __COMPILER_BARRIER
+ 117:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __COMPILER_BARRIER()                   __ASM volatile("":::"memory")
+ 118:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 119:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 120:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* #########################  Startup and Lowlevel Init  ######################## */
+ 121:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 122:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __PROGRAM_START
+ 123:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 124:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 125:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Initializes data and bss sections
+ 126:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details This default implementations initialized all data and additional bss
+ 127:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            sections relying on .copy.table and .zero.table specified properly
+ 128:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            in the used linker script.
+ 129:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 130:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 131:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE __NO_RETURN void __cmsis_start(void)
+ 132:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 133:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern void _start(void) __NO_RETURN;
+ 134:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 135:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   typedef struct {
+ 136:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t const* src;
+ 137:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t* dest;
+ 138:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t  wlen;
+ 139:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   } __copy_table_t;
+ 140:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 141:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   typedef struct {
+ 142:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t* dest;
+ 143:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t  wlen;
+ 144:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   } __zero_table_t;
+ 145:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 146:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __copy_table_t __copy_table_start__;
+ 147:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __copy_table_t __copy_table_end__;
+ 148:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __zero_table_t __zero_table_start__;
+ 149:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __zero_table_t __zero_table_end__;
+ 150:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 151:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   for (__copy_table_t const* pTable = &__copy_table_start__; pTable < &__copy_table_end__; ++pTable
+ 152:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     for(uint32_t i=0u; i<pTable->wlen; ++i) {
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****       pTable->dest[i] = pTable->src[i];
+ 154:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     }
+ 155:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 156:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 157:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   for (__zero_table_t const* pTable = &__zero_table_start__; pTable < &__zero_table_end__; ++pTable
+ 158:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     for(uint32_t i=0u; i<pTable->wlen; ++i) {
+ 159:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****       pTable->dest[i] = 0u;
+ 160:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     }
+ 161:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 162:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 163:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   _start();
+ 164:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 165:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 166:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __PROGRAM_START           __cmsis_start
+ 167:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 168:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 169:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __INITIAL_SP
+ 170:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __INITIAL_SP              __StackTop
+ 171:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 172:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 173:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __STACK_LIMIT
+ 174:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __STACK_LIMIT             __StackLimit
+ 175:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 176:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 177:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __VECTOR_TABLE
+ 178:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __VECTOR_TABLE            __Vectors
+ 179:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 180:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 181:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __VECTOR_TABLE_ATTRIBUTE
+ 182:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __VECTOR_TABLE_ATTRIBUTE  __attribute__((used, section(".vectors")))
+ 183:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 184:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 185:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+ 186:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __STACK_SEAL
+ 187:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __STACK_SEAL              __StackSeal
+ 188:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 189:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 190:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __TZ_STACK_SEAL_SIZE
+ 191:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __TZ_STACK_SEAL_SIZE      8U
+ 192:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 193:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 194:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __TZ_STACK_SEAL_VALUE
+ 195:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __TZ_STACK_SEAL_VALUE     0xFEF5EDA5FEF5EDA5ULL
+ 196:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 197:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 198:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 199:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __TZ_set_STACKSEAL_S (uint32_t* stackTop) {
+ 200:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   *((uint64_t *)stackTop) = __TZ_STACK_SEAL_VALUE;
+ 201:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 202:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 203:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 204:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 205:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* ##########################  Core Instruction Access  ######################### */
+ 206:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /** \defgroup CMSIS_Core_InstructionInterface CMSIS Core Instruction Interface
+ 207:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   Access to dedicated instructions
+ 208:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   @{
+ 209:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** */
+ 210:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 211:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* Define macros for porting to both thumb1 and thumb2.
+ 212:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * For thumb1, use low register (r0-r7), specified by constraint "l"
+ 213:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Otherwise, use general registers, specified by constraint "r" */
+ 214:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if defined (__thumb__) && !defined (__thumb2__)
+ 215:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_OUT_REG(r) "=l" (r)
+ 216:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_RW_REG(r) "+l" (r)
+ 217:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_USE_REG(r) "l" (r)
+ 218:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 219:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_OUT_REG(r) "=r" (r)
+ 220:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_RW_REG(r) "+r" (r)
+ 221:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_USE_REG(r) "r" (r)
+ 222:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 223:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 224:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 225:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   No Operation
+ 226:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details No Operation does nothing. This instruction can be used for code alignment purposes.
+ 227:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 228:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __NOP()                             __ASM volatile ("nop")
+ 229:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 230:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 231:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Wait For Interrupt
+ 232:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Wait For Interrupt is a hint instruction that suspends execution until one of a number o
+ 233:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 234:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __WFI()                             __ASM volatile ("wfi":::"memory")
+ 235:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 236:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 237:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 238:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Wait For Event
+ 239:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Wait For Event is a hint instruction that permits the processor to enter
+ 240:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            a low-power state until one of a number of events occurs.
+ 241:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 242:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __WFE()                             __ASM volatile ("wfe":::"memory")
+ 243:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 244:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 245:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 246:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Send Event
+ 247:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Send Event is a hint instruction. It causes an event to be signaled to the CPU.
+ 248:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 249:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __SEV()                             __ASM volatile ("sev")
+ 250:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 251:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 252:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 253:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Instruction Synchronization Barrier
+ 254:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Instruction Synchronization Barrier flushes the pipeline in the processor,
+ 255:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            so that all instructions following the ISB are fetched from cache or memory,
+ 256:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            after the instruction has been completed.
+ 257:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 258:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __ISB(void)
+ 259:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 260:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("isb 0xF":::"memory");
+ 261:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 262:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 263:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 264:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 265:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Data Synchronization Barrier
+ 266:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Acts as a special kind of Data Memory Barrier.
+ 267:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            It completes when all explicit memory accesses before this instruction complete.
+ 268:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 269:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __DSB(void)
+ 270:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 271:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("dsb 0xF":::"memory");
+ 272:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 273:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 274:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 275:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 276:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Data Memory Barrier
+ 277:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Ensures the apparent order of the explicit memory operations before
+ 278:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            and after the instruction, without ensuring their completion.
+ 279:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 280:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __DMB(void)
+ 281:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 282:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("dmb 0xF":::"memory");
+ 283:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 284:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 285:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 286:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 287:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse byte order (32 bit)
+ 288:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the byte order in unsigned integer value. For example, 0x12345678 becomes 0x785
+ 289:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 290:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 291:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 292:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __REV(uint32_t value)
+ 293:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 294:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+ 295:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return __builtin_bswap32(value);
+ 296:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 297:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 298:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 299:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM ("rev %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 300:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 301:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 302:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 303:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 304:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 305:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 306:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse byte order (16 bit)
+ 307:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the byte order within each halfword of a word. For example, 0x12345678 becomes 
+ 308:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 309:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 310:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 311:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __REV16(uint32_t value)
+ 312:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 313:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 314:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 315:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM ("rev16 %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 316:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 317:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 318:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 319:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 320:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 321:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse byte order (16 bit)
+ 322:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the byte order in a 16-bit value and returns the signed 16-bit result. For exam
+ 323:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 324:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 325:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 326:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE int16_t __REVSH(int16_t value)
+ 327:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 328:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 329:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return (int16_t)__builtin_bswap16(value);
+ 330:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 331:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   int16_t result;
+ 332:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 333:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM ("revsh %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 334:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 335:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 336:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 337:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 338:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 339:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 340:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Rotate Right in unsigned value (32 bit)
+ 341:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Rotate Right (immediate) provides the value of the contents of a register rotated by a v
+ 342:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    op1  Value to rotate
+ 343:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    op2  Number of Bits to rotate
+ 344:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Rotated value
+ 345:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 346:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
+ 347:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 348:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   op2 %= 32U;
+ 349:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   if (op2 == 0U)
+ 350:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 351:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     return op1;
+ 352:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 353:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return (op1 >> op2) | (op1 << (32U - op2));
+ 354:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 355:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 356:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 357:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 358:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Breakpoint
+ 359:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Causes the processor to enter Debug state.
+ 360:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            Debug tools can use this to investigate system state when the instruction at a particula
+ 361:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  is ignored by the processor.
+ 362:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****                  If required, a debugger can use it to store additional information about the break
+ 363:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 364:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __BKPT(value)                       __ASM volatile ("bkpt "#value)
+ 365:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 366:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 367:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 368:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse bit order of value
+ 369:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the bit order of the given value.
+ 370:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 371:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 372:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 373:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __RBIT(uint32_t value)
+ 374:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 375:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 376:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 377:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 378:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 379:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    )
+ 380:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM ("rbit %0, %1" : "=r" (result) : "r" (value) );
+ 381:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 382:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t s = (4U /*sizeof(v)*/ * 8U) - 1U; /* extra shift needed at end */
+ 383:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 384:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   result = value;                      /* r will be reversed bits of v; first get LSB of v */
+ 385:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   for (value >>= 1U; value != 0U; value >>= 1U)
+ 386:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 387:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     result <<= 1U;
+ 388:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     result |= value & 1U;
+ 389:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     s--;
+ 390:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 391:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   result <<= s;                        /* shift when v's highest bits are zero */
+ 392:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 393:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 394:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 395:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 396:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 397:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 398:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Count leading zeros
+ 399:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Counts the number of leading zeros of a data value.
+ 400:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to count the leading zeros
+ 401:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             number of leading zeros in value
+ 402:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 403:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint8_t __CLZ(uint32_t value)
+ 404:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 405:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   /* Even though __builtin_clz produces a CLZ instruction on ARM, formally
+ 406:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      __builtin_clz(0) is undefined behaviour, so handle this case specially.
+ 407:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      This guarantees ARM-compatible results if happening to compile on a non-ARM
+ 408:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      target, and ensures the compiler doesn't decide to activate any
+ 409:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      optimisations using the logic "value was passed to __builtin_clz, so it
+ 410:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      is non-zero".
+ 411:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      ARM GCC 7.3 and possibly earlier will optimise this test away, leaving a
+ 412:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      single CLZ instruction.
+ 413:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    */
+ 414:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   if (value == 0U)
+ 415:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 416:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     return 32U;
+ 417:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 418:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return __builtin_clz(value);
+ 419:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 420:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 421:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 422:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 423:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 424:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1)) || \
+ 425:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_BASE__ ) && (__ARM_ARCH_8M_BASE__ == 1))    )
+ 426:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 427:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDR Exclusive (8 bit)
+ 428:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive LDR instruction for 8 bit value.
+ 429:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 430:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             value of type uint8_t at (*ptr)
+ 431:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 432:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint8_t __LDREXB(volatile uint8_t *addr)
+ 433:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 434:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 435:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 436:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 437:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexb %0, %1" : "=r" (result) : "Q" (*addr) );
+ 438:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 439:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 440:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 441:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 442:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexb %0, [%1]" : "=r" (result) : "r" (addr) : "memory" );
+ 443:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 444:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint8_t) result);    /* Add explicit type cast here */
+ 445:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 446:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 447:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 448:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 449:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDR Exclusive (16 bit)
+ 450:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive LDR instruction for 16 bit values.
+ 451:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 452:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint16_t at (*ptr)
+ 453:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 454:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint16_t __LDREXH(volatile uint16_t *addr)
+ 455:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 456:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 457:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 458:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 459:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexh %0, %1" : "=r" (result) : "Q" (*addr) );
+ 460:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 461:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 462:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 463:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 464:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexh %0, [%1]" : "=r" (result) : "r" (addr) : "memory" );
+ 465:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 466:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint16_t) result);    /* Add explicit type cast here */
+ 467:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 468:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 469:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 470:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 471:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDR Exclusive (32 bit)
+ 472:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive LDR instruction for 32 bit values.
+ 473:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 474:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint32_t at (*ptr)
+ 475:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 476:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __LDREXW(volatile uint32_t *addr)
+ 477:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 478:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 479:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 480:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrex %0, %1" : "=r" (result) : "Q" (*addr) );
+ 481:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 482:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 483:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 484:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 485:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 486:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STR Exclusive (8 bit)
+ 487:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive STR instruction for 8 bit values.
+ 488:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 489:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 490:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          0  Function succeeded
+ 491:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          1  Function failed
+ 492:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 493:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __STREXB(uint8_t value, volatile uint8_t *addr)
+ 494:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 495:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    uint32_t result;
+ 496:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 497:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strexb %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" ((uint32_t)value) );
+ 498:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 499:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 500:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 501:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 502:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 503:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STR Exclusive (16 bit)
+ 504:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive STR instruction for 16 bit values.
+ 505:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 506:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 507:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          0  Function succeeded
+ 508:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          1  Function failed
+ 509:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 510:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __STREXH(uint16_t value, volatile uint16_t *addr)
+ 511:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 512:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    uint32_t result;
+ 513:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 514:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strexh %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" ((uint32_t)value) );
+ 515:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 516:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 517:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 518:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 519:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 520:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STR Exclusive (32 bit)
+ 521:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive STR instruction for 32 bit values.
+ 522:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 523:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 524:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          0  Function succeeded
+ 525:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          1  Function failed
+ 526:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 527:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
+ 528:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 529:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    uint32_t result;
+ 530:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 531:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strex %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" (value) );
+ 532:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 533:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 534:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 535:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 536:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 537:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Remove the exclusive lock
+ 538:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Removes the exclusive lock which is created by LDREX.
+ 539:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 540:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __CLREX(void)
+ 541:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 542:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("clrex" ::: "memory");
+ 543:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 544:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 545:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif /* ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 546:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 547:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1)) || \
+ 548:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_8M_BASE__ ) && (__ARM_ARCH_8M_BASE__ == 1))    ) */
+ 549:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 550:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 551:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 552:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 553:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    )
+ 554:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 555:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Signed Saturate
+ 556:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Saturates a signed value.
+ 557:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG1  Value to be saturated
+ 558:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG2  Bit position to saturate to (1..32)
+ 559:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             Saturated value
+ 560:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 561:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __SSAT(ARG1, ARG2) \
+ 562:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __extension__ \
+ 563:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** ({                          \
+ 564:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   int32_t __RES, __ARG1 = (ARG1); \
+ 565:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("ssat %0, %1, %2" : "=r" (__RES) :  "I" (ARG2), "r" (__ARG1) : "cc" ); \
+ 566:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __RES; \
+ 567:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  })
+ 568:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 569:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 570:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 571:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Unsigned Saturate
+ 572:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Saturates an unsigned value.
+ 573:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG1  Value to be saturated
+ 574:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG2  Bit position to saturate to (0..31)
+ 575:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             Saturated value
+ 576:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 577:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __USAT(ARG1, ARG2) \
+ 578:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __extension__ \
+ 579:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** ({                          \
+ 580:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t __RES, __ARG1 = (ARG1); \
+ 581:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("usat %0, %1, %2" : "=r" (__RES) :  "I" (ARG2), "r" (__ARG1) : "cc" ); \
+ 582:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __RES; \
+ 583:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  })
+ 584:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 585:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 586:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 587:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Rotate Right with Extend (32 bit)
+ 588:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Moves each bit of a bitstring right by one bit.
+ 589:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            The carry input is shifted in at the left end of the bitstring.
+ 590:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to rotate
+ 591:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Rotated value
+ 592:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 593:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __RRX(uint32_t value)
+ 594:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 595:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 596:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 597:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("rrx %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 598:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return(result);
+ 599:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 600:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 601:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 602:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 603:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDRT Unprivileged (8 bit)
+ 604:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged LDRT instruction for 8 bit value.
+ 605:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 606:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             value of type uint8_t at (*ptr)
+ 607:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 608:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint8_t __LDRBT(volatile uint8_t *ptr)
+ 609:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 610:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 611:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 612:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 613:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrbt %0, %1" : "=r" (result) : "Q" (*ptr) );
+ 614:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 615:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 616:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 617:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 618:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrbt %0, [%1]" : "=r" (result) : "r" (ptr) : "memory" );
+ 619:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 620:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint8_t) result);    /* Add explicit type cast here */
+ 621:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 622:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 623:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 624:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 625:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDRT Unprivileged (16 bit)
+ 626:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged LDRT instruction for 16 bit values.
+ 627:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 628:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint16_t at (*ptr)
+ 629:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 630:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint16_t __LDRHT(volatile uint16_t *ptr)
+ 631:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 632:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 633:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 634:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 635:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrht %0, %1" : "=r" (result) : "Q" (*ptr) );
+ 636:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 637:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 638:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 639:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 640:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrht %0, [%1]" : "=r" (result) : "r" (ptr) : "memory" );
+ 641:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 642:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint16_t) result);    /* Add explicit type cast here */
+ 643:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 644:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 645:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 646:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 647:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDRT Unprivileged (32 bit)
+ 648:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged LDRT instruction for 32 bit values.
+ 649:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 650:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint32_t at (*ptr)
+ 651:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 652:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __LDRT(volatile uint32_t *ptr)
+ 653:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 654:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 655:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 656:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrt %0, %1" : "=r" (result) : "Q" (*ptr) );
+ 657:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 658:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 659:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 660:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 661:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 662:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STRT Unprivileged (8 bit)
+ 663:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged STRT instruction for 8 bit values.
+ 664:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 665:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 666:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 667:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __STRBT(uint8_t value, volatile uint8_t *ptr)
+ 668:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 669:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strbt %1, %0" : "=Q" (*ptr) : "r" ((uint32_t)value) );
+ 670:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 671:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 672:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 673:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 674:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STRT Unprivileged (16 bit)
+ 675:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged STRT instruction for 16 bit values.
+ 676:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 677:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 678:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 679:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __STRHT(uint16_t value, volatile uint16_t *ptr)
+ 680:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 681:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strht %1, %0" : "=Q" (*ptr) : "r" ((uint32_t)value) );
+ 682:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 683:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 684:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 685:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 686:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STRT Unprivileged (32 bit)
+ 687:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged STRT instruction for 32 bit values.
+ 688:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 689:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 690:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 691:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __STRT(uint32_t value, volatile uint32_t *ptr)
+ 692:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 693:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strt %1, %0" : "=Q" (*ptr) : "r" (value) );
+ 694:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 695:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 696:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else  /* ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 697:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 698:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    ) */
+ 699:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 700:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 701:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Signed Saturate
+ 702:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Saturates a signed value.
+ 703:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to be saturated
+ 704:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    sat  Bit position to saturate to (1..32)
+ 705:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             Saturated value
+ 706:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 707:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
+ 708:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   if ((sat >= 1U) && (sat <= 32U))
+ 205                             		.loc 2 709 3 discriminator 2
+ 710:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t max = (int32_t)((1U << (sat - 1U)) - 1U);
+ 206                             		.loc 2 711 5 discriminator 2
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t min = -1 - max ;
+ 207                             		.loc 2 712 5 discriminator 2
+ 713:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     if (val > max)
+ 208                             		.loc 2 713 5 discriminator 2
+ 209                             		.loc 1 367 87 is_stmt 0 discriminator 2
+ 210 0130 AA 8D                   		mov.L	44[r0], r5
+ 211 0132 FD 61 51                		shar	r5, r1
+ 212                             	.LVL16:
+ 347:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 213                             		.loc 1 347 42 discriminator 2
+ 214 0135 A9 87                   		mov.L	24[r0], r7
+ 215 0137 62 17                   		add	#1, r7
+ 216                             	.LVL17:
+ 217                             		.loc 1 367 64 discriminator 2
+ 218 0139 FD 74 41 80             		max	#-128, r1
+ 219 013d 06 89 02 05             		add	20[r0], r2
+ 220 0141 FD 74 51 7F             		min	#0x7f, r1
+ 221 0145 06 89 0D 05             		add	20[r0], r13
+ 222 0149 ED 0A 03                		mov.L	12[r0], r10
+ 223 014c C3 A1                   		mov.B	r1, [r10]
+ 224 014e ED 0C 04                		mov.L	16[r0], r12
+ 225 0151 06 89 0C 0F             		add	60[r0], r12
+ 226 0155 E7 0C 04                		mov.L	r12, 16[r0]
+ 227 0158 06 89 0A 08             		add	32[r0], r10
+ 228 015c E7 0A 03                		mov.L	r10, 12[r0]
+ 347:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             {
+ 229                             		.loc 1 347 13 discriminator 2
+ 230 015f AA 84                   		mov.L	40[r0], r4
+ 231 0161 47 74                   		cmp	r7, r4
+ 232 0163 20 25                   		beq	.L33
+ 233 0165 A1 87                   		mov.L	r7, 24[r0]
+ 234 0167 38 7C FF                		bra	.L11
+ 235                             	.LVL18:
+ 236                             	.L32:
+ 359:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             {
+ 237                             		.loc 1 359 29
+ 238 016a 61 0F                   		cmp	#0, r15
+ 239 016c 20 AE                   		beq	.L7
+ 240 016e FF 03 FA                		sub	r15, r10, r3
+ 241 0171 EC 06                   		mov.L	[r0], r6
+ 242 0173 4B A6                   		add	r10, r6
+ 243                             	.LVL19:
+ 244 0175 FC 13 00                		.balign 8,3,5
+ 245                             	.L8:
+ 361:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     wt[i * ch_im_in * dim_kernel * dim_kernel + (m * dim_kernel + n
+ 246                             		.loc 1 361 33 is_stmt 1 discriminator 3
+ 361:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     wt[i * ch_im_in * dim_kernel * dim_kernel + (m * dim_kernel + n
+ 247                             		.loc 1 361 50 is_stmt 0 discriminator 3
+ 248 0178 FD 28 34                		mov.B	[r3+], r4
+ 362:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             }
+ 249                             		.loc 1 362 39 discriminator 3
+ 250 017b FD 28 6B                		mov.B	[r6+], r11
+ 361:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     wt[i * ch_im_in * dim_kernel * dim_kernel + (m * dim_kernel + n
+ 251                             		.loc 1 361 97 discriminator 3
+ 252 017e 4F B4                   		mul	r11, r4
+ 361:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                                     wt[i * ch_im_in * dim_kernel * dim_kernel + (m * dim_kernel + n
+ 253                             		.loc 1 361 42 discriminator 3
+ 254 0180 4B 41                   		add	r4, r1
+ 255                             	.LVL20:
+ 359:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****                             {
+ 256                             		.loc 1 359 29 discriminator 3
+ 257 0182 47 3A                   		cmp	r3, r10
+ 258 0184 21 F4                   		bne	.L8
+ 259 0186 2E 94                   		bra	.L7
+ 260                             	.LVL21:
+ 261                             	.L33:
+ 345:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 262                             		.loc 1 345 38 discriminator 2
+ 263 0188 AC 87                   		mov.L	72[r0], r7
+ 264                             	.LVL22:
+ 265 018a 62 17                   		add	#1, r7
+ 266                             	.LVL23:
+ 267 018c AC 8D                   		mov.L	76[r0], r5
+ 268 018e 4B 45                   		add	r4, r5
+ 269 0190 A4 8D                   		mov.L	r5, 76[r0]
+ 270 0192 ED 0A 14                		mov.L	80[r0], r10
+ 271 0195 06 89 0A 17             		add	92[r0], r10
+ 272 0199 E7 0A 14                		mov.L	r10, 80[r0]
+ 273 019c 06 89 08 05             		add	20[r0], r8
+ 274 01a0 ED 0C 0C                		mov.L	48[r0], r12
+ 275 01a3 06 89 0C 05             		add	20[r0], r12
+ 276 01a7 E7 0C 0C                		mov.L	r12, 48[r0]
+ 345:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         {
+ 277                             		.loc 1 345 9 discriminator 2
+ 278 01aa AC 84                   		mov.L	72[r0], r4
+ 279 01ac A9 85                   		mov.L	24[r0], r5
+ 280 01ae 47 54                   		cmp	r5, r4
+ 281 01b0 16                      		beq	.L34
+ 282 01b1 A4 87                   		mov.L	r7, 72[r0]
+ 283 01b3 38 13 FF                		bra	.L12
+ 284                             	.L34:
+ 343:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 285                             		.loc 1 343 33
+ 286 01b6 AC 0F                   		mov.L	68[r0], r7
+ 287                             	.LVL24:
+ 288 01b8 62 17                   		add	#1, r7
+ 289 01ba A4 0F                   		mov.L	r7, 68[r0]
+ 290                             	.LVL25:
+ 291 01bc ED 0A 09                		mov.L	36[r0], r10
+ 292 01bf 62 1A                   		add	#1, r10
+ 293 01c1 E7 0A 09                		mov.L	r10, 36[r0]
+ 294 01c4 ED 0C 0D                		mov.L	52[r0], r12
+ 295 01c7 06 89 0C 19             		add	100[r0], r12
+ 296 01cb E7 0C 0D                		mov.L	r12, 52[r0]
+ 343:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     {
+ 297                             		.loc 1 343 5
+ 298 01ce AA 04                   		mov.L	32[r0], r4
+ 299                             	.LVL26:
+ 300 01d0 47 47                   		cmp	r4, r7
+ 301 01d2 3B E3 FE                		bne	.L5
+ 302                             	.LVL27:
+ 303                             		.balign 8,3,1
+ 304                             	.L13:
+ 368:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****             }
+ 369:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****         }
+ 370:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 371:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 372:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** #endif /* ARM_MATH_DSP */
+ 373:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** 
+ 374:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     /* Return to application */
+ 375:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     return ARM_MATH_SUCCESS;
+ 305                             		.loc 1 375 12
+ 306 01d5 66 01                   		mov.L	#0, r1
+ 376:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c **** }
+ 307                             		.loc 1 376 1
+ 308 01d7 3F 6D 2B                		rtsd	#172, r6-r13
+ 309                             	.LVL28:
+ 310                             	.L14:
+ 340:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_HWC_q7_fast.c ****     }
+ 311                             		.loc 1 340 16
+ 312 01da FB 16 FD                		mov.L	#-3, r1
+ 313                             	.LVL29:
+ 314                             		.loc 1 376 1
+ 315 01dd 3F 6D 2B                		rtsd	#172, r6-r13
+ 316                             	.LFE82:
+ 368                             	.Letext0:
+ 369                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 370                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 371                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 372                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 373                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 374                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 375                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 376                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 377                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

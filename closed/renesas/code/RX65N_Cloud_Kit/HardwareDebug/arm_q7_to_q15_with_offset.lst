@@ -1,0 +1,162 @@
+   1                             		.file	"arm_q7_to_q15_with_offset.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_q7_to_q15_with_offset,"ax",@progbits
+   5                             		.global	_arm_q7_to_q15_with_offset
+   7                             	_arm_q7_to_q15_with_offset:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c"
+   1:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** /*
+   2:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  *
+   4:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  *
+   6:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * not use this file except in_q7x4 compliance with the License.
+   8:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  *
+  10:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  *
+  12:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * Unless required by applicable law or agreed to in_q7x4 writing, software
+  13:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  */
+  18:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  19:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * Title:        arm_q7_to_q15_with_offset.c
+  22:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * Description:  Converts the elements of the Q7 vector to Q15 vector with an added offset
+  23:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  *
+  24:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * $Date:        March 3, 2020
+  25:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * $Revision:    V.2.0.2
+  26:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  *
+  27:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  *
+  29:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  31:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** #include "arm_nnsupportfunctions.h"
+  32:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  33:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** /**
+  34:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * @ingroup groupSupport
+  35:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  */
+  36:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  37:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** /**
+  38:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * @addtogroup nndata_convert
+  39:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  * @{
+  40:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****  */
+  41:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  42:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** void arm_q7_to_q15_with_offset(const q7_t *src, q15_t *dst, uint32_t block_size, q15_t offset)
+  43:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** {
+  10                             		.loc 1 43 1
+  11                             	.LVL0:
+  44:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     int block_cnt;
+  12                             		.loc 1 44 5
+  45:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** #if defined(ARM_MATH_MVEI)
+  47:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  48:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     int16x8_t source;
+  49:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     const int16x8_t source_offset = vdupq_n_s16(offset);
+  50:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     block_cnt = block_size / 8;
+  51:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  52:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     while (block_cnt > 0)
+  53:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     {
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         source = vldrbq_s16(src);
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         source = vaddq_s16(source, source_offset);
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         vstrhq_s16(dst, source);
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         dst += 8;
+  58:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         src += 8;
+  59:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         block_cnt--;
+  60:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     }
+  61:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  62:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     block_cnt = block_size & 0x7;
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  64:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** #elif defined(ARM_MATH_DSP)
+  65:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     /* Run the below code for cores that support SIMD instructions  */
+  66:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     q31_t in_q7x4;
+  67:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     q31_t in_q15x2_1;
+  68:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     q31_t in_q15x2_2;
+  69:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     q31_t out_q15x2_1;
+  70:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     q31_t out_q15x2_2;
+  71:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  72:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     /*loop unrolling */
+  73:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     block_cnt = block_size >> 2;
+  74:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  75:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     /* First part of the processing with loop unrolling.  Compute 4 outputs at a time. */
+  76:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     const q31_t offset_q15x2 = __PKHBT(offset, offset, 16);
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     while (block_cnt > 0)
+  78:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     {
+  79:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         /* convert from q7 to q15 and then store the results in the destination buffer */
+  80:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         in_q7x4 = arm_nn_read_q7x4_ia(&src);
+  81:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  82:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         /* Extract and sign extend each of the four q7 values to q15 */
+  83:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         in_q15x2_1 = __SXTAB16(offset_q15x2, __ROR(in_q7x4, 8));
+  84:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         in_q15x2_2 = __SXTAB16(offset_q15x2, in_q7x4);
+  85:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  86:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         out_q15x2_2 = __PKHTB(in_q15x2_1, in_q15x2_2, 16);
+  87:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         out_q15x2_1 = __PKHBT(in_q15x2_2, in_q15x2_1, 16);
+  88:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  89:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         arm_nn_write_q15x2_ia(&dst, out_q15x2_1);
+  90:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         arm_nn_write_q15x2_ia(&dst, out_q15x2_2);
+  91:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  92:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         block_cnt--;
+  93:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     }
+  94:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     /* Handle left over samples */
+  95:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     block_cnt = block_size % 0x4;
+  96:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+  97:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** #else
+  98:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     /* Run the below code for Cortex-M0 */
+  99:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     /* Loop over block_size number of values */
+ 100:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     block_cnt = block_size;
+  13                             		.loc 1 100 5
+ 101:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** #endif
+ 102:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+ 103:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     while (block_cnt > 0)
+  14                             		.loc 1 103 5
+  15 0000 FF 2E 31                		add	r3, r1, r14
+  16                             		.loc 1 103 11 is_stmt 0
+  17 0003 61 03                   		cmp	#0, r3
+  18 0005 2B 13                   		ble	.L1
+  19                             	.LVL1:
+  20 0007 03                      		.balign 8,3,1
+  21                             	.L3:
+ 104:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     {
+ 105:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         *dst++ = (q15_t)*src++ + offset;
+  22                             		.loc 1 105 9 is_stmt 1
+  23                             		.loc 1 105 29 is_stmt 0
+  24 0008 62 11                   		add	#1, r1
+  25                             	.LVL2:
+  26                             		.loc 1 105 25
+  27 000a 71 15 FF                		add	#-1, r1, r5
+  28 000d CC 55                   		mov.B	[r5], r5
+  29                             		.loc 1 105 32
+  30 000f 4B 45                   		add	r4, r5
+  31                             		.loc 1 105 16
+  32 0011 FD 21 25                		mov.W	r5, [r2+]
+  33                             	.LVL3:
+ 106:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** 
+ 107:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         /* Decrement the loop counter */
+ 108:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****         block_cnt--;
+  34                             		.loc 1 108 9 is_stmt 1
+ 103:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     {
+  35                             		.loc 1 103 11 is_stmt 0
+  36 0014 47 E1                   		cmp	r14, r1
+  37 0016 21 F2                   		bne	.L3
+  38                             	.LVL4:
+  39                             	.L1:
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c ****     }
+ 110:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_with_offset.c **** }
+  40                             		.loc 1 110 1
+  41 0018 02                      		rts
+  42                             	.LFE82:
+  70                             	.Letext0:
+  71                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  72                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  73                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  74                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  75                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  76                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  77                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  78                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  79                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

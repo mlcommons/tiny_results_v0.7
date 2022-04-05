@@ -1,0 +1,181 @@
+   1                             		.file	"arm_nn_activations_q7.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_nn_activations_direct_q7,"ax",@progbits
+   5                             		.global	_arm_nn_activations_direct_q7
+   7                             	_arm_nn_activations_direct_q7:
+   8                             	.LFB27:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c"
+   1:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** /*
+   2:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+   4:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+   6:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  10:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  12:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  */
+  18:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** 
+  19:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Title:        arm_nn_activations_q7.c
+  22:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Description:  Q7 neural network activation function using direct table look-up
+  23:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  24:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * $Revision:    V.1.0.1
+  26:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  27:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  29:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** 
+  31:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** #include "arm_nn_tables.h"
+  32:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** #include "arm_nnfunctions.h"
+  33:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** 
+  34:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** /**
+  35:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *  @ingroup groupNN
+  36:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  */
+  37:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** 
+  38:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** /**
+  39:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @addtogroup Acti
+  40:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @{
+  41:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  */
+  42:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** 
+  43:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** /**
+  44:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @brief Q7 neural network activation function using direct table look-up
+  45:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @param[in,out]   data        pointer to input
+  46:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @param[in]       size        number of elements
+  47:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @param[in]       int_width   bit-width of the integer part, assume to be smaller than 3
+  48:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @param[in]       type        type of activation functions
+  49:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  50:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * @details
+  51:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  52:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * This is the direct table look-up approach.
+  53:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  *
+  54:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * Assume here the integer part of the fixed-point is <= 3.
+  55:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * More than 3 just not making much sense, makes no difference with
+  56:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  * saturation followed by any of these activation functions.
+  57:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****  */
+  58:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** 
+  59:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** void arm_nn_activations_direct_q7(q7_t *data, uint16_t size, uint16_t int_width, arm_nn_activation_
+  60:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** {
+  10                             		.loc 1 60 1
+  11                             	.LVL0:
+  61:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     uint16_t i = size;
+  62:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     q7_t *pIn = data;
+  63:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     q7_t *pOut = data;
+  64:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     q7_t in;
+  65:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     q7_t out;
+  66:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     uint16_t shift_size = 3 - int_width;
+  67:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     const q7_t *lookup_table;
+  68:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     switch (type)
+  69:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     {
+  70:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     case ARM_SIGMOID:
+  71:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         lookup_table = sigmoidTable_q7;
+  72:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         break;
+  73:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     case ARM_TANH:
+  74:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     default:
+  75:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         lookup_table = tanhTable_q7;
+  76:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         break;
+  77:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     }
+  78:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     while (i)
+  12                             		.loc 1 78 11 is_stmt 0
+  13 0000 5F 2E                   		movu.W	r2, r14
+  61:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     uint16_t i = size;
+  14                             		.loc 1 61 5 is_stmt 1
+  15                             	.LVL1:
+  62:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     q7_t *pOut = data;
+  16                             		.loc 1 62 5
+  63:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     q7_t in;
+  17                             		.loc 1 63 5
+  64:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     q7_t out;
+  18                             		.loc 1 64 5
+  65:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     uint16_t shift_size = 3 - int_width;
+  19                             		.loc 1 65 5
+  66:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     const q7_t *lookup_table;
+  20                             		.loc 1 66 5
+  75:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         break;
+  21                             		.loc 1 75 22 is_stmt 0
+  22 0002 61 04                   		cmp	#0, r4
+  23 0004 FB 42 00 00 00 00       		mov.L	#_sigmoidTable_q7, r4
+  24                             	.LVL2:
+  25 000a FD 70 F4 00 00 00 00    		stnz	#_tanhTable_q7, r4
+  66:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     const q7_t *lookup_table;
+  26                             		.loc 1 66 14
+  27 0011 66 35                   		mov.L	#3, r5
+  28 0013 FF 03 35                		sub	r3, r5, r3
+  29                             	.LVL3:
+  67:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     switch (type)
+  30                             		.loc 1 67 5 is_stmt 1
+  68:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     {
+  31                             		.loc 1 68 5
+  32                             		.loc 1 78 11 is_stmt 0
+  33 0016 61 0E                   		cmp	#0, r14
+  34 0018 20 24                   		beq	.L1
+  35 001a 60 12                   		sub	#1, r2
+  36                             	.LVL4:
+  37 001c 5F 33                   		movu.W	r3, r3
+  38                             	.LVL5:
+  39 001e 5F 22                   		movu.W	r2, r2
+  40 0020 71 2E 01                		add	#1, r2, r14
+  41                             	.LVL6:
+  42 0023 4B 1E                   		add	r1, r14
+  43                             	.LVL7:
+  44                             		.balign 8,3,1
+  45                             	.L3:
+  79:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     {
+  80:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         in = *pIn++;
+  46                             		.loc 1 80 9 is_stmt 1
+  47                             		.loc 1 80 18 is_stmt 0
+  48 0025 62 11                   		add	#1, r1
+  49                             	.LVL8:
+  81:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         out = lookup_table[(uint8_t)(in >> shift_size)];
+  50                             		.loc 1 81 9 is_stmt 1
+  80:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         out = lookup_table[(uint8_t)(in >> shift_size)];
+  51                             		.loc 1 80 12 is_stmt 0
+  52 0027 EF 12                   		mov.L	r1, r2
+  53                             		.loc 1 81 41
+  54 0029 FD 2C 25                		mov.B	[-r2], r5
+  55                             	.LVL9:
+  56 002c FD 61 35                		shar	r3, r5
+  57                             		.loc 1 81 28
+  58 002f 76 25 FF 00             		and #0xff, r5
+  59                             	.LVL10:
+  82:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         *pOut++ = out;
+  60                             		.loc 1 82 9 is_stmt 1
+  61                             		.loc 1 82 17 is_stmt 0
+  62 0033 FE 45 45                		mov.B	[r5,r4], r5
+  63                             	.LVL11:
+  64 0036 C3 25                   		mov.B	r5, [r2]
+  65                             	.LVL12:
+  83:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****         i--;
+  66                             		.loc 1 83 9 is_stmt 1
+  78:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     {
+  67                             		.loc 1 78 11 is_stmt 0
+  68 0038 47 E1                   		cmp	r14, r1
+  69 003a 21 EB                   		bne	.L3
+  70                             	.LVL13:
+  71                             	.L1:
+  84:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c ****     }
+  85:../src/CMSIS/NN/Source/ActivationFunctions/arm_nn_activations_q7.c **** }
+  72                             		.loc 1 85 1
+  73 003c 02                      		rts
+  74                             	.LFE27:
+ 102                             	.Letext0:
+ 103                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 104                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 105                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 106                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 107                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 108                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 109                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 110                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 111                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 112                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

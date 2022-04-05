@@ -1,0 +1,92 @@
+   1                             		.file	"RX65N_Cloud_Kit.cpp"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.startup.main,"ax",@progbits
+   5                             		.global	_main
+   7                             	_main:
+   8                             	.LFB8:
+   9                             		.file 1 "../src/RX65N_Cloud_Kit.cpp"
+   1:../src/RX65N_Cloud_Kit.cpp **** /**************************************************************************************************
+   2:../src/RX65N_Cloud_Kit.cpp **** * DISCLAIMER
+   3:../src/RX65N_Cloud_Kit.cpp **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/RX65N_Cloud_Kit.cpp **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/RX65N_Cloud_Kit.cpp **** * applicable laws, including copyright laws.
+   6:../src/RX65N_Cloud_Kit.cpp **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHE
+   7:../src/RX65N_Cloud_Kit.cpp **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/RX65N_Cloud_Kit.cpp **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/RX65N_Cloud_Kit.cpp **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/RX65N_Cloud_Kit.cpp **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/RX65N_Cloud_Kit.cpp **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/RX65N_Cloud_Kit.cpp **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/RX65N_Cloud_Kit.cpp **** * of this software.
+  14:../src/RX65N_Cloud_Kit.cpp **** *
+  15:../src/RX65N_Cloud_Kit.cpp **** * Copyright (C) 2022 Renesas Electronics Corporation. All rights reserved.
+  16:../src/RX65N_Cloud_Kit.cpp **** ***************************************************************************************************
+  17:../src/RX65N_Cloud_Kit.cpp **** 
+  18:../src/RX65N_Cloud_Kit.cpp **** #ifdef __cplusplus
+  19:../src/RX65N_Cloud_Kit.cpp **** extern "C" {
+  20:../src/RX65N_Cloud_Kit.cpp **** #endif
+  21:../src/RX65N_Cloud_Kit.cpp **** #include "r_smc_entry.h"
+  22:../src/RX65N_Cloud_Kit.cpp **** #include "monitor/ee_main.h"
+  23:../src/RX65N_Cloud_Kit.cpp **** 
+  24:../src/RX65N_Cloud_Kit.cpp **** uint8_t uart_receive_getch(void);
+  25:../src/RX65N_Cloud_Kit.cpp **** 
+  26:../src/RX65N_Cloud_Kit.cpp **** 
+  27:../src/RX65N_Cloud_Kit.cpp **** #ifdef __cplusplus
+  28:../src/RX65N_Cloud_Kit.cpp **** }
+  29:../src/RX65N_Cloud_Kit.cpp **** #endif
+  30:../src/RX65N_Cloud_Kit.cpp **** 
+  31:../src/RX65N_Cloud_Kit.cpp **** #include "tensorflow/lite/micro/examples/main_functions.h"
+  32:../src/RX65N_Cloud_Kit.cpp **** 
+  33:../src/RX65N_Cloud_Kit.cpp **** int main(void)
+  34:../src/RX65N_Cloud_Kit.cpp **** {
+  10                             		.loc 1 34 1
+  35:../src/RX65N_Cloud_Kit.cpp **** 	char ch=0;
+  11                             		.loc 1 35 2
+  12                             	.LVL0:
+  36:../src/RX65N_Cloud_Kit.cpp **** 
+  37:../src/RX65N_Cloud_Kit.cpp ****     ee_benchmark_initialize();
+  13                             		.loc 1 37 5
+  14                             		.loc 1 37 28 is_stmt 0
+  15 0000 05 00 00 00             		bsr	_ee_benchmark_initialize
+  16                             	.LVL1:
+  17                             		.balign 8,3,3
+  18                             	.L2:
+  38:../src/RX65N_Cloud_Kit.cpp **** 
+  39:../src/RX65N_Cloud_Kit.cpp **** 	while(1) {
+  19                             		.loc 1 39 2 is_stmt 1
+  40:../src/RX65N_Cloud_Kit.cpp **** 
+  41:../src/RX65N_Cloud_Kit.cpp **** 	// TODO: add application code here
+  42:../src/RX65N_Cloud_Kit.cpp **** 	       ch = (char)uart_receive_getch();
+  20                             		.loc 1 42 9
+  21                             		.loc 1 42 38 is_stmt 0
+  22 0004 05 00 00 00             		bsr	_uart_receive_getch
+  23                             	.LVL2:
+  43:../src/RX65N_Cloud_Kit.cpp **** 	       if( ch != 0)
+  24                             		.loc 1 43 9 is_stmt 1
+  25 0008 61 01                   		cmp	#0, r1
+  26 000a 20 FA                   		beq	.L2
+  44:../src/RX65N_Cloud_Kit.cpp **** 	        {
+  45:../src/RX65N_Cloud_Kit.cpp **** 	            ee_serial_callback(ch);
+  27                             		.loc 1 45 14
+  28                             		.loc 1 45 32 is_stmt 0
+  29 000c 05 00 00 00             		bsr	_ee_serial_callback
+  30                             	.LVL3:
+  31 0010 2E F4                   		bra	.L2
+  32                             	.LFE8:
+  60                             	.Letext0:
+  61                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  62                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  63                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  64                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  65                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  66                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  67                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+  68                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+  69                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+  70                             		.file 11 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+  71                             		.file 12 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+  72                             		.file 13 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+  73                             		.file 14 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+  74                             		.file 15 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EE
+  75                             		.file 16 "<built-in>"

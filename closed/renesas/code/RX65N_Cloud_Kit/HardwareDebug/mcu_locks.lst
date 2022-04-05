@@ -1,0 +1,23 @@
+   1                             		.file	"mcu_locks.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.global	_g_bsp_Locks
+   5                             		.section	.bss.g_bsp_Locks,"aw",@nobits
+   6                             		.balign 4
+   9                             	_g_bsp_Locks:
+  10 0000 00 00 00 00 00 00 00 00 		.zero	464
+  10      00 00 00 00 00 00 00 00 
+  10      00 00 00 00 00 00 00 00 
+  10      00 00 00 00 00 00 00 00 
+  10      00 00 00 00 00 00 00 00 
+  11                             		.section P,"ax"
+  12                             	.Letext0:
+  13                             		.file 1 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  14                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  15                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  16                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  17                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  18                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  19                             		.file 7 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+  20                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+  21                             		.file 9 "../src/smc_gen/r_bsp/mcu/all/mcu_locks.c"

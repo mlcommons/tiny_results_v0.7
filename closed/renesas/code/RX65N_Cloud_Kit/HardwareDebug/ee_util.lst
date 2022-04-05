@@ -1,0 +1,211 @@
+   1                             		.file	"ee_util.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.ee_hexdec,"ax",@progbits
+   5                             		.global	_ee_hexdec
+   7                             	_ee_hexdec:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/EEMBC/profile/ee_util.c"
+   1:../src/EEMBC/profile/ee_util.c **** /**
+   2:../src/EEMBC/profile/ee_util.c ****  * Copyright (C) EEMBC(R). All Rights Reserved
+   3:../src/EEMBC/profile/ee_util.c ****  *
+   4:../src/EEMBC/profile/ee_util.c ****  * All EEMBC Benchmark Software are products of EEMBC and are provided under the
+   5:../src/EEMBC/profile/ee_util.c ****  * terms of the EEMBC Benchmark License Agreements. The EEMBC Benchmark Software
+   6:../src/EEMBC/profile/ee_util.c ****  * are proprietary intellectual properties of EEMBC and its Members and is
+   7:../src/EEMBC/profile/ee_util.c ****  * protected under all applicable laws, including all applicable copyright laws.
+   8:../src/EEMBC/profile/ee_util.c ****  *
+   9:../src/EEMBC/profile/ee_util.c ****  * If you received this EEMBC Benchmark Software without having a currently
+  10:../src/EEMBC/profile/ee_util.c ****  * effective EEMBC Benchmark License Agreement, you must discontinue use.
+  11:../src/EEMBC/profile/ee_util.c ****  */
+  12:../src/EEMBC/profile/ee_util.c **** 
+  13:../src/EEMBC/profile/ee_util.c **** #include "profile/ee_util.h"
+  14:../src/EEMBC/profile/ee_util.c **** 
+  15:../src/EEMBC/profile/ee_util.c **** /**
+  16:../src/EEMBC/profile/ee_util.c ****  * @brief convert a hexidecimal string to a signed long
+  17:../src/EEMBC/profile/ee_util.c ****  * will not produce or process negative numbers except
+  18:../src/EEMBC/profile/ee_util.c ****  * to signal error.
+  19:../src/EEMBC/profile/ee_util.c ****  *
+  20:../src/EEMBC/profile/ee_util.c ****  * @param hex without decoration, case insensitive.
+  21:../src/EEMBC/profile/ee_util.c ****  *
+  22:../src/EEMBC/profile/ee_util.c ****  * @return -1 on error, or result (max (sizeof(long)*8)-1 bits)
+  23:../src/EEMBC/profile/ee_util.c ****  *
+  24:../src/EEMBC/profile/ee_util.c ****  */
+  25:../src/EEMBC/profile/ee_util.c **** long
+  26:../src/EEMBC/profile/ee_util.c **** ee_hexdec(char *hex)
+  27:../src/EEMBC/profile/ee_util.c **** {
+  10                             		.loc 1 27 1
+  11                             	.LVL0:
+  28:../src/EEMBC/profile/ee_util.c ****     char c;
+  12                             		.loc 1 28 5
+  29:../src/EEMBC/profile/ee_util.c ****     long dec = 0;
+  13                             		.loc 1 29 5
+  30:../src/EEMBC/profile/ee_util.c ****     long ret = 0;
+  14                             		.loc 1 30 5
+  31:../src/EEMBC/profile/ee_util.c **** 
+  32:../src/EEMBC/profile/ee_util.c ****     while (*hex && ret >= 0)
+  15                             		.loc 1 32 5
+  16                             		.loc 1 32 12 is_stmt 0
+  17 0000 CC 15                   		mov.B	[r1], r5
+  18                             		.loc 1 32 11
+  19 0002 5B 54                   		movu.B	r5, r4
+  20 0004 61 04                   		cmp	#0, r4
+  21 0006 20 52                   		beq	.L7
+  22 0008 71 1E 01                		add	#1, r1, r14
+  30:../src/EEMBC/profile/ee_util.c ****     long ret = 0;
+  23                             		.loc 1 30 10
+  24 000b 66 01                   		mov.L	#0, r1
+  25                             	.LVL1:
+  26 000d 2E 17                   		bra	.L6
+  27                             	.LVL2:
+  28                             	.L15:
+  33:../src/EEMBC/profile/ee_util.c ****     {
+  34:../src/EEMBC/profile/ee_util.c ****         c = *hex++;
+  35:../src/EEMBC/profile/ee_util.c ****         if (c >= '0' && c <= '9')
+  36:../src/EEMBC/profile/ee_util.c ****         {
+  37:../src/EEMBC/profile/ee_util.c ****             dec = c - '0';
+  29                             		.loc 1 37 17
+  30 000f 71 44 D0                		add	#-48, r4
+  31                             	.LVL3:
+  32                             		.balign 8,3,1
+  33                             	.L4:
+  38:../src/EEMBC/profile/ee_util.c ****         }
+  39:../src/EEMBC/profile/ee_util.c ****         else if (c >= 'a' && c <= 'f')
+  40:../src/EEMBC/profile/ee_util.c ****         {
+  41:../src/EEMBC/profile/ee_util.c ****             dec = c - 'a' + 10;
+  42:../src/EEMBC/profile/ee_util.c ****         }
+  43:../src/EEMBC/profile/ee_util.c ****         else if (c >= 'A' && c <= 'F')
+  44:../src/EEMBC/profile/ee_util.c ****         {
+  45:../src/EEMBC/profile/ee_util.c ****             dec = c - 'A' + 10;
+  46:../src/EEMBC/profile/ee_util.c ****         }
+  47:../src/EEMBC/profile/ee_util.c ****         else
+  48:../src/EEMBC/profile/ee_util.c ****         {
+  49:../src/EEMBC/profile/ee_util.c ****             return -1;
+  50:../src/EEMBC/profile/ee_util.c ****         }
+  51:../src/EEMBC/profile/ee_util.c ****         ret = (ret << 4) + dec;
+  34                             		.loc 1 51 9 is_stmt 1
+  35                             		.loc 1 51 20 is_stmt 0
+  36 0012 6C 41                   		shll	#4, r1
+  37                             	.LVL4:
+  32:../src/EEMBC/profile/ee_util.c ****     {
+  38                             		.loc 1 32 12
+  39 0014 FD 28 E5                		mov.B	[r14+], r5
+  40                             	.LVL5:
+  41                             		.loc 1 51 13
+  42 0017 4B 41                   		add	r4, r1
+  43                             	.LVL6:
+  32:../src/EEMBC/profile/ee_util.c ****     {
+  44                             		.loc 1 32 11
+  45 0019 5B 54                   		movu.B	r5, r4
+  46                             	.LVL7:
+  47 001b 61 04                   		cmp	#0, r4
+  48 001d 20 29                   		beq	.L1
+  49                             	.LVL8:
+  50 001f 03                      		.balign 8,3,1
+  51                             	.L16:
+  32:../src/EEMBC/profile/ee_util.c ****     {
+  52                             		.loc 1 32 17 discriminator 1
+  53 0020 61 01                   		cmp	#0, r1
+  54 0022 29 35                   		blt	.L14
+  55                             	.LVL9:
+  56                             		.balign 8,3,2
+  57                             	.L6:
+  34:../src/EEMBC/profile/ee_util.c ****         if (c >= '0' && c <= '9')
+  58                             		.loc 1 34 9 is_stmt 1
+  35:../src/EEMBC/profile/ee_util.c ****         {
+  59                             		.loc 1 35 9
+  37:../src/EEMBC/profile/ee_util.c ****         }
+  60                             		.loc 1 37 13
+  39:../src/EEMBC/profile/ee_util.c ****         {
+  61                             		.loc 1 39 14
+  35:../src/EEMBC/profile/ee_util.c ****         {
+  62                             		.loc 1 35 22 is_stmt 0
+  63 0024 71 53 D0                		add	#-48, r5, r3
+  39:../src/EEMBC/profile/ee_util.c ****         {
+  64                             		.loc 1 39 27
+  65 0027 71 52 9F                		add	#-97, r5, r2
+  35:../src/EEMBC/profile/ee_util.c ****         {
+  66                             		.loc 1 35 12
+  67 002a 5B 33                   		movu.B	r3, r3
+  39:../src/EEMBC/profile/ee_util.c ****         {
+  68                             		.loc 1 39 17
+  69 002c 5B 22                   		movu.B	r2, r2
+  35:../src/EEMBC/profile/ee_util.c ****         {
+  70                             		.loc 1 35 12
+  71 002e 61 93                   		cmp	#9, r3
+  72 0030 25 DF                   		bleu	.L15
+  41:../src/EEMBC/profile/ee_util.c ****         }
+  73                             		.loc 1 41 13 is_stmt 1
+  43:../src/EEMBC/profile/ee_util.c ****         {
+  74                             		.loc 1 43 14
+  45:../src/EEMBC/profile/ee_util.c ****         }
+  75                             		.loc 1 45 13
+  39:../src/EEMBC/profile/ee_util.c ****         {
+  76                             		.loc 1 39 17 is_stmt 0
+  77 0032 61 52                   		cmp	#5, r2
+  78 0034 24 13                   		bgtu	.L5
+  41:../src/EEMBC/profile/ee_util.c ****         }
+  79                             		.loc 1 41 17
+  80 0036 71 44 A9                		add	#-87, r4
+  81                             	.LVL10:
+  82                             		.loc 1 51 9 is_stmt 1
+  83                             		.loc 1 51 20 is_stmt 0
+  84 0039 6C 41                   		shll	#4, r1
+  85                             	.LVL11:
+  32:../src/EEMBC/profile/ee_util.c ****     {
+  86                             		.loc 1 32 12
+  87 003b FD 28 E5                		mov.B	[r14+], r5
+  88                             	.LVL12:
+  89                             		.loc 1 51 13
+  90 003e 4B 41                   		add	r4, r1
+  91                             	.LVL13:
+  32:../src/EEMBC/profile/ee_util.c ****     {
+  92                             		.loc 1 32 11
+  93 0040 5B 54                   		movu.B	r5, r4
+  94                             	.LVL14:
+  95 0042 61 04                   		cmp	#0, r4
+  96 0044 21 DC                   		bne	.L16
+  97                             	.LVL15:
+  98                             	.L1:
+  52:../src/EEMBC/profile/ee_util.c ****     }
+  53:../src/EEMBC/profile/ee_util.c ****     return ret;
+  54:../src/EEMBC/profile/ee_util.c **** }
+  99                             		.loc 1 54 1
+ 100 0046 02                      		rts
+ 101                             	.LVL16:
+ 102                             	.L5:
+  43:../src/EEMBC/profile/ee_util.c ****         {
+ 103                             		.loc 1 43 27
+ 104 0047 71 55 BF                		add	#-65, r5
+ 105                             	.LVL17:
+  45:../src/EEMBC/profile/ee_util.c ****         }
+ 106                             		.loc 1 45 17
+ 107 004a 71 44 C9                		add	#-55, r4
+ 108                             	.LVL18:
+  43:../src/EEMBC/profile/ee_util.c ****         {
+ 109                             		.loc 1 43 17
+ 110 004d 5B 55                   		movu.B	r5, r5
+ 111 004f 61 55                   		cmp	#5, r5
+ 112 0051 25 C1                   		bleu	.L4
+  49:../src/EEMBC/profile/ee_util.c ****         }
+ 113                             		.loc 1 49 20
+ 114 0053 FB 16 FF                		mov.L	#-1, r1
+ 115                             	.LVL19:
+ 116                             		.loc 1 54 1
+ 117 0056 02                      		rts
+ 118                             	.LVL20:
+ 119                             	.L14:
+ 120 0057 02                      		rts
+ 121                             	.LVL21:
+ 122                             	.L7:
+  30:../src/EEMBC/profile/ee_util.c **** 
+ 123                             		.loc 1 30 10
+ 124 0058 66 01                   		mov.L	#0, r1
+ 125                             	.LVL22:
+ 126 005a 02                      		rts
+ 127                             	.LFE3:
+ 155                             	.Letext0:
+ 156                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 157                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 158                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 159                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 160                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h"

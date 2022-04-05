@@ -1,0 +1,188 @@
+   1                             		.file	"Config_MTU2.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.R_Config_MTU2_Create,"ax",@progbits
+   5                             		.global	_R_Config_MTU2_Create
+   7                             	_R_Config_MTU2_Create:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/Config_MTU2/Config_MTU2.c"
+   1:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+   2:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * DISCLAIMER
+   3:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * applicable laws, including copyright laws. 
+   6:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHE
+   7:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * of this software. 
+  14:../src/smc_gen/Config_MTU2/Config_MTU2.c **** *
+  15:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Copyright (C) 2019 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  17:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  18:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+  19:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * File Name    : Config_MTU2.c
+  20:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Version      : 1.9.2
+  21:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Device(s)    : R5F565NEDxFP
+  22:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Description  : This file implements device driver for Config_MTU2.
+  23:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Creation Date: 2021-06-15
+  24:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  25:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  26:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+  27:../src/smc_gen/Config_MTU2/Config_MTU2.c **** Pragma directive
+  28:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  29:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /* Start user code for pragma. Do not edit comment generated here */
+  30:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /* End user code. Do not edit comment generated here */
+  31:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  32:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+  33:../src/smc_gen/Config_MTU2/Config_MTU2.c **** Includes
+  34:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  35:../src/smc_gen/Config_MTU2/Config_MTU2.c **** #include "r_cg_macrodriver.h"
+  36:../src/smc_gen/Config_MTU2/Config_MTU2.c **** #include "Config_MTU2.h"
+  37:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /* Start user code for include. Do not edit comment generated here */
+  38:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /* End user code. Do not edit comment generated here */
+  39:../src/smc_gen/Config_MTU2/Config_MTU2.c **** #include "r_cg_userdefine.h"
+  40:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  41:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+  42:../src/smc_gen/Config_MTU2/Config_MTU2.c **** Global variables and functions
+  43:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  44:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /* Start user code for global. Do not edit comment generated here */
+  45:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /* End user code. Do not edit comment generated here */
+  46:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  47:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+  48:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Function Name: R_Config_MTU2_Create
+  49:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Description  : This function initializes the MTU2 channel
+  50:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Arguments    : None
+  51:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Return Value : None
+  52:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  53:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  54:../src/smc_gen/Config_MTU2/Config_MTU2.c **** void R_Config_MTU2_Create(void)
+  55:../src/smc_gen/Config_MTU2/Config_MTU2.c **** {
+  10                             		.loc 1 55 1
+  56:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     /* Release MTU channel 2 from stop state */
+  57:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MSTP(MTU3) = 0U;
+  11                             		.loc 1 57 5
+  12                             		.loc 1 57 16 is_stmt 0
+  13 0000 FB 3E 00 00 08          		mov.L	#0x80000, r3
+  58:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  59:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     /* Stop MTU channel 2 counter */
+  60:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU.TSTRA.BIT.CST2 = 0U;
+  14                             		.loc 1 60 24
+  15 0005 FB 4E 0A 12 0C          		mov.L	#0xc120a, r4
+  57:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  16                             		.loc 1 57 16
+  17 000a A9 32                   		mov.L	16[r3], r2
+  61:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  62:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     /* MTU channel 2 is used as normal mode */
+  63:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU.TSYRA.BIT.SYNC2 = 0U;
+  64:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TCR.BYTE = _00_MTU_CKEG_RISE | _00_MTU_CKCL_DIS;
+  18                             		.loc 1 64 19
+  19 000c FB 5E 92 12 0C          		mov.L	#0xc1292, r5
+  57:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  20                             		.loc 1 57 16
+  21 0011 7A 92                   		bclr	#9, r2
+  22 0013 A1 32                   		mov.L	r2, 16[r3]
+  60:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  23                             		.loc 1 60 5 is_stmt 1
+  60:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  24                             		.loc 1 60 24 is_stmt 0
+  25 0015 F1 4A 76                		bclr	#2, 118[r4].B
+  63:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TCR.BYTE = _00_MTU_CKEG_RISE | _00_MTU_CKCL_DIS;
+  26                             		.loc 1 63 5 is_stmt 1
+  63:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TCR.BYTE = _00_MTU_CKEG_RISE | _00_MTU_CKCL_DIS;
+  27                             		.loc 1 63 25 is_stmt 0
+  28 0018 F1 4A 77                		bclr	#2, 119[r4].B
+  29                             		.loc 1 64 5 is_stmt 1
+  30                             		.loc 1 64 19 is_stmt 0
+  31 001b FA 54 6E 01 00          		mov.B	#0, 366[r5]
+  65:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TCR2.BYTE = _02_MTU_PCLK_8;
+  32                             		.loc 1 65 5 is_stmt 1
+  33                             		.loc 1 65 20 is_stmt 0
+  34 0020 FA 54 7A 01 02          		mov.B	#2, 378[r5]
+  66:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TIER.BYTE = _00_MTU_TGIEA_DISABLE | _00_MTU_TGIEB_DISABLE | _00_MTU_TCIEV_DISABLE | _00_MT
+  35                             		.loc 1 66 5 is_stmt 1
+  36                             		.loc 1 66 20 is_stmt 0
+  37 0025 FA 54 72 01 00          		mov.B	#0, 370[r5]
+  67:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TIOR.BYTE = _00_MTU_IOA_DISABLE | _00_MTU_IOB_DISABLE;
+  38                             		.loc 1 67 5 is_stmt 1
+  39                             		.loc 1 67 20 is_stmt 0
+  40 002a FA 54 70 01 00          		mov.B	#0, 368[r5]
+  68:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TGRA = _02ED_TGRA2_VALUE;
+  41                             		.loc 1 68 5 is_stmt 1
+  42                             		.loc 1 68 15 is_stmt 0
+  43 002f F9 59 BB ED 02          		mov.W	#0x2ed, 374[r5]
+  69:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU2.TGRB = _02ED_TGRB2_VALUE;
+  44                             		.loc 1 69 5 is_stmt 1
+  45                             		.loc 1 69 15 is_stmt 0
+  46 0034 F9 59 BC ED 02          		mov.W	#0x2ed, 376[r5]
+  70:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  71:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     R_Config_MTU2_Create_UserInit();
+  47                             		.loc 1 71 5 is_stmt 1
+  48 0039 04 00 00 00             		bra	_R_Config_MTU2_Create_UserInit
+  49                             	.LVL0:
+  50                             	.LFE3:
+  52                             		.section	.text.R_Config_MTU2_Start,"ax",@progbits
+  53                             		.global	_R_Config_MTU2_Start
+  55                             	_R_Config_MTU2_Start:
+  56                             	.LFB4:
+  72:../src/smc_gen/Config_MTU2/Config_MTU2.c **** }
+  73:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  74:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+  75:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Function Name: R_Config_MTU2_Start
+  76:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Description  : This function starts the MTU2 channel counter
+  77:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Arguments    : None
+  78:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Return Value : None
+  79:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  80:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  81:../src/smc_gen/Config_MTU2/Config_MTU2.c **** void R_Config_MTU2_Start(void)
+  82:../src/smc_gen/Config_MTU2/Config_MTU2.c **** {
+  57                             		.loc 1 82 1
+  83:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     /* Start MTU channel 2 counter */
+  84:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU.TSTRA.BIT.CST2 = 1U;
+  58                             		.loc 1 84 5
+  59                             		.loc 1 84 24 is_stmt 0
+  60 0000 FB 5E 0A 12 0C          		mov.L	#0xc120a, r5
+  61 0005 F1 52 76                		bset	#2, 118[r5].B
+  85:../src/smc_gen/Config_MTU2/Config_MTU2.c **** }
+  62                             		.loc 1 85 1
+  63 0008 02                      		rts
+  64                             	.LFE4:
+  66                             		.section	.text.R_Config_MTU2_Stop,"ax",@progbits
+  67                             		.global	_R_Config_MTU2_Stop
+  69                             	_R_Config_MTU2_Stop:
+  70                             	.LFB5:
+  86:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  87:../src/smc_gen/Config_MTU2/Config_MTU2.c **** /**************************************************************************************************
+  88:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Function Name: R_Config_MTU2_Stop
+  89:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Description  : This function stops the MTU2 channel counter
+  90:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Arguments    : None
+  91:../src/smc_gen/Config_MTU2/Config_MTU2.c **** * Return Value : None
+  92:../src/smc_gen/Config_MTU2/Config_MTU2.c **** ***************************************************************************************************
+  93:../src/smc_gen/Config_MTU2/Config_MTU2.c **** 
+  94:../src/smc_gen/Config_MTU2/Config_MTU2.c **** void R_Config_MTU2_Stop(void)
+  95:../src/smc_gen/Config_MTU2/Config_MTU2.c **** {
+  71                             		.loc 1 95 1 is_stmt 1
+  96:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     /* Stop MTU channel 2 counter */
+  97:../src/smc_gen/Config_MTU2/Config_MTU2.c ****     MTU.TSTRA.BIT.CST2 = 0U;
+  72                             		.loc 1 97 5
+  73                             		.loc 1 97 24 is_stmt 0
+  74 0000 FB 5E 0A 12 0C          		mov.L	#0xc120a, r5
+  75 0005 F1 5A 76                		bclr	#2, 118[r5].B
+  98:../src/smc_gen/Config_MTU2/Config_MTU2.c **** }
+  76                             		.loc 1 98 1
+  77 0008 02                      		rts
+  78                             	.LFE5:
+ 122                             	.Letext0:
+ 123                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 124                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 125                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 126                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 127                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 128                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 129                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 130                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 131                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 132                             		.file 11 "../src/smc_gen/Config_MTU2/Config_MTU2.h"

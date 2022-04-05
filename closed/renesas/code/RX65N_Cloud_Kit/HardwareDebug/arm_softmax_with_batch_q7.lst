@@ -1,0 +1,141 @@
+   1                             		.file	"arm_softmax_with_batch_q7.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_softmax_with_batch_q7,"ax",@progbits
+   5                             		.global	_arm_softmax_with_batch_q7
+   7                             	_arm_softmax_with_batch_q7:
+   8                             	.LFB27:
+   9                             		.file 1 "../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c"
+   1:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** /*
+   2:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * Copyright (C) 2010-2019 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+   4:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+   6:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  10:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  12:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  */
+  18:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** 
+  19:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * Title:        arm_softmax_with_batch_q7.c
+  22:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * Description:  Q7 softmax function
+  23:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  24:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * $Revision:    V.1.0.1
+  26:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  27:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * Target Processor:  Cortex-M and Cortex-A cores
+  28:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  29:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** 
+  31:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** 
+  33:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** /**
+  34:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *  @ingroup groupNN
+  35:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  */
+  36:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** 
+  37:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** /**
+  38:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @addtogroup Softmax
+  39:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @{
+  40:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  */
+  41:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** 
+  42:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** /**
+  43:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @brief Q7 softmax function with batch parameter
+  44:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @param[in]       vec_in      pointer to input vector
+  45:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @param[in]       nb_batches  number of batches
+  46:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @param[in]       dim_vec     input vector dimention
+  47:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @param[out]      p_out       pointer to output vector
+  48:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  49:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  * @details
+  50:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  51:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *  Here, instead of typical natural logarithm e based softmax, we use
+  52:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *  2-based softmax here, i.e.,:
+  53:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  54:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *  y_i = 2^(x_i) / sum(2^x_j)
+  55:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  56:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *  The relative output will be different here.
+  57:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *  But mathematically, the gradient will be the same
+  58:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *  with a log(2) scaling factor.
+  59:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  *
+  60:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****  */
+  61:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** 
+  62:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** void arm_softmax_with_batch_q7(const q7_t *vec_in, const uint16_t nb_batches, const uint16_t dim_ve
+  63:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** {
+  10                             		.loc 1 63 1
+  11                             	.LVL0:
+  12 0000 6E 6C                   		pushm	r6-r12
+  13                             	.LCFI0:
+  64:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****     for (int i = 0; i < nb_batches; i++)
+  14                             		.loc 1 64 5
+  15                             	.LBB2:
+  16                             		.loc 1 64 10
+  17                             	.LVL1:
+  18                             		.loc 1 64 23 is_stmt 0
+  19 0002 5F 2C                   		movu.W	r2, r12
+  20                             		.loc 1 64 5
+  21 0004 61 0C                   		cmp	#0, r12
+  22 0006 20 22                   		beq	.L1
+  23 0008 EF 17                   		mov.L	r1, r7
+  24 000a DF 39                   		mov.W	r3, r9
+  25 000c EF 4A                   		mov.L	r4, r10
+  26 000e 5F 3B                   		movu.W	r3, r11
+  27                             		.loc 1 64 14
+  28 0010 66 06                   		mov.L	#0, r6
+  29                             	.LVL2:
+  30                             		.balign 8,3,1
+  31                             	.L3:
+  65:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****     {
+  66:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****         arm_softmax_q7(vec_in, dim_vec, p_out);
+  32                             		.loc 1 66 9 is_stmt 1 discriminator 3
+  33 0012 EF A3                   		mov.L	r10, r3
+  34 0014 EF 71                   		mov.L	r7, r1
+  35 0016 DF 92                   		mov.W	r9, r2
+  64:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****     for (int i = 0; i < nb_batches; i++)
+  36                             		.loc 1 64 38 is_stmt 0 discriminator 3
+  37 0018 62 16                   		add	#1, r6
+  38                             	.LVL3:
+  67:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****         vec_in += dim_vec;
+  39                             		.loc 1 67 16 discriminator 3
+  40 001a 4B B7                   		add	r11, r7
+  41                             	.LVL4:
+  66:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****         vec_in += dim_vec;
+  42                             		.loc 1 66 9 discriminator 3
+  43 001c 05 00 00 00             		bsr	_arm_softmax_q7
+  44                             	.LVL5:
+  45                             		.loc 1 67 9 is_stmt 1 discriminator 3
+  68:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****         p_out += dim_vec;
+  46                             		.loc 1 68 9 discriminator 3
+  47                             		.loc 1 68 15 is_stmt 0 discriminator 3
+  48 0020 4B BA                   		add	r11, r10
+  49                             	.LVL6:
+  64:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****     {
+  50                             		.loc 1 64 5 discriminator 3
+  51 0022 47 C6                   		cmp	r12, r6
+  52 0024 21 EE                   		bne	.L3
+  53                             	.LVL7:
+  54 0026 EF 00                   		.balign 8,3,2
+  55                             	.L1:
+  56                             	.LBE2:
+  69:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c ****     }
+  70:../src/CMSIS/NN/Source/SoftmaxFunctions/arm_softmax_with_batch_q7.c **** }
+  57                             		.loc 1 70 1
+  58 0028 3F 6C 07                		rtsd	#28, r6-r12
+  59                             	.LFE27:
+ 105                             	.Letext0:
+ 106                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 107                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 108                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 109                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 110                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 111                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 112                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 113                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 114                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

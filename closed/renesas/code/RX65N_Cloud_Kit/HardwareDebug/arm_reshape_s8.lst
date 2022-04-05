@@ -1,0 +1,77 @@
+   1                             		.file	"arm_reshape_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_reshape_s8,"ax",@progbits
+   5                             		.global	_arm_reshape_s8
+   7                             	_arm_reshape_s8:
+   8                             	.LFB27:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c"
+   1:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** /*
+   2:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Copyright (C) 2010-2019 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+   4:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+   6:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+  10:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+  12:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  */
+  18:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** 
+  19:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Title:        arm_reshape_s8.c
+  22:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Description:  Reshape a s8 vector
+  23:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+  24:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * $Date:        September 2019
+  25:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * $Revision:    V.1.0.0
+  26:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+  27:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+  29:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** 
+  31:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** 
+  33:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** /**
+  34:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *  @ingroup groupNN
+  35:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  */
+  36:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** 
+  37:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** /**
+  38:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * @addtogroup Reshape
+  39:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * @{
+  40:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  */
+  41:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** 
+  42:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** /**
+  43:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Basic s8 reshape function.
+  44:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+  45:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  * Refer header file for details.
+  46:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  *
+  47:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****  */
+  48:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** 
+  49:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** void arm_reshape_s8(const int8_t *input, int8_t *output, const uint32_t total_size)
+  50:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** {
+  10                             		.loc 1 50 1
+  11                             	.LVL0:
+  51:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c ****     memcpy(output, input, total_size);
+  12                             		.loc 1 51 5
+  13 0000 FC 43 12                		xchg	r1, r2
+  14 0003 7F 8F                   		smovf
+  15                             	.LVL1:
+  52:../src/CMSIS/NN/Source/ReshapeFunctions/arm_reshape_s8.c **** }
+  16                             		.loc 1 52 1 is_stmt 0
+  17 0005 02                      		rts
+  18                             	.LFE27:
+  46                             	.Letext0:
+  47                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  48                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  49                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  50                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  51                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  52                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  53                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"

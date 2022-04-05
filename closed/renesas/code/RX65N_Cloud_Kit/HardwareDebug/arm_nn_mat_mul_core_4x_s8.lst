@@ -1,0 +1,326 @@
+   1                             		.file	"arm_nn_mat_mul_core_4x_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_nn_mat_mul_core_4x_s8,"ax",@progbits
+   5                             		.global	_arm_nn_mat_mul_core_4x_s8
+   7                             	_arm_nn_mat_mul_core_4x_s8:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c"
+   1:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** /*
+   2:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+   4:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+   6:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+  10:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+  12:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  */
+  18:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  19:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Title:        arm_nn_mat_mul_core_4x_s8.c
+  22:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Description:  General matrix multiplication function for MVE extension
+  23:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+  24:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * $Revision:    V.2.0.1
+  26:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+  27:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * -------------------------------------------------------------------- */
+  29:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  30:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** #include "arm_nnsupportfunctions.h"
+  31:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  32:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** /**
+  33:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * @ingroup groupSupport
+  34:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  */
+  35:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  36:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** /**
+  37:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * @addtogroup NNBasicMath
+  38:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * @{
+  39:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  */
+  40:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  41:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** /*
+  42:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * s8 matrix multiplication to process 4 rows and one column
+  43:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+  44:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  * Refer header file for details.
+  45:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  *
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****  */
+  47:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** arm_status arm_nn_mat_mul_core_4x_s8(const int32_t row_elements,
+  48:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                                      const int32_t offset,
+  49:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                                      const int8_t *row_base,
+  50:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                                      const int8_t *col_base,
+  51:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                                      int32_t *const sum_col,
+  52:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                                      int32_t *const output)
+  53:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** {
+  10                             		.loc 1 53 1
+  11                             	.LVL0:
+  12 0000 6E 6D                   		pushm	r6-r13
+  13                             	.LCFI0:
+  14 0002 71 00 EC                		add	#-20, r0
+  15                             	.LCFI1:
+  16                             		.loc 1 53 1 is_stmt 0
+  17 0005 75 47 38                		mov.L	#56, r7
+  18 0008 4B 07                   		add	r0, r7
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n0 = 0;
+  19                             		.loc 1 54 5 is_stmt 1
+  20                             	.LVL1:
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n1 = 0;
+  21                             		.loc 1 55 5
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n2 = 0;
+  22                             		.loc 1 56 5
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n3 = 0;
+  23                             		.loc 1 57 5
+  58:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  59:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     const int8_t *ip_row_0 = row_base;
+  24                             		.loc 1 59 5
+  60:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     const int8_t *ip_row_1 = row_base + offset;
+  25                             		.loc 1 60 5
+  61:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     const int8_t *ip_row_2 = row_base + (2 * offset);
+  26                             		.loc 1 61 5
+  62:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     const int8_t *ip_row_3 = row_base + (3 * offset);
+  27                             		.loc 1 62 5
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t sum_tmp = 0;
+  28                             		.loc 1 63 5
+  64:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  65:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** #if defined(ARM_MATH_MVEI) && !defined(ARM_MATH_AUTOVECTORIZE)
+  66:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     __ASM volatile("   vldrb.8         q0, [%[col]], 16     \n"
+  67:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   wlstp.8         lr, %[cnt], 1f       \n"
+  68:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "2:                                      \n"
+  69:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vaddva.s8      %[sum], q0            \n"
+  70:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vldrb.8         q1, [%[row0]], 16    \n"
+  71:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vmladava.s8    %[out0], q0, q1       \n"
+  72:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vldrb.8         q2, [%[row1]], 16    \n"
+  73:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vmladava.s8     %[out1], q0, q2      \n"
+  74:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vldrb.8         q3, [%[row2]], 16    \n"
+  75:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vmladava.s8     %[out2], q0, q3      \n"
+  76:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vldrb.8         q4, [%[row3]], 16    \n"
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vmladava.s8     %[out3], q0, q4      \n"
+  78:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   vldrb.8         q0, [%[col]], 16     \n"
+  79:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "   letp            lr, 2b               \n"
+  80:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    "1:                                      \n"
+  81:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    : [col] "+r"(col_base),
+  82:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [sum] "+Te"(sum_tmp),
+  83:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [row0] "+r"(ip_row_0),
+  84:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [row1] "+r"(ip_row_1),
+  85:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [row2] "+r"(ip_row_2),
+  86:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [row3] "+r"(ip_row_3),
+  87:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [out0] "+Te"(acc_n0),
+  88:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [out1] "+Te"(acc_n1),
+  89:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [out2] "+Te"(acc_n2),
+  90:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                      [out3] "+Te"(acc_n3)
+  91:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    : [cnt] "r"(row_elements)
+  92:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****                    : "q0", "q1", "q2", "q3", "q4", "memory", "r14");
+  93:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** #else
+  94:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     for (int i = 0; i < row_elements; i++)
+  29                             		.loc 1 94 5
+  30                             	.LBB2:
+  31                             		.loc 1 94 10
+  32                             	.LBE2:
+  53:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n0 = 0;
+  33                             		.loc 1 53 1 is_stmt 0
+  34 000a E4 70 02                		mov.L	[r7], 8[r0]
+  35 000d E5 70 01 01             		mov.L	4[r7], 4[r0]
+  36                             	.LBB4:
+  37                             		.loc 1 94 5
+  38 0011 61 01                   		cmp	#0, r1
+  39 0013 2B 59                   		ble	.L4
+  40 0015 FF 2D 23                		add	r2, r3, r13
+  41                             	.LVL2:
+  42 0018 4B 41                   		add	r4, r1
+  43                             	.LVL3:
+  44 001a E3 01                   		mov.L	r1, [r0]
+  45 001c FF 28 2D                		add	r2, r13, r8
+  46                             	.LBE4:
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t sum_tmp = 0;
+  47                             		.loc 1 63 13
+  48 001f 66 0A                   		mov.L	#0, r10
+  49 0021 FF 27 28                		add	r2, r8, r7
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+  50                             		.loc 1 57 13
+  51 0024 66 06                   		mov.L	#0, r6
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n3 = 0;
+  52                             		.loc 1 56 13
+  53 0026 66 0B                   		mov.L	#0, r11
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n2 = 0;
+  54                             		.loc 1 55 13
+  55 0028 66 0C                   		mov.L	#0, r12
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n1 = 0;
+  56                             		.loc 1 54 13
+  57 002a 66 09                   		mov.L	#0, r9
+  58                             	.LVL4:
+  59 002c 76 10 01 00             		.balign 8,3,5
+  60                             	.L3:
+  61                             	.LBB5:
+  62                             	.LBB3:
+  95:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     {
+  96:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         int32_t col = col_base[i];
+  63                             		.loc 1 96 9 is_stmt 1 discriminator 3
+  64                             		.loc 1 96 17 is_stmt 0 discriminator 3
+  65 0030 FD 28 45                		mov.B	[r4+], r5
+  66                             	.LVL5:
+  97:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         sum_tmp += col;
+  67                             		.loc 1 97 9 is_stmt 1 discriminator 3
+  98:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n0 += ip_row_0[i] * col;
+  68                             		.loc 1 98 27 is_stmt 0 discriminator 3
+  69 0033 FD 28 3F                		mov.B	[r3+], r15
+  99:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n1 += ip_row_1[i] * col;
+  70                             		.loc 1 99 27 discriminator 3
+  71 0036 FD 28 DE                		mov.B	[r13+], r14
+ 100:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n2 += ip_row_2[i] * col;
+  72                             		.loc 1 100 27 discriminator 3
+  73 0039 FD 28 81                		mov.B	[r8+], r1
+  98:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n0 += ip_row_0[i] * col;
+  74                             		.loc 1 98 31 discriminator 3
+  75 003c 4F 5F                   		mul	r5, r15
+ 101:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n3 += ip_row_3[i] * col;
+  76                             		.loc 1 101 27 discriminator 3
+  77 003e FD 28 72                		mov.B	[r7+], r2
+  99:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n1 += ip_row_1[i] * col;
+  78                             		.loc 1 99 31 discriminator 3
+  79 0041 4F 5E                   		mul	r5, r14
+ 100:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n2 += ip_row_2[i] * col;
+  80                             		.loc 1 100 31 discriminator 3
+  81 0043 4F 51                   		mul	r5, r1
+  82                             		.loc 1 101 31 discriminator 3
+  83 0045 4F 52                   		mul	r5, r2
+  97:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n0 += ip_row_0[i] * col;
+  84                             		.loc 1 97 17 discriminator 3
+  85 0047 4B 5A                   		add	r5, r10
+  86                             	.LVL6:
+  98:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n1 += ip_row_1[i] * col;
+  87                             		.loc 1 98 9 is_stmt 1 discriminator 3
+  98:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n1 += ip_row_1[i] * col;
+  88                             		.loc 1 98 16 is_stmt 0 discriminator 3
+  89 0049 4B F9                   		add	r15, r9
+  90                             	.LVL7:
+  99:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n2 += ip_row_2[i] * col;
+  91                             		.loc 1 99 9 is_stmt 1 discriminator 3
+  99:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n2 += ip_row_2[i] * col;
+  92                             		.loc 1 99 16 is_stmt 0 discriminator 3
+  93 004b 4B EC                   		add	r14, r12
+  94                             	.LVL8:
+ 100:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n3 += ip_row_3[i] * col;
+  95                             		.loc 1 100 9 is_stmt 1 discriminator 3
+ 100:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****         acc_n3 += ip_row_3[i] * col;
+  96                             		.loc 1 100 16 is_stmt 0 discriminator 3
+  97 004d 4B 1B                   		add	r1, r11
+  98                             	.LVL9:
+  99                             		.loc 1 101 9 is_stmt 1 discriminator 3
+ 100                             		.loc 1 101 16 is_stmt 0 discriminator 3
+ 101 004f 4B 26                   		add	r2, r6
+ 102                             	.LVL10:
+ 103                             	.LBE3:
+  94:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     {
+ 104                             		.loc 1 94 5 discriminator 3
+ 105 0051 EC 05                   		mov.L	[r0], r5
+ 106                             	.LVL11:
+ 107 0053 47 45                   		cmp	r4, r5
+ 108 0055 21 DB                   		bne	.L3
+ 109                             	.LBE5:
+ 102:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     }
+ 103:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** #endif
+ 104:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[0] = acc_n0;
+ 110                             		.loc 1 104 5 is_stmt 1
+ 111                             		.loc 1 104 15 is_stmt 0
+ 112 0057 A8 0F                   		mov.L	4[r0], r7
+ 113 0059 E3 79                   		mov.L	r9, [r7]
+ 114                             	.LVL12:
+ 105:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[1] = acc_n1;
+ 115                             		.loc 1 105 5 is_stmt 1
+ 116                             		.loc 1 105 15 is_stmt 0
+ 117 005b E7 7C 01                		mov.L	r12, 4[r7]
+ 106:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[2] = acc_n2;
+ 118                             		.loc 1 106 5 is_stmt 1
+ 119                             		.loc 1 106 15 is_stmt 0
+ 120 005e E7 7B 02                		mov.L	r11, 8[r7]
+ 107:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[3] = acc_n3;
+ 121                             		.loc 1 107 5 is_stmt 1
+ 108:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     *sum_col = sum_tmp;
+ 110:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 111:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     return ARM_MATH_SUCCESS;
+ 112:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** }
+ 122                             		.loc 1 112 1 is_stmt 0
+ 123 0061 66 01                   		mov.L	#0, r1
+ 107:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[3] = acc_n3;
+ 124                             		.loc 1 107 15
+ 125 0063 A0 FE                   		mov.L	r6, 12[r7]
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 126                             		.loc 1 109 5 is_stmt 1
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 127                             		.loc 1 109 14 is_stmt 0
+ 128 0065 A8 85                   		mov.L	8[r0], r5
+ 129 0067 E3 5A                   		mov.L	r10, [r5]
+ 111:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** }
+ 130                             		.loc 1 111 5 is_stmt 1
+ 131                             		.loc 1 112 1 is_stmt 0
+ 132 0069 3F 6D 0D                		rtsd	#52, r6-r13
+ 133                             	.LVL13:
+ 134                             	.L4:
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 135                             		.loc 1 63 13
+ 136 006c 66 0A                   		mov.L	#0, r10
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 137                             		.loc 1 57 13
+ 138 006e 66 06                   		mov.L	#0, r6
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n3 = 0;
+ 139                             		.loc 1 56 13
+ 140 0070 66 0B                   		mov.L	#0, r11
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n2 = 0;
+ 141                             		.loc 1 55 13
+ 142 0072 66 0C                   		mov.L	#0, r12
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     int32_t acc_n1 = 0;
+ 143                             		.loc 1 54 13
+ 144 0074 66 09                   		mov.L	#0, r9
+ 104:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[1] = acc_n1;
+ 145                             		.loc 1 104 5 is_stmt 1
+ 104:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[1] = acc_n1;
+ 146                             		.loc 1 104 15 is_stmt 0
+ 147 0076 A8 0F                   		mov.L	4[r0], r7
+ 148 0078 E3 79                   		mov.L	r9, [r7]
+ 105:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[2] = acc_n2;
+ 149                             		.loc 1 105 5 is_stmt 1
+ 105:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[2] = acc_n2;
+ 150                             		.loc 1 105 15 is_stmt 0
+ 151 007a E7 7C 01                		mov.L	r12, 4[r7]
+ 106:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[3] = acc_n3;
+ 152                             		.loc 1 106 5 is_stmt 1
+ 106:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c ****     output[3] = acc_n3;
+ 153                             		.loc 1 106 15 is_stmt 0
+ 154 007d E7 7B 02                		mov.L	r11, 8[r7]
+ 107:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 155                             		.loc 1 107 5 is_stmt 1
+ 156                             		.loc 1 112 1 is_stmt 0
+ 157 0080 66 01                   		mov.L	#0, r1
+ 158                             	.LVL14:
+ 107:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 159                             		.loc 1 107 15
+ 160 0082 A0 FE                   		mov.L	r6, 12[r7]
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 161                             		.loc 1 109 5 is_stmt 1
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** 
+ 162                             		.loc 1 109 14 is_stmt 0
+ 163 0084 A8 85                   		mov.L	8[r0], r5
+ 164 0086 E3 5A                   		mov.L	r10, [r5]
+ 111:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_mat_mul_core_4x_s8.c **** }
+ 165                             		.loc 1 111 5 is_stmt 1
+ 166                             		.loc 1 112 1 is_stmt 0
+ 167 0088 3F 6D 0D                		rtsd	#52, r6-r13
+ 168                             	.LFE82:
+ 220                             	.Letext0:
+ 221                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 222                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 223                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 224                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 225                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 226                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 227                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 228                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 229                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

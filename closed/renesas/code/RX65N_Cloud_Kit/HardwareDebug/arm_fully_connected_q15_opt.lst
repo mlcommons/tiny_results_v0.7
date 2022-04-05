@@ -1,0 +1,1704 @@
+   1                             		.file	"arm_fully_connected_q15_opt.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_fully_connected_q15_opt,"ax",@progbits
+   5                             		.global	_arm_fully_connected_q15_opt
+   7                             	_arm_fully_connected_q15_opt:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c"
+   1:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** /*
+   2:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+   4:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+   6:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  10:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  12:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  */
+  18:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+  19:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * Title:        arm_fully_connected_q15_opt.c
+  22:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * Description:  Q15 opt fully-connected layer function
+  23:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  24:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * $Revision:    V.1.0.1
+  26:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  27:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  29:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+  31:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+  34:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** /**
+  35:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  @ingroup groupNN
+  36:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  */
+  37:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+  38:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** /**
+  39:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @addtogroup FC
+  40:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @{
+  41:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  */
+  42:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+  43:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** /**
+  44:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @brief Q15 opt fully-connected layer function
+  45:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in]       pV          pointer to input vector
+  46:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in]       pM          pointer to matrix weights
+  47:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in]       dim_vec     length of the vector
+  48:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in]       num_of_rows number of rows in weight matrix
+  49:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in]       bias_shift  amount of left-shift for bias
+  50:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in]       out_shift   amount of right-shift for output
+  51:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in]       bias        pointer to bias
+  52:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in,out]   pOut        pointer to output vector
+  53:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @param[in,out]   vec_buffer  pointer to buffer space for input
+  54:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @return     The function returns <code>ARM_MATH_SUCCESS</code>
+  55:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  56:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  57:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * @details
+  58:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  59:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * <b>Buffer size:</b>
+  60:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  61:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  * vec_buffer size: 0
+  62:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  63:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  Here we use only one pointer to read 4 rows in the weight
+  64:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  matrix. So if the original matrix looks like this:
+  65:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  66:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a11 | a12 | a13 |
+  67:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  68:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a21 | a22 | a23 |
+  69:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  70:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a31 | a32 | a33 |
+  71:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  72:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a41 | a42 | a43 |
+  73:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  74:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a51 | a52 | a53 |
+  75:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  76:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a61 | a62 | a63 |
+  77:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  78:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  We operates on multiple-of-4 rows, so the first four rows becomes
+  79:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  80:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a11 | a12 | a21 | a22 | a31 | a32 | a41 | a42 |
+  81:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  82:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a13 | a23 | a33 | a43 |
+  83:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  84:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  Remaining rows are kept the same original order.
+  85:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  86:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  So the stored weight matrix looks like this:
+  87:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  88:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  89:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a11 | a12 | a21 | a22 | a31 | a32 | a41 | a42 |
+  90:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  91:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a13 | a23 | a33 | a43 | a51 | a52 | a53 | a61 |
+  92:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *
+  93:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  *  | a62 | a63 |
+  94:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****  */
+  95:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+  96:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** arm_status arm_fully_connected_q15_opt(const q15_t *pV,
+  97:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        const q15_t *pM,
+  98:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        const uint16_t dim_vec,
+  99:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        const uint16_t num_of_rows,
+ 100:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        const uint16_t bias_shift,
+ 101:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        const uint16_t out_shift,
+ 102:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        const q15_t *bias,
+ 103:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        q15_t *pOut,
+ 104:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                                        q15_t *vec_buffer)
+ 105:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** {
+  10                             		.loc 1 105 1
+  11                             	.LVL0:
+  12 0000 6E 6D                   		pushm	r6-r13
+  13                             	.LCFI0:
+  14 0002 71 00 9C                		add	#-100, r0
+  15                             	.LCFI1:
+  16                             		.loc 1 105 1 is_stmt 0
+  17 0005 D7 04 24                		mov.W	r4, 72[r0]
+  18 0008 75 47 88                		mov.L	#0x88, r7
+  19 000b 4B 07                   		add	r0, r7
+ 106:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     (void)vec_buffer;
+  20                             		.loc 1 106 5 is_stmt 1
+ 107:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #if defined(ARM_MATH_DSP)
+ 108:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     /* Run the following code for Cortex-M4 and Cortex-M7 */
+ 109:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 110:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     const q15_t *pB = pM;
+ 111:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     q15_t *pO = pOut;
+ 112:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     const q15_t *pBias = bias;
+ 113:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     const q15_t *pA = pV;
+ 114:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 115:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     uint16_t rowCnt = num_of_rows >> 2;
+ 116:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 117:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     while (rowCnt)
+ 118:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     {
+ 119:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 120:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 121:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum3 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 122:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum4 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 123:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 124:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         uint16_t colCnt = dim_vec >> 1;
+ 125:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 126:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         pA = pV;
+ 127:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 128:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #ifdef USE_INTRINSIC
+ 129:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 130:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         while (colCnt)
+ 131:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 132:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q31_t inM11, inM12, inM13, inM14;
+ 133:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q31_t inV;
+ 134:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 135:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inV = arm_nn_read_q15x2_ia(&pA);
+ 136:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inM11 = arm_nn_read_q15x2_ia(&pB);
+ 137:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum = __SMLAD(inV, inM11, sum);
+ 138:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inM12 = arm_nn_read_q15x2_ia(&pB);
+ 139:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum2 = __SMLAD(inV, inM12, sum2);
+ 140:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inM13 = arm_nn_read_q15x2_ia(&pB);
+ 141:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum3 = __SMLAD(inV, inM13, sum3);
+ 142:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inM14 = arm_nn_read_q15x2_ia(&pB);
+ 143:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum4 = __SMLAD(inV, inM14, sum4);
+ 144:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 145:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         }
+ 146:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 147:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #else
+ 148:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 149:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         /*
+ 150:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****          * register needed:
+ 151:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****          * loop counter: colCnt
+ 152:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****          * accumulators: sum, sum2, sum3, sum4
+ 153:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****          * pointers: pB, pA
+ 154:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****          * weight data: inM11, inM12, inM13, inM14
+ 155:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****          * activation data: inV
+ 156:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****          */
+ 157:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 158:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         asm volatile("COL_LOOP_%=:\n"
+ 159:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "ldr.w r4, [%[pA]], #4\n"
+ 160:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "ldr.w r0, [%[pB]], #16\n"
+ 161:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "smlad %[sum], r4, r0, %[sum]\n"
+ 162:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "ldr.w r1, [%[pB] , #-12]\n"
+ 163:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "smlad %[sum2], r4, r1, %[sum2]\n"
+ 164:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "ldr.w r2, [%[pB] , #-8]\n"
+ 165:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "smlad %[sum3], r4, r2, %[sum3]\n"
+ 166:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "ldr.w r3, [%[pB] , #-4]\n"
+ 167:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "smlad %[sum4], r4, r3, %[sum4]\n"
+ 168:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "subs %[colCnt], #1\n"
+ 169:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      "bne COL_LOOP_%=\n"
+ 170:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      : [ sum ] "+r"(sum),
+ 171:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                        [ sum2 ] "+r"(sum2),
+ 172:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                        [ sum3 ] "+r"(sum3),
+ 173:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                        [ sum4 ] "+r"(sum4),
+ 174:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                        [ pB ] "+r"(pB),
+ 175:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                        [ pA ] "+r"(pA)
+ 176:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      : [ colCnt ] "r"(colCnt)
+ 177:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****                      : "r0", "r1", "r2", "r3", "r4");
+ 178:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 179:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #endif /* USE_INTRINSIC */
+ 180:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 181:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         colCnt = dim_vec & 0x1;
+ 182:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         while (colCnt)
+ 183:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 184:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 185:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inV = *pA++;
+ 186:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inM = *pB++;
+ 187:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inM2 = *pB++;
+ 188:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inM3 = *pB++;
+ 189:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inM4 = *pB++;
+ 190:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 191:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum += inV * inM;
+ 192:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum2 += inV * inM2;
+ 193:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum3 += inV * inM3;
+ 194:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum4 += inV * inM4;
+ 195:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 196:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         } /* while over colCnt */
+ 197:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)(__SSAT((sum >> out_shift), 16));
+ 198:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)(__SSAT((sum2 >> out_shift), 16));
+ 199:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)(__SSAT((sum3 >> out_shift), 16));
+ 200:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)(__SSAT((sum4 >> out_shift), 16));
+ 201:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 202:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         /* adjust the pointers and counters */
+ 203:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         rowCnt--;
+ 204:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     }
+ 205:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 206:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     /* left-over part of the rows */
+ 207:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     rowCnt = num_of_rows & 0x3;
+ 208:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 209:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     while (rowCnt)
+ 210:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     {
+ 211:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 212:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 213:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         uint16_t colCnt = dim_vec >> 2;
+ 214:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 215:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         pA = pV;
+ 216:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 217:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         while (colCnt)
+ 218:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 219:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q31_t inV1, inV2, inM1, inM2;
+ 220:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 221:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inM1 = arm_nn_read_q15x2_ia(&pB);
+ 222:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inV1 = arm_nn_read_q15x2_ia(&pA);
+ 223:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum = __SMLAD(inV1, inM1, sum);
+ 224:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 225:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inM2 = arm_nn_read_q15x2_ia(&pB);
+ 226:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inV2 = arm_nn_read_q15x2_ia(&pA);
+ 227:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum = __SMLAD(inV2, inM2, sum);
+ 228:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 229:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 230:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         }
+ 231:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 232:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         /* left-over of the vector */
+ 233:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         colCnt = dim_vec & 0x3;
+ 234:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         while (colCnt)
+ 235:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 236:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inV = *pA++;
+ 237:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inM = *pB++;
+ 238:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum += inV * inM;
+ 239:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 240:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         }
+ 241:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 242:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)(__SSAT((sum >> out_shift), 16));
+ 243:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 244:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         rowCnt--;
+ 245:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     }
+ 246:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 247:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #else
+ 248:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     /* Run the following code as reference implementation for Cortex-M0 and Cortex-M3 */
+ 249:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     uint16_t rowCnt = num_of_rows >> 2;
+  21                             		.loc 1 249 5
+  22                             		.loc 1 249 14 is_stmt 0
+  23 000d 5F 4A                   		movu.W	r4, r10
+ 105:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     (void)vec_buffer;
+  24                             		.loc 1 105 1
+  25 000f A2 01                   		mov.L	r1, 32[r0]
+  26                             		.loc 1 249 14
+  27 0011 68 2A                   		shlr	#2, r10
+  28                             	.LVL1:
+ 250:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     const q15_t *pB = pM;
+  29                             		.loc 1 250 5 is_stmt 1
+ 105:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     (void)vec_buffer;
+  30                             		.loc 1 105 1 is_stmt 0
+  31 0013 A1 02                   		mov.L	r2, 16[r0]
+  32                             	.LVL2:
+ 251:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     const q15_t *pA;
+  33                             		.loc 1 251 5 is_stmt 1
+ 252:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     q15_t *pO = pOut;
+  34                             		.loc 1 252 5
+ 105:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     (void)vec_buffer;
+  35                             		.loc 1 105 1 is_stmt 0
+  36 0015 D7 03 22                		mov.W	r3, 68[r0]
+  37 0018 D4 70 28                		mov.W	[r7], 80[r0]
+  38 001b D5 70 01 29             		mov.W	2[r7], 82[r0]
+  39 001f E5 70 01 10             		mov.L	4[r7], 64[r0]
+  40 0023 E5 70 02 0F             		mov.L	8[r7], 60[r0]
+  41                             	.LVL3:
+ 253:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     const q15_t *pBias = bias;
+  42                             		.loc 1 253 5 is_stmt 1
+ 254:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 255:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     while (rowCnt)
+  43                             		.loc 1 255 5
+  44                             		.loc 1 255 11 is_stmt 0
+  45 0027 3A 5A 01                		beq	.L2
+  46                             	.LBB22:
+ 256:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     {
+ 257:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 258:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 259:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum3 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 260:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum4 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 261:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 262:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         uint16_t colCnt = dim_vec >> 1;
+  47                             		.loc 1 262 18
+  48 002a 5F 37                   		movu.W	r3, r7
+  49                             	.LVL4:
+  50 002c 60 1A                   		sub	#1, r10
+  51                             	.LVL5:
+  52 002e 68 17                   		shlr	#1, r7
+ 257:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+  53                             		.loc 1 257 57
+  54 0030 5D 03 29                		movu.W	82[r0], r3
+  55                             	.LVL6:
+  56 0033 A1 0B                   		mov.L	r3, 20[r0]
+  57 0035 71 72 FF                		add	#-1, r7, r2
+  58                             	.LVL7:
+  59 0038 5F 22                   		movu.W	r2, r2
+  60 003a 5F A5                   		movu.W	r10, r5
+  61 003c A4 8D                   		mov.L	r5, 76[r0]
+  62 003e 62 12                   		add	#1, r2
+  63 0040 66 13                   		mov.L	#1, r3
+  64 0042 ED 0A 05                		mov.L	20[r0], r10
+  65                             	.LVL8:
+  66 0045 FD 62 A3                		shll	r10, r3
+  67 0048 AB 8C                   		mov.L	60[r0], r4
+  68                             	.LVL9:
+  69 004a 62 84                   		add	#8, r4
+  70 004c 6C 35                   		shll	#3, r5
+  71 004e FD C2 2A                		shll	#2, r2, r10
+  72 0051 6C 42                   		shll	#4, r2
+  73 0053 A3 02                   		mov.L	r2, 48[r0]
+  74 0055 68 13                   		shlr	#1, r3
+  75 0057 A1 83                   		mov.L	r3, 24[r0]
+  76 0059 5D 03 28                		movu.W	80[r0], r3
+  77 005c A1 8B                   		mov.L	r3, 28[r0]
+  78 005e E5 00 0F 02             		mov.L	60[r0], 8[r0]
+  79 0062 E5 00 10 03             		mov.L	64[r0], 12[r0]
+  80 0066 4B 45                   		add	r4, r5
+  81 0068 A2 0D                   		mov.L	r5, 36[r0]
+  82 006a EF 15                   		mov.L	r1, r5
+  83 006c 4B A5                   		add	r10, r5
+  84 006e A3 0D                   		mov.L	r5, 52[r0]
+  85 0070 A2 87                   		mov.L	r7, 40[r0]
+  86 0072 DD 07 22                		mov.W	68[r0], r7
+  87 0075 64 17                   		and #1, r7
+  88 0077 A2 8F                   		mov.L	r7, 44[r0]
+  89 0079 A3 82                   		mov.L	r2, 56[r0]
+  90                             	.LVL10:
+  91                             		.balign 8,3,1
+  92                             	.L6:
+ 257:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+  93                             		.loc 1 257 9 is_stmt 1
+ 257:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+  94                             		.loc 1 257 22 is_stmt 0
+  95 007b A8 8B                   		mov.L	12[r0], r3
+  96 007d DC 3A                   		mov.W	[r3], r10
+ 258:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum3 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+  97                             		.loc 1 258 23
+  98 007f 98 3F                   		mov.W	2[r3], r7
+ 259:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum4 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+  99                             		.loc 1 259 23
+ 100 0081 DD 3E 02                		mov.W	4[r3], r14
+ 257:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 101                             		.loc 1 257 40
+ 102 0084 A9 8D                   		mov.L	28[r0], r5
+ 103 0086 FD 62 5A                		shll	r5, r10
+ 260:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 104                             		.loc 1 260 23
+ 105 0089 DD 3D 03                		mov.W	6[r3], r13
+ 258:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum3 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 106                             		.loc 1 258 41
+ 107 008c FD 62 57                		shll	r5, r7
+ 259:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum4 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 108                             		.loc 1 259 41
+ 109 008f FD 62 5E                		shll	r5, r14
+ 260:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 110                             		.loc 1 260 41
+ 111 0092 FD 62 5D                		shll	r5, r13
+ 257:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 112                             		.loc 1 257 55
+ 113 0095 ED 0B 06                		mov.L	24[r0], r11
+ 114 0098 4B AB                   		add	r10, r11
+ 115                             	.LVL11:
+ 258:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum3 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 116                             		.loc 1 258 9 is_stmt 1
+ 258:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum3 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 117                             		.loc 1 258 56 is_stmt 0
+ 118 009a ED 0F 06                		mov.L	24[r0], r15
+ 119 009d 4B 7F                   		add	r7, r15
+ 120                             	.LVL12:
+ 259:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum4 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 121                             		.loc 1 259 9 is_stmt 1
+ 259:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         q31_t sum4 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 122                             		.loc 1 259 56 is_stmt 0
+ 123 009f 06 89 0E 06             		add	24[r0], r14
+ 124                             	.LVL13:
+ 260:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 125                             		.loc 1 260 9 is_stmt 1
+ 260:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 126                             		.loc 1 260 56 is_stmt 0
+ 127 00a3 06 89 0D 06             		add	24[r0], r13
+ 128                             	.LVL14:
+ 129                             		.loc 1 262 9 is_stmt 1
+ 263:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 264:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         pA = pV;
+ 130                             		.loc 1 264 9
+ 265:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         while (colCnt)
+ 131                             		.loc 1 265 9
+ 132                             		.loc 1 265 15 is_stmt 0
+ 133 00a7 AA 87                   		mov.L	40[r0], r7
+ 134 00a9 61 07                   		cmp	#0, r7
+ 135 00ab 3A 89 01                		beq	.L12
+ 136 00ae A9 07                   		mov.L	16[r0], r7
+ 137 00b0 AA 06                   		mov.L	32[r0], r6
+ 138 00b2 ED 0A 0E                		mov.L	56[r0], r10
+ 139 00b5 4B 7A                   		add	r7, r10
+ 140 00b7 E7 0A 01                		mov.L	r10, 4[r0]
+ 141                             	.LVL15:
+ 142                             		.balign 8,3,5
+ 143                             	.L4:
+ 144                             	.LBB23:
+ 266:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 267:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inA1 = *pA++;
+ 145                             		.loc 1 267 13 is_stmt 1
+ 268:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inA2 = *pA++;
+ 146                             		.loc 1 268 13
+ 269:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 270:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inB1 = *pB++;
+ 147                             		.loc 1 270 13
+ 271:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inB2 = *pB++;
+ 148                             		.loc 1 271 13
+ 272:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum += inA1 * inB1 + inA2 * inB2;
+ 149                             		.loc 1 272 13
+ 150                             		.loc 1 272 25 is_stmt 0
+ 151 00ba DC 61                   		mov.W	[r6], r1
+ 152                             		.loc 1 272 39
+ 153 00bc 98 6A                   		mov.W	2[r6], r2
+ 154                             		.loc 1 272 25
+ 155 00be DC 78                   		mov.W	[r7], r8
+ 156                             		.loc 1 272 39
+ 157 00c0 98 7B                   		mov.W	2[r7], r3
+ 273:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 274:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB1 = *pB++;
+ 275:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB2 = *pB++;
+ 276:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum2 += inA1 * inB1 + inA2 * inB2;
+ 158                             		.loc 1 276 26
+ 159 00c2 98 F4                   		mov.W	4[r7], r4
+ 160                             		.loc 1 276 40
+ 161 00c4 DD 79 03                		mov.W	6[r7], r9
+ 277:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 278:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB1 = *pB++;
+ 279:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB2 = *pB++;
+ 280:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum3 += inA1 * inB1 + inA2 * inB2;
+ 162                             		.loc 1 280 26
+ 163 00c7 99 75                   		mov.W	8[r7], r5
+ 164                             		.loc 1 280 40
+ 165 00c9 DD 7C 05                		mov.W	10[r7], r12
+ 281:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 282:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB1 = *pB++;
+ 283:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB2 = *pB++;
+ 284:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum4 += inA1 * inB1 + inA2 * inB2;
+ 166                             		.loc 1 284 26
+ 167 00cc DD 7A 06                		mov.W	12[r7], r10
+ 272:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 168                             		.loc 1 272 25
+ 169 00cf 4F 18                   		mul	r1, r8
+ 170 00d1 E3 08                   		mov.L	r8, [r0]
+ 171                             		.loc 1 284 40
+ 172 00d3 DD 78 07                		mov.W	14[r7], r8
+ 272:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 173                             		.loc 1 272 39
+ 174 00d6 4F 23                   		mul	r2, r3
+ 276:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 175                             		.loc 1 276 26
+ 176 00d8 4F 14                   		mul	r1, r4
+ 276:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 177                             		.loc 1 276 40
+ 178 00da 4F 29                   		mul	r2, r9
+ 280:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 179                             		.loc 1 280 26
+ 180 00dc 4F 15                   		mul	r1, r5
+ 280:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 181                             		.loc 1 280 40
+ 182 00de 4F 2C                   		mul	r2, r12
+ 183                             		.loc 1 284 26
+ 184 00e0 4F 1A                   		mul	r1, r10
+ 185                             		.loc 1 284 40
+ 186 00e2 4F 82                   		mul	r8, r2
+ 272:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 187                             		.loc 1 272 32
+ 188 00e4 06 88 03                		add	[r0], r3
+ 276:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 189                             		.loc 1 276 33
+ 190 00e7 4B 94                   		add	r9, r4
+ 280:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 191                             		.loc 1 280 33
+ 192 00e9 4B C5                   		add	r12, r5
+ 193                             		.loc 1 284 33
+ 194 00eb 4B 2A                   		add	r2, r10
+ 195 00ed 71 77 10                		add	#16, r7
+ 196                             	.LVL16:
+ 272:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 197                             		.loc 1 272 17
+ 198 00f0 4B 3B                   		add	r3, r11
+ 199                             	.LVL17:
+ 274:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB2 = *pB++;
+ 200                             		.loc 1 274 13 is_stmt 1
+ 275:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum2 += inA1 * inB1 + inA2 * inB2;
+ 201                             		.loc 1 275 13
+ 276:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 202                             		.loc 1 276 13
+ 276:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 203                             		.loc 1 276 18 is_stmt 0
+ 204 00f2 4B 4F                   		add	r4, r15
+ 205                             	.LVL18:
+ 278:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB2 = *pB++;
+ 206                             		.loc 1 278 13 is_stmt 1
+ 279:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum3 += inA1 * inB1 + inA2 * inB2;
+ 207                             		.loc 1 279 13
+ 280:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 208                             		.loc 1 280 13
+ 280:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 209                             		.loc 1 280 18 is_stmt 0
+ 210 00f4 4B 5E                   		add	r5, r14
+ 211                             	.LVL19:
+ 282:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB2 = *pB++;
+ 212                             		.loc 1 282 13 is_stmt 1
+ 283:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum4 += inA1 * inB1 + inA2 * inB2;
+ 213                             		.loc 1 283 13
+ 214                             		.loc 1 284 13
+ 215                             		.loc 1 284 18 is_stmt 0
+ 216 00f6 4B AD                   		add	r10, r13
+ 217                             	.LVL20:
+ 285:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 286:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 218                             		.loc 1 286 13 is_stmt 1
+ 219 00f8 62 46                   		add	#4, r6
+ 220                             	.LVL21:
+ 221                             	.LBE23:
+ 265:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 222                             		.loc 1 265 15 is_stmt 0
+ 223 00fa A8 0B                   		mov.L	4[r0], r3
+ 224 00fc 47 73                   		cmp	r7, r3
+ 225 00fe 21 BC                   		bne	.L4
+ 226 0100 A9 07                   		mov.L	16[r0], r7
+ 227 0102 06 89 07 0C             		add	48[r0], r7
+ 228                             	.LBB24:
+ 268:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 229                             		.loc 1 268 29
+ 230 0106 ED 0A 0D                		mov.L	52[r0], r10
+ 231                             	.LVL22:
+ 232                             		.balign 8,3,1
+ 233                             	.L3:
+ 234                             	.LBE24:
+ 287:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         }
+ 288:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         colCnt = dim_vec & 0x1;
+ 235                             		.loc 1 288 9 is_stmt 1
+ 289:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         while (colCnt)
+ 236                             		.loc 1 289 9
+ 237                             		.loc 1 289 15 is_stmt 0
+ 238 0109 AA 8D                   		mov.L	44[r0], r5
+ 239 010b 61 05                   		cmp	#0, r5
+ 240 010d 3B 06 01                		bne	.L25
+ 241 0110 A1 07                   		mov.L	r7, 16[r0]
+ 242                             	.LVL23:
+ 243                             		.balign 8,3,1
+ 244                             	.L5:
+ 290:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 291:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inA = *pA++;
+ 292:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inB = *pB++;
+ 293:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum += inA * inB;
+ 294:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 295:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum2 += inA * inB;
+ 296:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 297:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum3 += inA * inB;
+ 298:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 299:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum4 += inA * inB;
+ 300:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 301:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         }
+ 302:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum >> out_shift), 16);
+ 245                             		.loc 1 302 9 is_stmt 1
+ 246                             	.LBE22:
+ 247                             		.file 2 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**************************************************************************//**
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @version  V5.4.1
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * @date     27. May 2021
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  ******************************************************************************/
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /*
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Copyright (c) 2009-2021 Arm Limited. All rights reserved.
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  *
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * limitations under the License.
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __has_builtin
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __ASM
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __INLINE
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __INLINE                               inline
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE
+  50:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  52:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  55:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __USED
+  56:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  58:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __WEAK
+  59:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  61:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __PACKED
+  62:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  64:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  67:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  70:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  78:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  86:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+  94:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 102:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 110:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 113:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 116:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef   __COMPILER_BARRIER
+ 117:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   #define __COMPILER_BARRIER()                   __ASM volatile("":::"memory")
+ 118:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 119:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 120:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* #########################  Startup and Lowlevel Init  ######################## */
+ 121:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 122:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __PROGRAM_START
+ 123:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 124:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 125:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Initializes data and bss sections
+ 126:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details This default implementations initialized all data and additional bss
+ 127:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            sections relying on .copy.table and .zero.table specified properly
+ 128:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            in the used linker script.
+ 129:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 130:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 131:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE __NO_RETURN void __cmsis_start(void)
+ 132:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 133:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern void _start(void) __NO_RETURN;
+ 134:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 135:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   typedef struct {
+ 136:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t const* src;
+ 137:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t* dest;
+ 138:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t  wlen;
+ 139:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   } __copy_table_t;
+ 140:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 141:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   typedef struct {
+ 142:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t* dest;
+ 143:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t  wlen;
+ 144:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   } __zero_table_t;
+ 145:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 146:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __copy_table_t __copy_table_start__;
+ 147:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __copy_table_t __copy_table_end__;
+ 148:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __zero_table_t __zero_table_start__;
+ 149:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   extern const __zero_table_t __zero_table_end__;
+ 150:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 151:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   for (__copy_table_t const* pTable = &__copy_table_start__; pTable < &__copy_table_end__; ++pTable
+ 152:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     for(uint32_t i=0u; i<pTable->wlen; ++i) {
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****       pTable->dest[i] = pTable->src[i];
+ 154:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     }
+ 155:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 156:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 157:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   for (__zero_table_t const* pTable = &__zero_table_start__; pTable < &__zero_table_end__; ++pTable
+ 158:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     for(uint32_t i=0u; i<pTable->wlen; ++i) {
+ 159:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****       pTable->dest[i] = 0u;
+ 160:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     }
+ 161:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 162:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 163:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   _start();
+ 164:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 165:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 166:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __PROGRAM_START           __cmsis_start
+ 167:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 168:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 169:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __INITIAL_SP
+ 170:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __INITIAL_SP              __StackTop
+ 171:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 172:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 173:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __STACK_LIMIT
+ 174:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __STACK_LIMIT             __StackLimit
+ 175:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 176:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 177:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __VECTOR_TABLE
+ 178:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __VECTOR_TABLE            __Vectors
+ 179:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 180:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 181:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __VECTOR_TABLE_ATTRIBUTE
+ 182:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __VECTOR_TABLE_ATTRIBUTE  __attribute__((used, section(".vectors")))
+ 183:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 184:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 185:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+ 186:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __STACK_SEAL
+ 187:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __STACK_SEAL              __StackSeal
+ 188:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 189:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 190:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __TZ_STACK_SEAL_SIZE
+ 191:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __TZ_STACK_SEAL_SIZE      8U
+ 192:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 193:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 194:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #ifndef __TZ_STACK_SEAL_VALUE
+ 195:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __TZ_STACK_SEAL_VALUE     0xFEF5EDA5FEF5EDA5ULL
+ 196:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 197:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 198:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 199:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __TZ_set_STACKSEAL_S (uint32_t* stackTop) {
+ 200:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   *((uint64_t *)stackTop) = __TZ_STACK_SEAL_VALUE;
+ 201:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 202:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 203:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 204:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 205:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* ##########################  Core Instruction Access  ######################### */
+ 206:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /** \defgroup CMSIS_Core_InstructionInterface CMSIS Core Instruction Interface
+ 207:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   Access to dedicated instructions
+ 208:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   @{
+ 209:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** */
+ 210:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 211:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /* Define macros for porting to both thumb1 and thumb2.
+ 212:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * For thumb1, use low register (r0-r7), specified by constraint "l"
+ 213:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  * Otherwise, use general registers, specified by constraint "r" */
+ 214:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if defined (__thumb__) && !defined (__thumb2__)
+ 215:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_OUT_REG(r) "=l" (r)
+ 216:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_RW_REG(r) "+l" (r)
+ 217:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_USE_REG(r) "l" (r)
+ 218:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 219:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_OUT_REG(r) "=r" (r)
+ 220:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_RW_REG(r) "+r" (r)
+ 221:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __CMSIS_GCC_USE_REG(r) "r" (r)
+ 222:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 223:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 224:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 225:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   No Operation
+ 226:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details No Operation does nothing. This instruction can be used for code alignment purposes.
+ 227:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 228:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __NOP()                             __ASM volatile ("nop")
+ 229:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 230:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 231:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Wait For Interrupt
+ 232:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Wait For Interrupt is a hint instruction that suspends execution until one of a number o
+ 233:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 234:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __WFI()                             __ASM volatile ("wfi":::"memory")
+ 235:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 236:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 237:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 238:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Wait For Event
+ 239:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Wait For Event is a hint instruction that permits the processor to enter
+ 240:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            a low-power state until one of a number of events occurs.
+ 241:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 242:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __WFE()                             __ASM volatile ("wfe":::"memory")
+ 243:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 244:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 245:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 246:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Send Event
+ 247:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Send Event is a hint instruction. It causes an event to be signaled to the CPU.
+ 248:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 249:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __SEV()                             __ASM volatile ("sev")
+ 250:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 251:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 252:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 253:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Instruction Synchronization Barrier
+ 254:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Instruction Synchronization Barrier flushes the pipeline in the processor,
+ 255:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            so that all instructions following the ISB are fetched from cache or memory,
+ 256:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            after the instruction has been completed.
+ 257:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 258:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __ISB(void)
+ 259:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 260:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("isb 0xF":::"memory");
+ 261:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 262:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 263:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 264:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 265:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Data Synchronization Barrier
+ 266:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Acts as a special kind of Data Memory Barrier.
+ 267:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            It completes when all explicit memory accesses before this instruction complete.
+ 268:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 269:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __DSB(void)
+ 270:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 271:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("dsb 0xF":::"memory");
+ 272:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 273:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 274:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 275:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 276:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Data Memory Barrier
+ 277:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Ensures the apparent order of the explicit memory operations before
+ 278:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            and after the instruction, without ensuring their completion.
+ 279:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 280:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __DMB(void)
+ 281:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 282:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("dmb 0xF":::"memory");
+ 283:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 284:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 285:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 286:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 287:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse byte order (32 bit)
+ 288:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the byte order in unsigned integer value. For example, 0x12345678 becomes 0x785
+ 289:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 290:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 291:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 292:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __REV(uint32_t value)
+ 293:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 294:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+ 295:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return __builtin_bswap32(value);
+ 296:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 297:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 298:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 299:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM ("rev %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 300:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 301:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 302:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 303:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 304:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 305:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 306:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse byte order (16 bit)
+ 307:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the byte order within each halfword of a word. For example, 0x12345678 becomes 
+ 308:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 309:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 310:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 311:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __REV16(uint32_t value)
+ 312:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 313:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 314:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 315:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM ("rev16 %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 316:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 317:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 318:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 319:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 320:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 321:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse byte order (16 bit)
+ 322:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the byte order in a 16-bit value and returns the signed 16-bit result. For exam
+ 323:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 324:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 325:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 326:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE int16_t __REVSH(int16_t value)
+ 327:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 328:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 329:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return (int16_t)__builtin_bswap16(value);
+ 330:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 331:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   int16_t result;
+ 332:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 333:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM ("revsh %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 334:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 335:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 336:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 337:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 338:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 339:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 340:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Rotate Right in unsigned value (32 bit)
+ 341:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Rotate Right (immediate) provides the value of the contents of a register rotated by a v
+ 342:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    op1  Value to rotate
+ 343:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    op2  Number of Bits to rotate
+ 344:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Rotated value
+ 345:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 346:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
+ 347:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 348:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   op2 %= 32U;
+ 349:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   if (op2 == 0U)
+ 350:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 351:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     return op1;
+ 352:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 353:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return (op1 >> op2) | (op1 << (32U - op2));
+ 354:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 355:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 356:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 357:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 358:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Breakpoint
+ 359:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Causes the processor to enter Debug state.
+ 360:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            Debug tools can use this to investigate system state when the instruction at a particula
+ 361:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  is ignored by the processor.
+ 362:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****                  If required, a debugger can use it to store additional information about the break
+ 363:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 364:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __BKPT(value)                       __ASM volatile ("bkpt "#value)
+ 365:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 366:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 367:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 368:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Reverse bit order of value
+ 369:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Reverses the bit order of the given value.
+ 370:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to reverse
+ 371:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Reversed value
+ 372:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 373:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __RBIT(uint32_t value)
+ 374:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 375:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 376:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 377:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 378:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 379:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    )
+ 380:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM ("rbit %0, %1" : "=r" (result) : "r" (value) );
+ 381:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 382:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t s = (4U /*sizeof(v)*/ * 8U) - 1U; /* extra shift needed at end */
+ 383:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 384:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   result = value;                      /* r will be reversed bits of v; first get LSB of v */
+ 385:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   for (value >>= 1U; value != 0U; value >>= 1U)
+ 386:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 387:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     result <<= 1U;
+ 388:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     result |= value & 1U;
+ 389:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     s--;
+ 390:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 391:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   result <<= s;                        /* shift when v's highest bits are zero */
+ 392:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 393:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return result;
+ 394:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 395:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 396:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 397:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 398:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Count leading zeros
+ 399:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Counts the number of leading zeros of a data value.
+ 400:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to count the leading zeros
+ 401:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             number of leading zeros in value
+ 402:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 403:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint8_t __CLZ(uint32_t value)
+ 404:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 405:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   /* Even though __builtin_clz produces a CLZ instruction on ARM, formally
+ 406:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      __builtin_clz(0) is undefined behaviour, so handle this case specially.
+ 407:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      This guarantees ARM-compatible results if happening to compile on a non-ARM
+ 408:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      target, and ensures the compiler doesn't decide to activate any
+ 409:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      optimisations using the logic "value was passed to __builtin_clz, so it
+ 410:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      is non-zero".
+ 411:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      ARM GCC 7.3 and possibly earlier will optimise this test away, leaving a
+ 412:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      single CLZ instruction.
+ 413:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    */
+ 414:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   if (value == 0U)
+ 415:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 416:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     return 32U;
+ 417:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   }
+ 418:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return __builtin_clz(value);
+ 419:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 420:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 421:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 422:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 423:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 424:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1)) || \
+ 425:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_BASE__ ) && (__ARM_ARCH_8M_BASE__ == 1))    )
+ 426:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 427:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDR Exclusive (8 bit)
+ 428:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive LDR instruction for 8 bit value.
+ 429:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 430:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             value of type uint8_t at (*ptr)
+ 431:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 432:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint8_t __LDREXB(volatile uint8_t *addr)
+ 433:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 434:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 435:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 436:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 437:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexb %0, %1" : "=r" (result) : "Q" (*addr) );
+ 438:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 439:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 440:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 441:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 442:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexb %0, [%1]" : "=r" (result) : "r" (addr) : "memory" );
+ 443:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 444:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint8_t) result);    /* Add explicit type cast here */
+ 445:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 446:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 447:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 448:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 449:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDR Exclusive (16 bit)
+ 450:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive LDR instruction for 16 bit values.
+ 451:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 452:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint16_t at (*ptr)
+ 453:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 454:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint16_t __LDREXH(volatile uint16_t *addr)
+ 455:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 456:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 457:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 458:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 459:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexh %0, %1" : "=r" (result) : "Q" (*addr) );
+ 460:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 461:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 462:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 463:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 464:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrexh %0, [%1]" : "=r" (result) : "r" (addr) : "memory" );
+ 465:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 466:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint16_t) result);    /* Add explicit type cast here */
+ 467:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 468:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 469:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 470:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 471:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDR Exclusive (32 bit)
+ 472:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive LDR instruction for 32 bit values.
+ 473:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 474:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint32_t at (*ptr)
+ 475:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 476:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __LDREXW(volatile uint32_t *addr)
+ 477:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 478:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 479:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 480:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrex %0, %1" : "=r" (result) : "Q" (*addr) );
+ 481:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 482:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 483:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 484:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 485:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 486:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STR Exclusive (8 bit)
+ 487:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive STR instruction for 8 bit values.
+ 488:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 489:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 490:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          0  Function succeeded
+ 491:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          1  Function failed
+ 492:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 493:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __STREXB(uint8_t value, volatile uint8_t *addr)
+ 494:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 495:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    uint32_t result;
+ 496:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 497:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strexb %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" ((uint32_t)value) );
+ 498:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 499:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 500:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 501:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 502:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 503:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STR Exclusive (16 bit)
+ 504:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive STR instruction for 16 bit values.
+ 505:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 506:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 507:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          0  Function succeeded
+ 508:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          1  Function failed
+ 509:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 510:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __STREXH(uint16_t value, volatile uint16_t *addr)
+ 511:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 512:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    uint32_t result;
+ 513:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 514:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strexh %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" ((uint32_t)value) );
+ 515:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 516:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 517:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 518:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 519:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 520:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STR Exclusive (32 bit)
+ 521:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a exclusive STR instruction for 32 bit values.
+ 522:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 523:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 524:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          0  Function succeeded
+ 525:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return          1  Function failed
+ 526:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 527:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __STREXW(uint32_t value, volatile uint32_t *addr)
+ 528:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 529:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    uint32_t result;
+ 530:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 531:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strex %0, %2, %1" : "=&r" (result), "=Q" (*addr) : "r" (value) );
+ 532:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 533:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 534:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 535:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 536:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 537:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Remove the exclusive lock
+ 538:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Removes the exclusive lock which is created by LDREX.
+ 539:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 540:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __CLREX(void)
+ 541:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 542:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("clrex" ::: "memory");
+ 543:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 544:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 545:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif /* ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 546:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 547:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1)) || \
+ 548:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_8M_BASE__ ) && (__ARM_ARCH_8M_BASE__ == 1))    ) */
+ 549:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 550:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 551:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 552:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 553:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****      (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    )
+ 554:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 555:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Signed Saturate
+ 556:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Saturates a signed value.
+ 557:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG1  Value to be saturated
+ 558:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG2  Bit position to saturate to (1..32)
+ 559:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             Saturated value
+ 560:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 561:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __SSAT(ARG1, ARG2) \
+ 562:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __extension__ \
+ 563:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** ({                          \
+ 564:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   int32_t __RES, __ARG1 = (ARG1); \
+ 565:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("ssat %0, %1, %2" : "=r" (__RES) :  "I" (ARG2), "r" (__ARG1) : "cc" ); \
+ 566:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __RES; \
+ 567:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  })
+ 568:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 569:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 570:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 571:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Unsigned Saturate
+ 572:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Saturates an unsigned value.
+ 573:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG1  Value to be saturated
+ 574:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  ARG2  Bit position to saturate to (0..31)
+ 575:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             Saturated value
+ 576:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 577:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #define __USAT(ARG1, ARG2) \
+ 578:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __extension__ \
+ 579:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** ({                          \
+ 580:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t __RES, __ARG1 = (ARG1); \
+ 581:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("usat %0, %1, %2" : "=r" (__RES) :  "I" (ARG2), "r" (__ARG1) : "cc" ); \
+ 582:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __RES; \
+ 583:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  })
+ 584:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 585:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 586:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 587:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Rotate Right with Extend (32 bit)
+ 588:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Moves each bit of a bitstring right by one bit.
+ 589:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            The carry input is shifted in at the left end of the bitstring.
+ 590:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    value  Value to rotate
+ 591:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return               Rotated value
+ 592:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 593:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __RRX(uint32_t value)
+ 594:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 595:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   uint32_t result;
+ 596:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 597:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   __ASM volatile ("rrx %0, %1" : __CMSIS_GCC_OUT_REG (result) : __CMSIS_GCC_USE_REG (value) );
+ 598:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   return(result);
+ 599:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 600:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 601:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 602:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 603:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDRT Unprivileged (8 bit)
+ 604:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged LDRT instruction for 8 bit value.
+ 605:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 606:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             value of type uint8_t at (*ptr)
+ 607:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 608:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint8_t __LDRBT(volatile uint8_t *ptr)
+ 609:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 610:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 611:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 612:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 613:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrbt %0, %1" : "=r" (result) : "Q" (*ptr) );
+ 614:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 615:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 616:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 617:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 618:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrbt %0, [%1]" : "=r" (result) : "r" (ptr) : "memory" );
+ 619:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 620:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint8_t) result);    /* Add explicit type cast here */
+ 621:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 622:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 623:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 624:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 625:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDRT Unprivileged (16 bit)
+ 626:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged LDRT instruction for 16 bit values.
+ 627:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 628:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint16_t at (*ptr)
+ 629:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 630:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint16_t __LDRHT(volatile uint16_t *ptr)
+ 631:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 632:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 633:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 634:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+ 635:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrht %0, %1" : "=r" (result) : "Q" (*ptr) );
+ 636:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else
+ 637:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     /* Prior to GCC 4.8, "Q" will be expanded to [rx, #0] which is not
+ 638:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****        accepted by assembler. So has to use following less efficient pattern.
+ 639:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     */
+ 640:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrht %0, [%1]" : "=r" (result) : "r" (ptr) : "memory" );
+ 641:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #endif
+ 642:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return ((uint16_t) result);    /* Add explicit type cast here */
+ 643:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 644:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 645:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 646:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 647:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   LDRT Unprivileged (32 bit)
+ 648:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged LDRT instruction for 32 bit values.
+ 649:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to data
+ 650:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return        value of type uint32_t at (*ptr)
+ 651:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 652:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __LDRT(volatile uint32_t *ptr)
+ 653:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 654:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     uint32_t result;
+ 655:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 656:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("ldrt %0, %1" : "=r" (result) : "Q" (*ptr) );
+ 657:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    return(result);
+ 658:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 659:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 660:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 661:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 662:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STRT Unprivileged (8 bit)
+ 663:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged STRT instruction for 8 bit values.
+ 664:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 665:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 666:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 667:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __STRBT(uint8_t value, volatile uint8_t *ptr)
+ 668:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 669:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strbt %1, %0" : "=Q" (*ptr) : "r" ((uint32_t)value) );
+ 670:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 671:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 672:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 673:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 674:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STRT Unprivileged (16 bit)
+ 675:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged STRT instruction for 16 bit values.
+ 676:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 677:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 678:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 679:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __STRHT(uint16_t value, volatile uint16_t *ptr)
+ 680:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 681:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strht %1, %0" : "=Q" (*ptr) : "r" ((uint32_t)value) );
+ 682:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 683:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 684:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 685:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 686:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   STRT Unprivileged (32 bit)
+ 687:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Executes a Unprivileged STRT instruction for 32 bit values.
+ 688:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to store
+ 689:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    ptr  Pointer to location
+ 690:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 691:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE void __STRT(uint32_t value, volatile uint32_t *ptr)
+ 692:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 693:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****    __ASM volatile ("strt %1, %0" : "=Q" (*ptr) : "r" (value) );
+ 694:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** }
+ 695:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 696:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** #else  /* ((defined (__ARM_ARCH_7M__      ) && (__ARM_ARCH_7M__      == 1)) || \
+ 697:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_7EM__     ) && (__ARM_ARCH_7EM__     == 1)) || \
+ 698:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****            (defined (__ARM_ARCH_8M_MAIN__ ) && (__ARM_ARCH_8M_MAIN__ == 1))    ) */
+ 699:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** 
+ 700:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** /**
+ 701:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \brief   Signed Saturate
+ 702:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \details Saturates a signed value.
+ 703:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]  value  Value to be saturated
+ 704:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \param [in]    sat  Bit position to saturate to (1..32)
+ 705:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   \return             Saturated value
+ 706:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****  */
+ 707:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
+ 708:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h **** {
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   if ((sat >= 1U) && (sat <= 32U))
+ 248                             		.loc 2 709 3
+ 710:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t max = (int32_t)((1U << (sat - 1U)) - 1U);
+ 249                             		.loc 2 711 5
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t min = -1 - max ;
+ 250                             		.loc 2 712 5
+ 713:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     if (val > max)
+ 251                             		.loc 2 713 5
+ 252                             	.LBB26:
+ 253                             		.loc 1 302 24 is_stmt 0
+ 254 0112 EF B7                   		mov.L	r11, r7
+ 255                             	.LVL24:
+ 256 0114 ED 0A 05                		mov.L	20[r0], r10
+ 257 0117 FD 61 A7                		shar	r10, r7
+ 303:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum2 >> out_shift), 16);
+ 258                             		.loc 1 303 24
+ 259 011a FD 61 AF                		shar	r10, r15
+ 260                             	.LVL25:
+ 261 011d EF FA                   		mov.L	r15, r10
+ 304:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum3 >> out_shift), 16);
+ 262                             		.loc 1 304 24
+ 263 011f A9 0B                   		mov.L	20[r0], r3
+ 264 0121 FD 61 3E                		shar	r3, r14
+ 265                             	.LVL26:
+ 305:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum4 >> out_shift), 16);
+ 266                             		.loc 1 305 24
+ 267 0124 FD 61 3D                		shar	r3, r13
+ 268                             	.LVL27:
+ 302:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum2 >> out_shift), 16);
+ 269                             		.loc 1 302 17
+ 270 0127 FD 78 47 00 80          		max	#-32768, r7
+ 303:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum3 >> out_shift), 16);
+ 271                             		.loc 1 303 17
+ 272 012c FD 78 4A 00 80          		max	#-32768, r10
+ 304:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum4 >> out_shift), 16);
+ 273                             		.loc 1 304 17
+ 274 0131 FD 78 4E 00 80          		max	#-32768, r14
+ 275                             		.loc 1 305 17
+ 276 0136 FD 78 4D 00 80          		max	#-32768, r13
+ 302:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum2 >> out_shift), 16);
+ 277                             		.loc 1 302 17
+ 278 013b FD 78 57 FF 7F          		min	#0x7fff, r7
+ 303:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum3 >> out_shift), 16);
+ 279                             		.loc 1 303 17
+ 280 0140 FD 78 5A FF 7F          		min	#0x7fff, r10
+ 304:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum4 >> out_shift), 16);
+ 281                             		.loc 1 304 17
+ 282 0145 FD 78 5E FF 7F          		min	#0x7fff, r14
+ 283                             		.loc 1 305 17
+ 284 014a FD 78 5D FF 7F          		min	#0x7fff, r13
+ 302:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum2 >> out_shift), 16);
+ 285                             		.loc 1 302 17
+ 286 014f A8 85                   		mov.L	8[r0], r5
+ 287 0151 D3 57                   		mov.W	r7, [r5]
+ 303:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum3 >> out_shift), 16);
+ 288                             		.loc 1 303 9 is_stmt 1
+ 289                             	.LVL28:
+ 290                             	.LBE26:
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 291                             		.loc 2 709 3
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t min = -1 - max ;
+ 292                             		.loc 2 711 5
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     if (val > max)
+ 293                             		.loc 2 712 5
+ 294                             		.loc 2 713 5
+ 295                             	.LBB27:
+ 303:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum3 >> out_shift), 16);
+ 296                             		.loc 1 303 17 is_stmt 0
+ 297 0153 D7 5A 01                		mov.W	r10, 2[r5]
+ 304:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum4 >> out_shift), 16);
+ 298                             		.loc 1 304 9 is_stmt 1
+ 299                             	.LVL29:
+ 300                             	.LBE27:
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 301                             		.loc 2 709 3
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t min = -1 - max ;
+ 302                             		.loc 2 711 5
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     if (val > max)
+ 303                             		.loc 2 712 5
+ 304                             		.loc 2 713 5
+ 305                             	.LBB28:
+ 304:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((sum4 >> out_shift), 16);
+ 306                             		.loc 1 304 17 is_stmt 0
+ 307 0156 D7 5E 02                		mov.W	r14, 4[r5]
+ 308                             		.loc 1 305 9 is_stmt 1
+ 309                             	.LVL30:
+ 310                             	.LBE28:
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 311                             		.loc 2 709 3
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t min = -1 - max ;
+ 312                             		.loc 2 711 5
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     if (val > max)
+ 313                             		.loc 2 712 5
+ 314                             		.loc 2 713 5
+ 315 0159 ED 0A 03                		mov.L	12[r0], r10
+ 316 015c 62 8A                   		add	#8, r10
+ 317 015e E7 0A 03                		mov.L	r10, 12[r0]
+ 318                             	.LVL31:
+ 319                             	.LBB29:
+ 320                             		.loc 1 305 17 is_stmt 0
+ 321 0161 D7 5D 03                		mov.W	r13, 6[r5]
+ 306:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 307:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         rowCnt--;
+ 322                             		.loc 1 307 9 is_stmt 1
+ 323                             	.LVL32:
+ 324 0164 62 85                   		add	#8, r5
+ 325 0166 A0 85                   		mov.L	r5, 8[r0]
+ 326                             	.LBE29:
+ 255:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     {
+ 327                             		.loc 1 255 11 is_stmt 0
+ 328 0168 AA 0B                   		mov.L	36[r0], r3
+ 329 016a 47 53                   		cmp	r5, r3
+ 330 016c 3B 0F FF                		bne	.L6
+ 331 016f AC 8F                   		mov.L	76[r0], r7
+ 332 0171 62 17                   		add	#1, r7
+ 333 0173 6C 37                   		shll	#3, r7
+ 334 0175 AC 05                   		mov.L	64[r0], r5
+ 335 0177 4B 75                   		add	r7, r5
+ 336 0179 A4 05                   		mov.L	r5, 64[r0]
+ 337                             	.LVL33:
+ 338 017b 06 89 07 0F             		add	60[r0], r7
+ 339 017f A3 8F                   		mov.L	r7, 60[r0]
+ 340                             	.LVL34:
+ 341                             		.balign 8,3,5
+ 342                             	.L2:
+ 308:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     }
+ 309:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     rowCnt = num_of_rows & 0x3;
+ 343                             		.loc 1 309 5 is_stmt 1
+ 344                             		.loc 1 309 12 is_stmt 0
+ 345 0181 DD 07 24                		mov.W	72[r0], r7
+ 346 0184 64 37                   		and	#3, r7
+ 347                             	.LVL35:
+ 310:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 311:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     while (rowCnt)
+ 348                             		.loc 1 311 5 is_stmt 1
+ 349                             		.loc 1 311 11 is_stmt 0
+ 350 0186 3A 88 00                		beq	.L22
+ 351 0189 71 73 FF                		add	#-1, r7, r3
+ 352                             	.LBB30:
+ 312:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     {
+ 313:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         int ip_out = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 353                             		.loc 1 313 58
+ 354 018c 5D 0C 29                		movu.W	82[r0], r12
+ 355 018f 5F 33                   		movu.W	r3, r3
+ 356 0191 62 13                   		add	#1, r3
+ 357 0193 66 16                   		mov.L	#1, r6
+ 358 0195 FD 62 C6                		shll	r12, r6
+ 359 0198 4B 33                   		add	r3, r3
+ 360 019a 5D 0B 22                		movu.W	68[r0], r11
+ 361 019d 68 16                   		shlr	#1, r6
+ 362 019f 5D 09 28                		movu.W	80[r0], r9
+ 363 01a2 06 89 03 0F             		add	60[r0], r3
+ 364 01a6 FF 28 BB                		add	r11, r11, r8
+ 365 01a9 ED 0E 08                		mov.L	32[r0], r14
+ 366 01ac A9 07                   		mov.L	16[r0], r7
+ 367                             	.LVL36:
+ 368 01ae ED 0D 10                		mov.L	64[r0], r13
+ 369 01b1 AB 89                   		mov.L	60[r0], r1
+ 370                             	.LVL37:
+ 371                             		.loc 1 313 9 is_stmt 1
+ 372                             		.loc 1 313 23 is_stmt 0
+ 373 01b3 FD 29 D4                		mov.W	[r13+], r4
+ 374                             		.loc 1 313 41
+ 375 01b6 FD 62 94                		shll	r9, r4
+ 376                             		.loc 1 313 56
+ 377 01b9 4B 64                   		add	r6, r4
+ 378                             	.LVL38:
+ 314:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         int j;
+ 379                             		.loc 1 314 9 is_stmt 1
+ 315:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 316:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         pA = pV;
+ 380                             		.loc 1 316 9
+ 317:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         for (j = 0; j < dim_vec; j++)
+ 381                             		.loc 1 317 9
+ 382 01bb 61 0B                   		cmp	#0, r11
+ 383 01bd 20 3B                   		beq	.L14
+ 384                             	.LVL39:
+ 385 01bf 03                      		.balign 8,3,2
+ 386                             	.L26:
+ 387 01c0 FF 22 87                		add	r8, r7, r2
+ 316:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         for (j = 0; j < dim_vec; j++)
+ 388                             		.loc 1 316 12 is_stmt 0
+ 389 01c3 EF EA                   		mov.L	r14, r10
+ 390                             	.LVL40:
+ 391 01c5 FC 13 00                		.balign 8,3,5
+ 392                             	.L9:
+ 393                             	.LBB31:
+ 318:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 319:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inA = *pA++;
+ 394                             		.loc 1 319 13 is_stmt 1 discriminator 3
+ 320:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inB = *pB++;
+ 395                             		.loc 1 320 13 discriminator 3
+ 321:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             ip_out += inA * inB;
+ 396                             		.loc 1 321 13 discriminator 3
+ 397                             		.loc 1 321 27 is_stmt 0 discriminator 3
+ 398 01c8 FD 29 A5                		mov.W	[r10+], r5
+ 399                             	.LVL41:
+ 400 01cb FD 29 7F                		mov.W	[r7+], r15
+ 401                             	.LVL42:
+ 402 01ce 4F F5                   		mul	r15, r5
+ 403                             		.loc 1 321 20 discriminator 3
+ 404 01d0 4B 54                   		add	r5, r4
+ 405                             	.LVL43:
+ 406                             	.LBE31:
+ 317:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 407                             		.loc 1 317 9 discriminator 3
+ 408 01d2 47 27                   		cmp	r2, r7
+ 409 01d4 21 F4                   		bne	.L9
+ 322:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         }
+ 323:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         *pO++ = (q15_t)__SSAT((ip_out >> out_shift), 16);
+ 410                             		.loc 1 323 9 is_stmt 1
+ 411                             	.LVL44:
+ 412                             	.LBE30:
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 413                             		.loc 2 709 3
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t min = -1 - max ;
+ 414                             		.loc 2 711 5
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     if (val > max)
+ 415                             		.loc 2 712 5
+ 416                             		.loc 2 713 5
+ 417                             	.LBB32:
+ 418                             		.loc 1 323 39 is_stmt 0
+ 419 01d6 FD 61 C4                		shar	r12, r4
+ 420                             	.LVL45:
+ 421                             		.loc 1 323 17
+ 422 01d9 FD 78 44 00 80          		max	#-32768, r4
+ 423 01de FD 78 54 FF 7F          		min	#0x7fff, r4
+ 424 01e3 FD 21 14                		mov.W	r4, [r1+]
+ 425                             	.LVL46:
+ 324:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 325:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         rowCnt--;
+ 426                             		.loc 1 325 9 is_stmt 1
+ 427                             	.LBE32:
+ 311:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     {
+ 428                             		.loc 1 311 11 is_stmt 0
+ 429 01e6 47 31                   		cmp	r3, r1
+ 430 01e8 20 26                   		beq	.L22
+ 431                             	.LVL47:
+ 432                             		.balign 8,3,1
+ 433                             	.L15:
+ 434 01ea EF 27                   		mov.L	r2, r7
+ 435                             	.LVL48:
+ 436                             	.LBB33:
+ 313:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         int j;
+ 437                             		.loc 1 313 9 is_stmt 1
+ 313:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         int j;
+ 438                             		.loc 1 313 23 is_stmt 0
+ 439 01ec FD 29 D4                		mov.W	[r13+], r4
+ 440                             	.LVL49:
+ 313:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         int j;
+ 441                             		.loc 1 313 41
+ 442 01ef FD 62 94                		shll	r9, r4
+ 313:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         int j;
+ 443                             		.loc 1 313 56
+ 444 01f2 4B 64                   		add	r6, r4
+ 445                             	.LVL50:
+ 314:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 446                             		.loc 1 314 9 is_stmt 1
+ 316:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         for (j = 0; j < dim_vec; j++)
+ 447                             		.loc 1 316 9
+ 317:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 448                             		.loc 1 317 9
+ 449 01f4 61 0B                   		cmp	#0, r11
+ 450 01f6 21 CA                   		bne	.L26
+ 451                             	.LVL51:
+ 452                             		.balign 8,3,1
+ 453                             	.L14:
+ 454 01f8 EF 72                   		mov.L	r7, r2
+ 323:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 455                             		.loc 1 323 9
+ 456                             	.LVL52:
+ 457                             	.LBE33:
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****   {
+ 458                             		.loc 2 709 3
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     const int32_t min = -1 - max ;
+ 459                             		.loc 2 711 5
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\Core\Include\cmsis_gcc.h ****     if (val > max)
+ 460                             		.loc 2 712 5
+ 461                             		.loc 2 713 5
+ 462                             	.LBB34:
+ 323:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 463                             		.loc 1 323 39 is_stmt 0
+ 464 01fa FD 61 C4                		shar	r12, r4
+ 465                             	.LVL53:
+ 323:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 466                             		.loc 1 323 17
+ 467 01fd FD 78 44 00 80          		max	#-32768, r4
+ 468 0202 FD 78 54 FF 7F          		min	#0x7fff, r4
+ 469 0207 FD 21 14                		mov.W	r4, [r1+]
+ 470                             	.LVL54:
+ 471                             		.loc 1 325 9 is_stmt 1
+ 472                             	.LBE34:
+ 311:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     {
+ 473                             		.loc 1 311 11 is_stmt 0
+ 474 020a 47 31                   		cmp	r3, r1
+ 475 020c 21 DE                   		bne	.L15
+ 476                             	.LVL55:
+ 477                             		.balign 8,3,1
+ 478                             	.L22:
+ 326:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     }
+ 327:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 328:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** #endif /* ARM_MATH_DSP */
+ 329:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** 
+ 330:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     /* Return to ARM_MATH_SUCCESS */
+ 331:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****     return (ARM_MATH_SUCCESS);
+ 332:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c **** }
+ 479                             		.loc 1 332 1
+ 480 020e 66 01                   		mov.L	#0, r1
+ 481 0210 3F 6D 21                		rtsd	#132, r6-r13
+ 482                             	.LVL56:
+ 483                             	.L25:
+ 484                             	.LBB35:
+ 485                             	.LBB25:
+ 291:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             q15_t inB = *pB++;
+ 486                             		.loc 1 291 13 is_stmt 1
+ 292:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum += inA * inB;
+ 487                             		.loc 1 292 13
+ 293:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 488                             		.loc 1 293 13
+ 293:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 489                             		.loc 1 293 24 is_stmt 0
+ 490 0213 DC AA                   		mov.W	[r10], r10
+ 491                             	.LVL57:
+ 492 0215 DC 73                   		mov.W	[r7], r3
+ 295:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 493                             		.loc 1 295 25
+ 494 0217 98 7C                   		mov.W	2[r7], r4
+ 297:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 495                             		.loc 1 297 25
+ 496 0219 98 F5                   		mov.W	4[r7], r5
+ 293:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 497                             		.loc 1 293 24
+ 498 021b 4F A3                   		mul	r10, r3
+ 299:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 499                             		.loc 1 299 25
+ 500 021d 98 FA                   		mov.W	6[r7], r2
+ 295:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 501                             		.loc 1 295 25
+ 502 021f 4F A4                   		mul	r10, r4
+ 297:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 503                             		.loc 1 297 25
+ 504 0221 4F A5                   		mul	r10, r5
+ 299:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 505                             		.loc 1 299 25
+ 506 0223 4F 2A                   		mul	r2, r10
+ 507                             	.LVL58:
+ 293:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 508                             		.loc 1 293 17
+ 509 0225 4B 3B                   		add	r3, r11
+ 510                             	.LVL59:
+ 294:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum2 += inA * inB;
+ 511                             		.loc 1 294 13 is_stmt 1
+ 295:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 512                             		.loc 1 295 13
+ 295:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 513                             		.loc 1 295 18 is_stmt 0
+ 514 0227 4B 4F                   		add	r4, r15
+ 515                             	.LVL60:
+ 296:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum3 += inA * inB;
+ 516                             		.loc 1 296 13 is_stmt 1
+ 297:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 517                             		.loc 1 297 13
+ 297:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             inB = *pB++;
+ 518                             		.loc 1 297 18 is_stmt 0
+ 519 0229 4B 5E                   		add	r5, r14
+ 520                             	.LVL61:
+ 298:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum4 += inA * inB;
+ 521                             		.loc 1 298 13 is_stmt 1
+ 298:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             sum4 += inA * inB;
+ 522                             		.loc 1 298 22 is_stmt 0
+ 523 022b 62 87                   		add	#8, r7
+ 524                             	.LVL62:
+ 525 022d A1 07                   		mov.L	r7, 16[r0]
+ 526                             	.LVL63:
+ 299:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 527                             		.loc 1 299 13 is_stmt 1
+ 299:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****             colCnt--;
+ 528                             		.loc 1 299 18 is_stmt 0
+ 529 022f 4B AD                   		add	r10, r13
+ 530                             	.LVL64:
+ 300:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         }
+ 531                             		.loc 1 300 13 is_stmt 1
+ 532                             	.LBE25:
+ 533 0231 38 E1 FE                		bra	.L5
+ 534                             	.LVL65:
+ 535                             	.L12:
+ 264:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         while (colCnt)
+ 536                             		.loc 1 264 12 is_stmt 0
+ 537 0234 ED 0A 08                		mov.L	32[r0], r10
+ 265:../src/CMSIS/NN/Source/FullyConnectedFunctions/arm_fully_connected_q15_opt.c ****         {
+ 538                             		.loc 1 265 15
+ 539 0237 A9 07                   		mov.L	16[r0], r7
+ 540 0239 38 D0 FE                		bra	.L3
+ 541                             	.LBE35:
+ 542                             	.LFE82:
+ 594                             	.Letext0:
+ 595                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 596                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 597                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 598                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 599                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 600                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 601                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 602                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 603                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

@@ -1,0 +1,300 @@
+   1                             		.file	"th_profile.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.th_load_tensor,"ax",@progbits
+   5                             		.global	_th_load_tensor
+   7                             	_th_load_tensor:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/EEMBC/profile/th_api/th_profile.c"
+   1:../src/EEMBC/profile/th_api/th_profile.c **** /**
+   2:../src/EEMBC/profile/th_api/th_profile.c ****  * Copyright (C) EEMBC(R). All Rights Reserved
+   3:../src/EEMBC/profile/th_api/th_profile.c ****  *
+   4:../src/EEMBC/profile/th_api/th_profile.c ****  * All EEMBC Benchmark Software are products of EEMBC and are provided under the
+   5:../src/EEMBC/profile/th_api/th_profile.c ****  * terms of the EEMBC Benchmark License Agreements. The EEMBC Benchmark Software
+   6:../src/EEMBC/profile/th_api/th_profile.c ****  * are proprietary intellectual properties of EEMBC and its Members and is
+   7:../src/EEMBC/profile/th_api/th_profile.c ****  * protected under all applicable laws, including all applicable copyright laws.
+   8:../src/EEMBC/profile/th_api/th_profile.c ****  *
+   9:../src/EEMBC/profile/th_api/th_profile.c ****  * If you received this EEMBC Benchmark Software without having a currently
+  10:../src/EEMBC/profile/th_api/th_profile.c ****  * effective EEMBC Benchmark License Agreement, you must discontinue use.
+  11:../src/EEMBC/profile/th_api/th_profile.c ****  */
+  12:../src/EEMBC/profile/th_api/th_profile.c **** 
+  13:../src/EEMBC/profile/th_api/th_profile.c **** #include "profile/th_api/th_profile.h"
+  14:../src/EEMBC/profile/th_api/th_profile.c **** 
+  15:../src/EEMBC/profile/th_api/th_profile.c **** /* From profile/ee_buffer.c */
+  16:../src/EEMBC/profile/th_api/th_profile.c **** //extern uint8_t *gp_buff;
+  17:../src/EEMBC/profile/th_api/th_profile.c **** //extern size_t   g_buff_size;
+  18:../src/EEMBC/profile/th_api/th_profile.c **** //extern size_t   g_buff_pos;
+  19:../src/EEMBC/profile/th_api/th_profile.c **** 
+  20:../src/EEMBC/profile/th_api/th_profile.c **** extern float    EEMBC_reslut[20];
+  21:../src/EEMBC/profile/th_api/th_profile.c **** 
+  22:../src/EEMBC/profile/th_api/th_profile.c **** /**
+  23:../src/EEMBC/profile/th_api/th_profile.c ****  * Copy the octet buffer `gp_buff` into your input tensor in the proper
+  24:../src/EEMBC/profile/th_api/th_profile.c ****  * format.
+  25:../src/EEMBC/profile/th_api/th_profile.c ****  */
+  26:../src/EEMBC/profile/th_api/th_profile.c **** void
+  27:../src/EEMBC/profile/th_api/th_profile.c **** th_load_tensor(void)
+  28:../src/EEMBC/profile/th_api/th_profile.c **** {
+  10                             		.loc 1 28 1
+  29:../src/EEMBC/profile/th_api/th_profile.c **** //#warning "th_load_tensor() not implemented"
+  30:../src/EEMBC/profile/th_api/th_profile.c ****     EEMBC_LoadTensor();
+  11                             		.loc 1 30 5
+  12 0000 04 00 00 00             		bra	_EEMBC_LoadTensor
+  13                             	.LVL0:
+  14                             	.LFE3:
+  16                             		.section	.text.th_infer,"ax",@progbits
+  17                             		.global	_th_infer
+  19                             	_th_infer:
+  20                             	.LFB4:
+  31:../src/EEMBC/profile/th_api/th_profile.c **** }
+  32:../src/EEMBC/profile/th_api/th_profile.c **** 
+  33:../src/EEMBC/profile/th_api/th_profile.c **** /**
+  34:../src/EEMBC/profile/th_api/th_profile.c ****  * Perform a single inference.
+  35:../src/EEMBC/profile/th_api/th_profile.c ****  */
+  36:../src/EEMBC/profile/th_api/th_profile.c **** void
+  37:../src/EEMBC/profile/th_api/th_profile.c **** th_infer(void)
+  38:../src/EEMBC/profile/th_api/th_profile.c **** {
+  21                             		.loc 1 38 1
+  39:../src/EEMBC/profile/th_api/th_profile.c **** //#warning "th_infer() not implemented"
+  40:../src/EEMBC/profile/th_api/th_profile.c ****     EEMBC_Inference();
+  22                             		.loc 1 40 5
+  23 0000 04 00 00 00             		bra	_EEMBC_Inference
+  24                             	.LVL1:
+  25                             	.LFE4:
+  27                             		.section	.text.th_results,"ax",@progbits
+  28                             		.global	_th_results
+  30                             	_th_results:
+  31                             	.LFB5:
+  41:../src/EEMBC/profile/th_api/th_profile.c **** }
+  42:../src/EEMBC/profile/th_api/th_profile.c **** 
+  43:../src/EEMBC/profile/th_api/th_profile.c **** void
+  44:../src/EEMBC/profile/th_api/th_profile.c **** th_results(void)
+  45:../src/EEMBC/profile/th_api/th_profile.c **** {
+  32                             		.loc 1 45 1
+  33 0000 6E 6C                   		pushm	r6-r12
+  34                             	.LCFI0:
+  35 0002 60 80                   		sub	#8, r0
+  36                             	.LCFI1:
+  46:../src/EEMBC/profile/th_api/th_profile.c ****     float *results  = NULL;
+  37                             		.loc 1 46 5
+  38                             	.LVL2:
+  47:../src/EEMBC/profile/th_api/th_profile.c ****     size_t nresults = 0;
+  39                             		.loc 1 47 5
+  48:../src/EEMBC/profile/th_api/th_profile.c ****     /* USER CODE 1 BEGIN */
+  49:../src/EEMBC/profile/th_api/th_profile.c ****     /* Populate results[] and n from the fp32 prediction tensor. */
+  50:../src/EEMBC/profile/th_api/th_profile.c **** //#warning "th_results() not implemented"
+  51:../src/EEMBC/profile/th_api/th_profile.c ****     nresults = EEMBC_Result();
+  40                             		.loc 1 51 5
+  41                             		.loc 1 51 16 is_stmt 0
+  42 0004 05 00 00 00             		bsr	_EEMBC_Result
+  43                             	.LVL3:
+  44 0008 EF 17                   		mov.L	r1, r7
+  45                             	.LVL4:
+  52:../src/EEMBC/profile/th_api/th_profile.c ****     results = EEMBC_reslut;
+  46                             		.loc 1 52 5 is_stmt 1
+  53:../src/EEMBC/profile/th_api/th_profile.c **** 
+  54:../src/EEMBC/profile/th_api/th_profile.c ****     /* USER CODE 1 END */
+  55:../src/EEMBC/profile/th_api/th_profile.c ****     /**
+  56:../src/EEMBC/profile/th_api/th_profile.c ****      * The results need to be printed back in exactly this format; if easier
+  57:../src/EEMBC/profile/th_api/th_profile.c ****      * to just modify this loop than copy to results[] above, do that.
+  58:../src/EEMBC/profile/th_api/th_profile.c ****      */
+  59:../src/EEMBC/profile/th_api/th_profile.c ****     th_printf("m-results-[");
+  47                             		.loc 1 59 5
+  48 000a F8 02 00 00 00 00       		mov.L	#.LC0, [r0]
+  49 0010 05 00 00 00             		bsr	_th_printf
+  50                             	.LVL5:
+  60:../src/EEMBC/profile/th_api/th_profile.c ****     for (size_t i = 0; i < nresults; i++)
+  51                             		.loc 1 60 5
+  52                             	.LBB2:
+  53                             		.loc 1 60 10
+  54                             		.loc 1 60 5 is_stmt 0
+  55 0014 61 07                   		cmp	#0, r7
+  56 0016 3A CB 00                		beq	.L8
+  57 0019 71 79 FF                		add	#-1, r7, r9
+  58 001c 20 6E                   		beq	.L6
+  59 001e 47 97                   		cmp	r9, r7
+  60 0020 EF 9C                   		mov.L	r9, r12
+  61 0022 24 04                   		bgtu 1f
+  62 0024 EF 7C                   		mov r7, r12
+  63                             	1:
+  64 0026 FB 82 00 00 00 00       		mov.L	#_EEMBC_reslut, r8
+  65                             		.loc 1 60 17
+  66 002c 66 09                   		mov.L	#0, r9
+  61:../src/EEMBC/profile/th_api/th_profile.c ****     {
+  62:../src/EEMBC/profile/th_api/th_profile.c ****         /* N.B. Be sure %f is enabled in SDK */
+  63:../src/EEMBC/profile/th_api/th_profile.c **** //        th_printf("%.3f", results[i]);
+  64:../src/EEMBC/profile/th_api/th_profile.c **** //        th_printf("%d", (int)results[i]);
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf("%d", (int)results[i]);
+  67                             		.loc 1 65 6
+  68 002e FB B2 10 00 00 00       		mov.L	#.LC2, r11
+  66:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+  69                             		.loc 1 66 6
+  70 0034 FB 62 13 00 00 00       		mov.L	#.LC3, r6
+  67:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf("%03d", (int)((int)(results[i]*1000)-((int)results[i]*1000)));
+  71                             		.loc 1 67 6
+  72 003a FB A2 15 00 00 00       		mov.L	#.LC4, r10
+  73                             	.LVL6:
+  74                             		.balign 8,3,1
+  75                             	.L7:
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+  76                             		.loc 1 65 6 is_stmt 1
+  77 0040 E3 0B                   		mov.L	r11, [r0]
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+  78                             		.loc 1 65 34 is_stmt 0
+  79 0042 FD 2A 85                		mov.L	[r8+], r5
+  60:../src/EEMBC/profile/th_api/th_profile.c ****     {
+  80                             		.loc 1 60 39
+  81 0045 62 19                   		add	#1, r9
+  82                             	.LVL7:
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+  83                             		.loc 1 65 6
+  84 0047 FC 97 55                		ftoi	r5, r5
+  85 004a A0 0D                   		mov.L	r5, 4[r0]
+  86 004c 05 00 00 00             		bsr	_th_printf
+  87                             	.LVL8:
+  66:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf("%03d", (int)((int)(results[i]*1000)-((int)results[i]*1000)));
+  88                             		.loc 1 66 6 is_stmt 1
+  89 0050 E3 06                   		mov.L	r6, [r0]
+  90 0052 05 00 00 00             		bsr	_th_printf
+  91                             	.LVL9:
+  92                             		.loc 1 67 6
+  93                             		.loc 1 67 43 is_stmt 0
+  94 0056 71 85 FC                		add	#-4, r8, r5
+  95 0059 EC 55                   		mov.L	[r5], r5
+  96                             		.loc 1 67 6
+  97 005b E3 0A                   		mov.L	r10, [r0]
+  98                             		.loc 1 67 46
+  99 005d FB 42 00 00 7A 44       		mov.L	#0x447a0000, r4
+ 100 0063 FC 8F 54                		fmul	r5, r4
+ 101                             		.loc 1 67 54
+ 102 0066 FC 97 55                		ftoi	r5, r5
+ 103                             		.loc 1 67 69
+ 104 0069 76 15 18 FC             		mul	#-1000, r5
+ 105                             		.loc 1 67 30
+ 106 006d FC 97 44                		ftoi	r4, r4
+ 107                             		.loc 1 67 6
+ 108 0070 4B 45                   		add	r4, r5
+ 109 0072 A0 0D                   		mov.L	r5, 4[r0]
+ 110 0074 05 00 00 00             		bsr	_th_printf
+ 111                             	.LVL10:
+  68:../src/EEMBC/profile/th_api/th_profile.c **** 
+  69:../src/EEMBC/profile/th_api/th_profile.c ****         if (i < (nresults - 1))
+ 112                             		.loc 1 69 9 is_stmt 1
+  70:../src/EEMBC/profile/th_api/th_profile.c ****         {
+  71:../src/EEMBC/profile/th_api/th_profile.c ****             th_printf(",");
+ 113                             		.loc 1 71 13
+ 114 0078 F8 02 1A 00 00 00       		mov.L	#.LC5, [r0]
+ 115 007e 05 00 00 00             		bsr	_th_printf
+ 116                             	.LVL11:
+  60:../src/EEMBC/profile/th_api/th_profile.c ****     {
+ 117                             		.loc 1 60 5 is_stmt 0
+ 118 0082 47 C9                   		cmp	r12, r9
+ 119 0084 23 BC                   		bltu	.L7
+ 120 0086 47 97                   		cmp	r9, r7
+ 121 0088 25 59                   		bleu	.L8
+ 122                             	.LVL12:
+ 123                             		.balign 8,3,2
+ 124                             	.L6:
+ 125 008a FD C2 9C                		shll	#2, r9, r12
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+ 126                             		.loc 1 65 6
+ 127 008d FB B2 10 00 00 00       		mov.L	#.LC2, r11
+ 128 0093 70 CC 00 00 00 00       		add	#_EEMBC_reslut, r12
+  66:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf("%03d", (int)((int)(results[i]*1000)-((int)results[i]*1000)));
+ 129                             		.loc 1 66 6
+ 130 0099 FB 62 13 00 00 00       		mov.L	#.LC3, r6
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 131                             		.loc 1 67 6
+ 132 009f FB A2 15 00 00 00       		mov.L	#.LC4, r10
+ 133                             		.balign 8,3,1
+ 134                             	.L9:
+ 135                             	.LVL13:
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+ 136                             		.loc 1 65 6 is_stmt 1
+ 137 00a5 E3 0B                   		mov.L	r11, [r0]
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+ 138                             		.loc 1 65 34 is_stmt 0
+ 139 00a7 FD 2A C5                		mov.L	[r12+], r5
+  60:../src/EEMBC/profile/th_api/th_profile.c ****     {
+ 140                             		.loc 1 60 39
+ 141 00aa 62 19                   		add	#1, r9
+ 142                             	.LVL14:
+  65:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf(".");
+ 143                             		.loc 1 65 6
+ 144 00ac FC 97 55                		ftoi	r5, r5
+ 145 00af A0 0D                   		mov.L	r5, 4[r0]
+ 146 00b1 05 00 00 00             		bsr	_th_printf
+ 147                             	.LVL15:
+  66:../src/EEMBC/profile/th_api/th_profile.c ****     	th_printf("%03d", (int)((int)(results[i]*1000)-((int)results[i]*1000)));
+ 148                             		.loc 1 66 6 is_stmt 1
+ 149 00b5 E3 06                   		mov.L	r6, [r0]
+ 150 00b7 05 00 00 00             		bsr	_th_printf
+ 151                             	.LVL16:
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 152                             		.loc 1 67 6
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 153                             		.loc 1 67 43 is_stmt 0
+ 154 00bb 71 C5 FC                		add	#-4, r12, r5
+ 155 00be EC 55                   		mov.L	[r5], r5
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 156                             		.loc 1 67 6
+ 157 00c0 E3 0A                   		mov.L	r10, [r0]
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 158                             		.loc 1 67 46
+ 159 00c2 FB 42 00 00 7A 44       		mov.L	#0x447a0000, r4
+ 160 00c8 FC 8F 54                		fmul	r5, r4
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 161                             		.loc 1 67 54
+ 162 00cb FC 97 55                		ftoi	r5, r5
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 163                             		.loc 1 67 69
+ 164 00ce 76 15 18 FC             		mul	#-1000, r5
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 165                             		.loc 1 67 30
+ 166 00d2 FC 97 44                		ftoi	r4, r4
+  67:../src/EEMBC/profile/th_api/th_profile.c **** 
+ 167                             		.loc 1 67 6
+ 168 00d5 4B 45                   		add	r4, r5
+ 169 00d7 A0 0D                   		mov.L	r5, 4[r0]
+ 170 00d9 05 00 00 00             		bsr	_th_printf
+ 171                             	.LVL17:
+  69:../src/EEMBC/profile/th_api/th_profile.c ****         {
+ 172                             		.loc 1 69 9 is_stmt 1
+  60:../src/EEMBC/profile/th_api/th_profile.c ****     {
+ 173                             		.loc 1 60 5 is_stmt 0
+ 174 00dd 47 97                   		cmp	r9, r7
+ 175 00df 24 C6                   		bgtu	.L9
+ 176                             	.LVL18:
+ 177                             	.L8:
+ 178                             	.LBE2:
+  72:../src/EEMBC/profile/th_api/th_profile.c ****         }
+  73:../src/EEMBC/profile/th_api/th_profile.c ****     }
+  74:../src/EEMBC/profile/th_api/th_profile.c ****     th_printf("]\r\n");
+ 179                             		.loc 1 74 5 is_stmt 1
+ 180 00e1 F8 02 0C 00 00 00       		mov.L	#.LC1, [r0]
+ 181 00e7 05 00 00 00             		bsr	_th_printf
+ 182                             	.LVL19:
+  75:../src/EEMBC/profile/th_api/th_profile.c **** }
+ 183                             		.loc 1 75 1 is_stmt 0
+ 184 00eb 3F 6C 09                		rtsd	#36, r6-r12
+ 185                             	.LFE5:
+ 187 00ee EF 00                   		.section	.rodata.th_results.str1.1,"aMS",@progbits,1
+ 188                             	.LC0:
+ 189 0000 6D 2D 72 65 73 75 6C 74 		.string	"m-results-["
+ 189      73 2D 5B 00 
+ 190                             	.LC1:
+ 191 000c 5D 0D 0A 00             		.string	"]\r\n"
+ 192                             	.LC2:
+ 193 0010 25 64 00                		.string	"%d"
+ 194                             	.LC3:
+ 195 0013 2E 00                   		.string	"."
+ 196                             	.LC4:
+ 197 0015 25 30 33 64 00          		.string	"%03d"
+ 198                             	.LC5:
+ 199 001a 2C 00                   		.string	","
+ 264                             	.Letext0:
+ 265                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 266                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 267                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 268                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 269                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h"
+ 270                             		.file 7 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EEM

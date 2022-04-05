@@ -1,0 +1,811 @@
+   1                             		.file	"recording_simple_memory_allocator.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite30RecordingSimpleMemoryAllocatorD2Ev,"ax",@progbits
+   5                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocatorD2Ev
+   7                             	__ZN6tflite30RecordingSimpleMemoryAllocatorD2Ev:
+   8                             	.LFB87:
+   9                             		.file 1 "../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc"
+   1:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+   3:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+   7:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+   9:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  16:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** #include "tensorflow/lite/micro/recording_simple_memory_allocator.h"
+  17:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  18:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** #include <new>
+  19:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  20:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** #include "tensorflow/lite/kernels/internal/compatibility.h"
+  21:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  22:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** namespace tflite {
+  23:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  24:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** RecordingSimpleMemoryAllocator::RecordingSimpleMemoryAllocator(
+  25:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     ErrorReporter* error_reporter, uint8_t* buffer_head, size_t buffer_size)
+  26:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     : SimpleMemoryAllocator(error_reporter, buffer_head, buffer_size),
+  27:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       requested_head_bytes_(0),
+  28:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       requested_tail_bytes_(0),
+  29:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       used_bytes_(0),
+  30:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       alloc_count_(0) {}
+  31:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  32:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** RecordingSimpleMemoryAllocator::~RecordingSimpleMemoryAllocator() {}
+  10                             		.loc 1 32 1
+  11                             	.LVL0:
+  12                             	.LBB23:
+  13                             		.loc 1 32 65 is_stmt 0
+  14 0000 F8 12 00 00 00 00       		mov.L	#__ZTVN6tflite30RecordingSimpleMemoryAllocatorE+8, [r1]
+  15 0006 04 00 00 00             		bra	__ZN6tflite21SimpleMemoryAllocatorD2Ev
+  16                             	.LVL1:
+  17                             	.LBE23:
+  18                             	.LFE87:
+  20                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocatorD1Ev
+  21                             		.set	__ZN6tflite30RecordingSimpleMemoryAllocatorD1Ev,__ZN6tflite30RecordingSimpleMemoryAllocatorD2
+  22                             		.section	.text._ZN6tflite30RecordingSimpleMemoryAllocatorD0Ev,"ax",@progbits
+  23                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocatorD0Ev
+  25                             	__ZN6tflite30RecordingSimpleMemoryAllocatorD0Ev:
+  26                             	.LFB89:
+  27                             		.loc 1 32 1 is_stmt 1
+  28                             	.LVL2:
+  29 0000 7E A7                   		push.l	r7
+  30                             	.LCFI0:
+  31                             		.loc 1 32 1 is_stmt 0
+  32 0002 EF 17                   		mov.L	r1, r7
+  33                             	.LVL3:
+  34                             	.LBB24:
+  35                             	.LBB25:
+  36                             		.loc 1 32 65
+  37 0004 F8 12 00 00 00 00       		mov.L	#__ZTVN6tflite30RecordingSimpleMemoryAllocatorE+8, [r1]
+  38 000a 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocatorD2Ev
+  39                             	.LVL4:
+  40                             	.LBE25:
+  41                             	.LBE24:
+  42                             		.loc 1 32 68
+  43 000e 75 42 2C                		mov.L	#44, r2
+  44 0011 EF 71                   		mov.L	r7, r1
+  45 0013 7E B7                   		pop	r7
+  46                             	.LVL5:
+  47 0015 04 00 00 00             		bra	__ZdlPvm
+  48                             	.LVL6:
+  49                             	.LFE89:
+  51                             		.section	.text._ZN6tflite30RecordingSimpleMemoryAllocator17SetHeadBufferSizeEmm,"ax",@progbits
+  52                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocator17SetHeadBufferSizeEmm
+  54                             	__ZN6tflite30RecordingSimpleMemoryAllocator17SetHeadBufferSizeEmm:
+  55                             	.LFB100:
+  33:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  34:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** RecordingSimpleMemoryAllocator* RecordingSimpleMemoryAllocator::Create(
+  35:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     ErrorReporter* error_reporter, uint8_t* buffer_head, size_t buffer_size) {
+  36:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   TFLITE_DCHECK(error_reporter != nullptr);
+  37:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   TFLITE_DCHECK(buffer_head != nullptr);
+  38:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   RecordingSimpleMemoryAllocator tmp =
+  39:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       RecordingSimpleMemoryAllocator(error_reporter, buffer_head, buffer_size);
+  40:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  41:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   uint8_t* allocator_buffer =
+  42:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       tmp.AllocateFromTail(sizeof(RecordingSimpleMemoryAllocator),
+  43:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****                            alignof(RecordingSimpleMemoryAllocator));
+  44:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   // Use the default copy constructor to populate internal states.
+  45:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return new (allocator_buffer) RecordingSimpleMemoryAllocator(tmp);
+  46:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+  47:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  48:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** size_t RecordingSimpleMemoryAllocator::GetRequestedBytes() const {
+  49:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return requested_head_bytes_ + requested_tail_bytes_;
+  50:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+  51:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  52:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** size_t RecordingSimpleMemoryAllocator::GetUsedBytes() const {
+  53:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return used_bytes_;
+  54:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+  55:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  56:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** size_t RecordingSimpleMemoryAllocator::GetAllocatedCount() const {
+  57:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return alloc_count_;
+  58:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+  59:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  60:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** TfLiteStatus RecordingSimpleMemoryAllocator::SetHeadBufferSize(
+  61:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     size_t size, size_t alignment) {
+  56                             		.loc 1 61 36 is_stmt 1
+  57                             	.LVL7:
+  58 0000 6E 6B                   		pushm	r6-r11
+  59                             	.LCFI1:
+  60 0002 60 40                   		sub	#4, r0
+  61                             	.LCFI2:
+  62:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   const uint8_t* previous_head = head();
+  62                             		.loc 1 62 3
+  61:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   const uint8_t* previous_head = head();
+  63                             		.loc 1 61 36 is_stmt 0
+  64 0004 EF 17                   		mov.L	r1, r7
+  65 0006 EF 2B                   		mov.L	r2, r11
+  66                             		.loc 1 62 38
+  67 0008 E3 03                   		mov.L	r3, [r0]
+  68 000a 05 00 00 00             		bsr	__ZNK6tflite21SimpleMemoryAllocator4headEv
+  69                             	.LVL8:
+  70 000e EF 16                   		mov.L	r1, r6
+  71                             	.LVL9:
+  63:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   TfLiteStatus status =
+  72                             		.loc 1 63 3 is_stmt 1
+  64:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       SimpleMemoryAllocator::SetHeadBufferSize(size, alignment);
+  73                             		.loc 1 64 47 is_stmt 0
+  74 0010 EC 03                   		mov.L	[r0], r3
+  75 0012 EF B2                   		mov.L	r11, r2
+  76 0014 EF 71                   		mov.L	r7, r1
+  77                             	.LVL10:
+  78 0016 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocator17SetHeadBufferSizeEmm
+  79                             	.LVL11:
+  65:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   if (status == kTfLiteOk) {
+  80                             		.loc 1 65 3
+  81 001a 71 1A 00                		add	#0, r1, r10
+  82 001d 16                      		beq	.L8
+  66:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += head() - previous_head;
+  67:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_head_bytes_ = size;
+  68:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+  69:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return status;
+  70:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+  83                             		.loc 1 70 1
+  84 001e EF A1                   		mov.L	r10, r1
+  85 0020 3F 6B 07                		rtsd	#28, r6-r11
+  86                             	.LVL12:
+  87                             	.L8:
+  66:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += head() - previous_head;
+  88                             		.loc 1 66 5 is_stmt 1
+  66:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += head() - previous_head;
+  89                             		.loc 1 66 24 is_stmt 0
+  90 0023 EF 71                   		mov.L	r7, r1
+  91 0025 05 00 00 00             		bsr	__ZNK6tflite21SimpleMemoryAllocator4headEv
+  92                             	.LVL13:
+  66:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += head() - previous_head;
+  93                             		.loc 1 66 17
+  94 0029 43 61                   		sub	r6, r1
+  95 002b 06 89 71 09             		add	36[r7].L, r1
+  96 002f A2 79                   		mov.L	r1, 36[r7]
+  67:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+  97                             		.loc 1 67 5 is_stmt 1
+  67:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+  98                             		.loc 1 67 27 is_stmt 0
+  99 0031 E7 7B 07                		mov.L	r11, 28[r7]
+  69:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+ 100                             		.loc 1 69 3 is_stmt 1
+ 101                             		.loc 1 70 1 is_stmt 0
+ 102 0034 EF A1                   		mov.L	r10, r1
+ 103 0036 3F 6B 07                		rtsd	#28, r6-r11
+ 104                             	.LFE100:
+ 106                             		.section	.text._ZN6tflite30RecordingSimpleMemoryAllocator16AllocateFromTailEmm,"ax",@progbits
+ 107                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocator16AllocateFromTailEmm
+ 109                             	__ZN6tflite30RecordingSimpleMemoryAllocator16AllocateFromTailEmm:
+ 110                             	.LFB101:
+  71:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+  72:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** uint8_t* RecordingSimpleMemoryAllocator::AllocateFromTail(size_t size,
+  73:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****                                                           size_t alignment) {
+ 111                             		.loc 1 73 77 is_stmt 1
+ 112                             	.LVL14:
+ 113 0000 6E 6B                   		pushm	r6-r11
+ 114                             	.LCFI3:
+ 115 0002 60 40                   		sub	#4, r0
+ 116                             	.LCFI4:
+  74:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   const uint8_t* previous_tail = tail();
+ 117                             		.loc 1 74 3
+  73:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   const uint8_t* previous_tail = tail();
+ 118                             		.loc 1 73 77 is_stmt 0
+ 119 0004 EF 17                   		mov.L	r1, r7
+ 120 0006 EF 2B                   		mov.L	r2, r11
+ 121                             		.loc 1 74 38
+ 122 0008 E3 03                   		mov.L	r3, [r0]
+ 123 000a 05 00 00 00             		bsr	__ZNK6tflite21SimpleMemoryAllocator4tailEv
+ 124                             	.LVL15:
+ 125 000e EF 1A                   		mov.L	r1, r10
+ 126                             	.LVL16:
+  75:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   uint8_t* result = SimpleMemoryAllocator::AllocateFromTail(size, alignment);
+ 127                             		.loc 1 75 3 is_stmt 1
+ 128                             		.loc 1 75 60 is_stmt 0
+ 129 0010 EC 03                   		mov.L	[r0], r3
+ 130 0012 EF B2                   		mov.L	r11, r2
+ 131 0014 EF 71                   		mov.L	r7, r1
+ 132                             	.LVL17:
+ 133 0016 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocator16AllocateFromTailEmm
+ 134                             	.LVL18:
+  76:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   if (result != nullptr) {
+ 135                             		.loc 1 76 3
+ 136 001a 71 16 00                		add	#0, r1, r6
+ 137 001d 20 1E                   		beq	.L9
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += previous_tail - tail();
+ 138                             		.loc 1 77 5 is_stmt 1
+ 139                             		.loc 1 77 40 is_stmt 0
+ 140 001f EF 71                   		mov.L	r7, r1
+ 141 0021 05 00 00 00             		bsr	__ZNK6tflite21SimpleMemoryAllocator4tailEv
+ 142                             	.LVL19:
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+  79:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     alloc_count_++;
+ 143                             		.loc 1 79 17
+ 144 0025 AA F5                   		mov.L	40[r7], r5
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += previous_tail - tail();
+ 145                             		.loc 1 77 17
+ 146 0027 FF 01 1A                		sub	r1, r10, r1
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 147                             		.loc 1 78 27
+ 148 002a 06 89 7B 08             		add	32[r7], r11
+ 149                             	.LVL20:
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += previous_tail - tail();
+ 150                             		.loc 1 77 17
+ 151 002e 06 89 71 09             		add	36[r7].L, r1
+ 152                             		.loc 1 79 17
+ 153 0032 62 15                   		add	#1, r5
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += previous_tail - tail();
+ 154                             		.loc 1 77 17
+ 155 0034 A2 79                   		mov.L	r1, 36[r7]
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 156                             		.loc 1 78 5 is_stmt 1
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 157                             		.loc 1 78 27 is_stmt 0
+ 158 0036 E7 7B 08                		mov.L	r11, 32[r7]
+ 159                             		.loc 1 79 5 is_stmt 1
+ 160                             		.loc 1 79 17 is_stmt 0
+ 161 0039 A2 F5                   		mov.L	r5, 40[r7]
+  80:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+  81:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return result;
+ 162                             		.loc 1 81 3 is_stmt 1
+ 163                             		.balign 8,3,1
+ 164                             	.L9:
+  82:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+ 165                             		.loc 1 82 1 is_stmt 0
+ 166 003b EF 61                   		mov.L	r6, r1
+ 167 003d 3F 6B 07                		rtsd	#28, r6-r11
+ 168                             	.LFE101:
+ 170                             		.section	.text._ZN6tflite30RecordingSimpleMemoryAllocatorC2EPNS_13ErrorReporterEPhm,"ax",@progbits
+ 171                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocatorC2EPNS_13ErrorReporterEPhm
+ 173                             	__ZN6tflite30RecordingSimpleMemoryAllocatorC2EPNS_13ErrorReporterEPhm:
+ 174                             	.LFB84:
+  24:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     ErrorReporter* error_reporter, uint8_t* buffer_head, size_t buffer_size)
+ 175                             		.loc 1 24 1 is_stmt 1
+ 176                             	.LVL21:
+ 177 0000 7E A7                   		push.l	r7
+ 178                             	.LCFI5:
+  24:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     ErrorReporter* error_reporter, uint8_t* buffer_head, size_t buffer_size)
+ 179                             		.loc 1 24 1 is_stmt 0
+ 180 0002 EF 17                   		mov.L	r1, r7
+ 181                             	.LBB26:
+  30:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 182                             		.loc 1 30 21
+ 183 0004 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocatorC2EPNS_13ErrorReporterEPhm
+ 184                             	.LVL22:
+ 185 0008 F8 72 00 00 00 00       		mov.L	#__ZTVN6tflite30RecordingSimpleMemoryAllocatorE+8, [r7]
+ 186 000e 3E 77 00                		mov.L	#0, 28[r7]
+ 187 0011 3E 78 00                		mov.L	#0, 32[r7]
+ 188 0014 3E 79 00                		mov.L	#0, 36[r7]
+ 189 0017 3E 7A 00                		mov.L	#0, 40[r7]
+ 190                             	.LBE26:
+  30:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 191                             		.loc 1 30 24
+ 192 001a 3F 77 01                		rtsd	#4, r7-r7
+ 193                             	.LFE84:
+ 195                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocatorC1EPNS_13ErrorReporterEPhm
+ 196                             		.set	__ZN6tflite30RecordingSimpleMemoryAllocatorC1EPNS_13ErrorReporterEPhm,__ZN6tflite30RecordingS
+ 197                             		.section	.text._ZN6tflite30RecordingSimpleMemoryAllocator6CreateEPNS_13ErrorReporterEPhm,"ax",@pro
+ 198                             		.global	__ZN6tflite30RecordingSimpleMemoryAllocator6CreateEPNS_13ErrorReporterEPhm
+ 200                             	__ZN6tflite30RecordingSimpleMemoryAllocator6CreateEPNS_13ErrorReporterEPhm:
+ 201                             	.LFB90:
+  35:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   TFLITE_DCHECK(error_reporter != nullptr);
+ 202                             		.loc 1 35 78 is_stmt 1
+ 203                             	.LVL23:
+ 204 0000 6E 7A                   		pushm	r7-r10
+ 205                             	.LCFI6:
+ 206 0002 71 00 D4                		add	#-44, r0
+ 207                             	.LCFI7:
+  36:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   TFLITE_DCHECK(buffer_head != nullptr);
+ 208                             		.loc 1 36 3
+ 209 0005 61 01                   		cmp	#0, r1
+ 210 0007 3A 9B 00                		beq	.L19
+  37:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   RecordingSimpleMemoryAllocator tmp =
+ 211                             		.loc 1 37 3
+ 212 000a 61 02                   		cmp	#0, r2
+ 213 000c 3A 96 00                		beq	.L19
+  38:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       RecordingSimpleMemoryAllocator(error_reporter, buffer_head, buffer_size);
+ 214                             		.loc 1 38 3
+ 215                             	.LVL24:
+ 216                             	.LBB40:
+ 217                             	.LBB41:
+ 218                             	.LBB42:
+  30:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 219                             		.loc 1 30 21 is_stmt 0
+ 220 000f EF 34                   		mov.L	r3, r4
+ 221 0011 EF 23                   		mov.L	r2, r3
+ 222                             	.LVL25:
+ 223 0013 EF 12                   		mov.L	r1, r2
+ 224                             	.LVL26:
+ 225 0015 EF 01                   		mov.L	r0, r1
+ 226                             	.LVL27:
+ 227 0017 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocatorC2EPNS_13ErrorReporterEPhm
+ 228                             	.LVL28:
+ 229                             	.LBE42:
+ 230                             	.LBE41:
+ 231                             	.LBE40:
+ 232                             	.LBB45:
+ 233                             	.LBB46:
+  74:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   uint8_t* result = SimpleMemoryAllocator::AllocateFromTail(size, alignment);
+ 234                             		.loc 1 74 38
+ 235 001b EF 01                   		mov.L	r0, r1
+ 236                             	.LBE46:
+ 237                             	.LBE45:
+ 238                             	.LBB48:
+ 239                             	.LBB44:
+ 240                             	.LBB43:
+  30:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 241                             		.loc 1 30 21
+ 242 001d F8 02 00 00 00 00       		mov.L	#__ZTVN6tflite30RecordingSimpleMemoryAllocatorE+8, [r0]
+ 243 0023 3E 07 00                		mov.L	#0, 28[r0]
+ 244 0026 3E 08 00                		mov.L	#0, 32[r0]
+ 245 0029 3E 09 00                		mov.L	#0, 36[r0]
+ 246 002c 3E 0A 00                		mov.L	#0, 40[r0]
+ 247                             	.LVL29:
+ 248                             	.LBE43:
+ 249                             	.LBE44:
+ 250                             	.LBE48:
+  41:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****       tmp.AllocateFromTail(sizeof(RecordingSimpleMemoryAllocator),
+ 251                             		.loc 1 41 3 is_stmt 1
+ 252                             	.LBB49:
+ 253                             	.LBB47:
+  74:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   uint8_t* result = SimpleMemoryAllocator::AllocateFromTail(size, alignment);
+ 254                             		.loc 1 74 3
+  74:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   uint8_t* result = SimpleMemoryAllocator::AllocateFromTail(size, alignment);
+ 255                             		.loc 1 74 38 is_stmt 0
+ 256 002f 05 00 00 00             		bsr	__ZNK6tflite21SimpleMemoryAllocator4tailEv
+ 257                             	.LVL30:
+ 258 0033 EF 1A                   		mov.L	r1, r10
+ 259                             	.LVL31:
+  75:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   if (result != nullptr) {
+ 260                             		.loc 1 75 3 is_stmt 1
+  75:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   if (result != nullptr) {
+ 261                             		.loc 1 75 60 is_stmt 0
+ 262 0035 66 43                   		mov.L	#4, r3
+ 263 0037 75 42 2C                		mov.L	#44, r2
+ 264 003a EF 01                   		mov.L	r0, r1
+ 265                             	.LVL32:
+ 266 003c 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocator16AllocateFromTailEmm
+ 267                             	.LVL33:
+  76:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     used_bytes_ += previous_tail - tail();
+ 268                             		.loc 1 76 3
+ 269 0040 71 17 00                		add	#0, r1, r7
+ 270 0043 20 57                   		beq	.L28
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 271                             		.loc 1 77 5 is_stmt 1
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 272                             		.loc 1 77 40 is_stmt 0
+ 273 0045 EF 01                   		mov.L	r0, r1
+ 274 0047 05 00 00 00             		bsr	__ZNK6tflite21SimpleMemoryAllocator4tailEv
+ 275                             	.LVL34:
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     alloc_count_++;
+ 276                             		.loc 1 78 27
+ 277 004b AA 04                   		mov.L	32[r0], r4
+  79:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+ 278                             		.loc 1 79 17
+ 279 004d AA 85                   		mov.L	40[r0], r5
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 280                             		.loc 1 77 17
+ 281 004f FF 01 1A                		sub	r1, r10, r1
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     alloc_count_++;
+ 282                             		.loc 1 78 27
+ 283 0052 71 44 2C                		add	#44, r4
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 284                             		.loc 1 77 17
+ 285 0055 06 89 01 09             		add	36[r0].L, r1
+  79:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+ 286                             		.loc 1 79 17
+ 287 0059 62 15                   		add	#1, r5
+  77:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     requested_tail_bytes_ += size;
+ 288                             		.loc 1 77 17
+ 289 005b A2 09                   		mov.L	r1, 36[r0]
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     alloc_count_++;
+ 290                             		.loc 1 78 5 is_stmt 1
+  78:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****     alloc_count_++;
+ 291                             		.loc 1 78 27 is_stmt 0
+ 292 005d A2 04                   		mov.L	r4, 32[r0]
+  79:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+ 293                             		.loc 1 79 5 is_stmt 1
+  79:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   }
+ 294                             		.loc 1 79 17 is_stmt 0
+ 295 005f A2 85                   		mov.L	r5, 40[r0]
+ 296                             		.balign 8,3,1
+ 297                             	.L20:
+  81:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+ 298                             		.loc 1 81 3 is_stmt 1
+ 299                             	.LVL35:
+ 300                             	.LBE47:
+ 301                             	.LBE49:
+  45:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+ 302                             		.loc 1 45 3
+ 303                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+   1:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // The -*- C++ -*- dynamic memory management header.
+   2:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+   3:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // Copyright (C) 1994-2018 Free Software Foundation, Inc.
+   4:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+   5:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // This file is part of GCC.
+   6:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** //
+   7:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // GCC is free software; you can redistribute it and/or modify
+   8:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // it under the terms of the GNU General Public License as published by
+   9:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // the Free Software Foundation; either version 3, or (at your option)
+  10:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // any later version.
+  11:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // 
+  12:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // GCC is distributed in the hope that it will be useful,
+  13:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // but WITHOUT ANY WARRANTY; without even the implied warranty of
+  14:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  15:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // GNU General Public License for more details.
+  16:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // 
+  17:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // Under Section 7 of GPL version 3, you are granted additional
+  18:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // permissions described in the GCC Runtime Library Exception, version
+  19:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // 3.1, as published by the Free Software Foundation.
+  20:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  21:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // You should have received a copy of the GNU General Public License and
+  22:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // a copy of the GCC Runtime Library Exception along with this program;
+  23:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+  24:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // <http://www.gnu.org/licenses/>.
+  25:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  26:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** /** @file new
+  27:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  This is a Standard C++ Library header.
+  28:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *
+  29:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  The header @c new defines several functions to manage dynamic memory and
+  30:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  handling memory allocation errors; see
+  31:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  http://gcc.gnu.org/onlinedocs/libstdc++/18_support/howto.html#4 for more.
+  32:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  */
+  33:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  34:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #ifndef _NEW
+  35:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #define _NEW
+  36:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  37:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #pragma GCC system_header
+  38:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  39:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #include <bits/c++config.h>
+  40:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #include <exception>
+  41:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  42:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #pragma GCC visibility push(default)
+  43:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  44:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** extern "C++" {
+  45:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  46:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** namespace std 
+  47:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** {
+  48:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   /**
+  49:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****    *  @brief  Exception possibly thrown by @c new.
+  50:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****    *  @ingroup exceptions
+  51:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****    *
+  52:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****    *  @c bad_alloc (or classes derived from it) is used to report allocation
+  53:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****    *  errors from the throwing forms of @c new.  */
+  54:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   class bad_alloc : public exception 
+  55:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   {
+  56:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   public:
+  57:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     bad_alloc() throw() { }
+  58:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  59:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     // This declaration is not useless:
+  60:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     // http://gcc.gnu.org/onlinedocs/gcc-3.0.2/gcc_6.html#SEC118
+  61:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     virtual ~bad_alloc() throw();
+  62:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  63:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     // See comment in eh_exception.cc.
+  64:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     virtual const char* what() const throw();
+  65:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   };
+  66:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  67:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #if __cplusplus >= 201103L
+  68:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   class bad_array_new_length : public bad_alloc
+  69:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   {
+  70:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   public:
+  71:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     bad_array_new_length() throw() { }
+  72:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  73:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     // This declaration is not useless:
+  74:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     // http://gcc.gnu.org/onlinedocs/gcc-3.0.2/gcc_6.html#SEC118
+  75:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     virtual ~bad_array_new_length() throw();
+  76:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  77:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     // See comment in eh_exception.cc.
+  78:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     virtual const char* what() const throw();
+  79:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   };
+  80:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #endif
+  81:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  82:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #if __cpp_aligned_new
+  83:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   enum class align_val_t: size_t {};
+  84:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #endif
+  85:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  86:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   struct nothrow_t
+  87:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   {
+  88:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #if __cplusplus >= 201103L
+  89:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****     explicit nothrow_t() = default;
+  90:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #endif
+  91:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   };
+  92:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  93:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   extern const nothrow_t nothrow;
+  94:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  95:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   /** If you write your own error handler to be called by @c new, it must
+  96:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****    *  be of this type.  */
+  97:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   typedef void (*new_handler)();
+  98:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+  99:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   /// Takes a replacement handler as the argument, returns the
+ 100:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   /// previous handler.
+ 101:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   new_handler set_new_handler(new_handler) throw();
+ 102:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+ 103:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #if __cplusplus >= 201103L
+ 104:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   /// Return the current new handler.
+ 105:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   new_handler get_new_handler() noexcept;
+ 106:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #endif
+ 107:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** } // namespace std
+ 108:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+ 109:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** //@{
+ 110:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** /** These are replaceable signatures:
+ 111:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  - normal single new and delete (no arguments, throw @c bad_alloc on error)
+ 112:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  - normal array new and delete (same)
+ 113:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  - @c nothrow single new and delete (take a @c nothrow argument, return
+ 114:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *    @c NULL on error)
+ 115:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  - @c nothrow array new and delete (same)
+ 116:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *
+ 117:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  Placement new and delete signatures (take a memory address argument,
+ 118:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****  *  does nothing) may not be replaced by a user's program.
+ 119:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** */
+ 120:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new(std::size_t) _GLIBCXX_THROW (std::bad_alloc)
+ 121:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 122:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new[](std::size_t) _GLIBCXX_THROW (std::bad_alloc)
+ 123:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 124:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete(void*) _GLIBCXX_USE_NOEXCEPT
+ 125:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 126:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete[](void*) _GLIBCXX_USE_NOEXCEPT
+ 127:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 128:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #if __cpp_sized_deallocation
+ 129:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete(void*, std::size_t) _GLIBCXX_USE_NOEXCEPT
+ 130:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 131:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete[](void*, std::size_t) _GLIBCXX_USE_NOEXCEPT
+ 132:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 133:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #endif
+ 134:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new(std::size_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+ 135:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 136:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new[](std::size_t, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+ 137:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 138:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete(void*, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+ 139:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 140:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete[](void*, const std::nothrow_t&) _GLIBCXX_USE_NOEXCEPT
+ 141:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 142:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #if __cpp_aligned_new
+ 143:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new(std::size_t, std::align_val_t)
+ 144:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 145:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new(std::size_t, std::align_val_t, const std::nothrow_t&)
+ 146:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 147:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete(void*, std::align_val_t)
+ 148:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 149:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete(void*, std::align_val_t, const std::nothrow_t&)
+ 150:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 151:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new[](std::size_t, std::align_val_t)
+ 152:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   __attribute__((__externally_visible__));
+ 153:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void* operator new[](std::size_t, std::align_val_t, const std::nothrow_t&)
+ 154:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 155:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete[](void*, std::align_val_t)
+ 156:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 157:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete[](void*, std::align_val_t, const std::nothrow_t&)
+ 158:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 159:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #if __cpp_sized_deallocation
+ 160:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete(void*, std::size_t, std::align_val_t)
+ 161:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 162:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** void operator delete[](void*, std::size_t, std::align_val_t)
+ 163:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new ****   _GLIBCXX_USE_NOEXCEPT __attribute__((__externally_visible__));
+ 164:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #endif // __cpp_sized_deallocation
+ 165:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** #endif // __cpp_aligned_new
+ 166:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** 
+ 167:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** // Default placement versions of operator new.
+ 168:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** inline void* operator new(std::size_t, void* __p) _GLIBCXX_USE_NOEXCEPT
+ 169:c:\gcc for renesas rx 8.3.0.202004-gnurx-elf\rx-elf\rx-elf\rx-elf\include\c++\8.3.0.202004-gnurx\new **** { return __p; }
+ 304                             		.loc 2 169 3
+ 305                             	.LBB50:
+ 306                             	.LBB51:
+ 307                             	.LBB52:
+ 308                             	.LBB53:
+ 309                             		.file 3 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** #ifndef TENSORFLOW_LITE_MICRO_SIMPLE_MEMORY_ALLOCATOR_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** #define TENSORFLOW_LITE_MICRO_SIMPLE_MEMORY_ALLOCATOR_H_
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** #include <cstddef>
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** #include <cstdint>
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** #include "tensorflow/lite/c/common.h"
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** #include "tensorflow/lite/core/api/error_reporter.h"
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** #include "tensorflow/lite/micro/compatibility.h"
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** namespace tflite {
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** 
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** // TODO(petewarden): This allocator never frees up or reuses  any memory, even
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** // though we have enough information about lifetimes of the tensors to do so.
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** // This makes it pretty wasteful, so we should use a more intelligent method.
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\simple_memory_allocator.h **** class SimpleMemoryAllocator {
+ 310                             		.loc 3 31 7 is_stmt 0
+ 311 0061 E5 07 02 02             		mov.L	8[r0], 8[r7]
+ 312 0065 E5 07 01 01             		mov.L	4[r0], 4[r7]
+ 313 0069 E5 07 03 03             		mov.L	12[r0], 12[r7]
+ 314                             	.LBE53:
+ 315                             	.LBE52:
+ 316                             		.file 4 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** 
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** #ifndef TENSORFLOW_LITE_MICRO_RECORDING_SIMPLE_MEMORY_ALLOCATOR_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** #define TENSORFLOW_LITE_MICRO_RECORDING_SIMPLE_MEMORY_ALLOCATOR_H_
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** 
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** #include "tensorflow/lite/micro/compatibility.h"
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** #include "tensorflow/lite/micro/simple_memory_allocator.h"
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** 
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** namespace tflite {
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** 
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** // Utility class used to log allocations of a SimpleMemoryAllocator. Should only
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** // be used in debug/evaluation settings or unit tests to evaluate allocation
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** // usage.
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\recording_simple_memory_allocator.h **** class RecordingSimpleMemoryAllocator : public SimpleMemoryAllocator {
+ 317                             		.loc 4 27 7
+ 318 006d E5 07 07 07             		mov.L	28[r0], 28[r7]
+ 319                             	.LBB57:
+ 320                             	.LBB54:
+ 321                             		.loc 3 31 7
+ 322 0071 E5 07 04 04             		mov.L	16[r0], 16[r7]
+ 323                             	.LBE54:
+ 324                             	.LBE57:
+ 325                             		.loc 4 27 7
+ 326 0075 A2 74                   		mov.L	r4, 32[r7]
+ 327                             	.LBB58:
+ 328                             	.LBB55:
+ 329                             		.loc 3 31 7
+ 330 0077 E5 07 05 05             		mov.L	20[r0], 20[r7]
+ 331                             	.LBE55:
+ 332                             	.LBE58:
+ 333                             		.loc 4 27 7
+ 334 007b A2 79                   		mov.L	r1, 36[r7]
+ 335                             	.LBB59:
+ 336                             	.LBB56:
+ 337                             		.loc 3 31 7
+ 338 007d E5 07 06 06             		mov.L	24[r0], 24[r7]
+ 339                             	.LVL36:
+ 340                             	.LBE56:
+ 341                             	.LBE59:
+ 342                             	.LBE51:
+ 343                             	.LBE50:
+ 344                             	.LBB61:
+ 345                             	.LBB62:
+  32:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 346                             		.loc 1 32 65
+ 347 0081 EF 01                   		mov.L	r0, r1
+ 348                             	.LBE62:
+ 349                             	.LBE61:
+ 350                             	.LBB64:
+ 351                             	.LBB60:
+ 352                             		.loc 4 27 7
+ 353 0083 F8 72 00 00 00 00       		mov.L	#__ZTVN6tflite30RecordingSimpleMemoryAllocatorE+8, [r7]
+ 354 0089 A2 F5                   		mov.L	r5, 40[r7]
+ 355                             	.LVL37:
+ 356                             	.LBE60:
+ 357                             	.LBE64:
+ 358                             	.LBB65:
+ 359                             	.LBB63:
+  32:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 360                             		.loc 1 32 65
+ 361 008b F8 02 00 00 00 00       		mov.L	#__ZTVN6tflite30RecordingSimpleMemoryAllocatorE+8, [r0]
+ 362 0091 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocatorD2Ev
+ 363                             	.LVL38:
+ 364                             	.LBE63:
+ 365                             	.LBE65:
+  46:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 366                             		.loc 1 46 1
+ 367 0095 EF 71                   		mov.L	r7, r1
+ 368 0097 3F 7A 0F                		rtsd	#60, r7-r10
+ 369                             	.LVL39:
+ 370                             	.L28:
+ 371 009a AA 09                   		mov.L	36[r0], r1
+ 372 009c AA 04                   		mov.L	32[r0], r4
+ 373 009e AA 85                   		mov.L	40[r0], r5
+ 374 00a0 2E C1                   		bra	.L20
+ 375                             	.LVL40:
+ 376                             	.L19:
+  36:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   TFLITE_DCHECK(buffer_head != nullptr);
+ 377                             		.loc 1 36 3 discriminator 1
+ 378 00a2 05 00 00 00             		bsr	_abort
+ 379                             	.LVL41:
+ 380                             	.LFE90:
+ 382 00a6 EF 00                   		.section	.text._ZNK6tflite30RecordingSimpleMemoryAllocator17GetRequestedBytesEv,"ax",@progbits
+ 383                             		.global	__ZNK6tflite30RecordingSimpleMemoryAllocator17GetRequestedBytesEv
+ 385                             	__ZNK6tflite30RecordingSimpleMemoryAllocator17GetRequestedBytesEv:
+ 386                             	.LFB97:
+  48:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return requested_head_bytes_ + requested_tail_bytes_;
+ 387                             		.loc 1 48 66 is_stmt 1
+ 388                             	.LVL42:
+ 389 0000 7E A7                   		push.l	r7
+ 390                             	.LCFI8:
+  49:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+ 391                             		.loc 1 49 3
+  50:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 392                             		.loc 1 50 1 is_stmt 0
+ 393 0002 A9 9F                   		mov.L	28[r1], r7
+ 394 0004 06 89 17 08             		add	32[r1].L, r7
+ 395 0008 EF 71                   		mov.L	r7, r1
+ 396                             	.LVL43:
+ 397 000a 3F 77 01                		rtsd	#4, r7-r7
+ 398                             	.LFE97:
+ 400                             		.section	.text._ZNK6tflite30RecordingSimpleMemoryAllocator12GetUsedBytesEv,"ax",@progbits
+ 401                             		.global	__ZNK6tflite30RecordingSimpleMemoryAllocator12GetUsedBytesEv
+ 403                             	__ZNK6tflite30RecordingSimpleMemoryAllocator12GetUsedBytesEv:
+ 404                             	.LFB98:
+  52:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return used_bytes_;
+ 405                             		.loc 1 52 61 is_stmt 1
+ 406                             	.LVL44:
+  53:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+ 407                             		.loc 1 53 3
+  54:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 408                             		.loc 1 54 1 is_stmt 0
+ 409 0000 AA 19                   		mov.L	36[r1], r1
+ 410                             	.LVL45:
+ 411 0002 02                      		rts
+ 412                             	.LFE98:
+ 414                             		.section	.text._ZNK6tflite30RecordingSimpleMemoryAllocator17GetAllocatedCountEv,"ax",@progbits
+ 415                             		.global	__ZNK6tflite30RecordingSimpleMemoryAllocator17GetAllocatedCountEv
+ 417                             	__ZNK6tflite30RecordingSimpleMemoryAllocator17GetAllocatedCountEv:
+ 418                             	.LFB99:
+  56:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc ****   return alloc_count_;
+ 419                             		.loc 1 56 66 is_stmt 1
+ 420                             	.LVL46:
+  57:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** }
+ 421                             		.loc 1 57 3
+  58:../src/tensorflow/lite/micro/recording_simple_memory_allocator.cc **** 
+ 422                             		.loc 1 58 1 is_stmt 0
+ 423 0000 AA 91                   		mov.L	40[r1], r1
+ 424                             	.LVL47:
+ 425 0002 02                      		rts
+ 426                             	.LFE99:
+ 428                             		.weak	__ZTVN6tflite30RecordingSimpleMemoryAllocatorE
+ 429                             		.section	.rodata._ZTVN6tflite30RecordingSimpleMemoryAllocatorE,"aG",@progbits,_ZTVN6tflite30Record
+ 430                             		.balign 4
+ 433                             	__ZTVN6tflite30RecordingSimpleMemoryAllocatorE:
+ 434 0000 00 00 00 00             		.long	0
+ 435 0004 00 00 00 00             		.long	0
+ 436 0008 00 00 00 00             		.long	__ZN6tflite30RecordingSimpleMemoryAllocatorD1Ev
+ 437 000c 00 00 00 00             		.long	__ZN6tflite30RecordingSimpleMemoryAllocatorD0Ev
+ 438 0010 00 00 00 00             		.long	__ZN6tflite30RecordingSimpleMemoryAllocator17SetHeadBufferSizeEmm
+ 439 0014 00 00 00 00             		.long	__ZN6tflite30RecordingSimpleMemoryAllocator16AllocateFromTailEmm
+ 440 0018 00 00 00 00             		.long	__ZN6tflite21SimpleMemoryAllocator12AllocateTempEmm
+ 441 001c 00 00 00 00             		.long	__ZN6tflite21SimpleMemoryAllocator20ResetTempAllocationsEv
+ 606                             	.Letext0:
+ 607                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 608                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 609                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 610                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 611                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 612                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 613                             		.file 11 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 614                             		.file 12 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 615                             		.file 13 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.2
+ 616                             		.file 14 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\
+ 617                             		.file 15 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_st
+ 618                             		.file 16 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdint.h
+ 619                             		.file 17 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 620                             		.file 18 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.2
+ 621                             		.file 19 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\loc
+ 622                             		.file 20 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_ty
+ 623                             		.file 21 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\ree
+ 624                             		.file 22 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 625                             		.file 23 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 626                             		.file 24 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 627                             		.file 25 "<built-in>"

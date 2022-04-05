@@ -1,0 +1,109 @@
+   1                             		.file	"usr_source.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.uart_receive_getch,"ax",@progbits
+   5                             		.global	_uart_receive_getch
+   7                             	_uart_receive_getch:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/EEMBC/usr_source.c"
+   1:../src/EEMBC/usr_source.c **** /**************************************************************************************************
+   2:../src/EEMBC/usr_source.c **** * DISCLAIMER
+   3:../src/EEMBC/usr_source.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/EEMBC/usr_source.c **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/EEMBC/usr_source.c **** * applicable laws, including copyright laws. 
+   6:../src/EEMBC/usr_source.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHE
+   7:../src/EEMBC/usr_source.c **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/EEMBC/usr_source.c **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/EEMBC/usr_source.c **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/EEMBC/usr_source.c **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/EEMBC/usr_source.c **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/EEMBC/usr_source.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/EEMBC/usr_source.c **** * of this software. 
+  14:../src/EEMBC/usr_source.c **** *
+  15:../src/EEMBC/usr_source.c **** * Copyright (C) 2022 Renesas Electronics Corporation. All rights reserved.
+  16:../src/EEMBC/usr_source.c **** ***************************************************************************************************
+  17:../src/EEMBC/usr_source.c **** 
+  18:../src/EEMBC/usr_source.c **** #include "r_smc_entry.h"
+  19:../src/EEMBC/usr_source.c **** 
+  20:../src/EEMBC/usr_source.c **** #define TRANSFER_LENGTH (128)
+  21:../src/EEMBC/usr_source.c **** 
+  22:../src/EEMBC/usr_source.c **** uint32_t rx_read_pos = 0;
+  23:../src/EEMBC/usr_source.c **** extern uint8_t  g_out_of_band_received[TRANSFER_LENGTH];
+  24:../src/EEMBC/usr_source.c **** extern uint32_t g_sci0_rx_count;
+  25:../src/EEMBC/usr_source.c **** extern uint32_t g_out_of_band_index;
+  26:../src/EEMBC/usr_source.c **** 
+  27:../src/EEMBC/usr_source.c **** 
+  28:../src/EEMBC/usr_source.c **** uint8_t uart_receive_getch(void)
+  29:../src/EEMBC/usr_source.c **** {
+  10                             		.loc 1 29 1
+  30:../src/EEMBC/usr_source.c **** 	uint8_t ch = 0;
+  11                             		.loc 1 30 2
+  12                             	.LVL0:
+  31:../src/EEMBC/usr_source.c **** 
+  32:../src/EEMBC/usr_source.c ****     if( g_out_of_band_index != rx_read_pos )
+  13                             		.loc 1 32 5
+  14                             		.loc 1 32 29 is_stmt 0
+  15 0000 FB 42 00 00 00 00       		mov.L	#.LANCHOR0, r4
+  16 0006 EC 45                   		mov.L	[r4], r5
+  17                             		.loc 1 32 7
+  18 0008 FB 32 00 00 00 00       		mov.L	#_g_out_of_band_index, r3
+  19 000e EC 33                   		mov.L	[r3], r3
+  20 0010 47 53                   		cmp	r5, r3
+  21 0012 20 1D                   		beq	.L4
+  33:../src/EEMBC/usr_source.c ****     {
+  34:../src/EEMBC/usr_source.c ****         ch = g_out_of_band_received[rx_read_pos++];
+  22                             		.loc 1 34 9 is_stmt 1
+  23                             		.loc 1 34 48 is_stmt 0
+  24 0014 71 53 01                		add	#1, r5, r3
+  25 0017 E3 43                   		mov.L	r3, [r4]
+  26                             		.loc 1 34 12
+  27 0019 FB 22 00 00 00 00       		mov.L	#_g_out_of_band_received, r2
+  28 001f FE 45 21                		mov.B	[r5,r2], r1
+  29                             	.LVL1:
+  30 0022 EF 35                   		mov.L	r3, r5
+  31                             	.LVL2:
+  32                             		.balign 8,3,2
+  33                             	.L2:
+  35:../src/EEMBC/usr_source.c ****     }
+  36:../src/EEMBC/usr_source.c **** 
+  37:../src/EEMBC/usr_source.c ****     if( TRANSFER_LENGTH <= rx_read_pos)
+  34                             		.loc 1 37 5 is_stmt 1
+  35                             		.loc 1 37 7 is_stmt 0
+  36 0024 75 55 7F                		cmp	#0x7f, r5
+  37 0027 25 05                   		bleu	.L3
+  38:../src/EEMBC/usr_source.c ****     {
+  39:../src/EEMBC/usr_source.c ****         rx_read_pos = 0;
+  38                             		.loc 1 39 9 is_stmt 1
+  39                             		.loc 1 39 21 is_stmt 0
+  40 0029 F8 46 00                		mov.L	#0, [r4]
+  41                             		.balign 8,3,1
+  42                             	.L3:
+  40:../src/EEMBC/usr_source.c ****     }
+  41:../src/EEMBC/usr_source.c ****     return ch;
+  43                             		.loc 1 41 5 is_stmt 1
+  42:../src/EEMBC/usr_source.c **** }
+  44                             		.loc 1 42 1 is_stmt 0
+  45 002c 5B 11                   		movu.B	r1, r1
+  46 002e 02                      		rts
+  47                             	.LVL3:
+  48                             	.L4:
+  30:../src/EEMBC/usr_source.c **** 
+  49                             		.loc 1 30 10
+  50 002f 66 01                   		mov	#0, r1
+  51 0031 2E F3                   		bra	.L2
+  52                             	.LFE3:
+  54                             		.global	_rx_read_pos
+  55 0033 77 10 01 00 00          		.section	.bss.rx_read_pos,"aw",@nobits
+  56                             		.balign 4
+  57                             		.set	.LANCHOR0,. + 0
+  60                             	_rx_read_pos:
+  61 0000 00 00 00 00             		.zero	4
+  88                             	.Letext0:
+  89                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  90                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  91                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  92                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  93                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  94                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  95                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+  96                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc

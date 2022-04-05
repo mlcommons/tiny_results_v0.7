@@ -1,0 +1,781 @@
+   1                             		.file	"kernel_runner.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite5micro12KernelRunner9GetTensorEPK13TfLiteContexti,"ax",@progbits
+   5                             		.global	__ZN6tflite5micro12KernelRunner9GetTensorEPK13TfLiteContexti
+   7                             	__ZN6tflite5micro12KernelRunner9GetTensorEPK13TfLiteContexti:
+   8                             	.LFB17:
+   9                             		.file 1 "../src/tensorflow/lite/micro/kernels/kernel_runner.cc"
+   1:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+   3:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+   7:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+   9:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  16:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** #include "tensorflow/lite/micro/kernels/kernel_runner.h"
+  17:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  18:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** namespace tflite {
+  19:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** namespace micro {
+  20:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  21:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** namespace {
+  22:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** constexpr size_t kBufferAlignment = 16;
+  23:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }  // namespace
+  24:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  25:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** // TODO(b/161841696): Consider moving away from global arena buffers:
+  26:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** constexpr int KernelRunner::kNumScratchBuffers_;
+  27:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** constexpr int KernelRunner::kKernelRunnerBufferSize_;
+  28:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** uint8_t KernelRunner::kKernelRunnerBuffer_[];
+  29:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  30:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** KernelRunner::KernelRunner(const TfLiteRegistration& registration,
+  31:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                            TfLiteTensor* tensors, int tensors_size,
+  32:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                            TfLiteIntArray* inputs, TfLiteIntArray* outputs,
+  33:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                            void* builtin_data, ErrorReporter* error_reporter)
+  34:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     : allocator_(SimpleMemoryAllocator::Create(
+  35:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****           error_reporter, kKernelRunnerBuffer_, kKernelRunnerBufferSize_)),
+  36:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       registration_(registration),
+  37:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       tensors_(tensors),
+  38:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       error_reporter_(error_reporter) {
+  39:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // Prepare TfLiteContext:
+  40:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.impl_ = static_cast<void*>(this);
+  41:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.ReportError = ReportOpError;
+  42:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.recommended_num_threads = 1;
+  43:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetTensor = GetTensor;
+  44:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetEvalTensor = GetEvalTensor;
+  45:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.AllocatePersistentBuffer = AllocatePersistentBuffer;
+  46:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.RequestScratchBufferInArena = RequestScratchBufferInArena;
+  47:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetScratchBuffer = GetScratchBuffer;
+  48:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  49:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // Prepare TfLiteNode:
+  50:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   node_.inputs = inputs;
+  51:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   node_.outputs = outputs;
+  52:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   node_.builtin_data = builtin_data;
+  53:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+  54:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  55:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** TfLiteStatus KernelRunner::InitAndPrepare(const char* init_data) {
+  56:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (registration_.init) {
+  57:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     node_.user_data = registration_.init(&context_, init_data, /*length=*/0);
+  58:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+  59:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (registration_.prepare) {
+  60:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_ENSURE_STATUS(registration_.prepare(&context_, &node_));
+  61:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+  62:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return kTfLiteOk;
+  63:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+  64:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  65:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** TfLiteStatus KernelRunner::Invoke() {
+  66:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (registration_.invoke == nullptr) {
+  67:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_REPORT_ERROR(error_reporter_,
+  68:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                          "TfLiteRegistration missing invoke function pointer!");
+  69:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     return kTfLiteError;
+  70:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+  71:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return registration_.invoke(&context_, &node_);
+  72:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+  73:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  74:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** TfLiteTensor* KernelRunner::GetTensor(const struct TfLiteContext* context,
+  75:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                                       int tensor_index) {
+  10                             		.loc 1 75 57
+  11                             	.LVL0:
+  76:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(context != nullptr);
+  12                             		.loc 1 76 3
+  13 0000 61 01                   		cmp	#0, r1
+  14 0002 20 0F                   		beq	.L3
+  77:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+  15                             		.loc 1 77 3
+  16                             		.loc 1 77 17 is_stmt 0
+  17 0004 A8 9D                   		mov.L	12[r1], r5
+  18                             	.LVL1:
+  78:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner != nullptr);
+  19                             		.loc 1 78 3 is_stmt 1
+  20 0006 61 05                   		cmp	#0, r5
+  21 0008 11                      		beq	.L3
+  79:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  80:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return &runner->tensors_[tensor_index];
+  22                             		.loc 1 80 3
+  23                             		.loc 1 80 40 is_stmt 0
+  24 0009 FD C6 21                		shll	#6, r2, r1
+  25                             	.LVL2:
+  81:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+  26                             		.loc 1 81 1
+  27 000c 06 89 51 02             		add	8[r5].L, r1
+  28 0010 02                      		rts
+  29                             	.LVL3:
+  30                             	.L3:
+  76:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+  31                             		.loc 1 76 3 discriminator 1
+  32 0011 05 00 00 00             		bsr	_abort
+  33                             	.LVL4:
+  34                             	.LFE17:
+  36                             		.section	.text._ZN6tflite5micro12KernelRunner13GetEvalTensorEPK13TfLiteContexti,"ax",@progbits
+  37                             		.global	__ZN6tflite5micro12KernelRunner13GetEvalTensorEPK13TfLiteContexti
+  39                             	__ZN6tflite5micro12KernelRunner13GetEvalTensorEPK13TfLiteContexti:
+  40                             	.LFB18:
+  82:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  83:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** TfLiteEvalTensor* KernelRunner::GetEvalTensor(
+  84:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     const struct TfLiteContext* context, int tensor_index) {
+  41                             		.loc 1 84 60 is_stmt 1
+  42                             	.LVL5:
+  43 0000 6E 7A                   		pushm	r7-r10
+  44                             	.LCFI0:
+  85:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(context != nullptr);
+  45                             		.loc 1 85 3
+  46 0002 61 01                   		cmp	#0, r1
+  47 0004 20 30                   		beq	.L10
+  86:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+  48                             		.loc 1 86 3
+  49                             		.loc 1 86 17 is_stmt 0
+  50 0006 ED 1A 03                		mov.L	12[r1], r10
+  51                             	.LVL6:
+  87:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner != nullptr);
+  52                             		.loc 1 87 3 is_stmt 1
+  53 0009 61 0A                   		cmp	#0, r10
+  54 000b 20 29                   		beq	.L10
+  55 000d EF 27                   		mov.L	r2, r7
+  88:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  89:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TfLiteEvalTensor* eval_tensor =
+  56                             		.loc 1 89 3
+  90:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       reinterpret_cast<TfLiteEvalTensor*>(runner->allocator_->AllocateTemp(
+  57                             		.loc 1 90 51 is_stmt 0
+  58 000f EC A1                   		mov.L	[r10], r1
+  59                             	.LVL7:
+  60                             		.loc 1 90 75
+  61 0011 66 43                   		mov.L	#4, r3
+  62 0013 66 C2                   		mov.L	#12, r2
+  63                             	.LVL8:
+  91:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****           sizeof(TfLiteEvalTensor), alignof(TfLiteEvalTensor)));
+  64                             		.loc 1 91 62
+  65 0015 EC 15                   		mov.L	[r1], r5
+  90:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       reinterpret_cast<TfLiteEvalTensor*>(runner->allocator_->AllocateTemp(
+  66                             		.loc 1 90 75
+  67 0017 A9 55                   		mov.L	16[r5], r5
+  68 0019 7F 15                   		jsr	r5
+  69                             	.LVL9:
+  92:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(eval_tensor != nullptr);
+  70                             		.loc 1 92 3
+  71 001b 71 15 00                		add	#0, r1, r5
+  72 001e 20 16                   		beq	.L10
+  93:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+  94:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // In unit tests, the TfLiteTensor pointer contains the source of truth for
+  95:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // buffers and values:
+  96:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   eval_tensor->data = runner->tensors_[tensor_index].data;
+  73                             		.loc 1 96 3 is_stmt 1
+  74                             		.loc 1 96 52 is_stmt 0
+  75 0020 FD C6 72                		shll	#6, r7, r2
+  76 0023 06 89 A2 02             		add	8[r10].L, r2
+  77                             		.loc 1 96 21
+  78 0027 E1 25 01                		mov.L	4[r2], [r5]
+  97:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   eval_tensor->dims = runner->tensors_[tensor_index].dims;
+  79                             		.loc 1 97 3 is_stmt 1
+  80                             		.loc 1 97 21 is_stmt 0
+  81 002a E5 25 02 01             		mov.L	8[r2], 4[r5]
+  98:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   eval_tensor->type = runner->tensors_[tensor_index].type;
+  82                             		.loc 1 98 3 is_stmt 1
+  83                             		.loc 1 98 21 is_stmt 0
+  84 002e E4 25 02                		mov.L	[r2], 8[r5]
+  99:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return eval_tensor;
+  85                             		.loc 1 99 3 is_stmt 1
+ 100:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+  86                             		.loc 1 100 1 is_stmt 0
+  87 0031 3F 7A 04                		rtsd	#16, r7-r10
+  88                             	.LVL10:
+  89                             	.L10:
+  85:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+  90                             		.loc 1 85 3 discriminator 1
+  91 0034 05 00 00 00             		bsr	_abort
+  92                             	.LVL11:
+  93                             	.LFE18:
+  95                             		.section	.text._ZN6tflite5micro12KernelRunner24AllocatePersistentBufferEP13TfLiteContextm,"ax",@pr
+  96                             		.global	__ZN6tflite5micro12KernelRunner24AllocatePersistentBufferEP13TfLiteContextm
+  98                             	__ZN6tflite5micro12KernelRunner24AllocatePersistentBufferEP13TfLiteContextm:
+  99                             	.LFB19:
+ 101:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 102:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** void* KernelRunner::AllocatePersistentBuffer(TfLiteContext* context,
+ 103:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                                              size_t bytes) {
+ 100                             		.loc 1 103 60 is_stmt 1
+ 101                             	.LVL12:
+ 104:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(context != nullptr);
+ 102                             		.loc 1 104 3
+ 103 0000 61 01                   		cmp	#0, r1
+ 104 0002 20 14                   		beq	.L20
+ 105:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+ 105                             		.loc 1 105 3
+ 106                             		.loc 1 105 17 is_stmt 0
+ 107 0004 A8 9D                   		mov.L	12[r1], r5
+ 108                             	.LVL13:
+ 106:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner != nullptr);
+ 109                             		.loc 1 106 3 is_stmt 1
+ 110 0006 61 05                   		cmp	#0, r5
+ 111 0008 20 0E                   		beq	.L20
+ 107:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 108:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return runner->allocator_->AllocateFromTail(bytes, kBufferAlignment);
+ 112                             		.loc 1 108 3
+ 113                             		.loc 1 108 18 is_stmt 0
+ 114 000a EC 51                   		mov.L	[r5], r1
+ 115                             	.LVL14:
+ 116                             		.loc 1 108 46
+ 117 000c 75 43 10                		mov.L	#16, r3
+ 118                             		.loc 1 108 70
+ 119 000f EC 15                   		mov.L	[r1], r5
+ 120                             	.LVL15:
+ 121                             		.loc 1 108 46
+ 122 0011 A8 DD                   		mov.L	12[r5], r5
+ 123 0013 7F 15                   		jsr	r5
+ 124                             	.LVL16:
+ 109:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 125                             		.loc 1 109 1
+ 126 0015 02                      		rts
+ 127                             	.LVL17:
+ 128                             	.L20:
+ 104:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+ 129                             		.loc 1 104 3 discriminator 1
+ 130 0016 05 00 00 00             		bsr	_abort
+ 131                             	.LVL18:
+ 132                             	.LFE19:
+ 134                             		.section	.text._ZN6tflite5micro12KernelRunner27RequestScratchBufferInArenaEP13TfLiteContextmPi,"ax
+ 135                             		.global	__ZN6tflite5micro12KernelRunner27RequestScratchBufferInArenaEP13TfLiteContextmPi
+ 137                             	__ZN6tflite5micro12KernelRunner27RequestScratchBufferInArenaEP13TfLiteContextmPi:
+ 138                             	.LFB20:
+ 110:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 111:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** TfLiteStatus KernelRunner::RequestScratchBufferInArena(TfLiteContext* context,
+ 112:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                                                        size_t bytes,
+ 113:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                                                        int* buffer_index) {
+ 139                             		.loc 1 113 75 is_stmt 1
+ 140                             	.LVL19:
+ 141 0000 6E 6A                   		pushm	r6-r10
+ 142                             	.LCFI1:
+ 143 0002 60 80                   		sub	#8, r0
+ 144                             	.LCFI2:
+ 114:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(context != nullptr);
+ 145                             		.loc 1 114 3
+ 146 0004 61 01                   		cmp	#0, r1
+ 147 0006 20 53                   		beq	.L26
+ 115:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(buffer_index != nullptr);
+ 148                             		.loc 1 115 3 is_stmt 0
+ 149 0008 71 36 00                		add	#0, r3, r6
+ 150 000b 20 4E                   		beq	.L26
+ 116:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 117:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+ 151                             		.loc 1 117 3 is_stmt 1
+ 152                             		.loc 1 117 17 is_stmt 0
+ 153 000d A8 9F                   		mov.L	12[r1], r7
+ 154                             	.LVL20:
+ 118:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner != nullptr);
+ 155                             		.loc 1 118 3 is_stmt 1
+ 156 000f 61 07                   		cmp	#0, r7
+ 157 0011 20 48                   		beq	.L26
+ 119:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 120:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (runner->scratch_buffer_count_ == kNumScratchBuffers_) {
+ 158                             		.loc 1 120 3
+ 159                             		.loc 1 120 15 is_stmt 0
+ 160 0013 ED 7A 23                		mov.L	140[r7], r10
+ 161                             		.loc 1 120 3
+ 162 0016 61 5A                   		cmp	#5, r10
+ 163 0018 20 2D                   		beq	.L39
+ 121:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_REPORT_ERROR(
+ 122:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****         runner->error_reporter_,
+ 123:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****         "Exceeded the maximum number of scratch tensors allowed (%d).",
+ 124:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****         kNumScratchBuffers_);
+ 125:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     return kTfLiteError;
+ 126:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 127:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 128:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // For tests, we allocate scratch buffers from the tail and keep them around
+ 129:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // for the lifetime of model. This means that the arena size in the tests will
+ 130:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // be more than what we would have if the scratch buffers could share memory.
+ 131:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   runner->scratch_buffers_[runner->scratch_buffer_count_] =
+ 164                             		.loc 1 131 3 is_stmt 1
+ 132:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       runner->allocator_->AllocateFromTail(bytes, kBufferAlignment);
+ 165                             		.loc 1 132 15 is_stmt 0
+ 166 001a EC 71                   		mov.L	[r7], r1
+ 167                             	.LVL21:
+ 168                             		.loc 1 132 43
+ 169 001c 75 43 10                		mov.L	#16, r3
+ 170                             	.LVL22:
+ 171                             		.loc 1 132 67
+ 172 001f EC 15                   		mov.L	[r1], r5
+ 173                             		.loc 1 132 43
+ 174 0021 A8 DD                   		mov.L	12[r5], r5
+ 175 0023 7F 15                   		jsr	r5
+ 176                             	.LVL23:
+ 133:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner->scratch_buffers_[runner->scratch_buffer_count_] !=
+ 177                             		.loc 1 133 3
+ 178 0025 ED 75 23                		mov.L	140[r7], r5
+ 131:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       runner->allocator_->AllocateFromTail(bytes, kBufferAlignment);
+ 179                             		.loc 1 131 59
+ 180 0028 71 AA 24                		add	#36, r10
+ 181                             		.loc 1 133 3
+ 182 002b 71 54 24                		add	#36, r5, r4
+ 131:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****       runner->allocator_->AllocateFromTail(bytes, kBufferAlignment);
+ 183                             		.loc 1 131 59
+ 184 002e FE 2A 71                		mov.L	r1, [r10,r7]
+ 185                             		.loc 1 133 3 is_stmt 1
+ 186 0031 FE 64 7A                		mov.L	[r4,r7], r10
+ 187 0034 61 0A                   		cmp	#0, r10
+ 188 0036 20 23                   		beq	.L26
+ 134:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                 nullptr);
+ 135:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 136:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   *buffer_index = runner->scratch_buffer_count_++;
+ 189                             		.loc 1 136 3
+ 190                             		.loc 1 136 48 is_stmt 0
+ 191 0038 71 5A 01                		add	#1, r5, r10
+ 137:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return kTfLiteOk;
+ 192                             		.loc 1 137 10
+ 193 003b 66 01                   		mov.L	#0, r1
+ 136:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return kTfLiteOk;
+ 194                             		.loc 1 136 48
+ 195 003d E7 7A 23                		mov.L	r10, 140[r7]
+ 136:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return kTfLiteOk;
+ 196                             		.loc 1 136 17
+ 197 0040 E3 65                   		mov.L	r5, [r6]
+ 198                             		.loc 1 137 3 is_stmt 1
+ 138:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 199                             		.loc 1 138 1 is_stmt 0
+ 200 0042 3F 6A 07                		rtsd	#28, r6-r10
+ 201                             	.LVL24:
+ 202                             	.L39:
+ 121:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****         runner->error_reporter_,
+ 203                             		.loc 1 121 5 is_stmt 1
+ 121:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****         runner->error_reporter_,
+ 204                             		.loc 1 121 5
+ 205 0045 A8 F9                   		mov.L	12[r7], r1
+ 206                             	.LVL25:
+ 207 0047 E7 0A 01                		mov.L	r10, 4[r0]
+ 208 004a F8 02 00 00 00 00       		mov.L	#.LC0, [r0]
+ 209 0050 05 00 00 00             		bsr	__ZN6tflite13ErrorReporter6ReportEPKcz
+ 210                             	.LVL26:
+ 125:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 211                             		.loc 1 125 5
+ 125:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 212                             		.loc 1 125 12 is_stmt 0
+ 213 0054 66 11                   		mov.L	#1, r1
+ 214                             		.loc 1 138 1
+ 215 0056 3F 6A 07                		rtsd	#28, r6-r10
+ 216                             	.LVL27:
+ 217                             	.L26:
+ 114:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(buffer_index != nullptr);
+ 218                             		.loc 1 114 3 discriminator 1
+ 219 0059 05 00 00 00             		bsr	_abort
+ 220                             	.LVL28:
+ 221                             	.LFE20:
+ 223                             		.section	.text._ZN6tflite5micro12KernelRunner16GetScratchBufferEP13TfLiteContexti,"ax",@progbits
+ 224                             		.global	__ZN6tflite5micro12KernelRunner16GetScratchBufferEP13TfLiteContexti
+ 226                             	__ZN6tflite5micro12KernelRunner16GetScratchBufferEP13TfLiteContexti:
+ 227                             	.LFB21:
+ 139:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 140:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** void* KernelRunner::GetScratchBuffer(TfLiteContext* context, int buffer_index) {
+ 228                             		.loc 1 140 80 is_stmt 1
+ 229                             	.LVL29:
+ 141:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(context != nullptr);
+ 230                             		.loc 1 141 3
+ 231 0000 61 01                   		cmp	#0, r1
+ 232 0002 20 1D                   		beq	.L42
+ 142:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+ 233                             		.loc 1 142 3
+ 234                             		.loc 1 142 17 is_stmt 0
+ 235 0004 A8 9D                   		mov.L	12[r1], r5
+ 236                             	.LVL30:
+ 143:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner != nullptr);
+ 237                             		.loc 1 143 3 is_stmt 1
+ 238 0006 61 05                   		cmp	#0, r5
+ 239 0008 20 17                   		beq	.L42
+ 144:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 145:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner->scratch_buffer_count_ <= kNumScratchBuffers_);
+ 240                             		.loc 1 145 3
+ 241 000a ED 54 23                		mov.L	140[r5], r4
+ 242 000d 61 54                   		cmp	#5, r4
+ 243 000f 2A 10                   		bgt	.L42
+ 146:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (buffer_index >= runner->scratch_buffer_count_) {
+ 244                             		.loc 1 146 3
+ 245 0011 47 24                   		cmp	r2, r4
+ 246 0013 2B 09                   		ble	.L44
+ 147:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     return nullptr;
+ 148:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 149:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   return runner->scratch_buffers_[buffer_index];
+ 247                             		.loc 1 149 3
+ 248                             		.loc 1 149 47 is_stmt 0
+ 249 0015 71 22 24                		add	#36, r2
+ 250                             	.LVL31:
+ 251 0018 FE 62 51                		mov.L	[r2,r5], r1
+ 252                             	.LVL32:
+ 253 001b 02                      		rts
+ 254                             	.LVL33:
+ 255                             	.L44:
+ 147:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     return nullptr;
+ 256                             		.loc 1 147 12
+ 257 001c 66 01                   		mov.L	#0, r1
+ 258                             	.LVL34:
+ 150:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 259                             		.loc 1 150 1
+ 260 001e 02                      		rts
+ 261                             	.LVL35:
+ 262                             	.L42:
+ 141:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+ 263                             		.loc 1 141 3 discriminator 1
+ 264 001f 05 00 00 00             		bsr	_abort
+ 265                             	.LVL36:
+ 266                             	.LFE21:
+ 268                             		.section	.text._ZN6tflite5micro12KernelRunner13ReportOpErrorEP13TfLiteContextPKcz,"ax",@progbits
+ 269                             		.global	__ZN6tflite5micro12KernelRunner13ReportOpErrorEP13TfLiteContextPKcz
+ 271                             	__ZN6tflite5micro12KernelRunner13ReportOpErrorEP13TfLiteContextPKcz:
+ 272                             	.LFB22:
+ 151:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 152:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** void KernelRunner::ReportOpError(struct TfLiteContext* context,
+ 153:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                                  const char* format, ...) {
+ 273                             		.loc 1 153 59 is_stmt 1
+ 274                             	.LVL37:
+ 275 0000 7E A7                   		push.l	r7
+ 276                             	.LCFI3:
+ 277 0002 60 40                   		sub	#4, r0
+ 278                             	.LCFI4:
+ 154:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(context != nullptr);
+ 279                             		.loc 1 154 3
+ 153:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(context != nullptr);
+ 280                             		.loc 1 153 59 is_stmt 0
+ 281 0004 66 C7                   		mov.L	#12, r7
+ 282 0006 4B 07                   		add	r0, r7
+ 283 0008 EC 72                   		mov.L	[r7], r2
+ 284                             		.loc 1 154 3
+ 285 000a 61 01                   		cmp	#0, r1
+ 286 000c 20 16                   		beq	.L50
+ 155:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+ 287                             		.loc 1 155 3 is_stmt 1
+ 288                             		.loc 1 155 17 is_stmt 0
+ 289 000e A8 9D                   		mov.L	12[r1], r5
+ 290                             	.LVL38:
+ 156:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TFLITE_DCHECK(runner != nullptr);
+ 291                             		.loc 1 156 3 is_stmt 1
+ 292 0010 61 05                   		cmp	#0, r5
+ 293 0012 20 10                   		beq	.L50
+ 157:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 158:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   va_list args;
+ 294                             		.loc 1 158 3
+ 159:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   va_start(args, format);
+ 295                             		.loc 1 159 3
+ 296                             	.LVL39:
+ 160:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   TF_LITE_REPORT_ERROR(runner->error_reporter_, format, args);
+ 297                             		.loc 1 160 3
+ 298                             		.loc 1 160 3
+ 299 0014 A8 D9                   		mov.L	12[r5], r1
+ 300                             	.LVL40:
+ 301 0016 71 73 04                		add	#4, r7, r3
+ 302                             	.LVL41:
+ 303 0019 EC 17                   		mov.L	[r1], r7
+ 304 001b A8 F7                   		mov.L	8[r7], r7
+ 305 001d 7F 17                   		jsr	r7
+ 306                             	.LVL42:
+ 161:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   va_end(args);
+ 307                             		.loc 1 161 3
+ 162:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 308                             		.loc 1 162 1 is_stmt 0
+ 309 001f 3F 77 02                		rtsd	#8, r7-r7
+ 310                             	.LVL43:
+ 311                             	.L50:
+ 154:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   KernelRunner* runner = reinterpret_cast<KernelRunner*>(context->impl_);
+ 312                             		.loc 1 154 3 discriminator 1
+ 313 0022 05 00 00 00             		bsr	_abort
+ 314                             	.LVL44:
+ 315                             	.LFE22:
+ 317                             		.section	.text._ZN6tflite5micro12KernelRunnerC2ERK18TfLiteRegistrationP12TfLiteTensoriP14TfLiteInt
+ 318                             		.global	__ZN6tflite5micro12KernelRunnerC2ERK18TfLiteRegistrationP12TfLiteTensoriP14TfLiteIntArrayS
+ 320                             	__ZN6tflite5micro12KernelRunnerC2ERK18TfLiteRegistrationP12TfLiteTensoriP14TfLiteIntArrayS8_PvPNS_1
+ 321                             	.LFB13:
+  30:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                            TfLiteTensor* tensors, int tensors_size,
+ 322                             		.loc 1 30 1 is_stmt 1
+ 323                             	.LVL45:
+ 324 0000 6E 6C                   		pushm	r6-r12
+ 325                             	.LCFI5:
+ 326 0002 71 00 F0                		add	#-16, r0
+ 327                             	.LCFI6:
+  30:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                            TfLiteTensor* tensors, int tensors_size,
+ 328                             		.loc 1 30 1 is_stmt 0
+ 329 0005 75 47 30                		mov.L	#48, r7
+ 330 0008 4B 07                   		add	r0, r7
+ 331 000a EF 1A                   		mov.L	r1, r10
+ 332 000c A8 FE                   		mov.L	12[r7], r6
+ 333 000e EF 28                   		mov.L	r2, r8
+ 334 0010 EF 39                   		mov.L	r3, r9
+ 335                             	.LBB2:
+  34:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****           error_reporter, kKernelRunnerBuffer_, kKernelRunnerBufferSize_)),
+ 336                             		.loc 1 34 47
+ 337 0012 FB 22 00 00 00 00       		mov.L	#.LANCHOR0, r2
+ 338                             	.LVL46:
+ 339 0018 FB 3A 10 27             		mov.L	#0x2710, r3
+ 340                             	.LVL47:
+ 341 001c EF 61                   		mov.L	r6, r1
+ 342                             	.LVL48:
+ 343                             	.LBE2:
+  30:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                            TfLiteTensor* tensors, int tensors_size,
+ 344                             		.loc 1 30 1
+ 345 001e EC 7C                   		mov.L	[r7], r12
+ 346 0020 ED 7B 01                		mov.L	4[r7], r11
+ 347 0023 A8 F7                   		mov.L	8[r7], r7
+ 348                             	.LBB3:
+  34:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****           error_reporter, kKernelRunnerBuffer_, kKernelRunnerBufferSize_)),
+ 349                             		.loc 1 34 47
+ 350 0025 05 00 00 00             		bsr	__ZN6tflite21SimpleMemoryAllocator6CreateEPNS_13ErrorReporterEPhm
+ 351                             	.LVL49:
+  38:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   // Prepare TfLiteContext:
+ 352                             		.loc 1 38 37
+ 353 0029 E3 A1                   		mov.L	r1, [r10]
+ 354 002b E7 A8 01                		mov.L	r8, 4[r10]
+ 355 002e E7 A9 02                		mov.L	r9, 8[r10]
+ 356 0031 71 A1 10                		add	#16, r10, r1
+ 357 0034 E7 A6 03                		mov.L	r6, 12[r10]
+ 358 0037 75 43 58                		mov.L	#0x58, r3
+ 359 003a 66 02                   		mov	#0, r2
+ 360 003c 7F 88                   		sstr.b
+ 361 003e 71 A1 68                		add	#0x68, r10, r1
+ 362 0041 75 43 24                		mov.L	#36, r3
+ 363 0044 7F 88                   		sstr.b
+ 364 0046 F9 A6 23 00             		mov.L	#0, 140[r10]
+  40:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.ReportError = ReportOpError;
+ 365                             		.loc 1 40 3 is_stmt 1
+  40:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.ReportError = ReportOpError;
+ 366                             		.loc 1 40 18 is_stmt 0
+ 367 004a E7 AA 07                		mov.L	r10, 28[r10]
+  41:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.recommended_num_threads = 1;
+ 368                             		.loc 1 41 3 is_stmt 1
+  41:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.recommended_num_threads = 1;
+ 369                             		.loc 1 41 24 is_stmt 0
+ 370 004d F9 A2 09 00 00 00 00    		mov.L	#__ZN6tflite5micro12KernelRunner13ReportOpErrorEP13TfLiteContextPKcz, 36[r10]
+  42:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetTensor = GetTensor;
+ 371                             		.loc 1 42 3 is_stmt 1
+  42:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetTensor = GetTensor;
+ 372                             		.loc 1 42 36 is_stmt 0
+ 373 0054 F9 A6 0D 01             		mov.L	#1, 52[r10]
+  43:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetEvalTensor = GetEvalTensor;
+ 374                             		.loc 1 43 3 is_stmt 1
+  43:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetEvalTensor = GetEvalTensor;
+ 375                             		.loc 1 43 22 is_stmt 0
+ 376 0058 F9 A2 18 00 00 00 00    		mov.L	#__ZN6tflite5micro12KernelRunner9GetTensorEPK13TfLiteContexti, 96[r10]
+  44:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.AllocatePersistentBuffer = AllocatePersistentBuffer;
+ 377                             		.loc 1 44 3 is_stmt 1
+  44:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.AllocatePersistentBuffer = AllocatePersistentBuffer;
+ 378                             		.loc 1 44 26 is_stmt 0
+ 379 005f F9 A2 19 00 00 00 00    		mov.L	#__ZN6tflite5micro12KernelRunner13GetEvalTensorEPK13TfLiteContexti, 100[r10]
+  45:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.RequestScratchBufferInArena = RequestScratchBufferInArena;
+ 380                             		.loc 1 45 3 is_stmt 1
+  45:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.RequestScratchBufferInArena = RequestScratchBufferInArena;
+ 381                             		.loc 1 45 37 is_stmt 0
+ 382 0066 F9 A2 12 00 00 00 00    		mov.L	#__ZN6tflite5micro12KernelRunner24AllocatePersistentBufferEP13TfLiteContextm, 72[r10]
+  46:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetScratchBuffer = GetScratchBuffer;
+ 383                             		.loc 1 46 3 is_stmt 1
+  46:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   context_.GetScratchBuffer = GetScratchBuffer;
+ 384                             		.loc 1 46 40 is_stmt 0
+ 385 006d F9 A2 14 00 00 00 00    		mov.L	#__ZN6tflite5micro12KernelRunner27RequestScratchBufferInArenaEP13TfLiteContextmPi, 80[r10]
+  47:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 386                             		.loc 1 47 3 is_stmt 1
+  47:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 387                             		.loc 1 47 29 is_stmt 0
+ 388 0074 F9 A2 15 00 00 00 00    		mov.L	#__ZN6tflite5micro12KernelRunner16GetScratchBufferEP13TfLiteContexti, 84[r10]
+  50:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   node_.outputs = outputs;
+ 389                             		.loc 1 50 3 is_stmt 1
+  50:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   node_.outputs = outputs;
+ 390                             		.loc 1 50 16 is_stmt 0
+ 391 007b E7 AC 1A                		mov.L	r12, 104[r10]
+  51:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   node_.builtin_data = builtin_data;
+ 392                             		.loc 1 51 3 is_stmt 1
+  51:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   node_.builtin_data = builtin_data;
+ 393                             		.loc 1 51 17 is_stmt 0
+ 394 007e E7 AB 1B                		mov.L	r11, 108[r10]
+  52:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 395                             		.loc 1 52 3 is_stmt 1
+  52:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 396                             		.loc 1 52 22 is_stmt 0
+ 397 0081 E7 A7 1F                		mov.L	r7, 124[r10]
+ 398                             	.LBE3:
+  53:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 399                             		.loc 1 53 1
+ 400 0084 3F 6C 0B                		rtsd	#44, r6-r12
+ 401                             	.LFE13:
+ 403                             		.global	__ZN6tflite5micro12KernelRunnerC1ERK18TfLiteRegistrationP12TfLiteTensoriP14TfLiteIntArrayS
+ 404                             		.set	__ZN6tflite5micro12KernelRunnerC1ERK18TfLiteRegistrationP12TfLiteTensoriP14TfLiteIntArrayS8_P
+ 405                             		.section	.text._ZN6tflite5micro12KernelRunner14InitAndPrepareEPKc,"ax",@progbits
+ 406                             		.global	__ZN6tflite5micro12KernelRunner14InitAndPrepareEPKc
+ 408                             	__ZN6tflite5micro12KernelRunner14InitAndPrepareEPKc:
+ 409                             	.LFB15:
+  55:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (registration_.init) {
+ 410                             		.loc 1 55 66 is_stmt 1
+ 411                             	.LVL50:
+ 412 0000 7E A7                   		push.l	r7
+ 413                             	.LCFI7:
+  56:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     node_.user_data = registration_.init(&context_, init_data, /*length=*/0);
+ 414                             		.loc 1 56 3
+  55:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (registration_.init) {
+ 415                             		.loc 1 55 66 is_stmt 0
+ 416 0002 EF 17                   		mov.L	r1, r7
+  56:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     node_.user_data = registration_.init(&context_, init_data, /*length=*/0);
+ 417                             		.loc 1 56 7
+ 418 0004 A8 1D                   		mov.L	4[r1], r5
+  56:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     node_.user_data = registration_.init(&context_, init_data, /*length=*/0);
+ 419                             		.loc 1 56 21
+ 420 0006 EC 54                   		mov.L	[r5], r4
+  56:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     node_.user_data = registration_.init(&context_, init_data, /*length=*/0);
+ 421                             		.loc 1 56 3
+ 422 0008 61 04                   		cmp	#0, r4
+ 423 000a 20 0E                   		beq	.L58
+  57:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 424                             		.loc 1 57 5 is_stmt 1
+  57:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 425                             		.loc 1 57 41 is_stmt 0
+ 426 000c 66 03                   		mov.L	#0, r3
+ 427 000e 71 11 10                		add	#16, r1
+ 428                             	.LVL51:
+ 429 0011 7F 14                   		jsr	r4
+ 430                             	.LVL52:
+ 431 0013 A8 7D                   		mov.L	4[r7], r5
+  57:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 432                             		.loc 1 57 21
+ 433 0015 A7 F1                   		mov.L	r1, 120[r7]
+ 434 0017 03                      		.balign 8,3,1
+ 435                             	.L58:
+  59:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_ENSURE_STATUS(registration_.prepare(&context_, &node_));
+ 436                             		.loc 1 59 3 is_stmt 1
+ 437                             	.LBB4:
+  59:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_ENSURE_STATUS(registration_.prepare(&context_, &node_));
+ 438                             		.loc 1 59 21 is_stmt 0
+ 439 0018 A8 D5                   		mov.L	8[r5], r5
+  59:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_ENSURE_STATUS(registration_.prepare(&context_, &node_));
+ 440                             		.loc 1 59 3
+ 441 001a 61 05                   		cmp	#0, r5
+ 442 001c 20 0D                   		beq	.L60
+ 443                             	.LBE4:
+  60:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 444                             		.loc 1 60 5 is_stmt 1
+ 445                             	.LBB6:
+ 446                             	.LBB5:
+  60:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 447                             		.loc 1 60 5
+ 448 001e 71 72 68                		add	#0x68, r7, r2
+ 449 0021 71 71 10                		add	#16, r7, r1
+ 450 0024 7F 15                   		jsr	r5
+ 451                             	.LVL53:
+  60:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 452                             		.loc 1 60 5
+ 453                             	.LBE5:
+ 454                             	.LBE6:
+  63:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 455                             		.loc 1 63 1 is_stmt 0
+ 456 0026 3F 77 01                		rtsd	#4, r7-r7
+ 457                             	.LVL54:
+ 458                             	.L60:
+  62:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 459                             		.loc 1 62 10
+ 460 0029 66 01                   		mov.L	#0, r1
+  63:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 461                             		.loc 1 63 1
+ 462 002b 3F 77 01                		rtsd	#4, r7-r7
+ 463                             	.LFE15:
+ 465 002e EF 00                   		.section	.text._ZN6tflite5micro12KernelRunner6InvokeEv,"ax",@progbits
+ 466                             		.global	__ZN6tflite5micro12KernelRunner6InvokeEv
+ 468                             	__ZN6tflite5micro12KernelRunner6InvokeEv:
+ 469                             	.LFB16:
+  65:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   if (registration_.invoke == nullptr) {
+ 470                             		.loc 1 65 37 is_stmt 1
+ 471                             	.LVL55:
+ 472 0000 60 40                   		sub	#4, r0
+ 473                             	.LCFI8:
+  66:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_REPORT_ERROR(error_reporter_,
+ 474                             		.loc 1 66 3
+  66:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_REPORT_ERROR(error_reporter_,
+ 475                             		.loc 1 66 21 is_stmt 0
+ 476 0002 A8 1D                   		mov.L	4[r1], r5
+ 477 0004 A8 DD                   		mov.L	12[r5], r5
+  66:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****     TF_LITE_REPORT_ERROR(error_reporter_,
+ 478                             		.loc 1 66 3
+ 479 0006 61 05                   		cmp	#0, r5
+ 480 0008 20 0C                   		beq	.L69
+  71:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 481                             		.loc 1 71 3 is_stmt 1
+  71:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** }
+ 482                             		.loc 1 71 30 is_stmt 0
+ 483 000a 71 12 68                		add	#0x68, r1, r2
+ 484 000d 71 11 10                		add	#16, r1
+ 485                             	.LVL56:
+ 486 0010 7F 15                   		jsr	r5
+ 487                             	.LVL57:
+  72:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 488                             		.loc 1 72 1
+ 489 0012 67 01                   		rtsd	#4
+ 490                             	.LVL58:
+ 491                             	.L69:
+  67:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                          "TfLiteRegistration missing invoke function pointer!");
+ 492                             		.loc 1 67 5 is_stmt 1
+  67:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****                          "TfLiteRegistration missing invoke function pointer!");
+ 493                             		.loc 1 67 5
+ 494 0014 A8 99                   		mov.L	12[r1], r1
+ 495                             	.LVL59:
+ 496 0016 F8 02 00 00 00 00       		mov.L	#.LC1, [r0]
+ 497 001c 05 00 00 00             		bsr	__ZN6tflite13ErrorReporter6ReportEPKcz
+ 498                             	.LVL60:
+  69:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 499                             		.loc 1 69 5
+  69:../src/tensorflow/lite/micro/kernels/kernel_runner.cc ****   }
+ 500                             		.loc 1 69 12 is_stmt 0
+ 501 0020 66 11                   		mov.L	#1, r1
+  72:../src/tensorflow/lite/micro/kernels/kernel_runner.cc **** 
+ 502                             		.loc 1 72 1
+ 503 0022 67 01                   		rtsd	#4
+ 504                             	.LFE16:
+ 506                             		.global	__ZN6tflite5micro12KernelRunner20kKernelRunnerBuffer_E
+ 507                             		.global	__ZN6tflite5micro12KernelRunner24kKernelRunnerBufferSize_E
+ 508                             		.global	__ZN6tflite5micro12KernelRunner19kNumScratchBuffers_E
+ 509                             		.section	.bss._ZN6tflite5micro12KernelRunner20kKernelRunnerBuffer_E,"aw",@nobits
+ 510                             		.balign 4
+ 511                             		.set	.LANCHOR0,. + 0
+ 514                             	__ZN6tflite5micro12KernelRunner20kKernelRunnerBuffer_E:
+ 515 0000 00 00 00 00 00 00 00 00 		.zero	10000
+ 515      00 00 00 00 00 00 00 00 
+ 515      00 00 00 00 00 00 00 00 
+ 515      00 00 00 00 00 00 00 00 
+ 515      00 00 00 00 00 00 00 00 
+ 516                             		.section	.rodata._ZN6tflite5micro12KernelRunner19kNumScratchBuffers_E,"a"
+ 517                             		.balign 4
+ 520                             	__ZN6tflite5micro12KernelRunner19kNumScratchBuffers_E:
+ 521 0000 05 00 00 00             		.long	5
+ 522                             		.section	.rodata._ZN6tflite5micro12KernelRunner24kKernelRunnerBufferSize_E,"a"
+ 523                             		.balign 4
+ 526                             	__ZN6tflite5micro12KernelRunner24kKernelRunnerBufferSize_E:
+ 527 0000 10 27 00 00             		.long	0x2710
+ 528                             		.section	.rodata._ZN6tflite5micro12KernelRunner27RequestScratchBufferInArenaEP13TfLiteContextmPi.s
+ 529                             	.LC0:
+ 530 0000 45 78 63 65 65 64 65 64 		.string	"Exceeded the maximum number of scratch tensors allowed (%d)."
+ 530      20 74 68 65 20 6D 61 78 
+ 530      69 6D 75 6D 20 6E 75 6D 
+ 530      62 65 72 20 6F 66 20 73 
+ 530      63 72 61 74 63 68 20 74 
+ 531                             		.section	.rodata._ZN6tflite5micro12KernelRunner6InvokeEv.str1.1,"aMS",@progbits,1
+ 532                             	.LC1:
+ 533 0000 54 66 4C 69 74 65 52 65 		.string	"TfLiteRegistration missing invoke function pointer!"
+ 533      67 69 73 74 72 61 74 69 
+ 533      6F 6E 20 6D 69 73 73 69 
+ 533      6E 67 20 69 6E 76 6F 6B 
+ 533      65 20 66 75 6E 63 74 69 
+ 696                             	.Letext0:
+ 697                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 698                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 699                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 700                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdint.h"
+ 701                             		.file 6 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 702                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 703                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 704                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 705                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 706                             		.file 11 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 707                             		.file 12 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 708                             		.file 13 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.2
+ 709                             		.file 14 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 710                             		.file 15 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\loc
+ 711                             		.file 16 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_ty
+ 712                             		.file 17 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\ree
+ 713                             		.file 18 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 714                             		.file 19 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 715                             		.file 20 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 716                             		.file 21 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 717                             		.file 22 "<built-in>"

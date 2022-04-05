@@ -1,0 +1,411 @@
+   1                             		.file	"th_libc.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.th_strncmp,"ax",@progbits
+   5                             		.global	_th_strncmp
+   7                             	_th_strncmp:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/EEMBC/monitor/th_api/th_libc.c"
+   1:../src/EEMBC/monitor/th_api/th_libc.c **** /**
+   2:../src/EEMBC/monitor/th_api/th_libc.c ****  * Copyright (C) EEMBC(R). All Rights Reserved
+   3:../src/EEMBC/monitor/th_api/th_libc.c ****  *
+   4:../src/EEMBC/monitor/th_api/th_libc.c ****  * All EEMBC Benchmark Software are products of EEMBC and are provided under the
+   5:../src/EEMBC/monitor/th_api/th_libc.c ****  * terms of the EEMBC Benchmark License Agreements. The EEMBC Benchmark Software
+   6:../src/EEMBC/monitor/th_api/th_libc.c ****  * are proprietary intellectual properties of EEMBC and its Members and is
+   7:../src/EEMBC/monitor/th_api/th_libc.c ****  * protected under all applicable laws, including all applicable copyright laws.
+   8:../src/EEMBC/monitor/th_api/th_libc.c ****  *
+   9:../src/EEMBC/monitor/th_api/th_libc.c ****  * If you received this EEMBC Benchmark Software without having a currently
+  10:../src/EEMBC/monitor/th_api/th_libc.c ****  * effective EEMBC Benchmark License Agreement, you must discontinue use.
+  11:../src/EEMBC/monitor/th_api/th_libc.c ****  */
+  12:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  13:../src/EEMBC/monitor/th_api/th_libc.c **** /**
+  14:../src/EEMBC/monitor/th_api/th_libc.c ****  * These functions are needed by the main framework. If no LIBC
+  15:../src/EEMBC/monitor/th_api/th_libc.c ****  * is provided, please implmenent these.
+  16:../src/EEMBC/monitor/th_api/th_libc.c ****  *
+  17:../src/EEMBC/monitor/th_api/th_libc.c ****  * TODO: This is a bit archaic, as modern SDKs provide nearly all of these.
+  18:../src/EEMBC/monitor/th_api/th_libc.c ****  *       Is it time to finally remove LIBC abstraction?
+  19:../src/EEMBC/monitor/th_api/th_libc.c ****  */
+  20:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  21:../src/EEMBC/monitor/th_api/th_libc.c **** #include "monitor/th_api/th_libc.h"
+  22:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  23:../src/EEMBC/monitor/th_api/th_libc.c **** #include "r_smc_entry.h"
+  24:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  25:../src/EEMBC/monitor/th_api/th_libc.c **** #define MAX_TX_BUFFER	(256)
+  26:../src/EEMBC/monitor/th_api/th_libc.c **** char tx_buffer[MAX_TX_BUFFER];
+  27:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  28:../src/EEMBC/monitor/th_api/th_libc.c **** extern char* model_input_ptr;
+  29:../src/EEMBC/monitor/th_api/th_libc.c **** extern uint32_t model_input_size;
+  30:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  31:../src/EEMBC/monitor/th_api/th_libc.c **** int
+  32:../src/EEMBC/monitor/th_api/th_libc.c **** th_strncmp(const char *str1, const char *str2, size_t n)
+  33:../src/EEMBC/monitor/th_api/th_libc.c **** {
+  10                             		.loc 1 33 1
+  11                             	.LVL0:
+  34:../src/EEMBC/monitor/th_api/th_libc.c ****     return strncmp(str1, str2, n);
+  12                             		.loc 1 34 5
+  33:../src/EEMBC/monitor/th_api/th_libc.c ****     return strncmp(str1, str2, n);
+  13                             		.loc 1 33 1 is_stmt 0
+  14 0000 EF 15                   		mov.L	r1, r5
+  15 0002 EF 24                   		mov.L	r2, r4
+  16                             		.loc 1 34 12
+  17 0004 7F 83                   		scmpu		; Perform the string comparison
+  18 0006 FB 56 FF                	   mov     #-1, r5      ; Set up -1 result (which cannot be created
+  19                             	                        ; by the SC insn)
+  20 0009 23 05                   	   bnc	   ?+		; If Carry is not set skip over
+  21 000b FC DB 51                	   scne.L  r5		; Set result based on Z flag
+  22                             	?:
+  23                             	
+  24                             	.LVL1:
+  35:../src/EEMBC/monitor/th_api/th_libc.c **** }
+  25                             		.loc 1 35 1
+  26 000e EF 51                   		mov.L	r5, r1
+  27 0010 02                      		rts
+  28                             	.LFE3:
+  30                             		.section	.text.th_strncpy,"ax",@progbits
+  31                             		.global	_th_strncpy
+  33                             	_th_strncpy:
+  34                             	.LFB4:
+  36:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  37:../src/EEMBC/monitor/th_api/th_libc.c **** char *
+  38:../src/EEMBC/monitor/th_api/th_libc.c **** th_strncpy(char *dest, const char *src, size_t n)
+  39:../src/EEMBC/monitor/th_api/th_libc.c **** {
+  35                             		.loc 1 39 1 is_stmt 1
+  36                             	.LVL2:
+  40:../src/EEMBC/monitor/th_api/th_libc.c ****     return strncpy(dest, src, n);
+  37                             		.loc 1 40 5
+  38                             		.loc 1 40 12 is_stmt 0
+  39 0000 04 00 00 00             		bra	_strncpy
+  40                             	.LVL3:
+  41                             	.LFE4:
+  43                             		.section	.text.th_strnlen,"ax",@progbits
+  44                             		.global	_th_strnlen
+  46                             	_th_strnlen:
+  47                             	.LFB5:
+  41:../src/EEMBC/monitor/th_api/th_libc.c **** }
+  42:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  43:../src/EEMBC/monitor/th_api/th_libc.c **** size_t
+  44:../src/EEMBC/monitor/th_api/th_libc.c **** th_strnlen(const char *str, size_t maxlen)
+  45:../src/EEMBC/monitor/th_api/th_libc.c **** {
+  48                             		.loc 1 45 1 is_stmt 1
+  49                             	.LVL4:
+  46:../src/EEMBC/monitor/th_api/th_libc.c ****     return strnlen(str, maxlen);
+  50                             		.loc 1 46 5
+  51                             		.loc 1 46 12 is_stmt 0
+  52 0000 04 00 00 00             		bra	_strnlen
+  53                             	.LVL5:
+  54                             	.LFE5:
+  56                             		.section	.text.th_strcat,"ax",@progbits
+  57                             		.global	_th_strcat
+  59                             	_th_strcat:
+  60                             	.LFB6:
+  47:../src/EEMBC/monitor/th_api/th_libc.c **** }
+  48:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  49:../src/EEMBC/monitor/th_api/th_libc.c **** /*@-mayaliasunique*/
+  50:../src/EEMBC/monitor/th_api/th_libc.c **** /*@-temptrans*/
+  51:../src/EEMBC/monitor/th_api/th_libc.c **** char *
+  52:../src/EEMBC/monitor/th_api/th_libc.c **** th_strcat(char *dest, const char *src)
+  53:../src/EEMBC/monitor/th_api/th_libc.c **** {
+  61                             		.loc 1 53 1 is_stmt 1
+  62                             	.LVL6:
+  54:../src/EEMBC/monitor/th_api/th_libc.c ****     return strcat(dest, src);
+  63                             		.loc 1 54 5
+  64                             		.loc 1 54 12 is_stmt 0
+  65 0000 04 00 00 00             		bra	_strcat
+  66                             	.LVL7:
+  67                             	.LFE6:
+  69                             		.section	.text.th_strstr,"ax",@progbits
+  70                             		.global	_th_strstr
+  72                             	_th_strstr:
+  73                             	.LFB7:
+  55:../src/EEMBC/monitor/th_api/th_libc.c **** }
+  56:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  57:../src/EEMBC/monitor/th_api/th_libc.c **** char *
+  58:../src/EEMBC/monitor/th_api/th_libc.c **** th_strstr(const char *str1, const char *str2)
+  59:../src/EEMBC/monitor/th_api/th_libc.c **** {
+  74                             		.loc 1 59 1 is_stmt 1
+  75                             	.LVL8:
+  60:../src/EEMBC/monitor/th_api/th_libc.c ****     return strstr(str1, str2);
+  76                             		.loc 1 60 5
+  77                             		.loc 1 60 12 is_stmt 0
+  78 0000 04 00 00 00             		bra	_strstr
+  79                             	.LVL9:
+  80                             	.LFE7:
+  82                             		.section	.text.th_strtok,"ax",@progbits
+  83                             		.global	_th_strtok
+  85                             	_th_strtok:
+  86                             	.LFB8:
+  61:../src/EEMBC/monitor/th_api/th_libc.c **** }
+  62:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  63:../src/EEMBC/monitor/th_api/th_libc.c **** char *
+  64:../src/EEMBC/monitor/th_api/th_libc.c **** th_strtok(char *str1, const char *sep)
+  65:../src/EEMBC/monitor/th_api/th_libc.c **** {
+  87                             		.loc 1 65 1 is_stmt 1
+  88                             	.LVL10:
+  66:../src/EEMBC/monitor/th_api/th_libc.c ****     return strtok(str1, sep);
+  89                             		.loc 1 66 5
+  90                             		.loc 1 66 12 is_stmt 0
+  91 0000 04 00 00 00             		bra	_strtok
+  92                             	.LVL11:
+  93                             	.LFE8:
+  95                             		.section	.text.th_atoi,"ax",@progbits
+  96                             		.global	_th_atoi
+  98                             	_th_atoi:
+  99                             	.LFB9:
+  67:../src/EEMBC/monitor/th_api/th_libc.c **** }
+  68:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  69:../src/EEMBC/monitor/th_api/th_libc.c **** int
+  70:../src/EEMBC/monitor/th_api/th_libc.c **** th_atoi(const char *str)
+  71:../src/EEMBC/monitor/th_api/th_libc.c **** {
+ 100                             		.loc 1 71 1 is_stmt 1
+ 101                             	.LVL12:
+  72:../src/EEMBC/monitor/th_api/th_libc.c ****     return atoi(str);
+ 102                             		.loc 1 72 5
+ 103                             		.loc 1 72 12 is_stmt 0
+ 104 0000 04 00 00 00             		bra	_atoi
+ 105                             	.LVL13:
+ 106                             	.LFE9:
+ 108                             		.section	.text.th_memset,"ax",@progbits
+ 109                             		.global	_th_memset
+ 111                             	_th_memset:
+ 112                             	.LFB10:
+  73:../src/EEMBC/monitor/th_api/th_libc.c **** }
+  74:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  75:../src/EEMBC/monitor/th_api/th_libc.c **** void *
+  76:../src/EEMBC/monitor/th_api/th_libc.c **** th_memset(void *b, int c, size_t len)
+  77:../src/EEMBC/monitor/th_api/th_libc.c **** {
+ 113                             		.loc 1 77 1 is_stmt 1
+ 114                             	.LVL14:
+  78:../src/EEMBC/monitor/th_api/th_libc.c ****     return memset(b, c, len);
+ 115                             		.loc 1 78 5
+  77:../src/EEMBC/monitor/th_api/th_libc.c ****     return memset(b, c, len);
+ 116                             		.loc 1 77 1 is_stmt 0
+ 117 0000 EF 15                   		mov.L	r1, r5
+ 118                             		.loc 1 78 12
+ 119 0002 7F 88                   		sstr.b
+ 120                             	.LVL15:
+  79:../src/EEMBC/monitor/th_api/th_libc.c **** }
+ 121                             		.loc 1 79 1
+ 122 0004 EF 51                   		mov.L	r5, r1
+ 123 0006 02                      		rts
+ 124                             	.LFE10:
+ 126                             		.section	.text.th_memcpy,"ax",@progbits
+ 127                             		.global	_th_memcpy
+ 129                             	_th_memcpy:
+ 130                             	.LFB11:
+  80:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  81:../src/EEMBC/monitor/th_api/th_libc.c **** void *
+  82:../src/EEMBC/monitor/th_api/th_libc.c **** th_memcpy(void *dst, const void *src, size_t n)
+  83:../src/EEMBC/monitor/th_api/th_libc.c **** {
+ 131                             		.loc 1 83 1 is_stmt 1
+ 132                             	.LVL16:
+  84:../src/EEMBC/monitor/th_api/th_libc.c ****     return memcpy(dst, src, n);
+ 133                             		.loc 1 84 5
+  83:../src/EEMBC/monitor/th_api/th_libc.c ****     return memcpy(dst, src, n);
+ 134                             		.loc 1 83 1 is_stmt 0
+ 135 0000 EF 15                   		mov.L	r1, r5
+ 136                             		.loc 1 84 12
+ 137 0002 7F 8F                   		smovf
+ 138                             	.LVL17:
+  85:../src/EEMBC/monitor/th_api/th_libc.c **** }
+ 139                             		.loc 1 85 1
+ 140 0004 EF 51                   		mov.L	r5, r1
+ 141 0006 02                      		rts
+ 142                             	.LFE11:
+ 144                             		.section	.text.th_malloc,"ax",@progbits
+ 145                             		.global	_th_malloc
+ 147                             	_th_malloc:
+ 148                             	.LFB12:
+  86:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  87:../src/EEMBC/monitor/th_api/th_libc.c **** void *
+  88:../src/EEMBC/monitor/th_api/th_libc.c **** th_malloc(size_t size)
+  89:../src/EEMBC/monitor/th_api/th_libc.c **** {
+ 149                             		.loc 1 89 1 is_stmt 1
+ 150                             	.LVL18:
+  90:../src/EEMBC/monitor/th_api/th_libc.c **** 	if( size <= model_input_size)
+ 151                             		.loc 1 90 2
+ 152                             		.loc 1 90 11 is_stmt 0
+ 153 0000 FB 52 00 00 00 00       		mov.L	#_model_input_size, r5
+ 154                             		.loc 1 90 4
+ 155 0006 EC 55                   		mov.L	[r5], r5
+ 156 0008 47 15                   		cmp	r1, r5
+ 157 000a 23 0B                   		bltu	.L13
+  91:../src/EEMBC/monitor/th_api/th_libc.c **** 	{
+  92:../src/EEMBC/monitor/th_api/th_libc.c **** 		return model_input_ptr;
+ 158                             		.loc 1 92 3 is_stmt 1
+ 159                             		.loc 1 92 10 is_stmt 0
+ 160 000c FB 52 00 00 00 00       		mov.L	#_model_input_ptr, r5
+ 161 0012 EC 51                   		mov.L	[r5], r1
+ 162                             	.LVL19:
+ 163 0014 02                      		rts
+ 164                             	.LVL20:
+ 165                             	.L13:
+  93:../src/EEMBC/monitor/th_api/th_libc.c **** 	}
+  94:../src/EEMBC/monitor/th_api/th_libc.c **** 	return NULL;
+ 166                             		.loc 1 94 9
+ 167 0015 66 01                   		mov.L	#0, r1
+ 168                             	.LVL21:
+  95:../src/EEMBC/monitor/th_api/th_libc.c **** //    return malloc(size);
+  96:../src/EEMBC/monitor/th_api/th_libc.c **** }
+ 169                             		.loc 1 96 1
+ 170 0017 02                      		rts
+ 171                             	.LFE12:
+ 173                             		.section	.text.th_calloc,"ax",@progbits
+ 174                             		.global	_th_calloc
+ 176                             	_th_calloc:
+ 177                             	.LFB13:
+  97:../src/EEMBC/monitor/th_api/th_libc.c **** 
+  98:../src/EEMBC/monitor/th_api/th_libc.c **** void *
+  99:../src/EEMBC/monitor/th_api/th_libc.c **** th_calloc(size_t count, size_t size)
+ 100:../src/EEMBC/monitor/th_api/th_libc.c **** {
+ 178                             		.loc 1 100 1 is_stmt 1
+ 179                             	.LVL22:
+ 101:../src/EEMBC/monitor/th_api/th_libc.c ****     for(int i = 0; i < size; i++)
+ 180                             		.loc 1 101 5
+ 181                             	.LBB2:
+ 182                             		.loc 1 101 9
+ 183                             		.loc 1 101 5 is_stmt 0
+ 184 0000 61 02                   		cmp	#0, r2
+ 185 0002 20 1E                   		beq	.L24
+ 186                             	.LBE2:
+ 100:../src/EEMBC/monitor/th_api/th_libc.c ****     for(int i = 0; i < size; i++)
+ 187                             		.loc 1 100 1
+ 188 0004 7E A7                   		push.l	r7
+ 189                             	.LCFI0:
+ 190                             	.LBB3:
+ 191                             		.loc 1 101 13
+ 192 0006 66 05                   		mov.L	#0, r5
+ 193 0008 FB 32 00 00 00 00       		mov.L	#_model_input_ptr, r3
+ 194                             	.LVL23:
+ 195                             		.balign 8,3,1
+ 196                             	.L16:
+ 102:../src/EEMBC/monitor/th_api/th_libc.c ****     {
+ 103:../src/EEMBC/monitor/th_api/th_libc.c ****     	model_input_ptr[i] = 0;
+ 197                             		.loc 1 103 6 is_stmt 1 discriminator 3
+ 198                             		.loc 1 103 25 is_stmt 0 discriminator 3
+ 199 000e EC 34                   		mov.L	[r3], r4
+ 200 0010 66 07                   		mov	#0, r7
+ 201 0012 FE 05 47                		mov.B	r7, [r5,r4]
+ 101:../src/EEMBC/monitor/th_api/th_libc.c ****     {
+ 202                             		.loc 1 101 31 discriminator 3
+ 203 0015 62 15                   		add	#1, r5
+ 204                             	.LVL24:
+ 101:../src/EEMBC/monitor/th_api/th_libc.c ****     {
+ 205                             		.loc 1 101 5 discriminator 3
+ 206 0017 47 25                   		cmp	r2, r5
+ 207 0019 21 F5                   		bne	.L16
+ 208                             	.LBE3:
+ 104:../src/EEMBC/monitor/th_api/th_libc.c ****     }
+ 105:../src/EEMBC/monitor/th_api/th_libc.c **** 
+ 106:../src/EEMBC/monitor/th_api/th_libc.c ****     return model_input_ptr;
+ 209                             		.loc 1 106 5 is_stmt 1
+ 107:../src/EEMBC/monitor/th_api/th_libc.c **** //    return calloc(count, size);
+ 108:../src/EEMBC/monitor/th_api/th_libc.c **** }
+ 210                             		.loc 1 108 1 is_stmt 0
+ 211 001b EC 31                   		mov.L	[r3], r1
+ 212                             	.LVL25:
+ 213 001d 3F 77 01                		rtsd	#4, r7-r7
+ 214                             	.LVL26:
+ 215                             	.L24:
+ 216                             	.LCFI1:
+ 217 0020 FB 32 00 00 00 00       		mov.L	#_model_input_ptr, r3
+ 106:../src/EEMBC/monitor/th_api/th_libc.c **** //    return calloc(count, size);
+ 218                             		.loc 1 106 5 is_stmt 1
+ 219                             		.loc 1 108 1 is_stmt 0
+ 220 0026 EC 31                   		mov.L	[r3], r1
+ 221                             	.LVL27:
+ 222 0028 02                      		rts
+ 223                             	.LFE13:
+ 225 0029 FD 70 40 00 00 00 80    		.section	.text.th_free,"ax",@progbits
+ 226                             		.global	_th_free
+ 228                             	_th_free:
+ 229                             	.LFB14:
+ 109:../src/EEMBC/monitor/th_api/th_libc.c **** 
+ 110:../src/EEMBC/monitor/th_api/th_libc.c **** void
+ 111:../src/EEMBC/monitor/th_api/th_libc.c **** th_free(void *ptr)
+ 112:../src/EEMBC/monitor/th_api/th_libc.c **** {
+ 230                             		.loc 1 112 1 is_stmt 1
+ 231                             	.LVL28:
+ 113:../src/EEMBC/monitor/th_api/th_libc.c **** //    free(ptr);
+ 114:../src/EEMBC/monitor/th_api/th_libc.c **** }
+ 232                             		.loc 1 114 1
+ 233 0000 02                      		rts
+ 234                             	.LFE14:
+ 236                             		.section	.text.th_vprintf,"ax",@progbits
+ 237                             		.global	_th_vprintf
+ 239                             	_th_vprintf:
+ 240                             	.LFB15:
+ 115:../src/EEMBC/monitor/th_api/th_libc.c **** 
+ 116:../src/EEMBC/monitor/th_api/th_libc.c **** /* N.B.: Many embedded *printf SDKs do not support all format specifiers. */
+ 117:../src/EEMBC/monitor/th_api/th_libc.c **** int
+ 118:../src/EEMBC/monitor/th_api/th_libc.c **** th_vprintf(const char *format, va_list ap)
+ 119:../src/EEMBC/monitor/th_api/th_libc.c **** {
+ 241                             		.loc 1 119 1
+ 242                             	.LVL29:
+ 243 0000 6E 6A                   		pushm	r6-r10
+ 244                             	.LCFI2:
+ 120:../src/EEMBC/monitor/th_api/th_libc.c **** 	vsprintf(tx_buffer, format, ap);
+ 245                             		.loc 1 120 2
+ 119:../src/EEMBC/monitor/th_api/th_libc.c **** 	vsprintf(tx_buffer, format, ap);
+ 246                             		.loc 1 119 1 is_stmt 0
+ 247 0002 EF 1A                   		mov.L	r1, r10
+ 248 0004 EF 26                   		mov.L	r2, r6
+ 249                             		.loc 1 120 2
+ 250 0006 FB 72 00 00 00 00       		mov.L	#.LANCHOR0, r7
+ 251 000c EF 23                   		mov.L	r2, r3
+ 252 000e EF 12                   		mov.L	r1, r2
+ 253                             	.LVL30:
+ 254 0010 EF 71                   		mov.L	r7, r1
+ 255                             	.LVL31:
+ 256 0012 05 00 00 00             		bsr	_vsprintf
+ 257                             	.LVL32:
+ 121:../src/EEMBC/monitor/th_api/th_libc.c **** 
+ 122:../src/EEMBC/monitor/th_api/th_libc.c ****     R_Config_SCI0_Serial_Send((uint8_t *)tx_buffer, strnlen(tx_buffer, MAX_TX_BUFFER));
+ 258                             		.loc 1 122 5 is_stmt 1
+ 259                             		.loc 1 122 53 is_stmt 0
+ 260 0016 FB 2A 00 01             		mov.L	#0x100, r2
+ 261 001a EF 71                   		mov.L	r7, r1
+ 262 001c 05 00 00 00             		bsr	_strnlen
+ 263                             	.LVL33:
+ 264                             		.loc 1 122 5
+ 265 0020 DF 12                   		mov.W	r1, r2
+ 266 0022 EF 71                   		mov.L	r7, r1
+ 267 0024 05 00 00 00             		bsr	_R_Config_SCI0_Serial_Send
+ 268                             	.LVL34:
+ 123:../src/EEMBC/monitor/th_api/th_libc.c ****     return vprintf(format, ap);
+ 269                             		.loc 1 123 5 is_stmt 1
+ 270                             		.loc 1 123 12 is_stmt 0
+ 271 0028 EF 62                   		mov.L	r6, r2
+ 272 002a EF A1                   		mov.L	r10, r1
+ 124:../src/EEMBC/monitor/th_api/th_libc.c **** }
+ 273                             		.loc 1 124 1
+ 274 002c 6F 6A                   		popm	r6-r10
+ 275                             	.LVL35:
+ 123:../src/EEMBC/monitor/th_api/th_libc.c ****     return vprintf(format, ap);
+ 276                             		.loc 1 123 12
+ 277 002e 04 00 00 00             		bra	_vprintf
+ 278                             	.LVL36:
+ 279                             	.LFE15:
+ 281                             		.global	_tx_buffer
+ 282                             		.section	.bss.tx_buffer,"aw",@nobits
+ 283                             		.balign 4
+ 284                             		.set	.LANCHOR0,. + 0
+ 287                             	_tx_buffer:
+ 288 0000 00 00 00 00 00 00 00 00 		.zero	256
+ 288      00 00 00 00 00 00 00 00 
+ 288      00 00 00 00 00 00 00 00 
+ 288      00 00 00 00 00 00 00 00 
+ 288      00 00 00 00 00 00 00 00 
+ 436                             	.Letext0:
+ 437                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 438                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 439                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 440                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 441                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 442                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 443                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 444                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 445                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 446                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 447                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 448                             		.file 13 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\string.h
+ 449                             		.file 14 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm

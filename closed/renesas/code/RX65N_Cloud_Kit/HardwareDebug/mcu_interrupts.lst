@@ -1,0 +1,2981 @@
+   1                             		.file	"mcu_interrupts.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.bsp_interrupt_enable_disable,"ax",@progbits
+   5                             		.global	_bsp_interrupt_enable_disable
+   7                             	_bsp_interrupt_enable_disable:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c"
+   1:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+   2:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * DISCLAIMER
+   3:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * other uses are authorized. This software is owned by Renesas Electronics Corporation and is prote
+   5:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * applicable laws, including copyright laws. 
+   6:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+   7:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF 
+   8:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIM
+   9:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AF
+  10:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY RE
+  11:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * this software. 
+  14:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *
+  15:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Copyright (C) 2016 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  17:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  18:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * File Name    : mcu_interrupts.c
+  19:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : This module is the control of the interrupt enable.
+  20:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  21:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  22:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * History : DD.MM.YYYY Version   Description
+  23:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *         : 01.10.2016 1.00      First Release
+  24:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *         : 15.05.2017 2.00      Added callback processing of the following group interrupt sources
+  25:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - RIIC1_EEI1
+  26:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - RIIC1_TEI1
+  27:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - GLCDC_VPOS
+  28:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - GLCDC_GR1UF
+  29:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - GLCDC_GR2UF
+  30:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - DRW2D_DRW_IRQ
+  31:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Changed calling order of callback function in group interrupts.
+  32:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *         : 27.07.2018 2.01      Added the comment to for statement.
+  33:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *         : 28.02.2019 3.00      Deleted the following functions. 
+  34:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                (The following functions moved to the common file (r_bsp_interrupt
+  35:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - bsp_interrupt_open
+  36:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - bsp_interrupt_group_enable_disable
+  37:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                  (And, changed the function name to bsp_gr_int_enable_disable.h.)
+  38:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - R_BSP_InterruptWrite
+  39:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - R_BSP_InterruptRead
+  40:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - R_BSP_InterruptControl
+  41:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Deleted the following definition.
+  42:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                (The following definition moved to the common file (r_bsp_common.h
+  43:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                - INTERNAL_NOT_USED(p)
+  44:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Replaced the setting of IEN bit.
+  45:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Added support for GNUC and ICCRX.
+  46:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Fixed coding style.
+  47:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Added support Group BE0 interrupts.
+  48:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Modified the bsp_interrupt_group_enable_disable function.
+  49:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                                Added the group_be0_handler_isr function.
+  50:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  51:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  52:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  53:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** Includes   <System Includes> , "Project Includes"
+  54:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  55:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /* Access to r_bsp. */
+  56:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** #include "platform.h"
+  57:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  58:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  59:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** Macro definitions
+  60:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  61:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /* Let FPSW EV, EO, EZ, EU, EX=1 (FPU exceptions enabled.) */
+  62:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** #define BSP_PRV_FPU_EXCEPTIONS_ENABLE       (0x00007C00)
+  63:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  64:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  65:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** Typedef definitions
+  66:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  67:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  68:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  69:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** Exported global variables (to be accessed by other files)
+  70:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  71:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  72:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  73:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** Private global variables and functions
+  74:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  75:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_PRAGMA_STATIC_INTERRUPT(group_bl0_handler_isr, VECT(ICU,GROUPBL0))
+  76:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_PRAGMA_STATIC_INTERRUPT(group_bl1_handler_isr, VECT(ICU,GROUPBL1))
+  77:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_PRAGMA_STATIC_INTERRUPT(group_bl2_handler_isr, VECT(ICU,GROUPBL2))
+  78:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_PRAGMA_STATIC_INTERRUPT(group_al0_handler_isr, VECT(ICU,GROUPAL0))
+  79:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_PRAGMA_STATIC_INTERRUPT(group_al1_handler_isr, VECT(ICU,GROUPAL1))
+  80:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_PRAGMA_STATIC_INTERRUPT(group_be0_handler_isr, VECT(ICU,GROUPBE0))
+  81:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  82:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+  83:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Function Name: bsp_interrupt_enable_disable
+  84:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : Either enables or disables an interrupt.
+  85:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Arguments    : vector -
+  86:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                    Which vector to enable or disable.
+  87:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                enable -
+  88:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                    Whether to enable or disable the interrupt.
+  89:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Return Value : BSP_INT_SUCCESS -
+  90:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                    Interrupt enabled or disabled.
+  91:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                BSP_INT_ERR_UNSUPPORTED -
+  92:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                    API does not support enabling/disabling for this vector.
+  93:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+  94:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** bsp_int_err_t bsp_interrupt_enable_disable (bsp_int_src_t vector, bool enable)
+  95:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** {
+  10                             		.loc 1 95 1
+  11                             	.LVL0:
+  96:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** #ifdef __FPU
+  97:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     uint32_t      tmp_fpsw;
+  12                             		.loc 1 97 5
+  98:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** #endif
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     bsp_int_err_t err = BSP_INT_SUCCESS;
+  13                             		.loc 1 99 5
+ 100:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 101:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     switch (vector)
+  14                             		.loc 1 101 5
+  15 0000 61 31                   		cmp	#3, r1
+  16 0002 20 4B                   		beq	.L2
+  17 0004 61 B1                   		cmp	#11, r1
+  18 0006 20 1A                   		beq	.L3
+  19 0008 61 21                   		cmp	#2, r1
+  20 000a 14                      		beq	.L4
+  21                             	.LVL1:
+  22                             		.balign 8,3,1
+  23                             	.L8:
+ 102:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 103:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         case (BSP_INT_SRC_BUS_ERROR):
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             if (true == enable)
+ 105:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+ 106:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Enable the bus error interrupt to catch accesses to illegal/reserved areas of me
+ 107:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Clear any pending interrupts */
+ 108:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 IR(BSC,BUSERR) = 0;
+ 109:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 110:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Make this the highest priority interrupt (adjust as necessary for your applicati
+ 111:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 IPR(BSC,BUSERR) = 0x0F;
+ 112:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 113:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Enable the interrupt in the ICU*/
+ 114:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 R_BSP_InterruptRequestEnable(VECT(BSC,BUSERR));
+ 115:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 116:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Enable illegal address interrupt in the BSC */
+ 117:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 BSC.BEREN.BIT.IGAEN = 1;
+ 118:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 119:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Enable timeout detection enable. */
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 BSC.BEREN.BIT.TOEN = 1;
+ 121:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 122:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             else
+ 123:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+ 124:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Disable the bus error interrupt. */
+ 125:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Disable the interrupt in the ICU*/
+ 126:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 R_BSP_InterruptRequestDisable(VECT(BSC,BUSERR));
+ 127:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 128:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Disable illegal address interrupt in the BSC */
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 BSC.BEREN.BIT.IGAEN = 0;
+ 130:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 131:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Disable timeout detection enable. */
+ 132:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 BSC.BEREN.BIT.TOEN = 0;
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 134:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             break;
+ 135:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 136:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** #ifdef __FPU
+ 137:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         case (BSP_INT_SRC_EXC_FPU):
+ 138:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 139:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             /* Get current FPSW. */
+ 140:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             tmp_fpsw = (uint32_t)R_BSP_GET_FPSW();
+ 141:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 142:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             if (true == enable)
+ 143:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Set the FPU exception flags. */
+ 145:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 R_BSP_SET_FPSW((tmp_fpsw | (uint32_t)BSP_PRV_FPU_EXCEPTIONS_ENABLE));
+ 146:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 147:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             else
+ 148:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+ 149:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Clear only the FPU exception flags. */
+ 150:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 R_BSP_SET_FPSW((tmp_fpsw & (uint32_t)~BSP_PRV_FPU_EXCEPTIONS_ENABLE));
+ 151:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 152:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             break;
+ 153:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** #endif
+ 154:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 155:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         case (BSP_INT_SRC_EXC_NMI_PIN):
+ 156:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             if (true == enable)
+ 157:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+ 158:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* Enable NMI pin interrupt (cannot undo!) */
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 ICU.NMIER.BIT.NMIEN = 1;
+ 160:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 161:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             else
+ 162:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+ 163:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 /* NMI pin interrupts cannot be disabled after being enabled. */
+ 164:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****                 err = BSP_INT_ERR_UNSUPPORTED;
+  24                             		.loc 1 164 21 is_stmt 0
+  25 000b 66 31                   		mov.L	#3, r1
+  26                             	.LVL2:
+ 165:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 166:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             break;
+ 167:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 168:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         default:
+ 169:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             err = BSP_INT_ERR_UNSUPPORTED;
+ 170:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             break;
+ 171:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 172:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 173:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     return err;
+  27                             		.loc 1 173 5 is_stmt 1
+ 174:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** } /* End of function bsp_interrupt_enable_disable() */
+  28                             		.loc 1 174 1 is_stmt 0
+  29 000d 02                      		rts
+  30                             	.LVL3:
+  31                             	.L4:
+ 156:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+  32                             		.loc 1 156 13 is_stmt 1
+ 156:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+  33                             		.loc 1 156 16 is_stmt 0
+  34 000e 5B 22                   		movu.B	r2, r2
+  35 0010 61 02                   		cmp	#0, r2
+  36 0012 20 F9                   		beq	.L8
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+  37                             		.loc 1 159 17 is_stmt 1
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+  38                             		.loc 1 159 37 is_stmt 0
+  39 0014 FB 5E 00 70 08          		mov.L	#0x87000, r5
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  40                             		.loc 1 99 19
+  41 0019 66 01                   		mov.L	#0, r1
+  42                             	.LVL4:
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+  43                             		.loc 1 159 37
+  44 001b F2 50 81 05             		bset	#0, 1409[r5].B
+  45 001f 02                      		rts
+  46                             	.LVL5:
+  47                             	.L3:
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+  48                             		.loc 1 104 13 is_stmt 1
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+  49                             		.loc 1 104 16 is_stmt 0
+  50 0020 5B 22                   		movu.B	r2, r2
+  51 0022 61 02                   		cmp	#0, r2
+  52 0024 20 46                   		beq	.L6
+ 108:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  53                             		.loc 1 108 17 is_stmt 1
+ 108:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  54                             		.loc 1 108 32 is_stmt 0
+  55 0026 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 114:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  56                             		.loc 1 114 17
+  57 002b 75 41 10                		mov.L	#16, r1
+  58                             	.LVL6:
+ 108:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  59                             		.loc 1 108 32
+  60 002e F1 58 10                		bclr	#0, 16[r5].B
+ 111:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  61                             		.loc 1 111 17 is_stmt 1
+ 111:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  62                             		.loc 1 111 33 is_stmt 0
+  63 0031 CE 54 00 03             		mov.B	768[r5], r4
+  64 0035 65 F4                   		or	#15, r4
+  65 0037 CB 54 00 03             		mov.B	r4, 768[r5]
+ 114:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  66                             		.loc 1 114 17 is_stmt 1
+  67 003b 05 00 00 00             		bsr	_R_BSP_InterruptRequestEnable
+  68                             	.LVL7:
+ 117:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  69                             		.loc 1 117 17
+ 117:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  70                             		.loc 1 117 37 is_stmt 0
+  71 003f FB 5E 00 13 08          		mov.L	#0x81300, r5
+  72 0044 F1 50 04                		bset	#0, 4[r5].B
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+  73                             		.loc 1 120 17 is_stmt 1
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+  74                             		.loc 1 120 36 is_stmt 0
+  75 0047 F1 51 04                		bset	#1, 4[r5].B
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  76                             		.loc 1 99 19
+  77 004a 66 01                   		mov.L	#0, r1
+  78 004c 02                      		rts
+  79                             	.LVL8:
+  80                             	.L2:
+ 140:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  81                             		.loc 1 140 13 is_stmt 1
+ 140:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  82                             		.loc 1 140 34 is_stmt 0
+  83 004d FD 6A 35                		mvfc	fpsw, r5
+  84                             	.LVL9:
+ 142:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+  85                             		.loc 1 142 13 is_stmt 1
+ 142:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             {
+  86                             		.loc 1 142 16 is_stmt 0
+  87 0050 5B 22                   		movu.B	r2, r2
+  88 0052 61 02                   		cmp	#0, r2
+  89 0054 20 0C                   		beq	.L7
+ 145:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+  90                             		.loc 1 145 17 is_stmt 1
+  91 0056 76 35 00 7C             		or	#0x7c00, r5
+  92                             	.LVL10:
+  93 005a FD 68 53                		mvtc	r5, fpsw
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+  94                             		.loc 1 99 19 is_stmt 0
+  95 005d 66 01                   		mov.L	#0, r1
+  96                             	.LVL11:
+  97 005f 02                      		rts
+  98                             	.LVL12:
+  99                             	.L7:
+ 150:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 100                             		.loc 1 150 17 is_stmt 1
+ 101 0060 76 25 FF 83             		and #-31745, r5
+ 102                             	.LVL13:
+ 103 0064 FD 68 53                		mvtc	r5, fpsw
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 104                             		.loc 1 99 19 is_stmt 0
+ 105 0067 66 01                   		mov.L	#0, r1
+ 106                             	.LVL14:
+ 107 0069 02                      		rts
+ 108                             	.LVL15:
+ 109                             	.L6:
+ 126:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 110                             		.loc 1 126 17 is_stmt 1
+ 111 006a 75 41 10                		mov.L	#16, r1
+ 112                             	.LVL16:
+ 113 006d 05 00 00 00             		bsr	_R_BSP_InterruptRequestDisable
+ 114                             	.LVL17:
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 115                             		.loc 1 129 17
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 116                             		.loc 1 129 37 is_stmt 0
+ 117 0071 FB 5E 00 13 08          		mov.L	#0x81300, r5
+ 118 0076 F1 58 04                		bclr	#0, 4[r5].B
+ 132:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 119                             		.loc 1 132 17 is_stmt 1
+ 132:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****             }
+ 120                             		.loc 1 132 36 is_stmt 0
+ 121 0079 F1 59 04                		bclr	#1, 4[r5].B
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 122                             		.loc 1 99 19
+ 123 007c 66 01                   		mov.L	#0, r1
+ 124 007e 02                      		rts
+ 125                             	.LFE3:
+ 127 007f 03                      		.section	.text.group_bl0_handler_isr,"ax",@progbits
+ 129                             	_group_bl0_handler_isr:
+ 130                             	.LFB4:
+ 175:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 176:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+ 177:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Function Name: group_bl0_handler_isr
+ 178:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : Interrupt handler for Group BL0 interrupts. The way this code works is that for ea
+ 179:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                in this group the following will be performed:
+ 180:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                1) Test to see if an interrupt is requested for this source
+ 181:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                2) If an interrupt is requested then the registered callback is called (if one is 
+ 182:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                NOTE: The interrupt request flag must be cleared in the peripheral.
+ 183:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Arguments    : None
+ 184:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Return Value : None
+ 185:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+ 186:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_ATTRIB_STATIC_INTERRUPT void group_bl0_handler_isr (void)
+ 187:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** {
+ 131                             		.loc 1 187 1 is_stmt 1
+ 132                             		.global	$tableentry$110$.rvectors
+ 133                             	$tableentry$110$.rvectors:
+ 134                             		; Note: Interrupt Handler
+ 135 0000 6E EF                   		pushm	r14-r15
+ 136                             	.LCFI0:
+ 137 0002 6E 15                   		pushm	r1-r5
+ 138                             	.LCFI1:
+ 188:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS1 */
+ 189:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS1)
+ 139                             		.loc 1 189 5
+ 140                             		.loc 1 189 28 is_stmt 0
+ 141 0004 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 142 0009 EE 55 8C 01             		mov.L	1584[r5], r5
+ 143                             		.loc 1 189 8
+ 144 000d 7C 15                   		btst	#1, r5
+ 145 000f 3B C5 01                		bne	.L41
+ 190:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 191:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI0_ERI0 */
+ 192:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI0_ERI0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 193:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 194:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 195:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS0 */
+ 196:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS0)
+ 146                             		.loc 1 196 5 is_stmt 1
+ 147                             		.loc 1 196 28 is_stmt 0
+ 148 0012 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 149 0017 EE 55 8C 01             		mov.L	1584[r5], r5
+ 150                             		.loc 1 196 8
+ 151 001b 7C 05                   		btst	#0, r5
+ 152 001d 3B D4 01                		bne	.L42
+ 153                             		.balign 8,3,4
+ 154                             	.L12:
+ 197:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 198:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI0_TEI0 */
+ 199:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI0_TEI0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 200:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 201:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 202:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS3 */
+ 203:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS3)
+ 155                             		.loc 1 203 5 is_stmt 1
+ 156                             		.loc 1 203 28 is_stmt 0
+ 157 0020 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 158 0025 EE 55 8C 01             		mov.L	1584[r5], r5
+ 159                             		.loc 1 203 8
+ 160 0029 7C 35                   		btst	#3, r5
+ 161 002b 3B E5 01                		bne	.L43
+ 162 002e EF 00                   		.balign 8,3,4
+ 163                             	.L13:
+ 204:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 205:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI1_ERI1 */
+ 206:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI1_ERI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 207:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 208:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 209:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS2 */
+ 210:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS2)
+ 164                             		.loc 1 210 5 is_stmt 1
+ 165                             		.loc 1 210 28 is_stmt 0
+ 166 0030 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 167 0035 EE 55 8C 01             		mov.L	1584[r5], r5
+ 168                             		.loc 1 210 8
+ 169 0039 7C 25                   		btst	#2, r5
+ 170 003b 3B F5 01                		bne	.L44
+ 171 003e EF 00                   		.balign 8,3,4
+ 172                             	.L14:
+ 211:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 212:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI1_TEI1 */
+ 213:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI1_TEI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 214:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 215:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 216:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS5 */
+ 217:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS5)
+ 173                             		.loc 1 217 5 is_stmt 1
+ 174                             		.loc 1 217 28 is_stmt 0
+ 175 0040 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 176 0045 EE 55 8C 01             		mov.L	1584[r5], r5
+ 177                             		.loc 1 217 8
+ 178 0049 7C 55                   		btst	#5, r5
+ 179 004b 3B 05 02                		bne	.L45
+ 180 004e EF 00                   		.balign 8,3,4
+ 181                             	.L15:
+ 218:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 219:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI2_ERI2 */
+ 220:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI2_ERI2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 221:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 222:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 223:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS4 */
+ 224:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS4)
+ 182                             		.loc 1 224 5 is_stmt 1
+ 183                             		.loc 1 224 28 is_stmt 0
+ 184 0050 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 185 0055 EE 55 8C 01             		mov.L	1584[r5], r5
+ 186                             		.loc 1 224 8
+ 187 0059 7C 45                   		btst	#4, r5
+ 188 005b 3B 15 02                		bne	.L46
+ 189 005e EF 00                   		.balign 8,3,4
+ 190                             	.L16:
+ 225:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 226:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI2_TEI2 */
+ 227:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI2_TEI2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 228:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 229:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 230:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS7 */
+ 231:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS7)
+ 191                             		.loc 1 231 5 is_stmt 1
+ 192                             		.loc 1 231 28 is_stmt 0
+ 193 0060 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 194 0065 EE 55 8C 01             		mov.L	1584[r5], r5
+ 195                             		.loc 1 231 8
+ 196 0069 7C 75                   		btst	#7, r5
+ 197 006b 3B 25 02                		bne	.L47
+ 198 006e EF 00                   		.balign 8,3,4
+ 199                             	.L17:
+ 232:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 233:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI3_ERI3 */
+ 234:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI3_ERI3, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 235:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 236:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 237:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS6 */
+ 238:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS6)
+ 200                             		.loc 1 238 5 is_stmt 1
+ 201                             		.loc 1 238 28 is_stmt 0
+ 202 0070 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 203 0075 EE 55 8C 01             		mov.L	1584[r5], r5
+ 204                             		.loc 1 238 8
+ 205 0079 7C 65                   		btst	#6, r5
+ 206 007b 3B 35 02                		bne	.L48
+ 207 007e EF 00                   		.balign 8,3,4
+ 208                             	.L18:
+ 239:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 240:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI3_TEI3 */
+ 241:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI3_TEI3, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 242:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 243:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 244:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS9 */
+ 245:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS9)
+ 209                             		.loc 1 245 5 is_stmt 1
+ 210                             		.loc 1 245 28 is_stmt 0
+ 211 0080 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 212 0085 EE 55 8C 01             		mov.L	1584[r5], r5
+ 213                             		.loc 1 245 8
+ 214 0089 7C 95                   		btst	#9, r5
+ 215 008b 3B 45 02                		bne	.L49
+ 216 008e EF 00                   		.balign 8,3,4
+ 217                             	.L19:
+ 246:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 247:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI4_ERI4 */
+ 248:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI4_ERI4, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 249:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 250:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 251:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS8 */
+ 252:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS8)
+ 218                             		.loc 1 252 5 is_stmt 1
+ 219                             		.loc 1 252 28 is_stmt 0
+ 220 0090 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 221 0095 EE 55 8C 01             		mov.L	1584[r5], r5
+ 222                             		.loc 1 252 8
+ 223 0099 7C 85                   		btst	#8, r5
+ 224 009b 3B 55 02                		bne	.L50
+ 225 009e EF 00                   		.balign 8,3,4
+ 226                             	.L20:
+ 253:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 254:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI4_TEI4 */
+ 255:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI4_TEI4, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 256:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 257:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 258:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS11 */
+ 259:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS11)
+ 227                             		.loc 1 259 5 is_stmt 1
+ 228                             		.loc 1 259 28 is_stmt 0
+ 229 00a0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 230 00a5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 231                             		.loc 1 259 8
+ 232 00a9 7C B5                   		btst	#11, r5
+ 233 00ab 3B 65 02                		bne	.L51
+ 234 00ae EF 00                   		.balign 8,3,4
+ 235                             	.L21:
+ 260:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 261:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI5_ERI5 */
+ 262:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI5_ERI5, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 263:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 264:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 265:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS10 */
+ 266:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS10)
+ 236                             		.loc 1 266 5 is_stmt 1
+ 237                             		.loc 1 266 28 is_stmt 0
+ 238 00b0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 239 00b5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 240                             		.loc 1 266 8
+ 241 00b9 7C A5                   		btst	#10, r5
+ 242 00bb 3B 75 02                		bne	.L52
+ 243 00be EF 00                   		.balign 8,3,4
+ 244                             	.L22:
+ 267:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 268:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI5_TEI5 */
+ 269:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI5_TEI5, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 270:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 271:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 272:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS13 */
+ 273:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS13)
+ 245                             		.loc 1 273 5 is_stmt 1
+ 246                             		.loc 1 273 28 is_stmt 0
+ 247 00c0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 248 00c5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 249                             		.loc 1 273 8
+ 250 00c9 7C D5                   		btst	#13, r5
+ 251 00cb 3B 85 02                		bne	.L53
+ 252 00ce EF 00                   		.balign 8,3,4
+ 253                             	.L23:
+ 274:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 275:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI6_ERI6 */
+ 276:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI6_ERI6, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 277:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 278:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 279:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS12 */
+ 280:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS12)
+ 254                             		.loc 1 280 5 is_stmt 1
+ 255                             		.loc 1 280 28 is_stmt 0
+ 256 00d0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 257 00d5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 258                             		.loc 1 280 8
+ 259 00d9 7C C5                   		btst	#12, r5
+ 260 00db 3B 95 02                		bne	.L54
+ 261 00de EF 00                   		.balign 8,3,4
+ 262                             	.L24:
+ 281:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 282:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI6_TEI6 */
+ 283:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI6_TEI6, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 284:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 285:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 286:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS15 */
+ 287:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS15)
+ 263                             		.loc 1 287 5 is_stmt 1
+ 264                             		.loc 1 287 28 is_stmt 0
+ 265 00e0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 266 00e5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 267                             		.loc 1 287 8
+ 268 00e9 7C F5                   		btst	#15, r5
+ 269 00eb 3B A5 02                		bne	.L55
+ 270 00ee EF 00                   		.balign 8,3,4
+ 271                             	.L25:
+ 288:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 289:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI7_ERI7 */
+ 290:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI7_ERI7, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 291:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 292:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 293:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS14 */
+ 294:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS14)
+ 272                             		.loc 1 294 5 is_stmt 1
+ 273                             		.loc 1 294 28 is_stmt 0
+ 274 00f0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 275 00f5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 276                             		.loc 1 294 8
+ 277 00f9 7C E5                   		btst	#14, r5
+ 278 00fb 3B B5 02                		bne	.L56
+ 279 00fe EF 00                   		.balign 8,3,4
+ 280                             	.L26:
+ 295:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 296:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI7_TEI7 */
+ 297:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI7_TEI7, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 298:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 299:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 300:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS17 */
+ 301:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS17)
+ 281                             		.loc 1 301 5 is_stmt 1
+ 282                             		.loc 1 301 28 is_stmt 0
+ 283 0100 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 284 0105 EE 55 8C 01             		mov.L	1584[r5], r5
+ 285                             		.loc 1 301 8
+ 286 0109 7D 15                   		btst	#17, r5
+ 287 010b 3B C5 02                		bne	.L57
+ 288 010e EF 00                   		.balign 8,3,4
+ 289                             	.L27:
+ 302:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 303:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI12_ERI12 */
+ 304:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI12_ERI12, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 305:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 306:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 307:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS16 */
+ 308:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS16)
+ 290                             		.loc 1 308 5 is_stmt 1
+ 291                             		.loc 1 308 28 is_stmt 0
+ 292 0110 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 293 0115 EE 55 8C 01             		mov.L	1584[r5], r5
+ 294                             		.loc 1 308 8
+ 295 0119 7D 05                   		btst	#16, r5
+ 296 011b 3B D5 02                		bne	.L58
+ 297 011e EF 00                   		.balign 8,3,4
+ 298                             	.L28:
+ 309:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 310:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI12_TEI12 */
+ 311:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI12_TEI12, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 312:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 313:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 314:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS18 */
+ 315:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS18)
+ 299                             		.loc 1 315 5 is_stmt 1
+ 300                             		.loc 1 315 28 is_stmt 0
+ 301 0120 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 302 0125 EE 55 8C 01             		mov.L	1584[r5], r5
+ 303                             		.loc 1 315 8
+ 304 0129 7D 25                   		btst	#18, r5
+ 305 012b 3B E5 02                		bne	.L59
+ 306 012e EF 00                   		.balign 8,3,4
+ 307                             	.L29:
+ 316:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 317:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI12_SCIX0 */
+ 318:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI12_SCIX0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 319:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 320:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 321:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS19 */
+ 322:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS19)
+ 308                             		.loc 1 322 5 is_stmt 1
+ 309                             		.loc 1 322 28 is_stmt 0
+ 310 0130 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 311 0135 EE 55 8C 01             		mov.L	1584[r5], r5
+ 312                             		.loc 1 322 8
+ 313 0139 7D 35                   		btst	#19, r5
+ 314 013b 3B F5 02                		bne	.L60
+ 315 013e EF 00                   		.balign 8,3,4
+ 316                             	.L30:
+ 323:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 324:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI12_SCIX1 */
+ 325:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI12_SCIX1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 326:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 327:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 328:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS20 */
+ 329:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS20)
+ 317                             		.loc 1 329 5 is_stmt 1
+ 318                             		.loc 1 329 28 is_stmt 0
+ 319 0140 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 320 0145 EE 55 8C 01             		mov.L	1584[r5], r5
+ 321                             		.loc 1 329 8
+ 322 0149 7D 45                   		btst	#20, r5
+ 323 014b 3B 05 03                		bne	.L61
+ 324 014e EF 00                   		.balign 8,3,4
+ 325                             	.L31:
+ 330:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 331:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI12_SCIX2 */
+ 332:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI12_SCIX2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 333:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 334:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 335:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS21 */
+ 336:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS21)
+ 326                             		.loc 1 336 5 is_stmt 1
+ 327                             		.loc 1 336 28 is_stmt 0
+ 328 0150 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 329 0155 EE 55 8C 01             		mov.L	1584[r5], r5
+ 330                             		.loc 1 336 8
+ 331 0159 7D 55                   		btst	#21, r5
+ 332 015b 3B 15 03                		bne	.L62
+ 333 015e EF 00                   		.balign 8,3,4
+ 334                             	.L32:
+ 337:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 338:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_SCI12_SCIX3 */
+ 339:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_SCI12_SCIX3, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 340:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 341:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 342:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS24 */
+ 343:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS24)
+ 335                             		.loc 1 343 5 is_stmt 1
+ 336                             		.loc 1 343 28 is_stmt 0
+ 337 0160 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 338 0165 EE 55 8C 01             		mov.L	1584[r5], r5
+ 339                             		.loc 1 343 8
+ 340 0169 7D 85                   		btst	#24, r5
+ 341 016b 3B 25 03                		bne	.L63
+ 342 016e EF 00                   		.balign 8,3,4
+ 343                             	.L33:
+ 344:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 345:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_QSPI_QSPSSLI */
+ 346:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_QSPI_QSPSSLI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR)
+ 347:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 348:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 349:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS26 */
+ 350:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS26)
+ 344                             		.loc 1 350 5 is_stmt 1
+ 345                             		.loc 1 350 28 is_stmt 0
+ 346 0170 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 347 0175 EE 55 8C 01             		mov.L	1584[r5], r5
+ 348                             		.loc 1 350 8
+ 349 0179 7D A5                   		btst	#26, r5
+ 350 017b 3B 35 03                		bne	.L64
+ 351 017e EF 00                   		.balign 8,3,4
+ 352                             	.L34:
+ 351:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 352:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_CAC_FERRI */
+ 353:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_CAC_FERRI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 354:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 355:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 356:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS27 */
+ 357:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS27)
+ 353                             		.loc 1 357 5 is_stmt 1
+ 354                             		.loc 1 357 28 is_stmt 0
+ 355 0180 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 356 0185 EE 55 8C 01             		mov.L	1584[r5], r5
+ 357                             		.loc 1 357 8
+ 358 0189 7D B5                   		btst	#27, r5
+ 359 018b 3B 45 03                		bne	.L65
+ 360 018e EF 00                   		.balign 8,3,4
+ 361                             	.L35:
+ 358:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 359:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_CAC_MENDI */
+ 360:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_CAC_MENDI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 361:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 362:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 363:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS28 */
+ 364:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS28)
+ 362                             		.loc 1 364 5 is_stmt 1
+ 363                             		.loc 1 364 28 is_stmt 0
+ 364 0190 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 365 0195 EE 55 8C 01             		mov.L	1584[r5], r5
+ 366                             		.loc 1 364 8
+ 367 0199 7D C5                   		btst	#28, r5
+ 368 019b 3B 55 03                		bne	.L66
+ 369 019e EF 00                   		.balign 8,3,4
+ 370                             	.L36:
+ 365:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 366:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_CAC_OVFI */
+ 367:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_CAC_OVFI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 368:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 369:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 370:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS29 */
+ 371:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS29)
+ 371                             		.loc 1 371 5 is_stmt 1
+ 372                             		.loc 1 371 28 is_stmt 0
+ 373 01a0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 374 01a5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 375                             		.loc 1 371 8
+ 376 01a9 7D D5                   		btst	#29, r5
+ 377 01ab 3B 65 03                		bne	.L67
+ 378 01ae EF 00                   		.balign 8,3,4
+ 379                             	.L37:
+ 372:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 373:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_DOC_DOPCI */
+ 374:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_DOC_DOPCI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 375:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 376:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 377:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS31 */
+ 378:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS31)
+ 380                             		.loc 1 378 5 is_stmt 1
+ 381                             		.loc 1 378 28 is_stmt 0
+ 382 01b0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 383 01b5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 384                             		.loc 1 378 8
+ 385 01b9 61 05                   		cmp	#0, r5
+ 386 01bb 28 05 38 73 03          		blt	.L68
+ 387                             		.balign 8,3,4
+ 388                             	.L38:
+ 379:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 380:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_PDC_PCERI */
+ 381:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_PDC_PCERI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 382:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 383:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 384:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL0 IS30 */
+ 385:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL0.BIT.IS30)
+ 389                             		.loc 1 385 5 is_stmt 1
+ 390                             		.loc 1 385 28 is_stmt 0
+ 391 01c0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 392 01c5 EE 55 8C 01             		mov.L	1584[r5], r5
+ 393                             		.loc 1 385 8
+ 394 01c9 7D E5                   		btst	#30, r5
+ 395 01cb 3B 85 03                		bne	.L69
+ 396                             		.balign 8,3,1
+ 397                             	.L10:
+ 386:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 387:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL0_PDC_PCFEI */
+ 388:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL0_PDC_PCFEI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 389:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 390:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** } /* End of function group_bl0_handler_isr() */
+ 398                             		.loc 1 390 1
+ 399 01ce 6F 15                   		popm	r1-r5
+ 400 01d0 6F EF                   		popm	r14-r15
+ 401 01d2 7F 95                   		rte
+ 402                             	.L41:
+ 192:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 403                             		.loc 1 192 9 is_stmt 1
+ 404 01d4 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 405 01da 66 02                   		mov.L	#0, r2
+ 406 01dc 75 41 15                		mov.L	#21, r1
+ 407 01df 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 408                             	.LVL18:
+ 196:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 409                             		.loc 1 196 5
+ 196:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 410                             		.loc 1 196 28 is_stmt 0
+ 411 01e3 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 412 01e8 EE 55 8C 01             		mov.L	1584[r5], r5
+ 196:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 413                             		.loc 1 196 8
+ 414 01ec 7C 05                   		btst	#0, r5
+ 415 01ee 3A 32 FE                		beq	.L12
+ 416                             		.balign 8,3,5
+ 417                             	.L42:
+ 199:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 418                             		.loc 1 199 9 is_stmt 1
+ 419 01f1 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 420 01f7 66 02                   		mov.L	#0, r2
+ 421 01f9 75 41 14                		mov.L	#20, r1
+ 422 01fc 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 423                             	.LVL19:
+ 203:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 424                             		.loc 1 203 5
+ 203:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 425                             		.loc 1 203 28 is_stmt 0
+ 426 0200 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 427 0205 EE 55 8C 01             		mov.L	1584[r5], r5
+ 203:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 428                             		.loc 1 203 8
+ 429 0209 7C 35                   		btst	#3, r5
+ 430 020b 3A 25 FE                		beq	.L13
+ 431 020e EF 00                   		.balign 8,3,5
+ 432                             	.L43:
+ 206:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 433                             		.loc 1 206 9 is_stmt 1
+ 434 0210 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 435 0216 66 02                   		mov.L	#0, r2
+ 436 0218 75 41 17                		mov.L	#23, r1
+ 437 021b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 438                             	.LVL20:
+ 210:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 439                             		.loc 1 210 5
+ 210:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 440                             		.loc 1 210 28 is_stmt 0
+ 441 021f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 442 0224 EE 55 8C 01             		mov.L	1584[r5], r5
+ 210:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 443                             		.loc 1 210 8
+ 444 0228 7C 25                   		btst	#2, r5
+ 445 022a 3A 16 FE                		beq	.L14
+ 446 022d FC 13 00                		.balign 8,3,5
+ 447                             	.L44:
+ 213:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 448                             		.loc 1 213 9 is_stmt 1
+ 449 0230 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 450 0236 66 02                   		mov.L	#0, r2
+ 451 0238 75 41 16                		mov.L	#22, r1
+ 452 023b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 453                             	.LVL21:
+ 217:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 454                             		.loc 1 217 5
+ 217:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 455                             		.loc 1 217 28 is_stmt 0
+ 456 023f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 457 0244 EE 55 8C 01             		mov.L	1584[r5], r5
+ 217:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 458                             		.loc 1 217 8
+ 459 0248 7C 55                   		btst	#5, r5
+ 460 024a 3A 06 FE                		beq	.L15
+ 461 024d FC 13 00                		.balign 8,3,5
+ 462                             	.L45:
+ 220:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 463                             		.loc 1 220 9 is_stmt 1
+ 464 0250 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 465 0256 66 02                   		mov.L	#0, r2
+ 466 0258 75 41 19                		mov.L	#25, r1
+ 467 025b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 468                             	.LVL22:
+ 224:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 469                             		.loc 1 224 5
+ 224:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 470                             		.loc 1 224 28 is_stmt 0
+ 471 025f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 472 0264 EE 55 8C 01             		mov.L	1584[r5], r5
+ 224:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 473                             		.loc 1 224 8
+ 474 0268 7C 45                   		btst	#4, r5
+ 475 026a 3A F6 FD                		beq	.L16
+ 476 026d FC 13 00                		.balign 8,3,5
+ 477                             	.L46:
+ 227:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 478                             		.loc 1 227 9 is_stmt 1
+ 479 0270 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 480 0276 66 02                   		mov.L	#0, r2
+ 481 0278 75 41 18                		mov.L	#24, r1
+ 482 027b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 483                             	.LVL23:
+ 231:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 484                             		.loc 1 231 5
+ 231:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 485                             		.loc 1 231 28 is_stmt 0
+ 486 027f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 487 0284 EE 55 8C 01             		mov.L	1584[r5], r5
+ 231:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 488                             		.loc 1 231 8
+ 489 0288 7C 75                   		btst	#7, r5
+ 490 028a 3A E6 FD                		beq	.L17
+ 491 028d FC 13 00                		.balign 8,3,5
+ 492                             	.L47:
+ 234:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 493                             		.loc 1 234 9 is_stmt 1
+ 494 0290 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 495 0296 66 02                   		mov.L	#0, r2
+ 496 0298 75 41 1B                		mov.L	#27, r1
+ 497 029b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 498                             	.LVL24:
+ 238:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 499                             		.loc 1 238 5
+ 238:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 500                             		.loc 1 238 28 is_stmt 0
+ 501 029f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 502 02a4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 238:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 503                             		.loc 1 238 8
+ 504 02a8 7C 65                   		btst	#6, r5
+ 505 02aa 3A D6 FD                		beq	.L18
+ 506 02ad FC 13 00                		.balign 8,3,5
+ 507                             	.L48:
+ 241:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 508                             		.loc 1 241 9 is_stmt 1
+ 509 02b0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 510 02b6 66 02                   		mov.L	#0, r2
+ 511 02b8 75 41 1A                		mov.L	#26, r1
+ 512 02bb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 513                             	.LVL25:
+ 245:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 514                             		.loc 1 245 5
+ 245:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 515                             		.loc 1 245 28 is_stmt 0
+ 516 02bf FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 517 02c4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 245:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 518                             		.loc 1 245 8
+ 519 02c8 7C 95                   		btst	#9, r5
+ 520 02ca 3A C6 FD                		beq	.L19
+ 521 02cd FC 13 00                		.balign 8,3,5
+ 522                             	.L49:
+ 248:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 523                             		.loc 1 248 9 is_stmt 1
+ 524 02d0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 525 02d6 66 02                   		mov.L	#0, r2
+ 526 02d8 75 41 1D                		mov.L	#29, r1
+ 527 02db 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 528                             	.LVL26:
+ 252:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 529                             		.loc 1 252 5
+ 252:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 530                             		.loc 1 252 28 is_stmt 0
+ 531 02df FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 532 02e4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 252:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 533                             		.loc 1 252 8
+ 534 02e8 7C 85                   		btst	#8, r5
+ 535 02ea 3A B6 FD                		beq	.L20
+ 536 02ed FC 13 00                		.balign 8,3,5
+ 537                             	.L50:
+ 255:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 538                             		.loc 1 255 9 is_stmt 1
+ 539 02f0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 540 02f6 66 02                   		mov.L	#0, r2
+ 541 02f8 75 41 1C                		mov.L	#28, r1
+ 542 02fb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 543                             	.LVL27:
+ 259:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 544                             		.loc 1 259 5
+ 259:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 545                             		.loc 1 259 28 is_stmt 0
+ 546 02ff FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 547 0304 EE 55 8C 01             		mov.L	1584[r5], r5
+ 259:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 548                             		.loc 1 259 8
+ 549 0308 7C B5                   		btst	#11, r5
+ 550 030a 3A A6 FD                		beq	.L21
+ 551 030d FC 13 00                		.balign 8,3,5
+ 552                             	.L51:
+ 262:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 553                             		.loc 1 262 9 is_stmt 1
+ 554 0310 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 555 0316 66 02                   		mov.L	#0, r2
+ 556 0318 75 41 1F                		mov.L	#31, r1
+ 557 031b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 558                             	.LVL28:
+ 266:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 559                             		.loc 1 266 5
+ 266:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 560                             		.loc 1 266 28 is_stmt 0
+ 561 031f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 562 0324 EE 55 8C 01             		mov.L	1584[r5], r5
+ 266:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 563                             		.loc 1 266 8
+ 564 0328 7C A5                   		btst	#10, r5
+ 565 032a 3A 96 FD                		beq	.L22
+ 566 032d FC 13 00                		.balign 8,3,5
+ 567                             	.L52:
+ 269:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 568                             		.loc 1 269 9 is_stmt 1
+ 569 0330 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 570 0336 66 02                   		mov.L	#0, r2
+ 571 0338 75 41 1E                		mov.L	#30, r1
+ 572 033b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 573                             	.LVL29:
+ 273:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 574                             		.loc 1 273 5
+ 273:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 575                             		.loc 1 273 28 is_stmt 0
+ 576 033f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 577 0344 EE 55 8C 01             		mov.L	1584[r5], r5
+ 273:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 578                             		.loc 1 273 8
+ 579 0348 7C D5                   		btst	#13, r5
+ 580 034a 3A 86 FD                		beq	.L23
+ 581 034d FC 13 00                		.balign 8,3,5
+ 582                             	.L53:
+ 276:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 583                             		.loc 1 276 9 is_stmt 1
+ 584 0350 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 585 0356 66 02                   		mov.L	#0, r2
+ 586 0358 75 41 21                		mov.L	#33, r1
+ 587 035b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 588                             	.LVL30:
+ 280:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 589                             		.loc 1 280 5
+ 280:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 590                             		.loc 1 280 28 is_stmt 0
+ 591 035f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 592 0364 EE 55 8C 01             		mov.L	1584[r5], r5
+ 280:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 593                             		.loc 1 280 8
+ 594 0368 7C C5                   		btst	#12, r5
+ 595 036a 3A 76 FD                		beq	.L24
+ 596 036d FC 13 00                		.balign 8,3,5
+ 597                             	.L54:
+ 283:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 598                             		.loc 1 283 9 is_stmt 1
+ 599 0370 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 600 0376 66 02                   		mov.L	#0, r2
+ 601 0378 75 41 20                		mov.L	#32, r1
+ 602 037b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 603                             	.LVL31:
+ 287:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 604                             		.loc 1 287 5
+ 287:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 605                             		.loc 1 287 28 is_stmt 0
+ 606 037f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 607 0384 EE 55 8C 01             		mov.L	1584[r5], r5
+ 287:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 608                             		.loc 1 287 8
+ 609 0388 7C F5                   		btst	#15, r5
+ 610 038a 3A 66 FD                		beq	.L25
+ 611 038d FC 13 00                		.balign 8,3,5
+ 612                             	.L55:
+ 290:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 613                             		.loc 1 290 9 is_stmt 1
+ 614 0390 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 615 0396 66 02                   		mov.L	#0, r2
+ 616 0398 75 41 23                		mov.L	#35, r1
+ 617 039b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 618                             	.LVL32:
+ 294:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 619                             		.loc 1 294 5
+ 294:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 620                             		.loc 1 294 28 is_stmt 0
+ 621 039f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 622 03a4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 294:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 623                             		.loc 1 294 8
+ 624 03a8 7C E5                   		btst	#14, r5
+ 625 03aa 3A 56 FD                		beq	.L26
+ 626 03ad FC 13 00                		.balign 8,3,5
+ 627                             	.L56:
+ 297:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 628                             		.loc 1 297 9 is_stmt 1
+ 629 03b0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 630 03b6 66 02                   		mov.L	#0, r2
+ 631 03b8 75 41 22                		mov.L	#34, r1
+ 632 03bb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 633                             	.LVL33:
+ 301:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 634                             		.loc 1 301 5
+ 301:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 635                             		.loc 1 301 28 is_stmt 0
+ 636 03bf FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 637 03c4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 301:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 638                             		.loc 1 301 8
+ 639 03c8 7D 15                   		btst	#17, r5
+ 640 03ca 3A 46 FD                		beq	.L27
+ 641 03cd FC 13 00                		.balign 8,3,5
+ 642                             	.L57:
+ 304:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 643                             		.loc 1 304 9 is_stmt 1
+ 644 03d0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 645 03d6 66 02                   		mov.L	#0, r2
+ 646 03d8 75 41 25                		mov.L	#37, r1
+ 647 03db 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 648                             	.LVL34:
+ 308:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 649                             		.loc 1 308 5
+ 308:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 650                             		.loc 1 308 28 is_stmt 0
+ 651 03df FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 652 03e4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 308:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 653                             		.loc 1 308 8
+ 654 03e8 7D 05                   		btst	#16, r5
+ 655 03ea 3A 36 FD                		beq	.L28
+ 656 03ed FC 13 00                		.balign 8,3,5
+ 657                             	.L58:
+ 311:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 658                             		.loc 1 311 9 is_stmt 1
+ 659 03f0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 660 03f6 66 02                   		mov.L	#0, r2
+ 661 03f8 75 41 24                		mov.L	#36, r1
+ 662 03fb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 663                             	.LVL35:
+ 315:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 664                             		.loc 1 315 5
+ 315:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 665                             		.loc 1 315 28 is_stmt 0
+ 666 03ff FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 667 0404 EE 55 8C 01             		mov.L	1584[r5], r5
+ 315:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 668                             		.loc 1 315 8
+ 669 0408 7D 25                   		btst	#18, r5
+ 670 040a 3A 26 FD                		beq	.L29
+ 671 040d FC 13 00                		.balign 8,3,5
+ 672                             	.L59:
+ 318:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 673                             		.loc 1 318 9 is_stmt 1
+ 674 0410 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 675 0416 66 02                   		mov.L	#0, r2
+ 676 0418 75 41 26                		mov.L	#38, r1
+ 677 041b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 678                             	.LVL36:
+ 322:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 679                             		.loc 1 322 5
+ 322:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 680                             		.loc 1 322 28 is_stmt 0
+ 681 041f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 682 0424 EE 55 8C 01             		mov.L	1584[r5], r5
+ 322:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 683                             		.loc 1 322 8
+ 684 0428 7D 35                   		btst	#19, r5
+ 685 042a 3A 16 FD                		beq	.L30
+ 686 042d FC 13 00                		.balign 8,3,5
+ 687                             	.L60:
+ 325:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 688                             		.loc 1 325 9 is_stmt 1
+ 689 0430 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 690 0436 66 02                   		mov.L	#0, r2
+ 691 0438 75 41 27                		mov.L	#39, r1
+ 692 043b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 693                             	.LVL37:
+ 329:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 694                             		.loc 1 329 5
+ 329:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 695                             		.loc 1 329 28 is_stmt 0
+ 696 043f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 697 0444 EE 55 8C 01             		mov.L	1584[r5], r5
+ 329:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 698                             		.loc 1 329 8
+ 699 0448 7D 45                   		btst	#20, r5
+ 700 044a 3A 06 FD                		beq	.L31
+ 701 044d FC 13 00                		.balign 8,3,5
+ 702                             	.L61:
+ 332:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 703                             		.loc 1 332 9 is_stmt 1
+ 704 0450 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 705 0456 66 02                   		mov.L	#0, r2
+ 706 0458 75 41 28                		mov.L	#40, r1
+ 707 045b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 708                             	.LVL38:
+ 336:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 709                             		.loc 1 336 5
+ 336:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 710                             		.loc 1 336 28 is_stmt 0
+ 711 045f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 712 0464 EE 55 8C 01             		mov.L	1584[r5], r5
+ 336:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 713                             		.loc 1 336 8
+ 714 0468 7D 55                   		btst	#21, r5
+ 715 046a 3A F6 FC                		beq	.L32
+ 716 046d FC 13 00                		.balign 8,3,5
+ 717                             	.L62:
+ 339:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 718                             		.loc 1 339 9 is_stmt 1
+ 719 0470 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 720 0476 66 02                   		mov.L	#0, r2
+ 721 0478 75 41 29                		mov.L	#41, r1
+ 722 047b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 723                             	.LVL39:
+ 343:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 724                             		.loc 1 343 5
+ 343:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 725                             		.loc 1 343 28 is_stmt 0
+ 726 047f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 727 0484 EE 55 8C 01             		mov.L	1584[r5], r5
+ 343:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 728                             		.loc 1 343 8
+ 729 0488 7D 85                   		btst	#24, r5
+ 730 048a 3A E6 FC                		beq	.L33
+ 731 048d FC 13 00                		.balign 8,3,5
+ 732                             	.L63:
+ 346:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 733                             		.loc 1 346 9 is_stmt 1
+ 734 0490 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 735 0496 66 02                   		mov.L	#0, r2
+ 736 0498 75 41 2A                		mov.L	#42, r1
+ 737 049b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 738                             	.LVL40:
+ 350:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 739                             		.loc 1 350 5
+ 350:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 740                             		.loc 1 350 28 is_stmt 0
+ 741 049f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 742 04a4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 350:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 743                             		.loc 1 350 8
+ 744 04a8 7D A5                   		btst	#26, r5
+ 745 04aa 3A D6 FC                		beq	.L34
+ 746 04ad FC 13 00                		.balign 8,3,5
+ 747                             	.L64:
+ 353:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 748                             		.loc 1 353 9 is_stmt 1
+ 749 04b0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 750 04b6 66 02                   		mov.L	#0, r2
+ 751 04b8 75 41 2B                		mov.L	#43, r1
+ 752 04bb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 753                             	.LVL41:
+ 357:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 754                             		.loc 1 357 5
+ 357:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 755                             		.loc 1 357 28 is_stmt 0
+ 756 04bf FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 757 04c4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 357:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 758                             		.loc 1 357 8
+ 759 04c8 7D B5                   		btst	#27, r5
+ 760 04ca 3A C6 FC                		beq	.L35
+ 761 04cd FC 13 00                		.balign 8,3,5
+ 762                             	.L65:
+ 360:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 763                             		.loc 1 360 9 is_stmt 1
+ 764 04d0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 765 04d6 66 02                   		mov.L	#0, r2
+ 766 04d8 75 41 2C                		mov.L	#44, r1
+ 767 04db 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 768                             	.LVL42:
+ 364:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 769                             		.loc 1 364 5
+ 364:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 770                             		.loc 1 364 28 is_stmt 0
+ 771 04df FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 772 04e4 EE 55 8C 01             		mov.L	1584[r5], r5
+ 364:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 773                             		.loc 1 364 8
+ 774 04e8 7D C5                   		btst	#28, r5
+ 775 04ea 3A B6 FC                		beq	.L36
+ 776 04ed FC 13 00                		.balign 8,3,5
+ 777                             	.L66:
+ 367:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 778                             		.loc 1 367 9 is_stmt 1
+ 779 04f0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 780 04f6 66 02                   		mov.L	#0, r2
+ 781 04f8 75 41 2D                		mov.L	#45, r1
+ 782 04fb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 783                             	.LVL43:
+ 371:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 784                             		.loc 1 371 5
+ 371:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 785                             		.loc 1 371 28 is_stmt 0
+ 786 04ff FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 787 0504 EE 55 8C 01             		mov.L	1584[r5], r5
+ 371:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 788                             		.loc 1 371 8
+ 789 0508 7D D5                   		btst	#29, r5
+ 790 050a 3A A6 FC                		beq	.L37
+ 791 050d FC 13 00                		.balign 8,3,5
+ 792                             	.L67:
+ 374:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 793                             		.loc 1 374 9 is_stmt 1
+ 794 0510 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 795 0516 66 02                   		mov.L	#0, r2
+ 796 0518 75 41 2E                		mov.L	#46, r1
+ 797 051b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 798                             	.LVL44:
+ 378:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 799                             		.loc 1 378 5
+ 378:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 800                             		.loc 1 378 28 is_stmt 0
+ 801 051f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 802 0524 EE 55 8C 01             		mov.L	1584[r5], r5
+ 378:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 803                             		.loc 1 378 8
+ 804 0528 61 05                   		cmp	#0, r5
+ 805 052a 29 05 38 94 FC          		bge	.L38
+ 806 052f 03                      		.balign 8,3,5
+ 807                             	.L68:
+ 381:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 808                             		.loc 1 381 9 is_stmt 1
+ 809 0530 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 810 0536 66 02                   		mov.L	#0, r2
+ 811 0538 75 41 30                		mov.L	#48, r1
+ 812 053b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 813                             	.LVL45:
+ 385:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 814                             		.loc 1 385 5
+ 385:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 815                             		.loc 1 385 28 is_stmt 0
+ 816 053f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 817 0544 EE 55 8C 01             		mov.L	1584[r5], r5
+ 385:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 818                             		.loc 1 385 8
+ 819 0548 7D E5                   		btst	#30, r5
+ 820 054a 3A 84 FC                		beq	.L10
+ 821 054d FC 13 00                		.balign 8,3,5
+ 822                             	.L69:
+ 388:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 823                             		.loc 1 388 9 is_stmt 1
+ 824 0550 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 825 0556 66 02                   		mov.L	#0, r2
+ 826 0558 75 41 2F                		mov.L	#47, r1
+ 827 055b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 828                             	.LVL46:
+ 829                             		.loc 1 390 1 is_stmt 0
+ 830 055f 6F 15                   		popm	r1-r5
+ 831 0561 6F EF                   		popm	r14-r15
+ 832 0563 7F 95                   		rte
+ 833                             	.LFE4:
+ 835                             		.section	.text.group_bl1_handler_isr,"ax",@progbits
+ 837                             	_group_bl1_handler_isr:
+ 838                             	.LFB5:
+ 391:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 392:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+ 393:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Function Name: group_bl1_handler_isr
+ 394:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : Interrupt handler for Group BL1 interrupts. The way this code works is that for ea
+ 395:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                in this group the following will be performed:
+ 396:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                1) Test to see if an interrupt is requested for this source
+ 397:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                2) If an interrupt is requested then the registered callback is called (if one is 
+ 398:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                NOTE: The interrupt request flag must be cleared in the peripheral.
+ 399:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Arguments    : None
+ 400:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Return Value : None
+ 401:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+ 402:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_ATTRIB_STATIC_INTERRUPT void group_bl1_handler_isr (void)
+ 403:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** {
+ 839                             		.loc 1 403 1 is_stmt 1
+ 840                             		.global	$tableentry$111$.rvectors
+ 841                             	$tableentry$111$.rvectors:
+ 842                             		; Note: Interrupt Handler
+ 843 0000 6E EF                   		pushm	r14-r15
+ 844                             	.LCFI2:
+ 845 0002 6E 15                   		pushm	r1-r5
+ 846                             	.LCFI3:
+ 404:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS3 */
+ 405:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS3)
+ 847                             		.loc 1 405 5
+ 848                             		.loc 1 405 28 is_stmt 0
+ 849 0004 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 850 0009 EE 55 8D 01             		mov.L	1588[r5], r5
+ 851                             		.loc 1 405 8
+ 852 000d 7C 35                   		btst	#3, r5
+ 853 000f 3B 75 01                		bne	.L96
+ 406:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 407:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_SDHI_CDETI */
+ 408:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_SDHI_CDETI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 409:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 410:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 411:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS4 */
+ 412:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS4)
+ 854                             		.loc 1 412 5 is_stmt 1
+ 855                             		.loc 1 412 28 is_stmt 0
+ 856 0012 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 857 0017 EE 55 8D 01             		mov.L	1588[r5], r5
+ 858                             		.loc 1 412 8
+ 859 001b 7C 45                   		btst	#4, r5
+ 860 001d 3B 84 01                		bne	.L97
+ 861                             		.balign 8,3,4
+ 862                             	.L72:
+ 413:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 414:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_SDHI_CACI */
+ 415:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_SDHI_CACI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 416:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 417:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 418:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS5 */
+ 419:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS5)
+ 863                             		.loc 1 419 5 is_stmt 1
+ 864                             		.loc 1 419 28 is_stmt 0
+ 865 0020 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 866 0025 EE 55 8D 01             		mov.L	1588[r5], r5
+ 867                             		.loc 1 419 8
+ 868 0029 7C 55                   		btst	#5, r5
+ 869 002b 3B 95 01                		bne	.L98
+ 870 002e EF 00                   		.balign 8,3,4
+ 871                             	.L73:
+ 420:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 421:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_SDHI_SDACI */
+ 422:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_SDHI_SDACI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 423:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 424:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 425:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS6 */
+ 426:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS6)
+ 872                             		.loc 1 426 5 is_stmt 1
+ 873                             		.loc 1 426 28 is_stmt 0
+ 874 0030 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 875 0035 EE 55 8D 01             		mov.L	1588[r5], r5
+ 876                             		.loc 1 426 8
+ 877 0039 7C 65                   		btst	#6, r5
+ 878 003b 3B A5 01                		bne	.L99
+ 879 003e EF 00                   		.balign 8,3,4
+ 880                             	.L74:
+ 427:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 428:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_MMCIF_CDETIO */
+ 429:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_MMCIF_CDETIO, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR)
+ 430:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 431:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 432:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS7 */
+ 433:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS7)
+ 881                             		.loc 1 433 5 is_stmt 1
+ 882                             		.loc 1 433 28 is_stmt 0
+ 883 0040 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 884 0045 EE 55 8D 01             		mov.L	1588[r5], r5
+ 885                             		.loc 1 433 8
+ 886 0049 7C 75                   		btst	#7, r5
+ 887 004b 3B B5 01                		bne	.L100
+ 888 004e EF 00                   		.balign 8,3,4
+ 889                             	.L75:
+ 434:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 435:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_MMCIF_ERRIO */
+ 436:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_MMCIF_ERRIO, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 437:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 438:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 439:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS8 */
+ 440:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS8)
+ 890                             		.loc 1 440 5 is_stmt 1
+ 891                             		.loc 1 440 28 is_stmt 0
+ 892 0050 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 893 0055 EE 55 8D 01             		mov.L	1588[r5], r5
+ 894                             		.loc 1 440 8
+ 895 0059 7C 85                   		btst	#8, r5
+ 896 005b 3B C5 01                		bne	.L101
+ 897 005e EF 00                   		.balign 8,3,4
+ 898                             	.L76:
+ 441:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 442:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_MMCIF_ACCIO */
+ 443:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_MMCIF_ACCIO, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 444:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 445:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 446:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS9 */
+ 447:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS9)
+ 899                             		.loc 1 447 5 is_stmt 1
+ 900                             		.loc 1 447 28 is_stmt 0
+ 901 0060 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 902 0065 EE 55 8D 01             		mov.L	1588[r5], r5
+ 903                             		.loc 1 447 8
+ 904 0069 7C 95                   		btst	#9, r5
+ 905 006b 3B D5 01                		bne	.L102
+ 906 006e EF 00                   		.balign 8,3,4
+ 907                             	.L77:
+ 448:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 449:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_POE3_OEI1 */
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_POE3_OEI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 451:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 452:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 453:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS10 */
+ 454:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS10)
+ 908                             		.loc 1 454 5 is_stmt 1
+ 909                             		.loc 1 454 28 is_stmt 0
+ 910 0070 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 911 0075 EE 55 8D 01             		mov.L	1588[r5], r5
+ 912                             		.loc 1 454 8
+ 913 0079 7C A5                   		btst	#10, r5
+ 914 007b 3B E5 01                		bne	.L103
+ 915 007e EF 00                   		.balign 8,3,4
+ 916                             	.L78:
+ 455:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 456:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_POE3_OEI2 */
+ 457:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_POE3_OEI2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 458:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 459:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 460:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS11 */
+ 461:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS11)
+ 917                             		.loc 1 461 5 is_stmt 1
+ 918                             		.loc 1 461 28 is_stmt 0
+ 919 0080 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 920 0085 EE 55 8D 01             		mov.L	1588[r5], r5
+ 921                             		.loc 1 461 8
+ 922 0089 7C B5                   		btst	#11, r5
+ 923 008b 3B F5 01                		bne	.L104
+ 924 008e EF 00                   		.balign 8,3,4
+ 925                             	.L79:
+ 462:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 463:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_POE3_OEI3 */
+ 464:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_POE3_OEI3, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 465:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 466:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 467:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS12 */
+ 468:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS12)
+ 926                             		.loc 1 468 5 is_stmt 1
+ 927                             		.loc 1 468 28 is_stmt 0
+ 928 0090 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 929 0095 EE 55 8D 01             		mov.L	1588[r5], r5
+ 930                             		.loc 1 468 8
+ 931 0099 7C C5                   		btst	#12, r5
+ 932 009b 3B 05 02                		bne	.L105
+ 933 009e EF 00                   		.balign 8,3,4
+ 934                             	.L80:
+ 469:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 470:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_POE3_OEI4 */
+ 471:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_POE3_OEI4, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 472:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 473:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 474:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS14 */
+ 475:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS14)
+ 935                             		.loc 1 475 5 is_stmt 1
+ 936                             		.loc 1 475 28 is_stmt 0
+ 937 00a0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 938 00a5 EE 55 8D 01             		mov.L	1588[r5], r5
+ 939                             		.loc 1 475 8
+ 940 00a9 7C E5                   		btst	#14, r5
+ 941 00ab 3B 15 02                		bne	.L106
+ 942 00ae EF 00                   		.balign 8,3,4
+ 943                             	.L81:
+ 476:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 477:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_RIIC0_EEI0 */
+ 478:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_RIIC0_EEI0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 479:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 480:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 481:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS13 */
+ 482:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS13)
+ 944                             		.loc 1 482 5 is_stmt 1
+ 945                             		.loc 1 482 28 is_stmt 0
+ 946 00b0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 947 00b5 EE 55 8D 01             		mov.L	1588[r5], r5
+ 948                             		.loc 1 482 8
+ 949 00b9 7C D5                   		btst	#13, r5
+ 950 00bb 3B 25 02                		bne	.L107
+ 951 00be EF 00                   		.balign 8,3,4
+ 952                             	.L82:
+ 483:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 484:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_RIIC0_TEI0 */
+ 485:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_RIIC0_TEI0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 486:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 487:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 488:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS16 */
+ 489:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS16)
+ 953                             		.loc 1 489 5 is_stmt 1
+ 954                             		.loc 1 489 28 is_stmt 0
+ 955 00c0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 956 00c5 EE 55 8D 01             		mov.L	1588[r5], r5
+ 957                             		.loc 1 489 8
+ 958 00c9 7D 05                   		btst	#16, r5
+ 959 00cb 3B 35 02                		bne	.L108
+ 960 00ce EF 00                   		.balign 8,3,4
+ 961                             	.L83:
+ 490:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 491:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_RIIC2_EEI2 */
+ 492:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_RIIC2_EEI2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 493:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 494:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 495:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS15 */
+ 496:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS15)
+ 962                             		.loc 1 496 5 is_stmt 1
+ 963                             		.loc 1 496 28 is_stmt 0
+ 964 00d0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 965 00d5 EE 55 8D 01             		mov.L	1588[r5], r5
+ 966                             		.loc 1 496 8
+ 967 00d9 7C F5                   		btst	#15, r5
+ 968 00db 3B 45 02                		bne	.L109
+ 969 00de EF 00                   		.balign 8,3,4
+ 970                             	.L84:
+ 497:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 498:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_RIIC2_TEI2 */
+ 499:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_RIIC2_TEI2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 500:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 501:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 502:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS20 */
+ 503:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS20)
+ 971                             		.loc 1 503 5 is_stmt 1
+ 972                             		.loc 1 503 28 is_stmt 0
+ 973 00e0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 974 00e5 EE 55 8D 01             		mov.L	1588[r5], r5
+ 975                             		.loc 1 503 8
+ 976 00e9 7D 45                   		btst	#20, r5
+ 977 00eb 3B 55 02                		bne	.L110
+ 978 00ee EF 00                   		.balign 8,3,4
+ 979                             	.L85:
+ 504:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 505:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_S12AD0_S12CMPAI */
+ 506:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_S12AD0_S12CMPAI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_P
+ 507:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 508:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 509:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS21 */
+ 510:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS21)
+ 980                             		.loc 1 510 5 is_stmt 1
+ 981                             		.loc 1 510 28 is_stmt 0
+ 982 00f0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 983 00f5 EE 55 8D 01             		mov.L	1588[r5], r5
+ 984                             		.loc 1 510 8
+ 985 00f9 7D 55                   		btst	#21, r5
+ 986 00fb 3B 65 02                		bne	.L111
+ 987 00fe EF 00                   		.balign 8,3,4
+ 988                             	.L86:
+ 511:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 512:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_S12AD0_S12CMPBI */
+ 513:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_S12AD0_S12CMPBI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_P
+ 514:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 515:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 516:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS22 */
+ 517:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS22)
+ 989                             		.loc 1 517 5 is_stmt 1
+ 990                             		.loc 1 517 28 is_stmt 0
+ 991 0100 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 992 0105 EE 55 8D 01             		mov.L	1588[r5], r5
+ 993                             		.loc 1 517 8
+ 994 0109 7D 65                   		btst	#22, r5
+ 995 010b 3B 75 02                		bne	.L112
+ 996 010e EF 00                   		.balign 8,3,4
+ 997                             	.L87:
+ 518:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 519:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_S12AD1_S12CMPAI1 */
+ 520:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_S12AD1_S12CMPAI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_
+ 521:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 522:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 523:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS23 */
+ 524:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS23)
+ 998                             		.loc 1 524 5 is_stmt 1
+ 999                             		.loc 1 524 28 is_stmt 0
+ 1000 0110 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1001 0115 EE 55 8D 01             		mov.L	1588[r5], r5
+ 1002                             		.loc 1 524 8
+ 1003 0119 7D 75                   		btst	#23, r5
+ 1004 011b 3B 85 02                		bne	.L113
+ 1005 011e EF 00                   		.balign 8,3,4
+ 1006                             	.L88:
+ 525:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 526:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_S12AD1_S12CMPBI1 */
+ 527:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_S12AD1_S12CMPBI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_
+ 528:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 529:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 530:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS25 */
+ 531:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS25)
+ 1007                             		.loc 1 531 5 is_stmt 1
+ 1008                             		.loc 1 531 28 is_stmt 0
+ 1009 0120 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1010 0125 EE 55 8D 01             		mov.L	1588[r5], r5
+ 1011                             		.loc 1 531 8
+ 1012 0129 7D 95                   		btst	#25, r5
+ 1013 012b 3B 95 02                		bne	.L114
+ 1014 012e EF 00                   		.balign 8,3,4
+ 1015                             	.L89:
+ 532:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 533:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_SCI8_ERI8 */
+ 534:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_SCI8_ERI8, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 535:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 536:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 537:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS24 */
+ 538:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS24)
+ 1016                             		.loc 1 538 5 is_stmt 1
+ 1017                             		.loc 1 538 28 is_stmt 0
+ 1018 0130 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1019 0135 EE 55 8D 01             		mov.L	1588[r5], r5
+ 1020                             		.loc 1 538 8
+ 1021 0139 7D 85                   		btst	#24, r5
+ 1022 013b 3B A5 02                		bne	.L115
+ 1023 013e EF 00                   		.balign 8,3,4
+ 1024                             	.L90:
+ 539:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 540:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_SCI8_TEI8 */
+ 541:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_SCI8_TEI8, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 542:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 543:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 544:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS27 */
+ 545:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS27)
+ 1025                             		.loc 1 545 5 is_stmt 1
+ 1026                             		.loc 1 545 28 is_stmt 0
+ 1027 0140 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1028 0145 EE 55 8D 01             		mov.L	1588[r5], r5
+ 1029                             		.loc 1 545 8
+ 1030 0149 7D B5                   		btst	#27, r5
+ 1031 014b 3B B5 02                		bne	.L116
+ 1032 014e EF 00                   		.balign 8,3,4
+ 1033                             	.L91:
+ 546:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 547:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_SCI9_ERI9 */
+ 548:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_SCI9_ERI9, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 549:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 550:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 551:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS26 */
+ 552:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS26)
+ 1034                             		.loc 1 552 5 is_stmt 1
+ 1035                             		.loc 1 552 28 is_stmt 0
+ 1036 0150 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1037 0155 EE 55 8D 01             		mov.L	1588[r5], r5
+ 1038                             		.loc 1 552 8
+ 1039 0159 7D A5                   		btst	#26, r5
+ 1040 015b 3B C5 02                		bne	.L117
+ 1041 015e EF 00                   		.balign 8,3,4
+ 1042                             	.L92:
+ 553:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 554:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_SCI9_TEI9 */
+ 555:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_SCI9_TEI9, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 556:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 557:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 558:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS29 */
+ 559:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS29)
+ 1043                             		.loc 1 559 5 is_stmt 1
+ 1044                             		.loc 1 559 28 is_stmt 0
+ 1045 0160 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1046 0165 EE 55 8D 01             		mov.L	1588[r5], r5
+ 1047                             		.loc 1 559 8
+ 1048 0169 7D D5                   		btst	#29, r5
+ 1049 016b 3B D5 02                		bne	.L118
+ 1050 016e EF 00                   		.balign 8,3,4
+ 1051                             	.L93:
+ 560:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 561:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_RIIC1_EEI1 */
+ 562:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_RIIC1_EEI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 563:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 564:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 565:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL1 IS28 */
+ 566:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL1.BIT.IS28)
+ 1052                             		.loc 1 566 5 is_stmt 1
+ 1053                             		.loc 1 566 28 is_stmt 0
+ 1054 0170 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1055 0175 EE 55 8D 01             		mov.L	1588[r5], r5
+ 1056                             		.loc 1 566 8
+ 1057 0179 7D C5                   		btst	#28, r5
+ 1058 017b 3B E5 02                		bne	.L119
+ 1059                             		.balign 8,3,1
+ 1060                             	.L70:
+ 567:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 568:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL1_RIIC1_TEI1 */
+ 569:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL1_RIIC1_TEI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 570:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 571:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** } /* End of function group_bl1_handler_isr() */
+ 1061                             		.loc 1 571 1
+ 1062 017e 6F 15                   		popm	r1-r5
+ 1063 0180 6F EF                   		popm	r14-r15
+ 1064 0182 7F 95                   		rte
+ 1065                             	.L96:
+ 408:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1066                             		.loc 1 408 9 is_stmt 1
+ 1067 0184 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1068 018a 66 02                   		mov.L	#0, r2
+ 1069 018c 75 41 32                		mov.L	#50, r1
+ 1070 018f 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1071                             	.LVL47:
+ 412:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1072                             		.loc 1 412 5
+ 412:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1073                             		.loc 1 412 28 is_stmt 0
+ 1074 0193 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1075 0198 EE 55 8D 01             		mov.L	1588[r5], r5
+ 412:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1076                             		.loc 1 412 8
+ 1077 019c 7C 45                   		btst	#4, r5
+ 1078 019e 3A 82 FE                		beq	.L72
+ 1079                             		.balign 8,3,5
+ 1080                             	.L97:
+ 415:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1081                             		.loc 1 415 9 is_stmt 1
+ 1082 01a1 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1083 01a7 66 02                   		mov.L	#0, r2
+ 1084 01a9 75 41 33                		mov.L	#51, r1
+ 1085 01ac 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1086                             	.LVL48:
+ 419:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1087                             		.loc 1 419 5
+ 419:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1088                             		.loc 1 419 28 is_stmt 0
+ 1089 01b0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1090 01b5 EE 55 8D 01             		mov.L	1588[r5], r5
+ 419:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1091                             		.loc 1 419 8
+ 1092 01b9 7C 55                   		btst	#5, r5
+ 1093 01bb 3A 75 FE                		beq	.L73
+ 1094 01be EF 00                   		.balign 8,3,5
+ 1095                             	.L98:
+ 422:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1096                             		.loc 1 422 9 is_stmt 1
+ 1097 01c0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1098 01c6 66 02                   		mov.L	#0, r2
+ 1099 01c8 75 41 34                		mov.L	#52, r1
+ 1100 01cb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1101                             	.LVL49:
+ 426:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1102                             		.loc 1 426 5
+ 426:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1103                             		.loc 1 426 28 is_stmt 0
+ 1104 01cf FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1105 01d4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 426:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1106                             		.loc 1 426 8
+ 1107 01d8 7C 65                   		btst	#6, r5
+ 1108 01da 3A 66 FE                		beq	.L74
+ 1109 01dd FC 13 00                		.balign 8,3,5
+ 1110                             	.L99:
+ 429:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1111                             		.loc 1 429 9 is_stmt 1
+ 1112 01e0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1113 01e6 66 02                   		mov.L	#0, r2
+ 1114 01e8 75 41 35                		mov.L	#53, r1
+ 1115 01eb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1116                             	.LVL50:
+ 433:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1117                             		.loc 1 433 5
+ 433:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1118                             		.loc 1 433 28 is_stmt 0
+ 1119 01ef FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1120 01f4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 433:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1121                             		.loc 1 433 8
+ 1122 01f8 7C 75                   		btst	#7, r5
+ 1123 01fa 3A 56 FE                		beq	.L75
+ 1124 01fd FC 13 00                		.balign 8,3,5
+ 1125                             	.L100:
+ 436:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1126                             		.loc 1 436 9 is_stmt 1
+ 1127 0200 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1128 0206 66 02                   		mov.L	#0, r2
+ 1129 0208 75 41 36                		mov.L	#54, r1
+ 1130 020b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1131                             	.LVL51:
+ 440:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1132                             		.loc 1 440 5
+ 440:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1133                             		.loc 1 440 28 is_stmt 0
+ 1134 020f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1135 0214 EE 55 8D 01             		mov.L	1588[r5], r5
+ 440:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1136                             		.loc 1 440 8
+ 1137 0218 7C 85                   		btst	#8, r5
+ 1138 021a 3A 46 FE                		beq	.L76
+ 1139 021d FC 13 00                		.balign 8,3,5
+ 1140                             	.L101:
+ 443:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1141                             		.loc 1 443 9 is_stmt 1
+ 1142 0220 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1143 0226 66 02                   		mov.L	#0, r2
+ 1144 0228 75 41 37                		mov.L	#55, r1
+ 1145 022b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1146                             	.LVL52:
+ 447:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1147                             		.loc 1 447 5
+ 447:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1148                             		.loc 1 447 28 is_stmt 0
+ 1149 022f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1150 0234 EE 55 8D 01             		mov.L	1588[r5], r5
+ 447:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1151                             		.loc 1 447 8
+ 1152 0238 7C 95                   		btst	#9, r5
+ 1153 023a 3A 36 FE                		beq	.L77
+ 1154 023d FC 13 00                		.balign 8,3,5
+ 1155                             	.L102:
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1156                             		.loc 1 450 9 is_stmt 1
+ 1157 0240 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1158 0246 66 02                   		mov.L	#0, r2
+ 1159 0248 75 41 38                		mov.L	#56, r1
+ 1160 024b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1161                             	.LVL53:
+ 454:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1162                             		.loc 1 454 5
+ 454:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1163                             		.loc 1 454 28 is_stmt 0
+ 1164 024f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1165 0254 EE 55 8D 01             		mov.L	1588[r5], r5
+ 454:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1166                             		.loc 1 454 8
+ 1167 0258 7C A5                   		btst	#10, r5
+ 1168 025a 3A 26 FE                		beq	.L78
+ 1169 025d FC 13 00                		.balign 8,3,5
+ 1170                             	.L103:
+ 457:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1171                             		.loc 1 457 9 is_stmt 1
+ 1172 0260 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1173 0266 66 02                   		mov.L	#0, r2
+ 1174 0268 75 41 39                		mov.L	#57, r1
+ 1175 026b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1176                             	.LVL54:
+ 461:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1177                             		.loc 1 461 5
+ 461:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1178                             		.loc 1 461 28 is_stmt 0
+ 1179 026f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1180 0274 EE 55 8D 01             		mov.L	1588[r5], r5
+ 461:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1181                             		.loc 1 461 8
+ 1182 0278 7C B5                   		btst	#11, r5
+ 1183 027a 3A 16 FE                		beq	.L79
+ 1184 027d FC 13 00                		.balign 8,3,5
+ 1185                             	.L104:
+ 464:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1186                             		.loc 1 464 9 is_stmt 1
+ 1187 0280 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1188 0286 66 02                   		mov.L	#0, r2
+ 1189 0288 75 41 3A                		mov.L	#58, r1
+ 1190 028b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1191                             	.LVL55:
+ 468:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1192                             		.loc 1 468 5
+ 468:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1193                             		.loc 1 468 28 is_stmt 0
+ 1194 028f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1195 0294 EE 55 8D 01             		mov.L	1588[r5], r5
+ 468:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1196                             		.loc 1 468 8
+ 1197 0298 7C C5                   		btst	#12, r5
+ 1198 029a 3A 06 FE                		beq	.L80
+ 1199 029d FC 13 00                		.balign 8,3,5
+ 1200                             	.L105:
+ 471:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1201                             		.loc 1 471 9 is_stmt 1
+ 1202 02a0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1203 02a6 66 02                   		mov.L	#0, r2
+ 1204 02a8 75 41 3B                		mov.L	#59, r1
+ 1205 02ab 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1206                             	.LVL56:
+ 475:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1207                             		.loc 1 475 5
+ 475:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1208                             		.loc 1 475 28 is_stmt 0
+ 1209 02af FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1210 02b4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 475:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1211                             		.loc 1 475 8
+ 1212 02b8 7C E5                   		btst	#14, r5
+ 1213 02ba 3A F6 FD                		beq	.L81
+ 1214 02bd FC 13 00                		.balign 8,3,5
+ 1215                             	.L106:
+ 478:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1216                             		.loc 1 478 9 is_stmt 1
+ 1217 02c0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1218 02c6 66 02                   		mov.L	#0, r2
+ 1219 02c8 75 41 3D                		mov.L	#61, r1
+ 1220 02cb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1221                             	.LVL57:
+ 482:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1222                             		.loc 1 482 5
+ 482:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1223                             		.loc 1 482 28 is_stmt 0
+ 1224 02cf FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1225 02d4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 482:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1226                             		.loc 1 482 8
+ 1227 02d8 7C D5                   		btst	#13, r5
+ 1228 02da 3A E6 FD                		beq	.L82
+ 1229 02dd FC 13 00                		.balign 8,3,5
+ 1230                             	.L107:
+ 485:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1231                             		.loc 1 485 9 is_stmt 1
+ 1232 02e0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1233 02e6 66 02                   		mov.L	#0, r2
+ 1234 02e8 75 41 3C                		mov.L	#60, r1
+ 1235 02eb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1236                             	.LVL58:
+ 489:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1237                             		.loc 1 489 5
+ 489:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1238                             		.loc 1 489 28 is_stmt 0
+ 1239 02ef FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1240 02f4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 489:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1241                             		.loc 1 489 8
+ 1242 02f8 7D 05                   		btst	#16, r5
+ 1243 02fa 3A D6 FD                		beq	.L83
+ 1244 02fd FC 13 00                		.balign 8,3,5
+ 1245                             	.L108:
+ 492:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1246                             		.loc 1 492 9 is_stmt 1
+ 1247 0300 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1248 0306 66 02                   		mov.L	#0, r2
+ 1249 0308 75 41 3F                		mov.L	#63, r1
+ 1250 030b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1251                             	.LVL59:
+ 496:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1252                             		.loc 1 496 5
+ 496:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1253                             		.loc 1 496 28 is_stmt 0
+ 1254 030f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1255 0314 EE 55 8D 01             		mov.L	1588[r5], r5
+ 496:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1256                             		.loc 1 496 8
+ 1257 0318 7C F5                   		btst	#15, r5
+ 1258 031a 3A C6 FD                		beq	.L84
+ 1259 031d FC 13 00                		.balign 8,3,5
+ 1260                             	.L109:
+ 499:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1261                             		.loc 1 499 9 is_stmt 1
+ 1262 0320 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1263 0326 66 02                   		mov.L	#0, r2
+ 1264 0328 75 41 3E                		mov.L	#62, r1
+ 1265 032b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1266                             	.LVL60:
+ 503:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1267                             		.loc 1 503 5
+ 503:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1268                             		.loc 1 503 28 is_stmt 0
+ 1269 032f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1270 0334 EE 55 8D 01             		mov.L	1588[r5], r5
+ 503:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1271                             		.loc 1 503 8
+ 1272 0338 7D 45                   		btst	#20, r5
+ 1273 033a 3A B6 FD                		beq	.L85
+ 1274 033d FC 13 00                		.balign 8,3,5
+ 1275                             	.L110:
+ 506:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1276                             		.loc 1 506 9 is_stmt 1
+ 1277 0340 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1278 0346 66 02                   		mov.L	#0, r2
+ 1279 0348 75 41 40                		mov.L	#0x40, r1
+ 1280 034b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1281                             	.LVL61:
+ 510:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1282                             		.loc 1 510 5
+ 510:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1283                             		.loc 1 510 28 is_stmt 0
+ 1284 034f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1285 0354 EE 55 8D 01             		mov.L	1588[r5], r5
+ 510:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1286                             		.loc 1 510 8
+ 1287 0358 7D 55                   		btst	#21, r5
+ 1288 035a 3A A6 FD                		beq	.L86
+ 1289 035d FC 13 00                		.balign 8,3,5
+ 1290                             	.L111:
+ 513:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1291                             		.loc 1 513 9 is_stmt 1
+ 1292 0360 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1293 0366 66 02                   		mov.L	#0, r2
+ 1294 0368 75 41 41                		mov.L	#0x41, r1
+ 1295 036b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1296                             	.LVL62:
+ 517:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1297                             		.loc 1 517 5
+ 517:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1298                             		.loc 1 517 28 is_stmt 0
+ 1299 036f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1300 0374 EE 55 8D 01             		mov.L	1588[r5], r5
+ 517:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1301                             		.loc 1 517 8
+ 1302 0378 7D 65                   		btst	#22, r5
+ 1303 037a 3A 96 FD                		beq	.L87
+ 1304 037d FC 13 00                		.balign 8,3,5
+ 1305                             	.L112:
+ 520:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1306                             		.loc 1 520 9 is_stmt 1
+ 1307 0380 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1308 0386 66 02                   		mov.L	#0, r2
+ 1309 0388 75 41 42                		mov.L	#0x42, r1
+ 1310 038b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1311                             	.LVL63:
+ 524:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1312                             		.loc 1 524 5
+ 524:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1313                             		.loc 1 524 28 is_stmt 0
+ 1314 038f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1315 0394 EE 55 8D 01             		mov.L	1588[r5], r5
+ 524:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1316                             		.loc 1 524 8
+ 1317 0398 7D 75                   		btst	#23, r5
+ 1318 039a 3A 86 FD                		beq	.L88
+ 1319 039d FC 13 00                		.balign 8,3,5
+ 1320                             	.L113:
+ 527:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1321                             		.loc 1 527 9 is_stmt 1
+ 1322 03a0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1323 03a6 66 02                   		mov.L	#0, r2
+ 1324 03a8 75 41 43                		mov.L	#0x43, r1
+ 1325 03ab 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1326                             	.LVL64:
+ 531:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1327                             		.loc 1 531 5
+ 531:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1328                             		.loc 1 531 28 is_stmt 0
+ 1329 03af FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1330 03b4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 531:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1331                             		.loc 1 531 8
+ 1332 03b8 7D 95                   		btst	#25, r5
+ 1333 03ba 3A 76 FD                		beq	.L89
+ 1334 03bd FC 13 00                		.balign 8,3,5
+ 1335                             	.L114:
+ 534:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1336                             		.loc 1 534 9 is_stmt 1
+ 1337 03c0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1338 03c6 66 02                   		mov.L	#0, r2
+ 1339 03c8 75 41 45                		mov.L	#0x45, r1
+ 1340 03cb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1341                             	.LVL65:
+ 538:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1342                             		.loc 1 538 5
+ 538:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1343                             		.loc 1 538 28 is_stmt 0
+ 1344 03cf FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1345 03d4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 538:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1346                             		.loc 1 538 8
+ 1347 03d8 7D 85                   		btst	#24, r5
+ 1348 03da 3A 66 FD                		beq	.L90
+ 1349 03dd FC 13 00                		.balign 8,3,5
+ 1350                             	.L115:
+ 541:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1351                             		.loc 1 541 9 is_stmt 1
+ 1352 03e0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1353 03e6 66 02                   		mov.L	#0, r2
+ 1354 03e8 75 41 44                		mov.L	#0x44, r1
+ 1355 03eb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1356                             	.LVL66:
+ 545:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1357                             		.loc 1 545 5
+ 545:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1358                             		.loc 1 545 28 is_stmt 0
+ 1359 03ef FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1360 03f4 EE 55 8D 01             		mov.L	1588[r5], r5
+ 545:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1361                             		.loc 1 545 8
+ 1362 03f8 7D B5                   		btst	#27, r5
+ 1363 03fa 3A 56 FD                		beq	.L91
+ 1364 03fd FC 13 00                		.balign 8,3,5
+ 1365                             	.L116:
+ 548:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1366                             		.loc 1 548 9 is_stmt 1
+ 1367 0400 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1368 0406 66 02                   		mov.L	#0, r2
+ 1369 0408 75 41 47                		mov.L	#0x47, r1
+ 1370 040b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1371                             	.LVL67:
+ 552:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1372                             		.loc 1 552 5
+ 552:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1373                             		.loc 1 552 28 is_stmt 0
+ 1374 040f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1375 0414 EE 55 8D 01             		mov.L	1588[r5], r5
+ 552:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1376                             		.loc 1 552 8
+ 1377 0418 7D A5                   		btst	#26, r5
+ 1378 041a 3A 46 FD                		beq	.L92
+ 1379 041d FC 13 00                		.balign 8,3,5
+ 1380                             	.L117:
+ 555:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1381                             		.loc 1 555 9 is_stmt 1
+ 1382 0420 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1383 0426 66 02                   		mov.L	#0, r2
+ 1384 0428 75 41 46                		mov.L	#0x46, r1
+ 1385 042b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1386                             	.LVL68:
+ 559:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1387                             		.loc 1 559 5
+ 559:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1388                             		.loc 1 559 28 is_stmt 0
+ 1389 042f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1390 0434 EE 55 8D 01             		mov.L	1588[r5], r5
+ 559:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1391                             		.loc 1 559 8
+ 1392 0438 7D D5                   		btst	#29, r5
+ 1393 043a 3A 36 FD                		beq	.L93
+ 1394 043d FC 13 00                		.balign 8,3,5
+ 1395                             	.L118:
+ 562:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1396                             		.loc 1 562 9 is_stmt 1
+ 1397 0440 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1398 0446 66 02                   		mov.L	#0, r2
+ 1399 0448 75 41 49                		mov.L	#0x49, r1
+ 1400 044b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1401                             	.LVL69:
+ 566:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1402                             		.loc 1 566 5
+ 566:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1403                             		.loc 1 566 28 is_stmt 0
+ 1404 044f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1405 0454 EE 55 8D 01             		mov.L	1588[r5], r5
+ 566:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1406                             		.loc 1 566 8
+ 1407 0458 7D C5                   		btst	#28, r5
+ 1408 045a 3A 24 FD                		beq	.L70
+ 1409 045d FC 13 00                		.balign 8,3,5
+ 1410                             	.L119:
+ 569:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1411                             		.loc 1 569 9 is_stmt 1
+ 1412 0460 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1413 0466 66 02                   		mov.L	#0, r2
+ 1414 0468 75 41 48                		mov.L	#0x48, r1
+ 1415 046b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1416                             	.LVL70:
+ 1417                             		.loc 1 571 1 is_stmt 0
+ 1418 046f 6F 15                   		popm	r1-r5
+ 1419 0471 6F EF                   		popm	r14-r15
+ 1420 0473 7F 95                   		rte
+ 1421                             	.LFE5:
+ 1423 0475 FC 13 00                		.section	.text.group_bl2_handler_isr,"ax",@progbits
+ 1425                             	_group_bl2_handler_isr:
+ 1426                             	.LFB6:
+ 572:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 573:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+ 574:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Function Name: group_bl2_handler_isr
+ 575:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : Interrupt handler for Group BL1 interrupts. The way this code works is that for ea
+ 576:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                in this group the following will be performed:
+ 577:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                1) Test to see if an interrupt is requested for this source
+ 578:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                2) If an interrupt is requested then the registered callback is called (if one is 
+ 579:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                NOTE: The interrupt request flag must be cleared in the peripheral.
+ 580:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Arguments    : None
+ 581:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Return Value : None
+ 582:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+ 583:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_ATTRIB_STATIC_INTERRUPT void group_bl2_handler_isr (void)
+ 584:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** {
+ 1427                             		.loc 1 584 1 is_stmt 1
+ 1428                             		.global	$tableentry$107$.rvectors
+ 1429                             	$tableentry$107$.rvectors:
+ 1430                             		; Note: Interrupt Handler
+ 1431 0000 6E EF                   		pushm	r14-r15
+ 1432                             	.LCFI4:
+ 1433 0002 6E 15                   		pushm	r1-r5
+ 1434                             	.LCFI5:
+ 585:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BL2 IS0 */
+ 586:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBL2.BIT.IS0)
+ 1435                             		.loc 1 586 5
+ 1436                             		.loc 1 586 28 is_stmt 0
+ 1437 0004 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1438 0009 EE 55 8E 01             		mov.L	1592[r5], r5
+ 1439                             		.loc 1 586 8
+ 1440 000d 7C 05                   		btst	#0, r5
+ 1441 000f 1F                      		bne	.L123
+ 587:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 588:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BL2_SDSI_SDIOI */
+ 589:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BL2_SDSI_SDIOI, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 590:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 591:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** } /* End of function group_bl2_handler_isr() */
+ 1442                             		.loc 1 591 1
+ 1443 0010 6F 15                   		popm	r1-r5
+ 1444 0012 6F EF                   		popm	r14-r15
+ 1445 0014 7F 95                   		rte
+ 1446                             	.L123:
+ 589:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1447                             		.loc 1 589 9 is_stmt 1
+ 1448 0016 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1449 001c 66 02                   		mov.L	#0, r2
+ 1450 001e 75 41 4B                		mov.L	#0x4b, r1
+ 1451 0021 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1452                             	.LVL71:
+ 1453                             		.loc 1 591 1 is_stmt 0
+ 1454 0025 6F 15                   		popm	r1-r5
+ 1455 0027 6F EF                   		popm	r14-r15
+ 1456 0029 7F 95                   		rte
+ 1457                             	.LFE6:
+ 1459                             		.section	.text.group_al0_handler_isr,"ax",@progbits
+ 1461                             	_group_al0_handler_isr:
+ 1462                             	.LFB7:
+ 592:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 593:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+ 594:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Function Name: group_al0_handler_isr
+ 595:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : Interrupt handler for Group AL0 interrupts. The way this code works is that for ea
+ 596:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                in this group the following will be performed:
+ 597:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                1) Test to see if an interrupt is requested for this source
+ 598:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                2) If an interrupt is requested then the registered callback is called (if one is 
+ 599:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                NOTE: The interrupt request flag must be cleared in the peripheral.
+ 600:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Arguments    : None
+ 601:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Return Value : None
+ 602:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+ 603:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_ATTRIB_STATIC_INTERRUPT void group_al0_handler_isr (void)
+ 604:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** {
+ 1463                             		.loc 1 604 1 is_stmt 1
+ 1464                             		.global	$tableentry$112$.rvectors
+ 1465                             	$tableentry$112$.rvectors:
+ 1466                             		; Note: Interrupt Handler
+ 1467 0000 6E EF                   		pushm	r14-r15
+ 1468                             	.LCFI6:
+ 1469 0002 6E 15                   		pushm	r1-r5
+ 1470                             	.LCFI7:
+ 605:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS9 */
+ 606:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS9)
+ 1471                             		.loc 1 606 5
+ 1472                             		.loc 1 606 28 is_stmt 0
+ 1473 0004 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1474 0009 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1475                             		.loc 1 606 8
+ 1476 000d 7C 95                   		btst	#9, r5
+ 1477 000f 3B 95 00                		bne	.L136
+ 607:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 608:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_SCI10_ERI10 */
+ 609:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_SCI10_ERI10, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 610:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 611:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 612:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS8 */
+ 613:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS8)
+ 1478                             		.loc 1 613 5 is_stmt 1
+ 1479                             		.loc 1 613 28 is_stmt 0
+ 1480 0012 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1481 0017 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1482                             		.loc 1 613 8
+ 1483 001b 7C 85                   		btst	#8, r5
+ 1484 001d 3B A4 00                		bne	.L137
+ 1485                             		.balign 8,3,4
+ 1486                             	.L126:
+ 614:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 615:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_SCI10_TEI10 */
+ 616:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_SCI10_TEI10, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 617:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 618:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 619:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS13 */
+ 620:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS13)
+ 1487                             		.loc 1 620 5 is_stmt 1
+ 1488                             		.loc 1 620 28 is_stmt 0
+ 1489 0020 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1490 0025 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1491                             		.loc 1 620 8
+ 1492 0029 7C D5                   		btst	#13, r5
+ 1493 002b 3B B5 00                		bne	.L138
+ 1494 002e EF 00                   		.balign 8,3,4
+ 1495                             	.L127:
+ 621:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 622:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_SCI11_ERI11 */
+ 623:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_SCI11_ERI11, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 624:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 625:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 626:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS12 */
+ 627:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS12)
+ 1496                             		.loc 1 627 5 is_stmt 1
+ 1497                             		.loc 1 627 28 is_stmt 0
+ 1498 0030 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1499 0035 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1500                             		.loc 1 627 8
+ 1501 0039 7C C5                   		btst	#12, r5
+ 1502 003b 3B C5 00                		bne	.L139
+ 1503 003e EF 00                   		.balign 8,3,4
+ 1504                             	.L128:
+ 628:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 629:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_SCI11_TEI11 */
+ 630:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_SCI11_TEI11, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 631:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 632:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 633:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS17 */
+ 634:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS17)
+ 1505                             		.loc 1 634 5 is_stmt 1
+ 1506                             		.loc 1 634 28 is_stmt 0
+ 1507 0040 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1508 0045 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1509                             		.loc 1 634 8
+ 1510 0049 7D 15                   		btst	#17, r5
+ 1511 004b 3B D5 00                		bne	.L140
+ 1512 004e EF 00                   		.balign 8,3,4
+ 1513                             	.L129:
+ 635:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 636:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_RSPI0_SPEI0 */
+ 637:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_RSPI0_SPEI0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 638:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 639:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 640:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS16 */
+ 641:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS16)
+ 1514                             		.loc 1 641 5 is_stmt 1
+ 1515                             		.loc 1 641 28 is_stmt 0
+ 1516 0050 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1517 0055 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1518                             		.loc 1 641 8
+ 1519 0059 7D 05                   		btst	#16, r5
+ 1520 005b 3B E5 00                		bne	.L141
+ 1521 005e EF 00                   		.balign 8,3,4
+ 1522                             	.L130:
+ 642:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 643:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_RSPI0_SPII0 */
+ 644:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_RSPI0_SPII0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 645:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 646:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 647:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS19 */
+ 648:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS19)
+ 1523                             		.loc 1 648 5 is_stmt 1
+ 1524                             		.loc 1 648 28 is_stmt 0
+ 1525 0060 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1526 0065 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1527                             		.loc 1 648 8
+ 1528 0069 7D 35                   		btst	#19, r5
+ 1529 006b 3B F5 00                		bne	.L142
+ 1530 006e EF 00                   		.balign 8,3,4
+ 1531                             	.L131:
+ 649:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 650:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_RSPI1_SPEI1 */
+ 651:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_RSPI1_SPEI1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 652:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 653:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 654:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS18 */
+ 655:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS18)
+ 1532                             		.loc 1 655 5 is_stmt 1
+ 1533                             		.loc 1 655 28 is_stmt 0
+ 1534 0070 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1535 0075 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1536                             		.loc 1 655 8
+ 1537 0079 7D 25                   		btst	#18, r5
+ 1538 007b 3B 05 01                		bne	.L143
+ 1539 007e EF 00                   		.balign 8,3,4
+ 1540                             	.L132:
+ 656:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 657:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_RSPI1_SPII1 */
+ 658:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_RSPI1_SPII1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 659:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 660:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 661:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS21 */
+ 662:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS21)
+ 1541                             		.loc 1 662 5 is_stmt 1
+ 1542                             		.loc 1 662 28 is_stmt 0
+ 1543 0080 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1544 0085 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1545                             		.loc 1 662 8
+ 1546 0089 7D 55                   		btst	#21, r5
+ 1547 008b 3B 15 01                		bne	.L144
+ 1548 008e EF 00                   		.balign 8,3,4
+ 1549                             	.L133:
+ 663:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 664:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_RSPI2_SPEI2 */
+ 665:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_RSPI2_SPEI2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 666:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 667:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 668:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL0 IS20 */
+ 669:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL0.BIT.IS20)
+ 1550                             		.loc 1 669 5 is_stmt 1
+ 1551                             		.loc 1 669 28 is_stmt 0
+ 1552 0090 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1553 0095 EE 55 0C 02             		mov.L	2096[r5], r5
+ 1554                             		.loc 1 669 8
+ 1555 0099 7D 45                   		btst	#20, r5
+ 1556 009b 3B 25 01                		bne	.L145
+ 1557                             		.balign 8,3,1
+ 1558                             	.L124:
+ 670:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 671:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL0_RSPI2_SPII2 */
+ 672:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL0_RSPI2_SPII2, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 673:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 674:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** } /* End of function group_al0_handler_isr() */
+ 1559                             		.loc 1 674 1
+ 1560 009e 6F 15                   		popm	r1-r5
+ 1561 00a0 6F EF                   		popm	r14-r15
+ 1562 00a2 7F 95                   		rte
+ 1563                             	.L136:
+ 609:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1564                             		.loc 1 609 9 is_stmt 1
+ 1565 00a4 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1566 00aa 66 02                   		mov.L	#0, r2
+ 1567 00ac 75 41 4E                		mov.L	#0x4e, r1
+ 1568 00af 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1569                             	.LVL72:
+ 613:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1570                             		.loc 1 613 5
+ 613:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1571                             		.loc 1 613 28 is_stmt 0
+ 1572 00b3 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1573 00b8 EE 55 0C 02             		mov.L	2096[r5], r5
+ 613:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1574                             		.loc 1 613 8
+ 1575 00bc 7C 85                   		btst	#8, r5
+ 1576 00be 3A 62 FF                		beq	.L126
+ 1577                             		.balign 8,3,5
+ 1578                             	.L137:
+ 616:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1579                             		.loc 1 616 9 is_stmt 1
+ 1580 00c1 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1581 00c7 66 02                   		mov.L	#0, r2
+ 1582 00c9 75 41 4D                		mov.L	#0x4d, r1
+ 1583 00cc 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1584                             	.LVL73:
+ 620:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1585                             		.loc 1 620 5
+ 620:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1586                             		.loc 1 620 28 is_stmt 0
+ 1587 00d0 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1588 00d5 EE 55 0C 02             		mov.L	2096[r5], r5
+ 620:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1589                             		.loc 1 620 8
+ 1590 00d9 7C D5                   		btst	#13, r5
+ 1591 00db 3A 55 FF                		beq	.L127
+ 1592 00de EF 00                   		.balign 8,3,5
+ 1593                             	.L138:
+ 623:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1594                             		.loc 1 623 9 is_stmt 1
+ 1595 00e0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1596 00e6 66 02                   		mov.L	#0, r2
+ 1597 00e8 75 41 50                		mov.L	#0x50, r1
+ 1598 00eb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1599                             	.LVL74:
+ 627:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1600                             		.loc 1 627 5
+ 627:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1601                             		.loc 1 627 28 is_stmt 0
+ 1602 00ef FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1603 00f4 EE 55 0C 02             		mov.L	2096[r5], r5
+ 627:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1604                             		.loc 1 627 8
+ 1605 00f8 7C C5                   		btst	#12, r5
+ 1606 00fa 3A 46 FF                		beq	.L128
+ 1607 00fd FC 13 00                		.balign 8,3,5
+ 1608                             	.L139:
+ 630:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1609                             		.loc 1 630 9 is_stmt 1
+ 1610 0100 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1611 0106 66 02                   		mov.L	#0, r2
+ 1612 0108 75 41 4F                		mov.L	#0x4f, r1
+ 1613 010b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1614                             	.LVL75:
+ 634:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1615                             		.loc 1 634 5
+ 634:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1616                             		.loc 1 634 28 is_stmt 0
+ 1617 010f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1618 0114 EE 55 0C 02             		mov.L	2096[r5], r5
+ 634:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1619                             		.loc 1 634 8
+ 1620 0118 7D 15                   		btst	#17, r5
+ 1621 011a 3A 36 FF                		beq	.L129
+ 1622 011d FC 13 00                		.balign 8,3,5
+ 1623                             	.L140:
+ 637:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1624                             		.loc 1 637 9 is_stmt 1
+ 1625 0120 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1626 0126 66 02                   		mov.L	#0, r2
+ 1627 0128 75 41 52                		mov.L	#0x52, r1
+ 1628 012b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1629                             	.LVL76:
+ 641:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1630                             		.loc 1 641 5
+ 641:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1631                             		.loc 1 641 28 is_stmt 0
+ 1632 012f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1633 0134 EE 55 0C 02             		mov.L	2096[r5], r5
+ 641:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1634                             		.loc 1 641 8
+ 1635 0138 7D 05                   		btst	#16, r5
+ 1636 013a 3A 26 FF                		beq	.L130
+ 1637 013d FC 13 00                		.balign 8,3,5
+ 1638                             	.L141:
+ 644:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1639                             		.loc 1 644 9 is_stmt 1
+ 1640 0140 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1641 0146 66 02                   		mov.L	#0, r2
+ 1642 0148 75 41 51                		mov.L	#0x51, r1
+ 1643 014b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1644                             	.LVL77:
+ 648:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1645                             		.loc 1 648 5
+ 648:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1646                             		.loc 1 648 28 is_stmt 0
+ 1647 014f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1648 0154 EE 55 0C 02             		mov.L	2096[r5], r5
+ 648:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1649                             		.loc 1 648 8
+ 1650 0158 7D 35                   		btst	#19, r5
+ 1651 015a 3A 16 FF                		beq	.L131
+ 1652 015d FC 13 00                		.balign 8,3,5
+ 1653                             	.L142:
+ 651:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1654                             		.loc 1 651 9 is_stmt 1
+ 1655 0160 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1656 0166 66 02                   		mov.L	#0, r2
+ 1657 0168 75 41 54                		mov.L	#0x54, r1
+ 1658 016b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1659                             	.LVL78:
+ 655:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1660                             		.loc 1 655 5
+ 655:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1661                             		.loc 1 655 28 is_stmt 0
+ 1662 016f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1663 0174 EE 55 0C 02             		mov.L	2096[r5], r5
+ 655:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1664                             		.loc 1 655 8
+ 1665 0178 7D 25                   		btst	#18, r5
+ 1666 017a 3A 06 FF                		beq	.L132
+ 1667 017d FC 13 00                		.balign 8,3,5
+ 1668                             	.L143:
+ 658:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1669                             		.loc 1 658 9 is_stmt 1
+ 1670 0180 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1671 0186 66 02                   		mov.L	#0, r2
+ 1672 0188 75 41 53                		mov.L	#0x53, r1
+ 1673 018b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1674                             	.LVL79:
+ 662:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1675                             		.loc 1 662 5
+ 662:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1676                             		.loc 1 662 28 is_stmt 0
+ 1677 018f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1678 0194 EE 55 0C 02             		mov.L	2096[r5], r5
+ 662:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1679                             		.loc 1 662 8
+ 1680 0198 7D 55                   		btst	#21, r5
+ 1681 019a 3A F6 FE                		beq	.L133
+ 1682 019d FC 13 00                		.balign 8,3,5
+ 1683                             	.L144:
+ 665:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1684                             		.loc 1 665 9 is_stmt 1
+ 1685 01a0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1686 01a6 66 02                   		mov.L	#0, r2
+ 1687 01a8 75 41 56                		mov.L	#0x56, r1
+ 1688 01ab 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1689                             	.LVL80:
+ 669:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1690                             		.loc 1 669 5
+ 669:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1691                             		.loc 1 669 28 is_stmt 0
+ 1692 01af FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1693 01b4 EE 55 0C 02             		mov.L	2096[r5], r5
+ 669:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1694                             		.loc 1 669 8
+ 1695 01b8 7D 45                   		btst	#20, r5
+ 1696 01ba 3A E4 FE                		beq	.L124
+ 1697 01bd FC 13 00                		.balign 8,3,5
+ 1698                             	.L145:
+ 672:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1699                             		.loc 1 672 9 is_stmt 1
+ 1700 01c0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1701 01c6 66 02                   		mov.L	#0, r2
+ 1702 01c8 75 41 55                		mov.L	#0x55, r1
+ 1703 01cb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1704                             	.LVL81:
+ 1705                             		.loc 1 674 1 is_stmt 0
+ 1706 01cf 6F 15                   		popm	r1-r5
+ 1707 01d1 6F EF                   		popm	r14-r15
+ 1708 01d3 7F 95                   		rte
+ 1709                             	.LFE7:
+ 1711 01d5 FC 13 00                		.section	.text.group_al1_handler_isr,"ax",@progbits
+ 1713                             	_group_al1_handler_isr:
+ 1714                             	.LFB8:
+ 675:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 676:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+ 677:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Function Name: group_al1_handler_isr
+ 678:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : Interrupt handler for Group AL1 interrupts. The way this code works is that for ea
+ 679:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                in this group the following will be performed:
+ 680:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                1) Test to see if an interrupt is requested for this source
+ 681:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                2) If an interrupt is requested then the registered callback is called (if one is 
+ 682:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                NOTE: The interrupt request flag must be cleared in the peripheral.
+ 683:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Arguments    : None
+ 684:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Return Value : None
+ 685:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+ 686:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_ATTRIB_STATIC_INTERRUPT void group_al1_handler_isr (void)
+ 687:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** {
+ 1715                             		.loc 1 687 1 is_stmt 1
+ 1716                             		.global	$tableentry$113$.rvectors
+ 1717                             	$tableentry$113$.rvectors:
+ 1718                             		; Note: Interrupt Handler
+ 1719 0000 6E EF                   		pushm	r14-r15
+ 1720                             	.LCFI8:
+ 1721 0002 6E 15                   		pushm	r1-r5
+ 1722                             	.LCFI9:
+ 688:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL1 IS4 */
+ 689:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL1.BIT.IS4)
+ 1723                             		.loc 1 689 5
+ 1724                             		.loc 1 689 28 is_stmt 0
+ 1725 0004 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1726 0009 EE 55 0D 02             		mov.L	2100[r5], r5
+ 1727                             		.loc 1 689 8
+ 1728 000d 7C 45                   		btst	#4, r5
+ 1729 000f 21 45                   		bne	.L153
+ 690:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 691:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL1_EDMAC0_EINT0 */
+ 692:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL1_EDMAC0_EINT0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR)
+ 693:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 694:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 695:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL1 IS9 */
+ 696:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL1.BIT.IS9)
+ 1730                             		.loc 1 696 5 is_stmt 1
+ 1731                             		.loc 1 696 28 is_stmt 0
+ 1732 0011 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1733 0016 EE 55 0D 02             		mov.L	2100[r5], r5
+ 1734                             		.loc 1 696 8
+ 1735 001a 7C 95                   		btst	#9, r5
+ 1736 001c 21 54                   		bne	.L154
+ 1737 001e EF 00                   		.balign 8,3,4
+ 1738                             	.L148:
+ 697:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 698:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL1_GLCDC_GR1UF */
+ 699:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL1_GLCDC_GR1UF, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 700:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 701:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 702:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL1 IS10 */
+ 703:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL1.BIT.IS10)
+ 1739                             		.loc 1 703 5 is_stmt 1
+ 1740                             		.loc 1 703 28 is_stmt 0
+ 1741 0020 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1742 0025 EE 55 0D 02             		mov.L	2100[r5], r5
+ 1743                             		.loc 1 703 8
+ 1744 0029 7C A5                   		btst	#10, r5
+ 1745 002b 21 65                   		bne	.L155
+ 1746 002d FC 13 00                		.balign 8,3,4
+ 1747                             	.L149:
+ 704:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 705:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL1_GLCDC_GR2UF */
+ 706:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL1_GLCDC_GR2UF, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 707:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 708:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 709:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL1 IS8 */
+ 710:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL1.BIT.IS8)
+ 1748                             		.loc 1 710 5 is_stmt 1
+ 1749                             		.loc 1 710 28 is_stmt 0
+ 1750 0030 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1751 0035 EE 55 0D 02             		mov.L	2100[r5], r5
+ 1752                             		.loc 1 710 8
+ 1753 0039 7C 85                   		btst	#8, r5
+ 1754 003b 21 75                   		bne	.L156
+ 1755 003d FC 13 00                		.balign 8,3,4
+ 1756                             	.L150:
+ 711:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 712:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL1_GLCDC_VPOS */
+ 713:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL1_GLCDC_VPOS, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 714:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 715:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 716:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* AL1 IS11 */
+ 717:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPAL1.BIT.IS11)
+ 1757                             		.loc 1 717 5 is_stmt 1
+ 1758                             		.loc 1 717 28 is_stmt 0
+ 1759 0040 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1760 0045 EE 55 0D 02             		mov.L	2100[r5], r5
+ 1761                             		.loc 1 717 8
+ 1762 0049 7C B5                   		btst	#11, r5
+ 1763 004b 3B 85 00                		bne	.L157
+ 1764                             		.balign 8,3,1
+ 1765                             	.L146:
+ 718:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 719:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_AL1_DRW2D_DRW_IRQ */
+ 720:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_AL1_DRW2D_DRW_IRQ, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR
+ 721:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 722:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** } /* End of function group_al1_handler_isr() */
+ 1766                             		.loc 1 722 1
+ 1767 004e 6F 15                   		popm	r1-r5
+ 1768 0050 6F EF                   		popm	r14-r15
+ 1769 0052 7F 95                   		rte
+ 1770                             	.L153:
+ 692:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1771                             		.loc 1 692 9 is_stmt 1
+ 1772 0054 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1773 005a 66 02                   		mov.L	#0, r2
+ 1774 005c 75 41 58                		mov.L	#0x58, r1
+ 1775 005f 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1776                             	.LVL82:
+ 696:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1777                             		.loc 1 696 5
+ 696:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1778                             		.loc 1 696 28 is_stmt 0
+ 1779 0063 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1780 0068 EE 55 0D 02             		mov.L	2100[r5], r5
+ 696:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1781                             		.loc 1 696 8
+ 1782 006c 7C 95                   		btst	#9, r5
+ 1783 006e 20 B2                   		beq	.L148
+ 1784                             		.balign 8,3,5
+ 1785                             	.L154:
+ 699:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1786                             		.loc 1 699 9 is_stmt 1
+ 1787 0070 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1788 0076 66 02                   		mov.L	#0, r2
+ 1789 0078 75 41 5A                		mov.L	#0x5a, r1
+ 1790 007b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1791                             	.LVL83:
+ 703:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1792                             		.loc 1 703 5
+ 703:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1793                             		.loc 1 703 28 is_stmt 0
+ 1794 007f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1795 0084 EE 55 0D 02             		mov.L	2100[r5], r5
+ 703:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1796                             		.loc 1 703 8
+ 1797 0088 7C A5                   		btst	#10, r5
+ 1798 008a 20 A6                   		beq	.L149
+ 1799 008c 76 10 01 00             		.balign 8,3,5
+ 1800                             	.L155:
+ 706:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1801                             		.loc 1 706 9 is_stmt 1
+ 1802 0090 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1803 0096 66 02                   		mov.L	#0, r2
+ 1804 0098 75 41 5B                		mov.L	#0x5b, r1
+ 1805 009b 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1806                             	.LVL84:
+ 710:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1807                             		.loc 1 710 5
+ 710:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1808                             		.loc 1 710 28 is_stmt 0
+ 1809 009f FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1810 00a4 EE 55 0D 02             		mov.L	2100[r5], r5
+ 710:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1811                             		.loc 1 710 8
+ 1812 00a8 7C 85                   		btst	#8, r5
+ 1813 00aa 20 96                   		beq	.L150
+ 1814 00ac 76 10 01 00             		.balign 8,3,5
+ 1815                             	.L156:
+ 713:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1816                             		.loc 1 713 9 is_stmt 1
+ 1817 00b0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1818 00b6 66 02                   		mov.L	#0, r2
+ 1819 00b8 75 41 59                		mov.L	#0x59, r1
+ 1820 00bb 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1821                             	.LVL85:
+ 717:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1822                             		.loc 1 717 5
+ 717:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1823                             		.loc 1 717 28 is_stmt 0
+ 1824 00bf FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1825 00c4 EE 55 0D 02             		mov.L	2100[r5], r5
+ 717:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1826                             		.loc 1 717 8
+ 1827 00c8 7C B5                   		btst	#11, r5
+ 1828 00ca 20 84                   		beq	.L146
+ 1829 00cc 76 10 01 00             		.balign 8,3,5
+ 1830                             	.L157:
+ 720:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1831                             		.loc 1 720 9 is_stmt 1
+ 1832 00d0 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 1833 00d6 66 02                   		mov.L	#0, r2
+ 1834 00d8 75 41 5C                		mov.L	#0x5c, r1
+ 1835 00db 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1836                             	.LVL86:
+ 1837                             		.loc 1 722 1 is_stmt 0
+ 1838 00df 6F 15                   		popm	r1-r5
+ 1839 00e1 6F EF                   		popm	r14-r15
+ 1840 00e3 7F 95                   		rte
+ 1841                             	.LFE8:
+ 1843 00e5 FC 13 00                		.section	.text.group_be0_handler_isr,"ax",@progbits
+ 1845                             	_group_be0_handler_isr:
+ 1846                             	.LFB9:
+ 723:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 724:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** /**************************************************************************************************
+ 725:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Function Name: group_be0_handler_isr
+ 726:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Description  : Interrupt handler for Group BE0 interrupts. The way this code works is that for ea
+ 727:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                in this group the following will be performed:
+ 728:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                1) Test to see if an interrupt is requested for this source
+ 729:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                2) If an interrupt is requested then the registered callback is called (if one is 
+ 730:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** *                NOTE: The interrupt request flag must be cleared in the peripheral.
+ 731:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Arguments    : None
+ 732:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** * Return Value : None
+ 733:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** ***************************************************************************************************
+ 734:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** R_BSP_ATTRIB_STATIC_INTERRUPT void group_be0_handler_isr (void)
+ 735:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** {
+ 1847                             		.loc 1 735 1 is_stmt 1
+ 1848                             		.global	$tableentry$106$.rvectors
+ 1849                             	$tableentry$106$.rvectors:
+ 1850                             		; Note: Interrupt Handler
+ 1851 0000 6E EF                   		pushm	r14-r15
+ 1852                             	.LCFI10:
+ 1853 0002 6E 15                   		pushm	r1-r5
+ 1854                             	.LCFI11:
+ 736:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BE0 IS0 */
+ 737:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBE0.BIT.IS0)
+ 1855                             		.loc 1 737 5
+ 1856                             		.loc 1 737 28 is_stmt 0
+ 1857 0004 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1858 0009 EE 54 80 01             		mov.L	1536[r5], r4
+ 1859                             		.loc 1 737 8
+ 1860 000d 7C 04                   		btst	#0, r4
+ 1861 000f 21 15                   		bne	.L162
+ 738:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 739:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* Clear the interrupt status flag. */
+ 740:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         ICU.GCRBE0.BIT.CLR0 = 1;
+ 741:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 742:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BE0_CAN0_ERS0 */
+ 743:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BE0_CAN0_ERS0, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 744:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 745:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 746:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     /* BE0 IS1 */
+ 747:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     if (1 == ICU.GRPBE0.BIT.IS1)
+ 1862                             		.loc 1 747 5 is_stmt 1
+ 1863                             		.loc 1 747 28 is_stmt 0
+ 1864 0011 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1865 0016 EE 54 80 01             		mov.L	1536[r5], r4
+ 1866                             		.loc 1 747 8
+ 1867 001a 7C 14                   		btst	#1, r4
+ 1868 001c 21 2E                   		bne	.L163
+ 1869                             		.balign 8,3,1
+ 1870                             	.L158:
+ 748:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 749:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* Clear the interrupt status flag. */
+ 750:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         ICU.GCRBE0.BIT.CLR1 = 1;
+ 751:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 752:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         /* BSP_INT_SRC_BE0_CAN1_ERS1 */
+ 753:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****         R_BSP_InterruptControl(BSP_INT_SRC_BE0_CAN1_ERS1, BSP_INT_CMD_CALL_CALLBACK, FIT_NO_PTR);
+ 754:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 755:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** } /* End of function group_be0_handler_isr() */
+ 1871                             		.loc 1 755 1
+ 1872 001e 6F 15                   		popm	r1-r5
+ 1873 0020 6F EF                   		popm	r14-r15
+ 1874 0022 7F 95                   		rte
+ 1875                             	.L162:
+ 740:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 1876                             		.loc 1 740 9 is_stmt 1
+ 743:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1877                             		.loc 1 743 9 is_stmt 0
+ 1878 0024 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 740:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 1879                             		.loc 1 740 29
+ 1880 002a EE 54 A0 01             		mov.L	1664[r5], r4
+ 743:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1881                             		.loc 1 743 9
+ 1882 002e 66 02                   		mov.L	#0, r2
+ 1883 0030 75 41 11                		mov.L	#17, r1
+ 740:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 1884                             		.loc 1 740 29
+ 1885 0033 78 04                   		bset	#0, r4
+ 1886 0035 EB 54 A0 01             		mov.L	r4, 1664[r5]
+ 743:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1887                             		.loc 1 743 9 is_stmt 1
+ 1888 0039 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1889                             	.LVL87:
+ 747:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1890                             		.loc 1 747 5
+ 747:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1891                             		.loc 1 747 28 is_stmt 0
+ 1892 003d FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 1893 0042 EE 54 80 01             		mov.L	1536[r5], r4
+ 747:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     {
+ 1894                             		.loc 1 747 8
+ 1895 0046 7C 14                   		btst	#1, r4
+ 1896 0048 20 D6                   		beq	.L158
+ 1897                             		.balign 8,3,5
+ 1898                             	.L163:
+ 750:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 1899                             		.loc 1 750 9 is_stmt 1
+ 753:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1900                             		.loc 1 753 9 is_stmt 0
+ 1901 004a FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+ 750:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 1902                             		.loc 1 750 29
+ 1903 0050 EE 54 A0 01             		mov.L	1664[r5], r4
+ 753:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1904                             		.loc 1 753 9
+ 1905 0054 66 02                   		mov.L	#0, r2
+ 1906 0056 75 41 12                		mov.L	#18, r1
+ 750:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c **** 
+ 1907                             		.loc 1 750 29
+ 1908 0059 78 14                   		bset	#1, r4
+ 1909 005b EB 54 A0 01             		mov.L	r4, 1664[r5]
+ 753:../src/smc_gen/r_bsp/mcu/rx65n/mcu_interrupts.c ****     }
+ 1910                             		.loc 1 753 9 is_stmt 1
+ 1911 005f 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 1912                             	.LVL88:
+ 1913                             		.loc 1 755 1 is_stmt 0
+ 1914 0063 6F 15                   		popm	r1-r5
+ 1915 0065 6F EF                   		popm	r14-r15
+ 1916 0067 7F 95                   		rte
+ 1917                             	.LFE9:
+ 2125                             	.Letext0:
+ 2126                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 2127                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 2128                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 2129                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 2130                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 2131                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 2132                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 2133                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 2134                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 2135                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 2136                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm

@@ -1,0 +1,11 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+arg1 = $(1)
+export PATH=C:\GCC for Renesas RX 8.3.0.202004-GNURX-ELF\rx-elf\rx-elf\bin\;C:\GCC for Renesas RX 8.3.0.202004-GNURX-ELF\rx-elf\rx-elf\libexec\gcc\rx-elf\8.3.0.202004-GNURX\;C:\Users\a5116938\.eclipse\com.renesas.platform_1435879475\Utilities;C:/Renesas/e2_studio/eclipse//plugins/com.renesas.runtime.jdk.hotspot.win32.x86_64_11.0.8.202009102051/jdk-11.0.8+10/bin/client;C:/Renesas/e2_studio/eclipse//plugins/com.renesas.runtime.jdk.hotspot.win32.x86_64_11.0.8.202009102051/jdk-11.0.8+10/bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\GCC for Renesas RX 8.3.0.202104-GNURX-ELF\rx-elf\rx-elf\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\Perforce\;C:\Program Files\CMake\bin;C:\Program Files\ARMCompiler6.15\bin;C:\Users\a5116938\AppData\Local\Programs\Python\Python37\Scripts\;C:\Users\a5116938\AppData\Local\Programs\Python\Python37\;C:\Users\a5116938\.pyenv\pyenv-win\bin;C:\Users\a5116938\.pyenv\pyenv-win\shims;C:\Users\a5116938\AppData\Local\Microsoft\WindowsApps;C:\Microsoft VS Code\bin;C:\Git\cmd;C:\GnuWin32\bin;C:\CMake\bin;C:\MinGW\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.30.30705\bin\Hostx64\x86;C:\Program Files\Java\jdk-17.0.2\bin;;C:\Renesas\e2_studio\eclipse
+export TCINSTALL=C:\GCC for Renesas RX 8.3.0.202004-GNURX-ELF\rx-elf\rx-elf$(call arg1,\)
+export CWD=$(CURDIR)
+export TC_VERSION=8.3.0.202004
+export PWD=$(CURDIR)
+export GCC_VERSION=8.3.0.202004-GNURX

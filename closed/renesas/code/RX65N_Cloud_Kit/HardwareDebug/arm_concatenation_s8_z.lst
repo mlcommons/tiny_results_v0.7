@@ -1,0 +1,170 @@
+   1                             		.file	"arm_concatenation_s8_z.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_concatenation_s8_z,"ax",@progbits
+   5                             		.global	_arm_concatenation_s8_z
+   7                             	_arm_concatenation_s8_z:
+   8                             	.LFB27:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c"
+   1:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** /*
+   2:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Copyright (C) 2010-2019 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+   4:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+   6:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+  10:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+  12:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  */
+  18:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  19:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Title:        arm_concatenation_s8_z.c
+  22:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Description:  s8 version of concatenation along the Z axis
+  23:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+  24:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * $Date:        October 2019
+  25:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * $Revision:    V.1.0.0
+  26:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+  27:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+  29:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  31:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  33:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** /**
+  34:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *  @ingroup groupNN
+  35:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  */
+  36:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  37:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** /**
+  38:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * @addtogroup Concatenation
+  39:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * @{
+  40:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  */
+  41:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  42:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** /*
+  43:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *  s8 version of concatenation along the Z axis
+  44:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+  45:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  * Refer to header file for details.
+  46:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  *
+  47:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****  */
+  48:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** void arm_concatenation_s8_z(const int8_t *input,
+  49:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****                             const uint16_t input_x,
+  50:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****                             const uint16_t input_y,
+  51:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****                             const uint16_t input_z,
+  52:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****                             const uint16_t input_w,
+  53:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****                             int8_t *output,
+  54:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****                             const uint16_t output_z,
+  55:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****                             const uint32_t offset_z)
+  56:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** {
+  10                             		.loc 1 56 1
+  11                             	.LVL0:
+  12 0000 6E 7A                   		pushm	r7-r10
+  13                             	.LCFI0:
+  14 0002 71 00 F0                		add	#-16, r0
+  15                             	.LCFI1:
+  57:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     const uint32_t input_copy_size = input_x * input_y * input_z;
+  16                             		.loc 1 57 5
+  56:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     const uint32_t input_copy_size = input_x * input_y * input_z;
+  17                             		.loc 1 56 1 is_stmt 0
+  18 0005 75 47 24                		mov.L	#36, r7
+  19 0008 4B 07                   		add	r0, r7
+  20                             		.loc 1 57 46
+  21 000a 5F 22                   		movu.W	r2, r2
+  56:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     const uint32_t input_copy_size = input_x * input_y * input_z;
+  22                             		.loc 1 56 1
+  23 000c A8 FD                   		mov.L	12[r7], r5
+  24                             		.loc 1 57 46
+  25 000e 5F 33                   		movu.W	r3, r3
+  26 0010 4F 32                   		mul	r3, r2
+  27                             	.LVL1:
+  58:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     const uint32_t output_stride = input_x * input_y * output_z;
+  28                             		.loc 1 58 54
+  29 0012 B9 73                   		movu.W	8[r7], r3
+  30                             	.LVL2:
+  57:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     const uint32_t input_copy_size = input_x * input_y * input_z;
+  31                             		.loc 1 57 56
+  32 0014 5F 44                   		movu.W	r4, r4
+  59:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  60:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     output += offset_z * (input_x * input_y);
+  61:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  62:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     uint32_t i;
+  63:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  64:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     for (i = 0; i < input_w; ++i)
+  33                             		.loc 1 64 19
+  34 0016 5C 7A                   		movu.W	[r7], r10
+  60:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  35                             		.loc 1 60 24
+  36 0018 4F 25                   		mul	r2, r5
+  57:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     const uint32_t output_stride = input_x * input_y * output_z;
+  37                             		.loc 1 57 56
+  38 001a 4F 24                   		mul	r2, r4
+  39                             	.LVL3:
+  58:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  40                             		.loc 1 58 5 is_stmt 1
+  60:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  41                             		.loc 1 60 12 is_stmt 0
+  42 001c 06 89 75 01             		add	4[r7].L, r5
+  58:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  43                             		.loc 1 58 54
+  44 0020 FF 37 23                		mul	r2, r3, r7
+  45                             	.LVL4:
+  60:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  46                             		.loc 1 60 5 is_stmt 1
+  62:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** 
+  47                             		.loc 1 62 5
+  48                             		.loc 1 64 5
+  49 0023 61 0A                   		cmp	#0, r10
+  50 0025 20 18                   		beq	.L1
+  51 0027 EF 1E                   		mov.L	r1, r14
+  52                             		.loc 1 64 12 is_stmt 0
+  53 0029 66 0F                   		mov.L	#0, r15
+  54                             	.LVL5:
+  55                             		.balign 8,3,1
+  56                             	.L3:
+  65:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     {
+  66:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****         memcpy(output, input, input_copy_size);
+  57                             		.loc 1 66 9 is_stmt 1 discriminator 3
+  58 002b EF 51                   		mov.L	r5, r1
+  59 002d EF E2                   		mov.L	r14, r2
+  60 002f EF 43                   		mov.L	r4, r3
+  61 0031 7F 8F                   		smovf
+  67:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****         input += input_copy_size;
+  62                             		.loc 1 67 9 discriminator 3
+  64:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     {
+  63                             		.loc 1 64 30 is_stmt 0 discriminator 3
+  64 0033 62 1F                   		add	#1, r15
+  65                             	.LVL6:
+  66                             		.loc 1 67 15 discriminator 3
+  67 0035 4B 4E                   		add	r4, r14
+  68                             	.LVL7:
+  68:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****         output += output_stride;
+  69                             		.loc 1 68 9 is_stmt 1 discriminator 3
+  70                             		.loc 1 68 16 is_stmt 0 discriminator 3
+  71 0037 4B 75                   		add	r7, r5
+  72                             	.LVL8:
+  64:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     {
+  73                             		.loc 1 64 5 discriminator 3
+  74 0039 47 AF                   		cmp	r10, r15
+  75 003b 21 F0                   		bne	.L3
+  76                             	.LVL9:
+  77                             		.balign 8,3,2
+  78                             	.L1:
+  69:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c ****     }
+  70:../src/CMSIS/NN/Source/ConcatenationFunctions/arm_concatenation_s8_z.c **** }
+  79                             		.loc 1 70 1
+  80 003d 3F 7A 08                		rtsd	#32, r7-r10
+  81                             	.LFE27:
+ 125                             	.Letext0:
+ 126                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 127                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 128                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 129                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 130                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 131                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 132                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"

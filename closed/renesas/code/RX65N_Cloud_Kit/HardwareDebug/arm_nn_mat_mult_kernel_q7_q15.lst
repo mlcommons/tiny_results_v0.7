@@ -1,0 +1,222 @@
+   1                             		.file	"arm_nn_mat_mult_kernel_q7_q15.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_nn_mat_mult_kernel_q7_q15,"ax",@progbits
+   5                             		.global	_arm_nn_mat_mult_kernel_q7_q15
+   7                             	_arm_nn_mat_mult_kernel_q7_q15:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c"
+   1:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** /*
+   2:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+   4:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+   6:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+  10:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+  12:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  */
+  18:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  19:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * Title:        arm_nn_mat_mult_kernel_q7_q15.c
+  22:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * Description:  Matrix-multiplication function for convolution
+  23:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+  24:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * $Date:        January 26, 2021
+  25:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * $Revision:    V.1.0.2
+  26:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+  27:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * -------------------------------------------------------------------- */
+  29:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  30:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** #include "arm_nnfunctions.h"
+  31:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** #include "arm_nnsupportfunctions.h"
+  32:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  33:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** /**
+  34:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * @brief Matrix-multiplication function for convolution.
+  35:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+  36:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  * @details Refer to header file for details.
+  37:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  *
+  38:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****  */
+  39:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  40:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** q7_t *arm_nn_mat_mult_kernel_q7_q15(const q7_t *pA,
+  41:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****                                     const q15_t *pInBuffer,
+  42:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****                                     const uint16_t ch_im_out,
+  43:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****                                     const uint16_t numCol_A,
+  44:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****                                     const uint16_t bias_shift,
+  45:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****                                     const uint16_t out_shift,
+  46:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****                                     const q7_t *bias,
+  47:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****                                     q7_t *pOut)
+  48:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** {
+  10                             		.loc 1 48 1
+  11                             	.LVL0:
+  12 0000 60 C0                   		sub	#12, r0
+  13                             	.LCFI0:
+  49:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** #if defined(ARM_MATH_DSP)
+  50:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     /* set up the second output pointers */
+  51:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     q7_t *pOut2 = pOut + ch_im_out;
+  52:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     const q7_t *pBias = bias;
+  53:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  54:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     uint16_t rowCnt = ch_im_out >> 1;
+  55:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     /* this loop over rows in A */
+  56:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     while (rowCnt)
+  57:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     {
+  58:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         /* setup pointers for B */
+  59:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         const q15_t *pB = pInBuffer;
+  60:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         const q15_t *pB2 = pB + numCol_A;
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         /* align the second pointer for A */
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         const q7_t *pA2 = pA + numCol_A;
+  64:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         /* init the sum with bias */
+  66:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         q31_t sum = ((q31_t)(*pBias) << bias_shift) + NN_ROUND(out_shift);
+  67:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+  68:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         q31_t sum3 = ((q31_t)(*pBias) << bias_shift) + NN_ROUND(out_shift);
+  69:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         q31_t sum4 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+  70:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  71:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         uint16_t colCnt = numCol_A >> 2;
+  72:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         /* accumulate over the vector */
+  73:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         while (colCnt)
+  74:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         {
+  75:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q31_t inA11, inA12, inA21, inA22;
+  76:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  77:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q31_t inB1 = arm_nn_read_q15x2_ia(&pB);
+  78:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q31_t inB2 = arm_nn_read_q15x2_ia(&pB2);
+  79:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             pA = read_and_pad(pA, &inA11, &inA12);
+  81:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             pA2 = read_and_pad(pA2, &inA21, &inA22);
+  82:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  83:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum = __SMLAD(inA11, inB1, sum);
+  84:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum2 = __SMLAD(inA11, inB2, sum2);
+  85:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum3 = __SMLAD(inA21, inB1, sum3);
+  86:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum4 = __SMLAD(inA21, inB2, sum4);
+  87:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  88:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             inB1 = arm_nn_read_q15x2_ia(&pB);
+  89:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             inB2 = arm_nn_read_q15x2_ia(&pB2);
+  90:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  91:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum = __SMLAD(inA12, inB1, sum);
+  92:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum2 = __SMLAD(inA12, inB2, sum2);
+  93:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum3 = __SMLAD(inA22, inB1, sum3);
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum4 = __SMLAD(inA22, inB2, sum4);
+  95:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+  96:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             colCnt--;
+  97:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         } /* while over colCnt */
+  98:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         colCnt = numCol_A & 0x3;
+  99:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         while (colCnt)
+ 100:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         {
+ 101:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q7_t inA1 = *pA++;
+ 102:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q15_t inB1 = *pB++;
+ 103:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q7_t inA2 = *pA2++;
+ 104:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q15_t inB2 = *pB2++;
+ 105:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum += inA1 * inB1;
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum2 += inA1 * inB2;
+ 108:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum3 += inA2 * inB1;
+ 109:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum4 += inA2 * inB2;
+ 110:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             colCnt--;
+ 111:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         } /* while over colCnt */
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         *pOut++ = (q7_t)__SSAT((sum >> out_shift), 8);
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         *pOut++ = (q7_t)__SSAT((sum3 >> out_shift), 8);
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         *pOut2++ = (q7_t)__SSAT((sum2 >> out_shift), 8);
+ 115:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         *pOut2++ = (q7_t)__SSAT((sum4 >> out_shift), 8);
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 117:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         /* skip the row computed with A2 */
+ 118:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         pA += numCol_A;
+ 119:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         rowCnt--;
+ 120:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     } /* for over ch_im_out */
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 122:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     /* compute left-over row if any */
+ 123:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     if (ch_im_out & 0x1)
+ 124:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     {
+ 125:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         /* setup pointers for B */
+ 126:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         const q15_t *pB = pInBuffer;
+ 127:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         const q15_t *pB2 = pB + numCol_A;
+ 128:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 129:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         /* load the bias */
+ 130:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         q31_t sum = ((q31_t)(*pBias) << bias_shift) + NN_ROUND(out_shift);
+ 131:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         q31_t sum2 = ((q31_t)(*pBias++) << bias_shift) + NN_ROUND(out_shift);
+ 132:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 133:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         uint16_t colCnt = numCol_A >> 2;
+ 134:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         while (colCnt)
+ 135:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         {
+ 136:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q31_t inA11, inA12;
+ 137:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 138:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q31_t inB1 = arm_nn_read_q15x2_ia(&pB);
+ 139:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q31_t inB2 = arm_nn_read_q15x2_ia(&pB2);
+ 140:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 141:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             pA = read_and_pad(pA, &inA11, &inA12);
+ 142:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 143:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum = __SMLAD(inA11, inB1, sum);
+ 144:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum2 = __SMLAD(inA11, inB2, sum2);
+ 145:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 146:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             inB1 = arm_nn_read_q15x2_ia(&pB);
+ 147:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             inB2 = arm_nn_read_q15x2_ia(&pB2);
+ 148:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 149:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum = __SMLAD(inA12, inB1, sum);
+ 150:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum2 = __SMLAD(inA12, inB2, sum2);
+ 151:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 152:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             colCnt--;
+ 153:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         }
+ 154:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         colCnt = numCol_A & 0x3;
+ 155:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         while (colCnt)
+ 156:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         {
+ 157:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q7_t inA1 = *pA++;
+ 158:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q15_t inB1 = *pB++;
+ 159:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             q15_t inB2 = *pB2++;
+ 160:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 161:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum += inA1 * inB1;
+ 162:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             sum2 += inA1 * inB2;
+ 163:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****             colCnt--;
+ 164:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         }
+ 165:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 166:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         *pOut++ = (q7_t)__SSAT((sum >> out_shift), 8);
+ 167:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****         *pOut2++ = (q7_t)__SSAT((sum2 >> out_shift), 8);
+ 168:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     }
+ 169:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 170:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     pOut += ch_im_out;
+ 171:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** 
+ 172:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     /* return the new output pointer with offset */
+ 173:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     return pOut;
+ 174:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** #else
+ 175:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)pA;
+  14                             		.loc 1 175 5
+ 176:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)pInBuffer;
+  15                             		.loc 1 176 5
+ 177:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)ch_im_out;
+  16                             		.loc 1 177 5
+ 178:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)numCol_A;
+  17                             		.loc 1 178 5
+ 179:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)bias_shift;
+  18                             		.loc 1 179 5
+ 180:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)out_shift;
+  19                             		.loc 1 180 5
+ 181:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)bias;
+  20                             		.loc 1 181 5
+ 182:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     (void)pOut;
+  21                             		.loc 1 182 5
+ 183:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     /* To be completed */
+ 184:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c ****     return NULL;
+  22                             		.loc 1 184 5
+ 185:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** #endif /* ARM_MATH_DSP */
+ 186:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_q7_q15.c **** }
+  23                             		.loc 1 186 1 is_stmt 0
+  24 0002 66 01                   		mov.L	#0, r1
+  25                             	.LVL1:
+  26 0004 67 03                   		rtsd	#12
+  27                             	.LFE82:
+  59                             	.Letext0:
+  60                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  61                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  62                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  63                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  64                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  65                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  66                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  67                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  68                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

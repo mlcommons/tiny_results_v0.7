@@ -1,0 +1,37 @@
+   1                             		.file	"th_util.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.th_pre,"ax",@progbits
+   5                             		.global	_th_pre
+   7                             	_th_pre:
+   8                             	.LFB0:
+   9                             		.file 1 "../src/EEMBC/profile/th_api/th_util.c"
+   1:../src/EEMBC/profile/th_api/th_util.c **** /**
+   2:../src/EEMBC/profile/th_api/th_util.c ****  * Copyright (C) EEMBC(R). All Rights Reserved
+   3:../src/EEMBC/profile/th_api/th_util.c ****  *
+   4:../src/EEMBC/profile/th_api/th_util.c ****  * All EEMBC Benchmark Software are products of EEMBC and are provided under the
+   5:../src/EEMBC/profile/th_api/th_util.c ****  * terms of the EEMBC Benchmark License Agreements. The EEMBC Benchmark Software
+   6:../src/EEMBC/profile/th_api/th_util.c ****  * are proprietary intellectual properties of EEMBC and its Members and is
+   7:../src/EEMBC/profile/th_api/th_util.c ****  * protected under all applicable laws, including all applicable copyright laws.
+   8:../src/EEMBC/profile/th_api/th_util.c ****  *
+   9:../src/EEMBC/profile/th_api/th_util.c ****  * If you received this EEMBC Benchmark Software without having a currently
+  10:../src/EEMBC/profile/th_api/th_util.c ****  * effective EEMBC Benchmark License Agreement, you must discontinue use.
+  11:../src/EEMBC/profile/th_api/th_util.c ****  */
+  12:../src/EEMBC/profile/th_api/th_util.c **** 
+  13:../src/EEMBC/profile/th_api/th_util.c **** #include "profile/th_api/th_util.h"
+  14:../src/EEMBC/profile/th_api/th_util.c **** 
+  15:../src/EEMBC/profile/th_api/th_util.c **** void
+  16:../src/EEMBC/profile/th_api/th_util.c **** th_pre(void)
+  17:../src/EEMBC/profile/th_api/th_util.c **** {
+  10                             		.loc 1 17 1
+  18:../src/EEMBC/profile/th_api/th_util.c **** }
+  11                             		.loc 1 18 1
+  12 0000 02                      		rts
+  13                             	.LFE0:
+  15                             		.section	.text.th_post,"ax",@progbits
+  16                             		.global	_th_post
+  18                             	_th_post:
+  19                             	.LFB3:
+  20 0000 02                      		rts
+  21                             	.LFE3:
+  57                             	.Letext0:

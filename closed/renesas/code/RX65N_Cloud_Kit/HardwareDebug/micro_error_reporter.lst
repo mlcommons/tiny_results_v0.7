@@ -1,0 +1,149 @@
+   1                             		.file	"micro_error_reporter.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite18MicroErrorReporterD2Ev,"axG",@progbits,_ZN6tflite18MicroErrorReporterD5
+   5                             		.weak	__ZN6tflite18MicroErrorReporterD2Ev
+   7                             	__ZN6tflite18MicroErrorReporterD2Ev:
+   8                             	.LFB5:
+   9                             		.file 1 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** /* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** #ifndef TENSORFLOW_LITE_MICRO_MICRO_ERROR_REPORTER_H_
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** #define TENSORFLOW_LITE_MICRO_MICRO_ERROR_REPORTER_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** 
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** #include <cstdarg>
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** 
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** #include "tensorflow/lite/core/api/error_reporter.h"
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** #include "tensorflow/lite/micro/compatibility.h"
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** 
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** namespace tflite {
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** 
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h **** class MicroErrorReporter : public ErrorReporter {
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h ****  public:
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_error_reporter.h ****   ~MicroErrorReporter() override {}
+  10                             		.loc 1 27 3
+  11                             	.LVL0:
+  12                             		.loc 1 27 35 is_stmt 0
+  13 0000 02                      		rts
+  14                             	.LFE5:
+  16                             		.weak	__ZN6tflite18MicroErrorReporterD1Ev
+  17                             		.set	__ZN6tflite18MicroErrorReporterD1Ev,__ZN6tflite18MicroErrorReporterD2Ev
+  18                             		.section	.text._ZN6tflite18MicroErrorReporter6ReportEPKcPv,"ax",@progbits
+  19                             		.global	__ZN6tflite18MicroErrorReporter6ReportEPKcPv
+  21                             	__ZN6tflite18MicroErrorReporter6ReportEPKcPv:
+  22                             	.LFB8:
+  23                             		.file 2 "../src/tensorflow/lite/micro/micro_error_reporter.cc"
+   1:../src/tensorflow/lite/micro/micro_error_reporter.cc **** /* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+   3:../src/tensorflow/lite/micro/micro_error_reporter.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/micro_error_reporter.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/micro_error_reporter.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+   7:../src/tensorflow/lite/micro/micro_error_reporter.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+   9:../src/tensorflow/lite/micro/micro_error_reporter.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/micro_error_reporter.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/micro_error_reporter.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/micro_error_reporter.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/micro_error_reporter.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/micro_error_reporter.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+  16:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #include "tensorflow/lite/micro/micro_error_reporter.h"
+  17:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+  18:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #include <cstdarg>
+  19:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+  20:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  21:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #include "tensorflow/lite/micro/debug_log.h"
+  22:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #include "tensorflow/lite/micro/micro_string.h"
+  23:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #endif
+  24:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+  25:../src/tensorflow/lite/micro/micro_error_reporter.cc **** namespace tflite {
+  26:../src/tensorflow/lite/micro/micro_error_reporter.cc **** 
+  27:../src/tensorflow/lite/micro/micro_error_reporter.cc **** int MicroErrorReporter::Report(const char* format, va_list args) {
+  24                             		.loc 2 27 66 is_stmt 1
+  25                             	.LVL1:
+  26 0000 72 00 00 FF             		add	#-256, r0
+  27                             	.LCFI0:
+  28:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  29:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   // Only pulling in the implementation of this function for builds where we
+  30:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   // expect to make use of it to be extra cautious about not increasing the code
+  31:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   // size.
+  32:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   static constexpr int kMaxLogLen = 256;
+  28                             		.loc 2 32 3
+  33:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   char log_buffer[kMaxLogLen];
+  29                             		.loc 2 33 3
+  34:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   MicroVsnprintf(log_buffer, kMaxLogLen, format, args);
+  30                             		.loc 2 34 3
+  31                             		.loc 2 34 17 is_stmt 0
+  32 0004 EF 34                   		mov.L	r3, r4
+  33 0006 EF 01                   		mov.L	r0, r1
+  34                             	.LVL2:
+  35 0008 EF 23                   		mov.L	r2, r3
+  36                             	.LVL3:
+  37 000a FB 2A 00 01             		mov.L	#0x100, r2
+  38                             	.LVL4:
+  39 000e 05 00 00 00             		bsr	_MicroVsnprintf
+  40                             	.LVL5:
+  35:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   DebugLog(log_buffer);
+  41                             		.loc 2 35 3 is_stmt 1
+  42                             		.loc 2 35 11 is_stmt 0
+  43 0012 EF 01                   		mov.L	r0, r1
+  44 0014 05 00 00 00             		bsr	_DebugLog
+  45                             	.LVL6:
+  36:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   DebugLog("\r\n");
+  46                             		.loc 2 36 3 is_stmt 1
+  47                             		.loc 2 36 11 is_stmt 0
+  48 0018 FB 12 00 00 00 00       		mov.L	#.LC0, r1
+  49 001e 05 00 00 00             		bsr	_DebugLog
+  50                             	.LVL7:
+  37:../src/tensorflow/lite/micro/micro_error_reporter.cc **** #endif
+  38:../src/tensorflow/lite/micro/micro_error_reporter.cc ****   return 0;
+  51                             		.loc 2 38 3 is_stmt 1
+  39:../src/tensorflow/lite/micro/micro_error_reporter.cc **** }
+  52                             		.loc 2 39 1 is_stmt 0
+  53 0022 66 01                   		mov.L	#0, r1
+  54 0024 67 40                   		rtsd	#0x100
+  55                             	.LFE8:
+  57                             		.section	.text._ZN6tflite18MicroErrorReporterD0Ev,"axG",@progbits,_ZN6tflite18MicroErrorReporterD5
+  58                             		.weak	__ZN6tflite18MicroErrorReporterD0Ev
+  60                             	__ZN6tflite18MicroErrorReporterD0Ev:
+  61                             	.LFB7:
+  62                             		.loc 1 27 3 is_stmt 1
+  63                             	.LVL8:
+  64                             		.loc 1 27 35 is_stmt 0
+  65 0000 66 42                   		mov.L	#4, r2
+  66 0002 04 00 00 00             		bra	__ZdlPvm
+  67                             	.LVL9:
+  68                             	.LFE7:
+  70                             		.weak	__ZTVN6tflite18MicroErrorReporterE
+  71                             		.section	.rodata._ZTVN6tflite18MicroErrorReporterE,"aG",@progbits,_ZTVN6tflite18MicroErrorReporter
+  72                             		.balign 4
+  75                             	__ZTVN6tflite18MicroErrorReporterE:
+  76 0000 00 00 00 00             		.long	0
+  77 0004 00 00 00 00             		.long	0
+  78 0008 00 00 00 00             		.long	__ZN6tflite18MicroErrorReporterD1Ev
+  79 000c 00 00 00 00             		.long	__ZN6tflite18MicroErrorReporterD0Ev
+  80 0010 00 00 00 00             		.long	__ZN6tflite18MicroErrorReporter6ReportEPKcPv
+  81                             		.section	.rodata._ZN6tflite18MicroErrorReporter6ReportEPKcPv.str1.1,"aMS",@progbits,1
+  82                             	.LC0:
+  83 0000 0D 0A 00                		.string	"\r\n"
+ 130                             	.Letext0:
+ 131                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 132                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 133                             		.file 5 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 134                             		.file 6 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 135                             		.file 7 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 136                             		.file 8 "<built-in>"
+ 137                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.

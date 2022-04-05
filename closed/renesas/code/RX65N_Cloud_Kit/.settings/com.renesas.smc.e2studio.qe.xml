@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<QE>
+    <Segment id="Project">
+        <Setting id="SrcGeneratedPath" value="src/smc_gen"/>
+    </Segment>
+    <Segment id="Pin">
+        <Setting id="P36" value="EXTAL"/>
+        <Setting id="P37" value="XTAL"/>
+    </Segment>
+    <Segment id="Device">
+        <Setting id="Series" value="RX600"/>
+        <Setting id="Group" value="RX65N"/>
+        <Setting id="Board" value="Custom User Board"/>
+        <Setting id="PartNo" value="R5F565NEDxFB"/>
+        <Setting id="PinCount" value="144"/>
+    </Segment>
+    <Segment id="Clock">
+        <Setting id="PCLKD" value="60000.0"/>
+        <Setting id="CacMCLK" value="24000.0"/>
+        <Setting id="PLLCLK" value="240000.0"/>
+        <Setting id="PCLKB" value="60000.0"/>
+        <Setting id="VCC" value="3.3"/>
+        <Setting id="PCLKC" value="60000.0"/>
+        <Setting id="BusCLK" value="120000.0"/>
+        <Setting id="PCLKA" value="120000.0"/>
+        <Setting id="ICLK" value="120000.0"/>
+        <Setting id="FCLK" value="60000.0"/>
+        <Setting id="SysCLKSrc" value="4.0"/>
+        <Setting id="ExtCLK" value="24000.0"/>
+    </Segment>
+    <Segment id="Component">
+        <Setting id="r_bsp" value="FIT"/>
+    </Segment>
+</QE>

@@ -1,0 +1,396 @@
+   1                             		.file	"mcu_init.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.bsp_non_existent_port_init,"ax",@progbits
+   5                             		.global	_bsp_non_existent_port_init
+   7                             	_bsp_non_existent_port_init:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c"
+   1:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+   2:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * DISCLAIMER
+   3:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * other uses are authorized. This software is owned by Renesas Electronics Corporation and is prote
+   5:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * applicable laws, including copyright laws.
+   6:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+   7:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF 
+   8:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIM
+   9:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AF
+  10:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY RE
+  11:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * this software. 
+  14:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *
+  15:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * Copyright (C) 2016 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+  17:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+  18:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * File Name    : mcu_init.c
+  19:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * Description  : Performs initialization common to all MCUs in this Group
+  20:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+  21:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+  22:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * History : DD.MM.YYYY Version  Description
+  23:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *         : 01.10.2016 1.00     First Release
+  24:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *         : 15.05.2017 2.00     Added port setting of 177 pins and 176 pins.
+  25:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *                               Added setting of PORTG.
+  26:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *         : 31.10.2018 2.01     Added port setting of 64 pins.
+  27:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *         : 28.02.2019 2.02     Fixed coding style.
+  28:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+  29:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  30:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+  31:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** Includes   <System Includes> , "Project Includes"
+  32:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+  33:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /* Get specifics on this MCU. */
+  34:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #include "platform.h"
+  35:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  36:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+  37:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** Macro definitions
+  38:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+  39:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /* RX MCUs come in different packages and different pin counts. For MCUs that do not have the maxim
+  40:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****  * for their group (e.g. MCU with 100 pins when maximum is 177 pins) these 'non-existent' pins that
+  41:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****  * need to be initialized to save power. The macros below define the non-existent pins on each port
+  42:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****  * pin count MCUs. If a pin is non-existent then its value is set to a 1. These values are then ORe
+  43:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****  * direction registers to set non-existent pins as outputs which can help save power.
+  44:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****  */
+  45:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #if   (BSP_PACKAGE_PINS == 177) || (BSP_PACKAGE_PINS == 176)
+  46:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT0_NE_PIN_MASK     (0x50)    /* Missing pins: P04 P06 */
+  47:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT1_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  48:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT2_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  49:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT3_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  50:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT4_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  51:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT5_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  52:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT6_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  53:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT7_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  54:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT8_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  55:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT9_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  56:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTA_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  57:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTB_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  58:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTC_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  59:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTD_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  60:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTE_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  61:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTF_NE_PIN_MASK     (0xC0)    /* Missing pins: PF6 PF7 */
+  62:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTG_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  63:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xD0)    /* Missing pins: PJ4 PJ6 PJ7 */
+  64:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #elif (BSP_PACKAGE_PINS == 145) || (BSP_PACKAGE_PINS == 144)
+  65:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT0_NE_PIN_MASK     (0x50)    /* Missing pins: P04 P06 */
+  66:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT1_NE_PIN_MASK     (0x03)    /* Missing pins: P10 P11 */
+  67:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT2_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  68:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT3_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  69:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT4_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  70:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT5_NE_PIN_MASK     (0x80)    /* Missing pins: P57 */
+  71:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT6_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  72:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT7_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  73:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT8_NE_PIN_MASK     (0x30)    /* Missing pins: P84 P85 */
+  74:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT9_NE_PIN_MASK     (0xF0)    /* Missing pins: P94 P95 P96 P97 */
+  75:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTA_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  76:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTB_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  77:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTC_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  78:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTD_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  79:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTE_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  80:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTF_NE_PIN_MASK     (0xDF)    /* Missing pins: PF0 PF1 PF2 PF3 PF4 PF6 PF7 */
+  81:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #if defined(BSP_MCU_RX65N_2MB)
+  82:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTG_NE_PIN_MASK     (0xFF)    /* Missing pins: PG0 PG1 PG2 PG3 PG4 PG5 PG6 PG
+  83:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #endif
+  84:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xD7)    /* Missing pins: PJ0 PJ1 PJ2 PJ4 PJ6 PJ7 */
+  85:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #elif BSP_PACKAGE_PINS == 100
+  86:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT0_NE_PIN_MASK     (0x5F)    /* Missing pins: P00 P01 P02 P03 P04 P06 */
+  87:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT1_NE_PIN_MASK     (0x03)    /* Missing pins: P10 P11 */
+  88:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT2_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  89:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT3_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  90:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT4_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  91:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT5_NE_PIN_MASK     (0xC0)    /* Missing pins: P56 P57 */
+  92:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT6_NE_PIN_MASK     (0xFF)    /* Missing pins: P60 P61 P62 P63 P64 P65 P66 P6
+  93:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT7_NE_PIN_MASK     (0xFF)    /* Missing pins: P70 P71 P72 P73 P74 P75 P76 P7
+  94:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT8_NE_PIN_MASK     (0xFF)    /* Missing pins: P80 P81 P82 P83 P84 P85 P86 P8
+  95:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT9_NE_PIN_MASK     (0xFF)    /* Missing pins: P90 P91 P92 P93 P94 P95 P96 P9
+  96:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTA_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  97:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTB_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  98:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTC_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTD_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+ 100:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTE_NE_PIN_MASK     (0x00)    /* Missing pins: None */
+ 101:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTF_NE_PIN_MASK     (0xFF)    /* Missing pins: PF0 PF1 PF2 PF3 PF4 PF5 PF6 PF
+ 102:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #if defined(BSP_MCU_RX65N_2MB)
+ 103:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTG_NE_PIN_MASK     (0xFF)    /* Missing pins: PG0 PG1 PG2 PG3 PG4 PG5 PG6 PG
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #endif
+ 105:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xF7)    /* Missing pins: PJ0 PJ1 PJ2 PJ4 PJ5 PJ6 PJ7 */
+ 106:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #elif BSP_PACKAGE_PINS == 64
+ 107:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #if BSP_CFG_MCU_PART_PACKAGE == 0xC
+ 108:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT0_NE_PIN_MASK     (0xFF)    /* Missing pins: P00 P01 P02 P03 P04 P05 P06 P0
+ 109:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #else
+ 110:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT0_NE_PIN_MASK     (0xDF)    /* Missing pins: P00 P01 P02 P03 P04 P06 P07 */
+ 111:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #endif
+ 112:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT1_NE_PIN_MASK     (0x33)    /* Missing pins: P10 P11 P14 P15 */
+ 113:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT2_NE_PIN_MASK     (0x3F)    /* Missing pins: P20 P21 P22 P23 P24 P25 */
+ 114:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT3_NE_PIN_MASK     (0x0C)    /* Missing pins: P32 P33 */
+ 115:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT4_NE_PIN_MASK     (0xF0)    /* Missing pins: P44 P45 P46 P47 */
+ 116:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT5_NE_PIN_MASK     (0xF7)    /* Missing pins: P50 P51 P52 P54 P55 P56 P57 */
+ 117:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT6_NE_PIN_MASK     (0xFF)    /* Missing pins: P60 P61 P62 P63 P64 P65 P66 P6
+ 118:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT7_NE_PIN_MASK     (0xFF)    /* Missing pins: P70 P71 P72 P73 P74 P75 P76 P7
+ 119:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT8_NE_PIN_MASK     (0xFF)    /* Missing pins: P80 P81 P82 P83 P84 P85 P86 P8
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORT9_NE_PIN_MASK     (0xFF)    /* Missing pins: P90 P91 P92 P93 P94 P95 P96 P9
+ 121:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTA_NE_PIN_MASK     (0x29)    /* Missing pins: PA0 PA3 PA5 */
+ 122:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTB_NE_PIN_MASK     (0x1F)    /* Missing pins: PB0 PB1 PB2 PB3 PB4 */
+ 123:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTC_NE_PIN_MASK     (0x0C)    /* Missing pins: PC2 PC3 */
+ 124:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTD_NE_PIN_MASK     (0x03)    /* Missing pins: PD0 PD1 */
+ 125:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTE_NE_PIN_MASK     (0x38)    /* Missing pins: PE3 PE4 PE5 */
+ 126:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTF_NE_PIN_MASK     (0xFF)    /* Missing pins: PF0 PF1 PF2 PF3 PF4 PF5 PF6 PF
+ 127:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTG_NE_PIN_MASK     (0xFF)    /* Missing pins: PG0 PG1 PG2 PG3 PG4 PG5 PG6 PG
+ 128:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #define BSP_PRV_PORTJ_NE_PIN_MASK     (0xFF)    /* Missing pins: PJ0 PJ1 PJ2 PJ3 PJ4 PJ5 PJ6 PJ
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 130:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #else
+ 131:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     #error "ERROR - This package is not defined in mcu_init.c"
+ 132:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #endif
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 134:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+ 135:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** Typedef definitions
+ 136:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+ 137:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 138:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+ 139:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** Exported global variables (to be accessed by other files)
+ 140:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+ 141:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 142:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+ 143:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** Private global variables and functions
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+ 145:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 146:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** /**************************************************************************************************
+ 147:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * Function Name: bsp_non_existent_port_init
+ 148:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * Description  : For MCUs that do not have the maximum number of pins for their group (e.g. MCU wit
+ 149:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *                maximum is 177 pins) these 'non-existent' pins that are not bonded out need to be 
+ 150:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** *                power.
+ 151:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * Arguments    : none
+ 152:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** * Return Value : none
+ 153:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** ***************************************************************************************************
+ 154:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** void bsp_non_existent_port_init (void)
+ 155:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** {
+  10                             		.loc 1 155 1
+  11 0000 6E 6D                   		pushm	r6-r13
+  12                             	.LCFI0:
+  13 0002 60 40                   		sub	#4, r0
+  14                             	.LCFI1:
+ 156:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* OR in missing pin masks from above. */
+ 157:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 158:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT0.PDR */
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT0.PDR.BYTE |= BSP_PRV_PORT0_NE_PIN_MASK;
+  15                             		.loc 1 159 5
+  16                             		.loc 1 159 20 is_stmt 0
+  17 0004 FB AE 00 C0 08          		mov.L	#0x8c000, r10
+ 160:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 161:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT1.PDR */
+ 162:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT1.PDR.BYTE |= BSP_PRV_PORT1_NE_PIN_MASK;
+  18                             		.loc 1 162 20
+  19 0009 FB 7E 01 C0 08          		mov.L	#0x8c001, r7
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  20                             		.loc 1 159 20
+  21 000e CC A4                   		mov.B	[r10], r4
+ 163:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 164:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT2.PDR */
+ 165:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT2.PDR.BYTE |= BSP_PRV_PORT2_NE_PIN_MASK;
+  22                             		.loc 1 165 20
+  23 0010 FB 3E 02 C0 08          		mov.L	#0x8c002, r3
+ 166:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 167:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT3.PDR */
+ 168:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT3.PDR.BYTE |= BSP_PRV_PORT3_NE_PIN_MASK;
+  24                             		.loc 1 168 20
+  25 0015 FB DE 03 C0 08          		mov.L	#0x8c003, r13
+ 169:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 170:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT4.PDR */
+ 171:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT4.PDR.BYTE |= BSP_PRV_PORT4_NE_PIN_MASK;
+  26                             		.loc 1 171 20
+  27 001a FB 5E 04 C0 08          		mov.L	#0x8c004, r5
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  28                             		.loc 1 159 20
+  29 001f 75 34 5F                		or	#0x5f, r4
+ 172:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 173:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT5.PDR */
+ 174:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT5.PDR.BYTE |= BSP_PRV_PORT5_NE_PIN_MASK;
+  30                             		.loc 1 174 20
+  31 0022 FB 8E 05 C0 08          		mov.L	#0x8c005, r8
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  32                             		.loc 1 159 20
+  33 0027 C3 A4                   		mov.B	r4, [r10]
+ 162:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  34                             		.loc 1 162 5 is_stmt 1
+ 175:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 176:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT6.PDR */
+ 177:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT6.PDR.BYTE |= BSP_PRV_PORT6_NE_PIN_MASK;
+  35                             		.loc 1 177 20 is_stmt 0
+  36 0029 FB 9E 06 C0 08          		mov.L	#0x8c006, r9
+ 162:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  37                             		.loc 1 162 20
+  38 002e CC 74                   		mov.B	[r7], r4
+ 178:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 179:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT7.PDR */
+ 180:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT7.PDR.BYTE |= BSP_PRV_PORT7_NE_PIN_MASK;
+  39                             		.loc 1 180 20
+  40 0030 FB CE 07 C0 08          		mov.L	#0x8c007, r12
+ 181:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 182:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT8.PDR */
+ 183:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT8.PDR.BYTE |= BSP_PRV_PORT8_NE_PIN_MASK;
+  41                             		.loc 1 183 20
+  42 0035 FB BE 08 C0 08          		mov.L	#0x8c008, r11
+ 184:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 185:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORT9.PDR */
+ 186:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORT9.PDR.BYTE |= BSP_PRV_PORT9_NE_PIN_MASK;
+  43                             		.loc 1 186 20
+  44 003a FB 6E 09 C0 08          		mov.L	#0x8c009, r6
+ 162:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  45                             		.loc 1 162 20
+  46 003f 65 34                   		or	#3, r4
+ 187:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 188:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTA.PDR */
+ 189:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTA.PDR.BYTE |= BSP_PRV_PORTA_NE_PIN_MASK;
+  47                             		.loc 1 189 20
+  48 0041 FB AE 0A C0 08          		mov.L	#0x8c00a, r10
+ 162:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  49                             		.loc 1 162 20
+  50 0046 C3 74                   		mov.B	r4, [r7]
+ 165:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  51                             		.loc 1 165 5 is_stmt 1
+ 190:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 191:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTB.PDR */
+ 192:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTB.PDR.BYTE |= BSP_PRV_PORTB_NE_PIN_MASK;
+  52                             		.loc 1 192 20 is_stmt 0
+  53 0048 FB 7E 0B C0 08          		mov.L	#0x8c00b, r7
+ 165:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  54                             		.loc 1 165 20
+  55 004d CC 34                   		mov.B	[r3], r4
+ 193:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 194:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTC.PDR */
+ 195:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTC.PDR.BYTE |= BSP_PRV_PORTC_NE_PIN_MASK;
+  56                             		.loc 1 195 20
+  57 004f FB FE 0C C0 08          		mov.L	#0x8c00c, r15
+ 196:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 197:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTD.PDR */
+ 198:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTD.PDR.BYTE |= BSP_PRV_PORTD_NE_PIN_MASK;
+  58                             		.loc 1 198 20
+  59 0054 FB EE 0D C0 08          		mov.L	#0x8c00d, r14
+ 199:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 200:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTE.PDR */
+ 201:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTE.PDR.BYTE |= BSP_PRV_PORTE_NE_PIN_MASK;
+  60                             		.loc 1 201 20
+  61 0059 FB 1E 0E C0 08          		mov.L	#0x8c00e, r1
+ 165:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  62                             		.loc 1 165 20
+  63 005e C3 34                   		mov.B	r4, [r3]
+ 168:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  64                             		.loc 1 168 5 is_stmt 1
+ 202:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 203:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTF.PDR */
+ 204:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTF.PDR.BYTE |= BSP_PRV_PORTF_NE_PIN_MASK;
+  65                             		.loc 1 204 20 is_stmt 0
+  66 0060 FB 2E 0F C0 08          		mov.L	#0x8c00f, r2
+ 168:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  67                             		.loc 1 168 20
+  68 0065 C0 D0                   		mov.B	[r13], [r0]
+ 205:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #if defined(BSP_MCU_RX65N_2MB)
+ 206:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 207:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTG.PDR */
+ 208:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTG.PDR.BYTE |= BSP_PRV_PORTG_NE_PIN_MASK;
+  69                             		.loc 1 208 20
+  70 0067 FB 3E 10 C0 08          		mov.L	#0x8c010, r3
+ 209:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #endif
+ 210:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 211:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     /* Set PORTJ.PDR */
+ 212:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c ****     PORTJ.PDR.BYTE |= BSP_PRV_PORTJ_NE_PIN_MASK;
+  71                             		.loc 1 212 20
+  72 006c FB 4E 12 C0 08          		mov.L	#0x8c012, r4
+ 168:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  73                             		.loc 1 168 20
+  74 0071 C0 0D                   		mov.B	[r0], [r13]
+ 171:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  75                             		.loc 1 171 5 is_stmt 1
+ 171:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  76                             		.loc 1 171 20 is_stmt 0
+  77 0073 CC 5D                   		mov.B	[r5], r13
+  78 0075 C3 5D                   		mov.B	r13, [r5]
+ 174:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  79                             		.loc 1 174 5 is_stmt 1
+ 174:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  80                             		.loc 1 174 20 is_stmt 0
+  81 0077 CC 85                   		mov.B	[r8], r5
+  82 0079 75 35 C0                		or	#-64, r5
+  83 007c C3 85                   		mov.B	r5, [r8]
+ 177:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  84                             		.loc 1 177 5 is_stmt 1
+ 177:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  85                             		.loc 1 177 20 is_stmt 0
+  86 007e CC 95                   		mov.B	[r9], r5
+  87 0080 F8 94 FF                		mov.B	#-1, [r9]
+ 180:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  88                             		.loc 1 180 5 is_stmt 1
+ 180:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  89                             		.loc 1 180 20 is_stmt 0
+  90 0083 CC C5                   		mov.B	[r12], r5
+  91 0085 F8 C4 FF                		mov.B	#-1, [r12]
+ 183:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  92                             		.loc 1 183 5 is_stmt 1
+ 183:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  93                             		.loc 1 183 20 is_stmt 0
+  94 0088 CC B5                   		mov.B	[r11], r5
+  95 008a F8 B4 FF                		mov.B	#-1, [r11]
+ 186:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  96                             		.loc 1 186 5 is_stmt 1
+ 186:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+  97                             		.loc 1 186 20 is_stmt 0
+  98 008d CC 65                   		mov.B	[r6], r5
+  99 008f F8 64 FF                		mov.B	#-1, [r6]
+ 189:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 100                             		.loc 1 189 5 is_stmt 1
+ 189:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 101                             		.loc 1 189 20 is_stmt 0
+ 102 0092 CC A5                   		mov.B	[r10], r5
+ 103 0094 C3 A5                   		mov.B	r5, [r10]
+ 192:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 104                             		.loc 1 192 5 is_stmt 1
+ 192:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 105                             		.loc 1 192 20 is_stmt 0
+ 106 0096 CC 7A                   		mov.B	[r7], r10
+ 107 0098 C3 7A                   		mov.B	r10, [r7]
+ 195:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 108                             		.loc 1 195 5 is_stmt 1
+ 195:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 109                             		.loc 1 195 20 is_stmt 0
+ 110 009a CC F7                   		mov.B	[r15], r7
+ 111 009c C3 F7                   		mov.B	r7, [r15]
+ 198:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 112                             		.loc 1 198 5 is_stmt 1
+ 198:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 113                             		.loc 1 198 20 is_stmt 0
+ 114 009e CC E7                   		mov.B	[r14], r7
+ 115 00a0 C3 E7                   		mov.B	r7, [r14]
+ 201:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 116                             		.loc 1 201 5 is_stmt 1
+ 201:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** 
+ 117                             		.loc 1 201 20 is_stmt 0
+ 118 00a2 CC 17                   		mov.B	[r1], r7
+ 119 00a4 C3 17                   		mov.B	r7, [r1]
+ 204:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #if defined(BSP_MCU_RX65N_2MB)
+ 120                             		.loc 1 204 5 is_stmt 1
+ 204:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #if defined(BSP_MCU_RX65N_2MB)
+ 121                             		.loc 1 204 20 is_stmt 0
+ 122 00a6 CC 27                   		mov.B	[r2], r7
+ 123 00a8 F8 24 FF                		mov.B	#-1, [r2]
+ 208:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #endif
+ 124                             		.loc 1 208 5 is_stmt 1
+ 208:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** #endif
+ 125                             		.loc 1 208 20 is_stmt 0
+ 126 00ab CC 37                   		mov.B	[r3], r7
+ 127 00ad F8 34 FF                		mov.B	#-1, [r3]
+ 128                             		.loc 1 212 5 is_stmt 1
+ 129                             		.loc 1 212 20 is_stmt 0
+ 130 00b0 CC 45                   		mov.B	[r4], r5
+ 131 00b2 75 35 F7                		or	#-9, r5
+ 132 00b5 C3 45                   		mov.B	r5, [r4]
+ 213:../src/smc_gen/r_bsp/mcu/rx65n/mcu_init.c **** } /* End of function bsp_non_existent_port_init() */
+ 133                             		.loc 1 213 1
+ 134 00b7 3F 6D 09                		rtsd	#36, r6-r13
+ 135                             	.LFE3:
+ 187                             	.Letext0:
+ 188                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 189                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 190                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 191                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 192                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 193                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 194                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 195                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 196                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm

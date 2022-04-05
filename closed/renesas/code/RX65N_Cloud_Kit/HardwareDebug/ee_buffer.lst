@@ -1,0 +1,778 @@
+   1                             		.file	"ee_buffer.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.ee_buffer_parse,"ax",@progbits
+   5                             		.global	_ee_buffer_parse
+   7                             	_ee_buffer_parse:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/EEMBC/profile/ee_buffer.c"
+   1:../src/EEMBC/profile/ee_buffer.c **** /**
+   2:../src/EEMBC/profile/ee_buffer.c ****  * Copyright (C) EEMBC(R). All Rights Reserved
+   3:../src/EEMBC/profile/ee_buffer.c ****  *
+   4:../src/EEMBC/profile/ee_buffer.c ****  * All EEMBC Benchmark Software are products of EEMBC and are provided under the
+   5:../src/EEMBC/profile/ee_buffer.c ****  * terms of the EEMBC Benchmark License Agreements. The EEMBC Benchmark Software
+   6:../src/EEMBC/profile/ee_buffer.c ****  * are proprietary intellectual properties of EEMBC and its Members and is
+   7:../src/EEMBC/profile/ee_buffer.c ****  * protected under all applicable laws, including all applicable copyright laws.
+   8:../src/EEMBC/profile/ee_buffer.c ****  *
+   9:../src/EEMBC/profile/ee_buffer.c ****  * If you received this EEMBC Benchmark Software without having a currently
+  10:../src/EEMBC/profile/ee_buffer.c ****  * effective EEMBC Benchmark License Agreement, you must discontinue use.
+  11:../src/EEMBC/profile/ee_buffer.c ****  */
+  12:../src/EEMBC/profile/ee_buffer.c **** 
+  13:../src/EEMBC/profile/ee_buffer.c **** #include "profile/ee_profile.h"
+  14:../src/EEMBC/profile/ee_buffer.c **** 
+  15:../src/EEMBC/profile/ee_buffer.c **** /**
+  16:../src/EEMBC/profile/ee_buffer.c ****  * These varaibles describe the generic buffer. The buffer is created via
+  17:../src/EEMBC/profile/ee_buffer.c ****  * LIBC malloc()/free().
+  18:../src/EEMBC/profile/ee_buffer.c ****  */
+  19:../src/EEMBC/profile/ee_buffer.c **** uint8_t *gp_buff     = NULL;
+  20:../src/EEMBC/profile/ee_buffer.c **** size_t   g_buff_size = 0u;
+  21:../src/EEMBC/profile/ee_buffer.c **** size_t   g_buff_pos  = 0u;
+  22:../src/EEMBC/profile/ee_buffer.c **** 
+  23:../src/EEMBC/profile/ee_buffer.c **** arg_claimed_t
+  24:../src/EEMBC/profile/ee_buffer.c **** ee_buffer_parse(char *p_command)
+  25:../src/EEMBC/profile/ee_buffer.c **** {
+  10                             		.loc 1 25 1
+  11                             	.LVL0:
+  12 0000 6E 6C                   		pushm	r6-r12
+  13                             	.LCFI0:
+  14 0002 60 C0                   		sub	#12, r0
+  15                             	.LCFI1:
+  26:../src/EEMBC/profile/ee_buffer.c ****     char *p_next;
+  16                             		.loc 1 26 5
+  27:../src/EEMBC/profile/ee_buffer.c **** 
+  28:../src/EEMBC/profile/ee_buffer.c ****     if (th_strncmp(p_command, "db", EE_CMD_SIZE) != 0)
+  17                             		.loc 1 28 5
+  18                             		.loc 1 28 9 is_stmt 0
+  19 0004 75 43 50                		mov.L	#0x50, r3
+  20 0007 FB 22 00 00 00 00       		mov.L	#.LC0, r2
+  21 000d 05 00 00 00             		bsr	_th_strncmp
+  22                             	.LVL1:
+  23                             		.loc 1 28 8
+  24 0011 61 01                   		cmp	#0, r1
+  25 0013 10                      		beq	.L40
+  29:../src/EEMBC/profile/ee_buffer.c ****     {
+  30:../src/EEMBC/profile/ee_buffer.c ****         return EE_ARG_UNCLAIMED;
+  26                             		.loc 1 30 16
+  27 0014 66 17                   		mov.L	#1, r7
+  28                             		.balign 8,3,1
+  29                             	.L1:
+  31:../src/EEMBC/profile/ee_buffer.c ****     }
+  32:../src/EEMBC/profile/ee_buffer.c **** 
+  33:../src/EEMBC/profile/ee_buffer.c ****     p_next = th_strtok(NULL, EE_CMD_DELIMITER);
+  34:../src/EEMBC/profile/ee_buffer.c **** 
+  35:../src/EEMBC/profile/ee_buffer.c ****     if (p_next == NULL)
+  36:../src/EEMBC/profile/ee_buffer.c ****     {
+  37:../src/EEMBC/profile/ee_buffer.c ****         th_printf("e-[Command 'db' requires a subcommand]\r\n");
+  38:../src/EEMBC/profile/ee_buffer.c ****     }
+  39:../src/EEMBC/profile/ee_buffer.c ****     else if (th_strncmp(p_next, "load", EE_CMD_SIZE) == 0)
+  40:../src/EEMBC/profile/ee_buffer.c ****     {
+  41:../src/EEMBC/profile/ee_buffer.c ****         p_next = th_strtok(NULL, EE_CMD_DELIMITER);
+  42:../src/EEMBC/profile/ee_buffer.c **** 
+  43:../src/EEMBC/profile/ee_buffer.c ****         if (p_next == NULL)
+  44:../src/EEMBC/profile/ee_buffer.c ****         {
+  45:../src/EEMBC/profile/ee_buffer.c ****             th_printf("e-[Command 'db load' requires the # of bytes]\r\n");
+  46:../src/EEMBC/profile/ee_buffer.c ****         }
+  47:../src/EEMBC/profile/ee_buffer.c ****         else
+  48:../src/EEMBC/profile/ee_buffer.c ****         {
+  49:../src/EEMBC/profile/ee_buffer.c ****             g_buff_size = (size_t)atoi(p_next);
+  50:../src/EEMBC/profile/ee_buffer.c ****             if (g_buff_size == 0)
+  51:../src/EEMBC/profile/ee_buffer.c ****             {
+  52:../src/EEMBC/profile/ee_buffer.c ****                 th_printf("e-[Command 'db load' must be >0 bytes]\r\n");
+  53:../src/EEMBC/profile/ee_buffer.c ****             }
+  54:../src/EEMBC/profile/ee_buffer.c ****             else
+  55:../src/EEMBC/profile/ee_buffer.c ****             {
+  56:../src/EEMBC/profile/ee_buffer.c ****                 g_buff_pos = 0;
+  57:../src/EEMBC/profile/ee_buffer.c ****                 if (gp_buff != NULL)
+  58:../src/EEMBC/profile/ee_buffer.c ****                 {
+  59:../src/EEMBC/profile/ee_buffer.c ****                     th_free(gp_buff);
+  60:../src/EEMBC/profile/ee_buffer.c ****                     gp_buff = NULL;
+  61:../src/EEMBC/profile/ee_buffer.c ****                 }
+  62:../src/EEMBC/profile/ee_buffer.c ****                 gp_buff = (void *)th_malloc(g_buff_size);
+  63:../src/EEMBC/profile/ee_buffer.c ****                 if (gp_buff == NULL)
+  64:../src/EEMBC/profile/ee_buffer.c ****                 {
+  65:../src/EEMBC/profile/ee_buffer.c ****                     th_printf("e-[Unable to malloc %u bytes]\r\n", g_buff_size);
+  66:../src/EEMBC/profile/ee_buffer.c ****                 }
+  67:../src/EEMBC/profile/ee_buffer.c ****                 else
+  68:../src/EEMBC/profile/ee_buffer.c ****                 {
+  69:../src/EEMBC/profile/ee_buffer.c ****                     th_printf("m-[Expecting %d bytes]\r\n", g_buff_size);
+  70:../src/EEMBC/profile/ee_buffer.c ****                 }
+  71:../src/EEMBC/profile/ee_buffer.c ****             }
+  72:../src/EEMBC/profile/ee_buffer.c ****         }
+  73:../src/EEMBC/profile/ee_buffer.c ****     }
+  74:../src/EEMBC/profile/ee_buffer.c ****     else if (th_strncmp(p_next, "print", EE_CMD_SIZE) == 0)
+  75:../src/EEMBC/profile/ee_buffer.c ****     {
+  76:../src/EEMBC/profile/ee_buffer.c ****         if (gp_buff == NULL)
+  77:../src/EEMBC/profile/ee_buffer.c ****         {
+  78:../src/EEMBC/profile/ee_buffer.c ****             th_printf("e-[Buffer not allocated]\r\n");
+  79:../src/EEMBC/profile/ee_buffer.c ****         }
+  80:../src/EEMBC/profile/ee_buffer.c ****         else
+  81:../src/EEMBC/profile/ee_buffer.c ****         {
+  82:../src/EEMBC/profile/ee_buffer.c ****             size_t       i   = 0;
+  83:../src/EEMBC/profile/ee_buffer.c ****             const size_t max = 8;
+  84:../src/EEMBC/profile/ee_buffer.c ****             for (; i < g_buff_size; ++i)
+  85:../src/EEMBC/profile/ee_buffer.c ****             {
+  86:../src/EEMBC/profile/ee_buffer.c ****                 if ((i + max) % max == 0 || i == 0)
+  87:../src/EEMBC/profile/ee_buffer.c ****                 {
+  88:../src/EEMBC/profile/ee_buffer.c ****                     th_printf("m-buffer-");
+  89:../src/EEMBC/profile/ee_buffer.c ****                 }
+  90:../src/EEMBC/profile/ee_buffer.c ****                 /* N.B. Not every `printf` supports the spacing prefix! */
+  91:../src/EEMBC/profile/ee_buffer.c ****                 th_printf("%02x", gp_buff[i]);
+  92:../src/EEMBC/profile/ee_buffer.c ****                 if (((i + 1) % max == 0) || ((i + 1) == g_buff_size))
+  93:../src/EEMBC/profile/ee_buffer.c ****                 {
+  94:../src/EEMBC/profile/ee_buffer.c ****                     th_printf("\r\n");
+  95:../src/EEMBC/profile/ee_buffer.c ****                 }
+  96:../src/EEMBC/profile/ee_buffer.c ****                 else
+  97:../src/EEMBC/profile/ee_buffer.c ****                 {
+  98:../src/EEMBC/profile/ee_buffer.c ****                     th_printf("-");
+  99:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 100:../src/EEMBC/profile/ee_buffer.c ****             }
+ 101:../src/EEMBC/profile/ee_buffer.c ****             if (i % max != 0)
+ 102:../src/EEMBC/profile/ee_buffer.c ****             {
+ 103:../src/EEMBC/profile/ee_buffer.c ****                 th_printf("\r\n");
+ 104:../src/EEMBC/profile/ee_buffer.c ****             }
+ 105:../src/EEMBC/profile/ee_buffer.c ****         }
+ 106:../src/EEMBC/profile/ee_buffer.c ****     }
+ 107:../src/EEMBC/profile/ee_buffer.c ****     else
+ 108:../src/EEMBC/profile/ee_buffer.c ****     {
+ 109:../src/EEMBC/profile/ee_buffer.c ****         size_t numbytes;
+ 110:../src/EEMBC/profile/ee_buffer.c ****         char   test[3];
+ 111:../src/EEMBC/profile/ee_buffer.c ****         long   res;
+ 112:../src/EEMBC/profile/ee_buffer.c **** 
+ 113:../src/EEMBC/profile/ee_buffer.c ****         if (gp_buff == NULL)
+ 114:../src/EEMBC/profile/ee_buffer.c ****         {
+ 115:../src/EEMBC/profile/ee_buffer.c ****             th_printf("e-[Buffer not allocated]\r\n");
+ 116:../src/EEMBC/profile/ee_buffer.c ****             return EE_ARG_CLAIMED;
+ 117:../src/EEMBC/profile/ee_buffer.c ****         }
+ 118:../src/EEMBC/profile/ee_buffer.c **** 
+ 119:../src/EEMBC/profile/ee_buffer.c ****         /* Two hexdigits per byte */
+ 120:../src/EEMBC/profile/ee_buffer.c ****         numbytes = th_strnlen(p_next, EE_CMD_SIZE);
+ 121:../src/EEMBC/profile/ee_buffer.c **** 
+ 122:../src/EEMBC/profile/ee_buffer.c ****         if ((numbytes & 1) != 0)
+ 123:../src/EEMBC/profile/ee_buffer.c ****         {
+ 124:../src/EEMBC/profile/ee_buffer.c ****             th_printf("e-[Insufficent number of hex digits]\r\n");
+ 125:../src/EEMBC/profile/ee_buffer.c ****             return EE_ARG_CLAIMED;
+ 126:../src/EEMBC/profile/ee_buffer.c ****         }
+ 127:../src/EEMBC/profile/ee_buffer.c ****         test[2] = 0;
+ 128:../src/EEMBC/profile/ee_buffer.c ****         for (size_t i = 0; i < numbytes;)
+ 129:../src/EEMBC/profile/ee_buffer.c ****         {
+ 130:../src/EEMBC/profile/ee_buffer.c ****             test[0] = p_next[i++];
+ 131:../src/EEMBC/profile/ee_buffer.c ****             test[1] = p_next[i++];
+ 132:../src/EEMBC/profile/ee_buffer.c ****             res     = ee_hexdec(test);
+ 133:../src/EEMBC/profile/ee_buffer.c ****             if (res < 0)
+ 134:../src/EEMBC/profile/ee_buffer.c ****             {
+ 135:../src/EEMBC/profile/ee_buffer.c ****                 th_printf("e-[Invalid hex digit '%s']\r\n", test);
+ 136:../src/EEMBC/profile/ee_buffer.c ****                 return EE_ARG_CLAIMED;
+ 137:../src/EEMBC/profile/ee_buffer.c ****             }
+ 138:../src/EEMBC/profile/ee_buffer.c ****             else
+ 139:../src/EEMBC/profile/ee_buffer.c ****             {
+ 140:../src/EEMBC/profile/ee_buffer.c ****                 gp_buff[g_buff_pos] = (uint8_t)res;
+ 141:../src/EEMBC/profile/ee_buffer.c ****                 g_buff_pos++;
+ 142:../src/EEMBC/profile/ee_buffer.c ****                 if (g_buff_pos == g_buff_size)
+ 143:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 144:../src/EEMBC/profile/ee_buffer.c ****                     th_printf("m-load-done\r\n");
+ 145:../src/EEMBC/profile/ee_buffer.c ****                     /* Disregard the remainder of the digits when done. */
+ 146:../src/EEMBC/profile/ee_buffer.c ****                     return EE_ARG_CLAIMED;
+ 147:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 148:../src/EEMBC/profile/ee_buffer.c ****             }
+ 149:../src/EEMBC/profile/ee_buffer.c ****         }
+ 150:../src/EEMBC/profile/ee_buffer.c ****     }
+ 151:../src/EEMBC/profile/ee_buffer.c ****     return EE_ARG_CLAIMED;
+ 152:../src/EEMBC/profile/ee_buffer.c **** }
+  30                             		.loc 1 152 1
+  31 0016 EF 71                   		mov.L	r7, r1
+  32 0018 3F 6C 0A                		rtsd	#40, r6-r12
+  33                             	.L40:
+  33:../src/EEMBC/profile/ee_buffer.c **** 
+  34                             		.loc 1 33 5 is_stmt 1
+  33:../src/EEMBC/profile/ee_buffer.c **** 
+  35                             		.loc 1 33 14 is_stmt 0
+  36 001b FB 22 03 00 00 00       		mov.L	#.LC1, r2
+  37 0021 05 00 00 00             		bsr	_th_strtok
+  38                             	.LVL2:
+  35:../src/EEMBC/profile/ee_buffer.c ****     {
+  39                             		.loc 1 35 8
+  40 0025 71 17 00                		add	#0, r1, r7
+  41 0028 3A 00 01                		beq	.L41
+  39:../src/EEMBC/profile/ee_buffer.c ****     {
+  42                             		.loc 1 39 10 is_stmt 1
+  39:../src/EEMBC/profile/ee_buffer.c ****     {
+  43                             		.loc 1 39 14 is_stmt 0
+  44 002b 75 43 50                		mov.L	#0x50, r3
+  45 002e FB 22 2E 00 00 00       		mov.L	#.LC3, r2
+  46 0034 05 00 00 00             		bsr	_th_strncmp
+  47                             	.LVL3:
+  39:../src/EEMBC/profile/ee_buffer.c ****     {
+  48                             		.loc 1 39 13
+  49 0038 61 01                   		cmp	#0, r1
+  50 003a 3A 86 00                		beq	.L42
+  74:../src/EEMBC/profile/ee_buffer.c ****     {
+  51                             		.loc 1 74 10 is_stmt 1
+  74:../src/EEMBC/profile/ee_buffer.c ****     {
+  52                             		.loc 1 74 14 is_stmt 0
+  53 003d 75 43 50                		mov.L	#0x50, r3
+  54 0040 FB 22 C5 00 00 00       		mov.L	#.LC8, r2
+  55 0046 EF 71                   		mov.L	r7, r1
+  56 0048 05 00 00 00             		bsr	_th_strncmp
+  57                             	.LVL4:
+  76:../src/EEMBC/profile/ee_buffer.c ****         {
+  58                             		.loc 1 76 21
+  59 004c FB 62 00 00 00 00       		mov.L	#.LANCHOR2, r6
+  74:../src/EEMBC/profile/ee_buffer.c ****     {
+  60                             		.loc 1 74 13
+  61 0052 61 01                   		cmp	#0, r1
+  62 0054 3B E3 00                		bne	.L9
+  76:../src/EEMBC/profile/ee_buffer.c ****         {
+  63                             		.loc 1 76 9 is_stmt 1
+  76:../src/EEMBC/profile/ee_buffer.c ****         {
+  64                             		.loc 1 76 12 is_stmt 0
+  65 0057 EC 67                   		mov.L	[r6], r7
+  66 0059 61 07                   		cmp	#0, r7
+  67 005b 3A A7 01                		beq	.L10
+  68                             	.LVL5:
+  69                             	.LBB2:
+  84:../src/EEMBC/profile/ee_buffer.c ****             {
+  70                             		.loc 1 84 22
+  71 005e FB B2 00 00 00 00       		mov.L	#.LANCHOR0, r11
+  72 0064 EC B7                   		mov.L	[r11], r7
+  84:../src/EEMBC/profile/ee_buffer.c ****             {
+  73                             		.loc 1 84 13
+  74 0066 61 07                   		cmp	#0, r7
+  75 0068 20 AE                   		beq	.L1
+  76 006a 66 07                   		mov.L	#0, r7
+  82:../src/EEMBC/profile/ee_buffer.c ****             const size_t max = 8;
+  77                             		.loc 1 82 26
+  78 006c 66 0A                   		mov.L	#0, r10
+  88:../src/EEMBC/profile/ee_buffer.c ****                 }
+  79                             		.loc 1 88 21
+  80 006e FB 82 E6 00 00 00       		mov.L	#.LC10, r8
+  91:../src/EEMBC/profile/ee_buffer.c ****                 if (((i + 1) % max == 0) || ((i + 1) == g_buff_size))
+  81                             		.loc 1 91 17
+  82 0074 FB C2 F0 00 00 00       		mov.L	#.LC11, r12
+  94:../src/EEMBC/profile/ee_buffer.c ****                 }
+  83                             		.loc 1 94 21
+  84 007a FB 92 F5 00 00 00       		mov.L	#.LC12, r9
+  85 0080 2E 18                   		bra	.L11
+  86                             	.LVL6:
+  87                             	.L14:
+  98:../src/EEMBC/profile/ee_buffer.c ****                 }
+  88                             		.loc 1 98 21
+  89 0082 F8 02 F8 00 00 00       		mov.L	#.LC13, [r0]
+  90 0088 05 00 00 00             		bsr	_th_printf
+  91                             	.LVL7:
+  92 008c 76 10 01 00             		.balign 8,3,4
+  93                             	.L15:
+  84:../src/EEMBC/profile/ee_buffer.c ****             {
+  94                             		.loc 1 84 13 discriminator 1
+  95 0090 06 84 BA                		cmp	[r11].L, r10
+  96 0093 23 05 38 12 01          		bgeu	.L43
+  97                             	.LVL8:
+  98                             		.balign 8,3,1
+  99                             	.L11:
+  86:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 100                             		.loc 1 86 17 is_stmt 1
+  86:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 101                             		.loc 1 86 20 is_stmt 0
+ 102 0098 61 07                   		cmp	#0, r7
+ 103 009a 3A 85 00                		beq	.L44
+ 104                             		.balign 8,3,1
+ 105                             	.L12:
+  91:../src/EEMBC/profile/ee_buffer.c ****                 if (((i + 1) % max == 0) || ((i + 1) == g_buff_size))
+ 106                             		.loc 1 91 17 is_stmt 1
+  91:../src/EEMBC/profile/ee_buffer.c ****                 if (((i + 1) % max == 0) || ((i + 1) == g_buff_size))
+ 107                             		.loc 1 91 42 is_stmt 0
+ 108 009d EC 67                   		mov.L	[r6], r7
+  91:../src/EEMBC/profile/ee_buffer.c ****                 if (((i + 1) % max == 0) || ((i + 1) == g_buff_size))
+ 109                             		.loc 1 91 17
+ 110 009f FE CA 75                		movu.B	[r10,r7], r5
+  92:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 111                             		.loc 1 92 25
+ 112 00a2 62 1A                   		add	#1, r10
+ 113                             	.LVL9:
+  91:../src/EEMBC/profile/ee_buffer.c ****                 if (((i + 1) % max == 0) || ((i + 1) == g_buff_size))
+ 114                             		.loc 1 91 17
+ 115 00a4 E3 0C                   		mov.L	r12, [r0]
+  92:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 116                             		.loc 1 92 30
+ 117 00a6 66 77                   		mov.L	#7, r7
+ 118 00a8 53 A7                   		and	r10, r7
+  91:../src/EEMBC/profile/ee_buffer.c ****                 if (((i + 1) % max == 0) || ((i + 1) == g_buff_size))
+ 119                             		.loc 1 91 17
+ 120 00aa A0 0D                   		mov.L	r5, 4[r0]
+ 121 00ac 05 00 00 00             		bsr	_th_printf
+ 122                             	.LVL10:
+  92:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 123                             		.loc 1 92 17 is_stmt 1
+  94:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 124                             		.loc 1 94 21
+  92:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 125                             		.loc 1 92 20 is_stmt 0
+ 126 00b0 61 07                   		cmp	#0, r7
+ 127 00b2 16                      		beq	.L13
+  98:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 128                             		.loc 1 98 21 is_stmt 1 discriminator 1
+  92:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 129                             		.loc 1 92 42 is_stmt 0 discriminator 1
+ 130 00b3 06 84 BA                		cmp	[r11].L, r10
+ 131 00b6 21 CC                   		bne	.L14
+ 132                             		.balign 8,3,1
+ 133                             	.L13:
+  94:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 134                             		.loc 1 94 21
+ 135 00b8 E3 09                   		mov.L	r9, [r0]
+ 136 00ba 05 00 00 00             		bsr	_th_printf
+ 137                             	.LVL11:
+ 138 00be 2E D2                   		bra	.L15
+ 139                             	.LVL12:
+ 140                             	.L42:
+ 141                             	.LBE2:
+  41:../src/EEMBC/profile/ee_buffer.c **** 
+ 142                             		.loc 1 41 9 is_stmt 1
+  41:../src/EEMBC/profile/ee_buffer.c **** 
+ 143                             		.loc 1 41 18 is_stmt 0
+ 144 00c0 FB 22 03 00 00 00       		mov.L	#.LC1, r2
+ 145 00c6 05 00 00 00             		bsr	_th_strtok
+ 146                             	.LVL13:
+  43:../src/EEMBC/profile/ee_buffer.c ****         {
+ 147                             		.loc 1 43 9 is_stmt 1
+  43:../src/EEMBC/profile/ee_buffer.c ****         {
+ 148                             		.loc 1 43 12 is_stmt 0
+ 149 00ca 61 01                   		cmp	#0, r1
+ 150 00cc 3A EF 00                		beq	.L45
+  49:../src/EEMBC/profile/ee_buffer.c ****             if (g_buff_size == 0)
+ 151                             		.loc 1 49 13 is_stmt 1
+  49:../src/EEMBC/profile/ee_buffer.c ****             if (g_buff_size == 0)
+ 152                             		.loc 1 49 25 is_stmt 0
+ 153 00cf FB B2 00 00 00 00       		mov.L	#.LANCHOR0, r11
+  49:../src/EEMBC/profile/ee_buffer.c ****             if (g_buff_size == 0)
+ 154                             		.loc 1 49 35
+ 155 00d5 05 00 00 00             		bsr	_atoi
+ 156                             	.LVL14:
+ 157 00d9 EF 17                   		mov.L	r1, r7
+  49:../src/EEMBC/profile/ee_buffer.c ****             if (g_buff_size == 0)
+ 158                             		.loc 1 49 25
+ 159 00db E3 B1                   		mov.L	r1, [r11]
+  50:../src/EEMBC/profile/ee_buffer.c ****             {
+ 160                             		.loc 1 50 13 is_stmt 1
+  50:../src/EEMBC/profile/ee_buffer.c ****             {
+ 161                             		.loc 1 50 16 is_stmt 0
+ 162 00dd 61 01                   		cmp	#0, r1
+ 163 00df 3A EB 00                		beq	.L46
+  56:../src/EEMBC/profile/ee_buffer.c ****                 if (gp_buff != NULL)
+ 164                             		.loc 1 56 17 is_stmt 1
+  57:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 165                             		.loc 1 57 29 is_stmt 0
+ 166 00e2 FB 62 00 00 00 00       		mov.L	#.LANCHOR2, r6
+ 167 00e8 EC 61                   		mov.L	[r6], r1
+  56:../src/EEMBC/profile/ee_buffer.c ****                 if (gp_buff != NULL)
+ 168                             		.loc 1 56 28
+ 169 00ea FB A2 00 00 00 00       		mov.L	#.LANCHOR1, r10
+ 170 00f0 F8 A6 00                		mov.L	#0, [r10]
+  57:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 171                             		.loc 1 57 17 is_stmt 1
+  57:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 172                             		.loc 1 57 20 is_stmt 0
+ 173 00f3 61 01                   		cmp	#0, r1
+ 174 00f5 20 0B                   		beq	.L7
+  59:../src/EEMBC/profile/ee_buffer.c ****                     gp_buff = NULL;
+ 175                             		.loc 1 59 21 is_stmt 1
+ 176 00f7 05 00 00 00             		bsr	_th_free
+ 177                             	.LVL15:
+  60:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 178                             		.loc 1 60 21
+ 179 00fb EC B7                   		mov.L	[r11], r7
+  60:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 180                             		.loc 1 60 29 is_stmt 0
+ 181 00fd F8 66 00                		mov.L	#0, [r6]
+ 182                             		.balign 8,3,1
+ 183                             	.L7:
+  62:../src/EEMBC/profile/ee_buffer.c ****                 if (gp_buff == NULL)
+ 184                             		.loc 1 62 17 is_stmt 1
+  62:../src/EEMBC/profile/ee_buffer.c ****                 if (gp_buff == NULL)
+ 185                             		.loc 1 62 27 is_stmt 0
+ 186 0100 EF 71                   		mov.L	r7, r1
+ 187 0102 05 00 00 00             		bsr	_th_malloc
+ 188                             	.LVL16:
+  62:../src/EEMBC/profile/ee_buffer.c ****                 if (gp_buff == NULL)
+ 189                             		.loc 1 62 25
+ 190 0106 E3 61                   		mov.L	r1, [r6]
+  63:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 191                             		.loc 1 63 17 is_stmt 1
+  65:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 192                             		.loc 1 65 21 is_stmt 0
+ 193 0108 E4 B0 01                		mov.L	[r11], 4[r0]
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 194                             		.loc 1 151 12
+ 195 010b 66 07                   		mov.L	#0, r7
+  63:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 196                             		.loc 1 63 20
+ 197 010d 61 01                   		cmp	#0, r1
+ 198 010f 3A C8 00                		beq	.L47
+  69:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 199                             		.loc 1 69 21 is_stmt 1
+ 200 0112 F8 02 AC 00 00 00       		mov.L	#.LC7, [r0]
+ 201 0118 05 00 00 00             		bsr	_th_printf
+ 202                             	.LVL17:
+ 203 011c 38 FA FE                		bra	.L1
+ 204                             	.LVL18:
+ 205                             	.L44:
+ 206                             	.LBB3:
+  88:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 207                             		.loc 1 88 21
+ 208 011f E3 08                   		mov.L	r8, [r0]
+ 209 0121 05 00 00 00             		bsr	_th_printf
+ 210                             	.LVL19:
+ 211 0125 38 78 FF                		bra	.L12
+ 212                             	.LVL20:
+ 213                             	.L41:
+ 214                             	.LBE3:
+  37:../src/EEMBC/profile/ee_buffer.c ****     }
+ 215                             		.loc 1 37 9
+ 216 0128 F8 02 05 00 00 00       		mov.L	#.LC2, [r0]
+ 217 012e 05 00 00 00             		bsr	_th_printf
+ 218                             	.LVL21:
+ 219                             		.loc 1 152 1 is_stmt 0
+ 220 0132 EF 71                   		mov.L	r7, r1
+ 221 0134 3F 6C 0A                		rtsd	#40, r6-r12
+ 222                             	.L9:
+ 223                             	.LBB4:
+ 109:../src/EEMBC/profile/ee_buffer.c ****         char   test[3];
+ 224                             		.loc 1 109 9 is_stmt 1
+ 110:../src/EEMBC/profile/ee_buffer.c ****         long   res;
+ 225                             		.loc 1 110 9
+ 111:../src/EEMBC/profile/ee_buffer.c **** 
+ 226                             		.loc 1 111 9
+ 113:../src/EEMBC/profile/ee_buffer.c ****         {
+ 227                             		.loc 1 113 9
+ 113:../src/EEMBC/profile/ee_buffer.c ****         {
+ 228                             		.loc 1 113 12 is_stmt 0
+ 229 0137 EC 6A                   		mov.L	[r6], r10
+ 230 0139 61 0A                   		cmp	#0, r10
+ 231 013b 3A B8 00                		beq	.L48
+ 120:../src/EEMBC/profile/ee_buffer.c **** 
+ 232                             		.loc 1 120 9 is_stmt 1
+ 120:../src/EEMBC/profile/ee_buffer.c **** 
+ 233                             		.loc 1 120 20 is_stmt 0
+ 234 013e 75 42 50                		mov.L	#0x50, r2
+ 235 0141 EF 71                   		mov.L	r7, r1
+ 236 0143 05 00 00 00             		bsr	_th_strnlen
+ 237                             	.LVL22:
+ 238 0147 EF 19                   		mov.L	r1, r9
+ 239                             	.LVL23:
+ 122:../src/EEMBC/profile/ee_buffer.c ****         {
+ 240                             		.loc 1 122 9 is_stmt 1
+ 122:../src/EEMBC/profile/ee_buffer.c ****         {
+ 241                             		.loc 1 122 23 is_stmt 0
+ 242 0149 66 1B                   		mov.L	#1, r11
+ 243 014b 53 1B                   		and	r1, r11
+ 122:../src/EEMBC/profile/ee_buffer.c ****         {
+ 244                             		.loc 1 122 12
+ 245 014d 3B C4 00                		bne	.L49
+ 127:../src/EEMBC/profile/ee_buffer.c ****         for (size_t i = 0; i < numbytes;)
+ 246                             		.loc 1 127 9 is_stmt 1
+ 127:../src/EEMBC/profile/ee_buffer.c ****         for (size_t i = 0; i < numbytes;)
+ 247                             		.loc 1 127 17 is_stmt 0
+ 248 0150 3C 0A 00                		mov.B	#0, 10[r0]
+ 128:../src/EEMBC/profile/ee_buffer.c ****         {
+ 249                             		.loc 1 128 9 is_stmt 1
+ 250                             	.LBB5:
+ 128:../src/EEMBC/profile/ee_buffer.c ****         {
+ 251                             		.loc 1 128 14
+ 252                             	.LVL24:
+ 128:../src/EEMBC/profile/ee_buffer.c ****         {
+ 253                             		.loc 1 128 9 is_stmt 0
+ 254 0153 61 01                   		cmp	#0, r1
+ 255 0155 20 4D                   		beq	.L17
+ 140:../src/EEMBC/profile/ee_buffer.c ****                 g_buff_pos++;
+ 256                             		.loc 1 140 24
+ 257 0157 FB C2 00 00 00 00       		mov.L	#.LANCHOR1, r12
+ 142:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 258                             		.loc 1 142 32
+ 259 015d FB 82 00 00 00 00       		mov.L	#.LANCHOR0, r8
+ 260 0163 2E 18                   		bra	.L22
+ 261                             	.LVL25:
+ 262                             	.L20:
+ 140:../src/EEMBC/profile/ee_buffer.c ****                 g_buff_pos++;
+ 263                             		.loc 1 140 37
+ 264 0165 EC CA                   		mov.L	[r12], r10
+ 265 0167 EC 65                   		mov.L	[r6], r5
+ 140:../src/EEMBC/profile/ee_buffer.c ****                 g_buff_pos++;
+ 266                             		.loc 1 140 39
+ 267 0169 FE 0A 51                		mov.B	r1, [r10,r5]
+ 141:../src/EEMBC/profile/ee_buffer.c ****                 if (g_buff_pos == g_buff_size)
+ 268                             		.loc 1 141 17 is_stmt 1
+ 141:../src/EEMBC/profile/ee_buffer.c ****                 if (g_buff_pos == g_buff_size)
+ 269                             		.loc 1 141 27 is_stmt 0
+ 270 016c EC CA                   		mov.L	[r12], r10
+ 271 016e 62 1A                   		add	#1, r10
+ 272 0170 E3 CA                   		mov.L	r10, [r12]
+ 142:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 273                             		.loc 1 142 17 is_stmt 1
+ 142:../src/EEMBC/profile/ee_buffer.c ****                 {
+ 274                             		.loc 1 142 20 is_stmt 0
+ 275 0172 06 84 8A                		cmp	[r8].L, r10
+ 276 0175 20 6F                   		beq	.L50
+ 128:../src/EEMBC/profile/ee_buffer.c ****         {
+ 277                             		.loc 1 128 9 discriminator 1
+ 278 0177 47 B9                   		cmp	r11, r9
+ 279 0179 25 29                   		bleu	.L17
+ 280                             	.LVL26:
+ 281                             		.balign 8,3,1
+ 282                             	.L22:
+ 130:../src/EEMBC/profile/ee_buffer.c ****             test[1] = p_next[i++];
+ 283                             		.loc 1 130 13 is_stmt 1
+ 130:../src/EEMBC/profile/ee_buffer.c ****             test[1] = p_next[i++];
+ 284                             		.loc 1 130 21 is_stmt 0
+ 285 017b C4 70 08                		mov.B	[r7], 8[r0]
+ 131:../src/EEMBC/profile/ee_buffer.c ****             res     = ee_hexdec(test);
+ 286                             		.loc 1 131 13 is_stmt 1
+ 132:../src/EEMBC/profile/ee_buffer.c ****             if (res < 0)
+ 287                             		.loc 1 132 23 is_stmt 0
+ 288 017e 66 81                   		mov.L	#8, r1
+ 289 0180 4B 01                   		add	r0, r1
+ 131:../src/EEMBC/profile/ee_buffer.c ****             res     = ee_hexdec(test);
+ 290                             		.loc 1 131 31
+ 291 0182 62 2B                   		add	#2, r11
+ 292                             	.LVL27:
+ 131:../src/EEMBC/profile/ee_buffer.c ****             res     = ee_hexdec(test);
+ 293                             		.loc 1 131 21
+ 294 0184 C5 70 01 09             		mov.B	1[r7], 9[r0]
+ 132:../src/EEMBC/profile/ee_buffer.c ****             if (res < 0)
+ 295                             		.loc 1 132 13 is_stmt 1
+ 296 0188 62 27                   		add	#2, r7
+ 132:../src/EEMBC/profile/ee_buffer.c ****             if (res < 0)
+ 297                             		.loc 1 132 23 is_stmt 0
+ 298 018a 05 00 00 00             		bsr	_ee_hexdec
+ 299                             	.LVL28:
+ 140:../src/EEMBC/profile/ee_buffer.c ****                 g_buff_pos++;
+ 300                             		.loc 1 140 17 is_stmt 1
+ 133:../src/EEMBC/profile/ee_buffer.c ****             {
+ 301                             		.loc 1 133 13
+ 133:../src/EEMBC/profile/ee_buffer.c ****             {
+ 302                             		.loc 1 133 16 is_stmt 0
+ 303 018e 61 01                   		cmp	#0, r1
+ 304 0190 28 D5                   		bge	.L20
+ 135:../src/EEMBC/profile/ee_buffer.c ****                 return EE_ARG_CLAIMED;
+ 305                             		.loc 1 135 17 is_stmt 1
+ 306 0192 66 87                   		mov.L	#8, r7
+ 307 0194 4B 07                   		add	r0, r7
+ 308 0196 A0 0F                   		mov.L	r7, 4[r0]
+ 309 0198 F8 02 21 01 00 00       		mov.L	#.LC15, [r0]
+ 310 019e 05 00 00 00             		bsr	_th_printf
+ 311                             	.LVL29:
+ 136:../src/EEMBC/profile/ee_buffer.c ****             }
+ 312                             		.loc 1 136 17
+ 313                             		.balign 8,3,1
+ 314                             	.L17:
+ 315                             	.LBE5:
+ 316                             	.LBE4:
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 317                             		.loc 1 151 12 is_stmt 0
+ 318 01a2 66 07                   		mov.L	#0, r7
+ 319                             	.LBB7:
+ 320 01a4 38 72 FE                		bra	.L1
+ 321                             	.LVL30:
+ 322                             	.L43:
+ 323                             	.LBE7:
+ 324                             	.LBB8:
+ 101:../src/EEMBC/profile/ee_buffer.c ****             {
+ 325                             		.loc 1 101 13 is_stmt 1
+ 101:../src/EEMBC/profile/ee_buffer.c ****             {
+ 326                             		.loc 1 101 16 is_stmt 0
+ 327 01a7 61 07                   		cmp	#0, r7
+ 328 01a9 3A 6D FE                		beq	.L1
+ 103:../src/EEMBC/profile/ee_buffer.c ****             }
+ 329                             		.loc 1 103 17 is_stmt 1
+ 330                             	.LBE8:
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 331                             		.loc 1 151 12 is_stmt 0
+ 332 01ac 66 07                   		mov.L	#0, r7
+ 333                             	.LBB9:
+ 103:../src/EEMBC/profile/ee_buffer.c ****             }
+ 334                             		.loc 1 103 17
+ 335 01ae F8 02 F5 00 00 00       		mov.L	#.LC12, [r0]
+ 336 01b4 05 00 00 00             		bsr	_th_printf
+ 337                             	.LVL31:
+ 338 01b8 38 5E FE                		bra	.L1
+ 339                             	.LVL32:
+ 340                             	.L45:
+ 341                             	.LBE9:
+  45:../src/EEMBC/profile/ee_buffer.c ****         }
+ 342                             		.loc 1 45 13 is_stmt 1
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 343                             		.loc 1 151 12 is_stmt 0
+ 344 01bb 66 07                   		mov.L	#0, r7
+  45:../src/EEMBC/profile/ee_buffer.c ****         }
+ 345                             		.loc 1 45 13
+ 346 01bd F8 02 33 00 00 00       		mov.L	#.LC4, [r0]
+ 347 01c3 05 00 00 00             		bsr	_th_printf
+ 348                             	.LVL33:
+ 349 01c7 38 4F FE                		bra	.L1
+ 350                             	.L46:
+  52:../src/EEMBC/profile/ee_buffer.c ****             }
+ 351                             		.loc 1 52 17 is_stmt 1
+ 352 01ca F8 02 63 00 00 00       		mov.L	#.LC5, [r0]
+ 353 01d0 05 00 00 00             		bsr	_th_printf
+ 354                             	.LVL34:
+ 355 01d4 38 42 FE                		bra	.L1
+ 356                             	.L47:
+  65:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 357                             		.loc 1 65 21
+ 358 01d7 F8 02 8C 00 00 00       		mov.L	#.LC6, [r0]
+ 359 01dd 05 00 00 00             		bsr	_th_printf
+ 360                             	.LVL35:
+ 361 01e1 38 35 FE                		bra	.L1
+ 362                             	.LVL36:
+ 363                             	.L50:
+ 364                             	.LBB10:
+ 365                             	.LBB6:
+ 144:../src/EEMBC/profile/ee_buffer.c ****                     /* Disregard the remainder of the digits when done. */
+ 366                             		.loc 1 144 21
+ 367 01e4 F8 02 3E 01 00 00       		mov.L	#.LC16, [r0]
+ 368 01ea 05 00 00 00             		bsr	_th_printf
+ 369                             	.LVL37:
+ 146:../src/EEMBC/profile/ee_buffer.c ****                 }
+ 370                             		.loc 1 146 21
+ 371                             	.LBE6:
+ 372                             	.LBE10:
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 373                             		.loc 1 151 12 is_stmt 0
+ 374 01ee 66 07                   		mov.L	#0, r7
+ 375 01f0 38 26 FE                		bra	.L1
+ 376                             	.LVL38:
+ 377                             	.L48:
+ 378                             	.LBB11:
+ 115:../src/EEMBC/profile/ee_buffer.c ****             return EE_ARG_CLAIMED;
+ 379                             		.loc 1 115 13 is_stmt 1
+ 380 01f3 F8 02 CB 00 00 00       		mov.L	#.LC9, [r0]
+ 381 01f9 05 00 00 00             		bsr	_th_printf
+ 382                             	.LVL39:
+ 116:../src/EEMBC/profile/ee_buffer.c ****         }
+ 383                             		.loc 1 116 13
+ 384                             	.LBE11:
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 385                             		.loc 1 151 12 is_stmt 0
+ 386 01fd 66 07                   		mov.L	#0, r7
+ 387 01ff 38 17 FE                		bra	.L1
+ 388                             	.L10:
+  78:../src/EEMBC/profile/ee_buffer.c ****         }
+ 389                             		.loc 1 78 13 is_stmt 1
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 390                             		.loc 1 151 12 is_stmt 0
+ 391 0202 66 07                   		mov.L	#0, r7
+  78:../src/EEMBC/profile/ee_buffer.c ****         }
+ 392                             		.loc 1 78 13
+ 393 0204 F8 02 CB 00 00 00       		mov.L	#.LC9, [r0]
+ 394 020a 05 00 00 00             		bsr	_th_printf
+ 395                             	.LVL40:
+ 396 020e 38 08 FE                		bra	.L1
+ 397                             	.LVL41:
+ 398                             	.L49:
+ 399                             	.LBB12:
+ 124:../src/EEMBC/profile/ee_buffer.c ****             return EE_ARG_CLAIMED;
+ 400                             		.loc 1 124 13 is_stmt 1
+ 401 0211 F8 02 FA 00 00 00       		mov.L	#.LC14, [r0]
+ 402 0217 05 00 00 00             		bsr	_th_printf
+ 403                             	.LVL42:
+ 125:../src/EEMBC/profile/ee_buffer.c ****         }
+ 404                             		.loc 1 125 13
+ 405                             	.LBE12:
+ 151:../src/EEMBC/profile/ee_buffer.c **** }
+ 406                             		.loc 1 151 12 is_stmt 0
+ 407 021b 66 07                   		mov.L	#0, r7
+ 408 021d 38 F9 FD                		bra	.L1
+ 409                             	.LFE3:
+ 411                             		.global	_g_buff_pos
+ 412                             		.global	_g_buff_size
+ 413                             		.global	_gp_buff
+ 414                             		.section	.bss.g_buff_pos,"aw",@nobits
+ 415                             		.balign 4
+ 416                             		.set	.LANCHOR1,. + 0
+ 419                             	_g_buff_pos:
+ 420 0000 00 00 00 00             		.zero	4
+ 421                             		.section	.bss.g_buff_size,"aw",@nobits
+ 422                             		.balign 4
+ 423                             		.set	.LANCHOR0,. + 0
+ 426                             	_g_buff_size:
+ 427 0000 00 00 00 00             		.zero	4
+ 428                             		.section	.bss.gp_buff,"aw",@nobits
+ 429                             		.balign 4
+ 430                             		.set	.LANCHOR2,. + 0
+ 433                             	_gp_buff:
+ 434 0000 00 00 00 00             		.zero	4
+ 435                             		.section	.rodata.ee_buffer_parse.str1.1,"aMS",@progbits,1
+ 436                             	.LC0:
+ 437 0000 64 62 00                		.string	"db"
+ 438                             	.LC1:
+ 439 0003 20 00                   		.string	" "
+ 440                             	.LC2:
+ 441 0005 65 2D 5B 43 6F 6D 6D 61 		.string	"e-[Command 'db' requires a subcommand]\r\n"
+ 441      6E 64 20 27 64 62 27 20 
+ 441      72 65 71 75 69 72 65 73 
+ 441      20 61 20 73 75 62 63 6F 
+ 441      6D 6D 61 6E 64 5D 0D 0A 
+ 442                             	.LC3:
+ 443 002e 6C 6F 61 64 00          		.string	"load"
+ 444                             	.LC4:
+ 445 0033 65 2D 5B 43 6F 6D 6D 61 		.string	"e-[Command 'db load' requires the # of bytes]\r\n"
+ 445      6E 64 20 27 64 62 20 6C 
+ 445      6F 61 64 27 20 72 65 71 
+ 445      75 69 72 65 73 20 74 68 
+ 445      65 20 23 20 6F 66 20 62 
+ 446                             	.LC5:
+ 447 0063 65 2D 5B 43 6F 6D 6D 61 		.string	"e-[Command 'db load' must be >0 bytes]\r\n"
+ 447      6E 64 20 27 64 62 20 6C 
+ 447      6F 61 64 27 20 6D 75 73 
+ 447      74 20 62 65 20 3E 30 20 
+ 447      62 79 74 65 73 5D 0D 0A 
+ 448                             	.LC6:
+ 449 008c 65 2D 5B 55 6E 61 62 6C 		.string	"e-[Unable to malloc %u bytes]\r\n"
+ 449      65 20 74 6F 20 6D 61 6C 
+ 449      6C 6F 63 20 25 75 20 62 
+ 449      79 74 65 73 5D 0D 0A 00 
+ 450                             	.LC7:
+ 451 00ac 6D 2D 5B 45 78 70 65 63 		.string	"m-[Expecting %d bytes]\r\n"
+ 451      74 69 6E 67 20 25 64 20 
+ 451      62 79 74 65 73 5D 0D 0A 
+ 451      00 
+ 452                             	.LC8:
+ 453 00c5 70 72 69 6E 74 00       		.string	"print"
+ 454                             	.LC9:
+ 455 00cb 65 2D 5B 42 75 66 66 65 		.string	"e-[Buffer not allocated]\r\n"
+ 455      72 20 6E 6F 74 20 61 6C 
+ 455      6C 6F 63 61 74 65 64 5D 
+ 455      0D 0A 00 
+ 456                             	.LC10:
+ 457 00e6 6D 2D 62 75 66 66 65 72 		.string	"m-buffer-"
+ 457      2D 00 
+ 458                             	.LC11:
+ 459 00f0 25 30 32 78 00          		.string	"%02x"
+ 460                             	.LC12:
+ 461 00f5 0D 0A 00                		.string	"\r\n"
+ 462                             	.LC13:
+ 463 00f8 2D 00                   		.string	"-"
+ 464                             	.LC14:
+ 465 00fa 65 2D 5B 49 6E 73 75 66 		.string	"e-[Insufficent number of hex digits]\r\n"
+ 465      66 69 63 65 6E 74 20 6E 
+ 465      75 6D 62 65 72 20 6F 66 
+ 465      20 68 65 78 20 64 69 67 
+ 465      69 74 73 5D 0D 0A 00 
+ 466                             	.LC15:
+ 467 0121 65 2D 5B 49 6E 76 61 6C 		.string	"e-[Invalid hex digit '%s']\r\n"
+ 467      69 64 20 68 65 78 20 64 
+ 467      69 67 69 74 20 27 25 73 
+ 467      27 5D 0D 0A 00 
+ 468                             	.LC16:
+ 469 013e 6D 2D 6C 6F 61 64 2D 64 		.string	"m-load-done\r\n"
+ 469      6F 6E 65 0D 0A 00 
+ 518                             	.Letext0:
+ 519                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 520                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 521                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 522                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 523                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 524                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 525                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h"
+ 526                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EEM
+ 527                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EE
+ 528                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EE
+ 529                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EE

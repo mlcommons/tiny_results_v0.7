@@ -1,0 +1,1565 @@
+   1                             		.file	"mcu_clocks.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.get_iclk_freq_hz,"ax",@progbits
+   5                             		.global	_get_iclk_freq_hz
+   7                             	_get_iclk_freq_hz:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c"
+   1:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+   2:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * DISCLAIMER
+   3:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * other uses are authorized. This software is owned by Renesas Electronics Corporation and is prote
+   5:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * applicable laws, including copyright laws. 
+   6:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+   7:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF 
+   8:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIM
+   9:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AF
+  10:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY RE
+  11:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * this software. 
+  14:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *
+  15:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Copyright (C) 2016 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  17:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  18:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * File Name    : mcu_clocks.c
+  19:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Description  : Contains clock specific routines
+  20:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  21:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  22:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * History : DD.MM.YYYY Version  Description
+  23:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *         : 01.10.2016 1.00     First Release
+  24:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *         : 27.07.2018 1.01     Modified the comment of get_iclk_freq_hz.
+  25:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *         : 28.02.2019 2.00     Added clock setup.
+  26:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               Fixed cast of get_iclk_freq_hz function.
+  27:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               Deleted the rom cache setting.
+  28:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               (The rom cache setting moved to the hardware setup file (hwsetup.c)
+  29:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               Fixed coding style.
+  30:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               Renamed following macro definitions.
+  31:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               - BSP_PRV_CKSEL_LOCO
+  32:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               - BSP_PRV_CKSEL_HOCO
+  33:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               - BSP_PRV_CKSEL_MAIN_OSC
+  34:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               - BSP_PRV_CKSEL_SUBCLOCK
+  35:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               - BSP_PRV_CKSEL_PLL
+  36:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               - BSP_PRV_NORMALIZE_X10
+  37:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                               Deleted the error check of BSP_CFG_CLOCK_SOURCE in the clock_source
+  38:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *         : 17.12.2019 2.01     Fixed warning of clock_source_select function with IAR compiler.
+  39:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *         : 14.02.2020 2.02     Fixed warning of clock_source_select function with CCRX and IAR com
+  40:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  41:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  42:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  43:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** Includes   <System Includes> , "Project Includes"
+  44:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  45:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #include "platform.h"
+  46:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  47:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  48:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** Macro definitions
+  49:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  50:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #define BSP_PRV_CKSEL_LOCO            (0x0)
+  51:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #define BSP_PRV_CKSEL_HOCO            (0x1)
+  52:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #define BSP_PRV_CKSEL_MAIN_OSC        (0x2)
+  53:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #define BSP_PRV_CKSEL_SUBCLOCK        (0x3)
+  54:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #define BSP_PRV_CKSEL_PLL             (0x4)
+  55:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  56:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #define BSP_PRV_NORMALIZE_X10  (10)   /* used to avoid floating point arithmetic */
+  57:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  58:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  59:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** Typedef definitions
+  60:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  61:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  62:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  63:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** Exported global variables (to be accessed by other files)
+  64:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  65:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  66:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  67:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** Private global variables and functions
+  68:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  69:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /* When using the user startup program, disable the following code. */
+  70:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_STARTUP_DISABLE == 0
+  71:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** static void operating_frequency_set(void);
+  72:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** static void clock_source_select(void);
+  73:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
+  74:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  75:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+  76:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Function Name: get_iclk_freq_hz
+  77:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Description  : Return the current ICLK frequency in Hz.  Called by R_BSP_GetIClkFreqHz().
+  78:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                The system clock source can be changed at any time via SYSTEM.SCKCR3.BIT.CKSEL, so
+  79:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                determine the ICLK frequency we need to first find the current system clock source
+  80:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                in some cases where the clock source can be configured for multiple frequencies, c
+  81:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                frequency at which it is currently running.
+  82:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Arguments    : None
+  83:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Return Value : uint32_t - the iclk frequency in Hz
+  84:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+  85:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** uint32_t get_iclk_freq_hz(void)
+  86:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** {
+  10                             		.loc 1 86 1
+  11 0000 60 C0                   		sub	#12, r0
+  12                             	.LCFI0:
+  87:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint32_t sys_clock_src_freq;
+  13                             		.loc 1 87 5
+  88:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint32_t pll_multiplier;
+  14                             		.loc 1 88 5
+  89:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint32_t pll_source_freq;
+  15                             		.loc 1 89 5
+  90:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint32_t hoco_frequency[3] = {16000000, 18000000, 20000000};
+  16                             		.loc 1 90 5
+  17                             		.loc 1 90 14 is_stmt 0
+  18 0002 F8 02 00 24 F4 00       		mov.L	#0xf42400, [r0]
+  19 0008 F9 02 01 80 A8 12 01    		mov.L	#0x112a880, 4[r0]
+  91:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  92:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Casting is valid because it matches the type to the retern value. */
+  93:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint8_t  cksel = (uint8_t)SYSTEM.SCKCR3.BIT.CKSEL;
+  20                             		.loc 1 93 48
+  21 000f FB 3E 00 00 08          		mov.L	#0x80000, r3
+  90:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint32_t hoco_frequency[3] = {16000000, 18000000, 20000000};
+  22                             		.loc 1 90 14
+  23 0014 F9 02 02 00 2D 31 01    		mov.L	#0x1312d00, 8[r0]
+  24                             		.loc 1 93 5 is_stmt 1
+  25                             		.loc 1 93 48 is_stmt 0
+  26 001b 9C BD                   		mov.W	38[r3], r5
+  27 001d 68 85                   		shlr	#8, r5
+  28 001f 64 75                   		and #7, r5
+  29                             	.LVL0:
+  94:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  95:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     switch (cksel)
+  30                             		.loc 1 95 5 is_stmt 1
+  31 0021 5B 54                   		movu.B	r5, r4
+  32 0023 61 14                   		cmp	#1, r4
+  33 0025 20 4E                   		beq	.L2
+  34 0027 61 05                   		cmp	#0, r5
+  35 0029 20 35                   		beq	.L6
+  36 002b 61 34                   		cmp	#3, r4
+  37 002d 20 1C                   		beq	.L7
+  38 002f 61 44                   		cmp	#4, r4
+  39 0031 20 5A                   		beq	.L4
+  96:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+  97:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         case BSP_PRV_CKSEL_LOCO:
+  98:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             sys_clock_src_freq = BSP_LOCO_HZ;
+  99:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 100:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 101:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         case BSP_PRV_CKSEL_HOCO:
+ 102:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 103:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Set HOCO frequency. */
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             sys_clock_src_freq = hoco_frequency[SYSTEM.HOCOCR2.BIT.HCFRQ];
+ 105:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 106:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 107:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         case BSP_PRV_CKSEL_MAIN_OSC:
+ 108:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             sys_clock_src_freq = BSP_CFG_XTAL_HZ;
+  40                             		.loc 1 108 32 is_stmt 0
+  41 0033 FB 12 00 36 6E 01       		mov.L	#0x16e3600, r1
+  42                             	.LVL1:
+ 109:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 110:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 111:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         case BSP_PRV_CKSEL_SUBCLOCK:
+ 112:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             sys_clock_src_freq = BSP_SUB_CLOCK_HZ;
+ 113:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 114:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 115:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         case BSP_PRV_CKSEL_PLL:
+ 116:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 117:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* The RX65N have two possible sources for the PLL */
+ 118:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 119:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Casting is valid because it matches the type to the retern value. */
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             pll_multiplier = ((((uint32_t)(SYSTEM.PLLCR.BIT.STC + 1)) * BSP_PRV_NORMALIZE_X10) / 2)
+ 121:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 122:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Default to the MAIN OSC as the PLL source */
+ 123:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             pll_source_freq = BSP_CFG_XTAL_HZ;
+ 124:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 125:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* If 1 then the HOCO is the PLL source */
+ 126:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             if (0x1 == SYSTEM.PLLCR.BIT.PLLSRCSEL)
+ 127:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             {
+ 128:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****                 /* Set HOCO frequency. */
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****                 pll_source_freq = hoco_frequency[SYSTEM.HOCOCR2.BIT.HCFRQ];
+ 130:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             }
+ 131:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 132:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Casting is valid because it matches the type to the retern value. */
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             sys_clock_src_freq = ((pll_source_freq / (((uint32_t)(SYSTEM.PLLCR.BIT.PLIDIV + 1)) * B
+ 134:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 135:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 136:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         default:
+ 137:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 138:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Should never arrive here. Use the Main OSC freq as a default... */
+ 139:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             sys_clock_src_freq = BSP_CFG_XTAL_HZ;
+ 140:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 141:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 142:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 143:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Finally, divide the system clock source frequency by the currently set ICLK divider to get t
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     return (sys_clock_src_freq / (uint32_t)(1 << SYSTEM.SCKCR.BIT.ICK));
+  43                             		.loc 1 144 5 is_stmt 1
+  44                             		.loc 1 144 66 is_stmt 0
+  45 0039 FB 5E 00 00 08          		mov.L	#0x80000, r5
+  46                             	.LVL2:
+  47 003e AA 55                   		mov.L	32[r5], r5
+  48 0040 69 85                   		shlr	#24, r5
+  49 0042 64 F5                   		and #15, r5
+ 145:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+  50                             		.loc 1 145 1
+  51 0044 FD 60 51                		shlr	r5, r1
+  52                             	.LVL3:
+  53 0047 67 03                   		rtsd	#12
+  54                             	.LVL4:
+  55                             	.L7:
+ 112:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+  56                             		.loc 1 112 32
+  57 0049 FB 1E 00 80 00          		mov.L	#0x8000, r1
+  58                             	.LVL5:
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+  59                             		.loc 1 144 5 is_stmt 1
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+  60                             		.loc 1 144 66 is_stmt 0
+  61 004e FB 5E 00 00 08          		mov.L	#0x80000, r5
+  62                             	.LVL6:
+  63 0053 AA 55                   		mov.L	32[r5], r5
+  64 0055 69 85                   		shlr	#24, r5
+  65 0057 64 F5                   		and #15, r5
+  66                             		.loc 1 145 1
+  67 0059 FD 60 51                		shlr	r5, r1
+  68                             	.LVL7:
+  69 005c 67 03                   		rtsd	#12
+  70                             	.LVL8:
+  71                             	.L6:
+  98:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+  72                             		.loc 1 98 32
+  73 005e FB 1E 80 A9 03          		mov.L	#0x3a980, r1
+  74                             	.LVL9:
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+  75                             		.loc 1 144 5 is_stmt 1
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+  76                             		.loc 1 144 66 is_stmt 0
+  77 0063 FB 5E 00 00 08          		mov.L	#0x80000, r5
+  78                             	.LVL10:
+  79 0068 AA 55                   		mov.L	32[r5], r5
+  80 006a 69 85                   		shlr	#24, r5
+  81 006c 64 F5                   		and #15, r5
+  82                             		.loc 1 145 1
+  83 006e FD 60 51                		shlr	r5, r1
+  84                             	.LVL11:
+  85 0071 67 03                   		rtsd	#12
+  86                             	.LVL12:
+  87                             	.L2:
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+  88                             		.loc 1 104 13 is_stmt 1
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+  89                             		.loc 1 104 67 is_stmt 0
+  90 0073 CD 35 37                		mov.B	55[r3], r5
+  91                             	.LVL13:
+  92 0076 64 35                   		and #3, r5
+ 104:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+  93                             		.loc 1 104 32
+  94 0078 FE 65 01                		mov.L	[r5,r0], r1
+  95                             	.LVL14:
+ 105:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+  96                             		.loc 1 105 13 is_stmt 1
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+  97                             		.loc 1 144 5
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+  98                             		.loc 1 144 66 is_stmt 0
+  99 007b FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 100 0080 AA 55                   		mov.L	32[r5], r5
+ 101 0082 69 85                   		shlr	#24, r5
+ 102 0084 64 F5                   		and #15, r5
+ 103                             		.loc 1 145 1
+ 104 0086 FD 60 51                		shlr	r5, r1
+ 105                             	.LVL15:
+ 106 0089 67 03                   		rtsd	#12
+ 107                             	.LVL16:
+ 108                             	.L4:
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 109                             		.loc 1 120 13 is_stmt 1
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 110                             		.loc 1 120 60 is_stmt 0
+ 111 008b 9D 35                   		mov.W	40[r3], r5
+ 112                             	.LVL17:
+ 126:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             {
+ 113                             		.loc 1 126 40
+ 114 008d 9D 34                   		mov.W	40[r3], r4
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 115                             		.loc 1 120 60
+ 116 008f FD 88 51                		shlr	#8, r5, r1
+ 117 0092 75 21 3F                		and #63, r1
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 118                             		.loc 1 120 65
+ 119 0095 62 11                   		add	#1, r1
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 120                             		.loc 1 120 71
+ 121 0097 63 A1                   		mul	#10, r1
+ 120:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 122                             		.loc 1 120 28
+ 123 0099 FD 81 15                		shlr	#1, r1, r5
+ 124                             	.LVL18:
+ 123:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 125                             		.loc 1 123 13 is_stmt 1
+ 126:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             {
+ 126                             		.loc 1 126 13
+ 126:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             {
+ 127                             		.loc 1 126 16 is_stmt 0
+ 128 009c 7C 44                   		btst	#4, r4
+ 129 009e 21 2C                   		bne	.L11
+ 123:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 130                             		.loc 1 123 29
+ 131 00a0 FB 12 00 36 6E 01       		mov.L	#0x16e3600, r1
+ 132                             	.LVL19:
+ 133 00a6 EF 00                   		.balign 8,3,4
+ 134                             	.L5:
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 135                             		.loc 1 133 13 is_stmt 1
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 136                             		.loc 1 133 83 is_stmt 0
+ 137 00a8 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 138 00ad 9D 44                   		mov.W	40[r4], r4
+ 139 00af 64 34                   		and #3, r4
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 140                             		.loc 1 133 91
+ 141 00b1 62 14                   		add	#1, r4
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 142                             		.loc 1 133 97
+ 143 00b3 63 A4                   		mul	#10, r4
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 144                             		.loc 1 133 52
+ 145 00b5 FC 27 41                		divu	r4, r1
+ 146                             	.LVL20:
+ 133:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             break;
+ 147                             		.loc 1 133 32
+ 148 00b8 4F 51                   		mul	r5, r1
+ 149                             	.LVL21:
+ 134:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 150                             		.loc 1 134 13 is_stmt 1
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+ 151                             		.loc 1 144 5
+ 144:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function get_iclk_freq_hz() */
+ 152                             		.loc 1 144 66 is_stmt 0
+ 153 00ba FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 154                             	.LVL22:
+ 155 00bf AA 55                   		mov.L	32[r5], r5
+ 156 00c1 69 85                   		shlr	#24, r5
+ 157 00c3 64 F5                   		and #15, r5
+ 158                             		.loc 1 145 1
+ 159 00c5 FD 60 51                		shlr	r5, r1
+ 160                             	.LVL23:
+ 161 00c8 67 03                   		rtsd	#12
+ 162                             	.LVL24:
+ 163                             	.L11:
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             }
+ 164                             		.loc 1 129 17 is_stmt 1
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             }
+ 165                             		.loc 1 129 68 is_stmt 0
+ 166 00ca CD 34 37                		mov.B	55[r3], r4
+ 167 00cd 64 34                   		and #3, r4
+ 129:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             }
+ 168                             		.loc 1 129 33
+ 169 00cf FE 64 01                		mov.L	[r4,r0], r1
+ 170                             	.LVL25:
+ 171 00d2 2E D6                   		bra	.L5
+ 172                             	.LFE3:
+ 174 00d4 76 10 01 00             		.section	.text.mcu_clock_setup,"ax",@progbits
+ 175                             		.global	_mcu_clock_setup
+ 177                             	_mcu_clock_setup:
+ 178                             	.LFB4:
+ 146:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 147:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /* When using the user startup program, disable the following code. */
+ 148:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_STARTUP_DISABLE == 0
+ 149:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 150:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+ 151:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Function name: mcu_clock_setup
+ 152:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Description  : Contains clock functions called at device restart.
+ 153:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Arguments    : none
+ 154:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Return value : none
+ 155:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+ 156:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** void mcu_clock_setup(void)
+ 157:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** {
+ 179                             		.loc 1 157 1 is_stmt 1
+ 180 0000 7E A7                   		push.l	r7
+ 181                             	.LCFI1:
+ 182 0002 60 40                   		sub	#4, r0
+ 183                             	.LCFI2:
+ 158:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Switch to high-speed operation */
+ 159:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     operating_frequency_set();
+ 184                             		.loc 1 159 5
+ 185                             	.LBB6:
+ 186                             	.LBB7:
+ 160:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function mcu_clock_setup() */
+ 161:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 162:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+ 163:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Function name: operating_frequency_set
+ 164:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Description  : Configures the clock settings for each of the device clocks
+ 165:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Arguments    : none
+ 166:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Return value : none
+ 167:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+ 168:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** static void operating_frequency_set (void)
+ 169:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** {
+ 170:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Used for constructing value to write to SCKCR, SCKCR2, and SCKCR3 registers. */
+ 171:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint32_t tmp_clock = 0;
+ 187                             		.loc 1 171 5
+ 188                             	.LVL26:
+ 172:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 173:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Protect off. */
+ 174:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.PRCR.WORD = 0xA50B;
+ 189                             		.loc 1 174 5
+ 190                             		.loc 1 174 22 is_stmt 0
+ 191 0004 FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 192 0009 FA 59 FF 01 0B A5       		mov.W	#-23285, 1022[r5]
+ 175:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 176:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Select the clock based upon user's choice. */
+ 177:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     clock_source_select();
+ 193                             		.loc 1 177 5 is_stmt 1
+ 194                             	.LBB8:
+ 195                             	.LBB9:
+ 178:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 179:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for FCK bits. */
+ 180:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_FCK_DIV == 1
+ 181:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Do nothing since FCK bits should be 0. */
+ 182:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_FCK_DIV == 2
+ 183:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x10000000;
+ 184:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_FCK_DIV == 4
+ 185:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x20000000;
+ 186:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_FCK_DIV == 8
+ 187:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x30000000;
+ 188:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_FCK_DIV == 16
+ 189:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x40000000;
+ 190:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_FCK_DIV == 32
+ 191:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x50000000;
+ 192:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_FCK_DIV == 64
+ 193:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x60000000;
+ 194:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 195:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_FCK_DIV in r_bsp_config.h"
+ 196:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 197:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 198:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for ICK bits. */
+ 199:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_ICK_DIV == 1
+ 200:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Do nothing since ICK bits should be 0. */
+ 201:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_ICK_DIV == 2
+ 202:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x01000000;
+ 203:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_ICK_DIV == 4
+ 204:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x02000000;
+ 205:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_ICK_DIV == 8
+ 206:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x03000000;
+ 207:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_ICK_DIV == 16
+ 208:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x04000000;
+ 209:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_ICK_DIV == 32
+ 210:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x05000000;
+ 211:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_ICK_DIV == 64
+ 212:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x06000000;
+ 213:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 214:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_ICK_DIV in r_bsp_config.h"
+ 215:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 216:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 217:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for BCK bits. */
+ 218:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_BCK_DIV == 1
+ 219:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Do nothing since BCK bits should be 0. */
+ 220:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCK_DIV == 2
+ 221:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00010000;
+ 222:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCK_DIV == 4
+ 223:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00020000;
+ 224:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCK_DIV == 8
+ 225:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00030000;
+ 226:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCK_DIV == 16
+ 227:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00040000;
+ 228:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCK_DIV == 32
+ 229:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00050000;
+ 230:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCK_DIV == 64
+ 231:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00060000;
+ 232:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 233:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_BCK_DIV in r_bsp_config.h"
+ 234:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 235:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 236:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Configure PSTOP1 bit for BCLK output. */
+ 237:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_BCLK_OUTPUT == 0
+ 238:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set PSTOP1 bit */
+ 239:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00800000;
+ 240:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCLK_OUTPUT == 1
+ 241:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Clear PSTOP1 bit */
+ 242:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock &= ~0x00800000;
+ 243:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCLK_OUTPUT == 2
+ 244:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Clear PSTOP1 bit */
+ 245:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock &= ~0x00800000;
+ 246:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set BCLK divider bit */
+ 247:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.BCKCR.BIT.BCLKDIV = 1;
+ 248:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 249:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in Us
+ 250:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        This is done to ensure that the register has been written before the next register access. T
+ 251:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        pipeline architecture so the next instruction could be executed before the previous write ha
+ 252:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     */
+ 253:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if(1 ==  SYSTEM.BCKCR.BIT.BCLKDIV)
+ 254:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 255:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 256:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 257:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 258:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_BCLK_OUTPUT in r_bsp_config.h"
+ 259:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 260:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 261:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Configure PSTOP0 bit for SDCLK output. */
+ 262:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_SDCLK_OUTPUT == 0
+ 263:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set PSTOP0 bit */
+ 264:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00400000;
+ 265:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_SDCLK_OUTPUT == 1
+ 266:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Clear PSTOP0 bit */
+ 267:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock &= ~0x00400000;
+ 268:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 269:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_SDCLK_OUTPUT in r_bsp_config.h"
+ 270:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 271:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 272:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for PCKA bits. */
+ 273:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_PCKA_DIV == 1
+ 274:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Do nothing since PCKA bits should be 0. */
+ 275:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKA_DIV == 2
+ 276:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00001000;
+ 277:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKA_DIV == 4
+ 278:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00002000;
+ 279:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKA_DIV == 8
+ 280:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00003000;
+ 281:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKA_DIV == 16
+ 282:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00004000;
+ 283:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKA_DIV == 32
+ 284:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00005000;
+ 285:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKA_DIV == 64
+ 286:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00006000;
+ 287:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 288:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_PCKA_DIV in r_bsp_config.h"
+ 289:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 290:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 291:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for PCKB bits. */
+ 292:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_PCKB_DIV == 1
+ 293:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Do nothing since PCKB bits should be 0. */
+ 294:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKB_DIV == 2
+ 295:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000100;
+ 296:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKB_DIV == 4
+ 297:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000200;
+ 298:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKB_DIV == 8
+ 299:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000300;
+ 300:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKB_DIV == 16
+ 301:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000400;
+ 302:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKB_DIV == 32
+ 303:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000500;
+ 304:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKB_DIV == 64
+ 305:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000600;
+ 306:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 307:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_PCKB_DIV in r_bsp_config.h"
+ 308:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 309:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 310:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for PCKC bits. */
+ 311:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_PCKC_DIV == 1
+ 312:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Do nothing since PCKA bits should be 0. */
+ 313:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKC_DIV == 2
+ 314:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000010;
+ 315:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKC_DIV == 4
+ 316:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000020;
+ 317:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKC_DIV == 8
+ 318:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000030;
+ 319:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKC_DIV == 16
+ 320:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000040;
+ 321:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKC_DIV == 32
+ 322:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000050;
+ 323:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKC_DIV == 64
+ 324:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000060;
+ 325:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 326:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_PCKC_DIV in r_bsp_config.h"
+ 327:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 328:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 329:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for PCKD bits. */
+ 330:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_PCKD_DIV == 1
+ 331:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Do nothing since PCKD bits should be 0. */
+ 332:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKD_DIV == 2
+ 333:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000001;
+ 334:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKD_DIV == 4
+ 335:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000002;
+ 336:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKD_DIV == 8
+ 337:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000003;
+ 338:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKD_DIV == 16
+ 339:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000004;
+ 340:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKD_DIV == 32
+ 341:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000005;
+ 342:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKD_DIV == 64
+ 343:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000006;
+ 344:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 345:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_PCKD_DIV in r_bsp_config.h"
+ 346:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 347:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 348:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set SCKCR register. */
+ 349:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.SCKCR.LONG = tmp_clock;
+ 350:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 351:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in Us
+ 352:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        This is done to ensure that the register has been written before the next register access. T
+ 353:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        pipeline architecture so the next instruction could be executed before the previous write ha
+ 354:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     */
+ 355:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if(tmp_clock ==  SYSTEM.SCKCR.LONG)
+ 356:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 357:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 358:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 359:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 360:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Re-init tmp_clock to use to set SCKCR2. */
+ 361:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock = 0;
+ 362:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 363:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Figure out setting for UCK bits. */
+ 364:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if   BSP_CFG_UCK_DIV == 2
+ 365:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000011;
+ 366:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_UCK_DIV == 3
+ 367:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000021;
+ 368:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_UCK_DIV == 4
+ 369:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000031;
+ 370:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_UCK_DIV == 5
+ 371:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock |= 0x00000041;
+ 372:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 373:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_UCK_DIV in r_bsp_config.h"
+ 374:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 375:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 376:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set SCKCR2 register. */
+ 377:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.SCKCR2.WORD = (uint16_t)tmp_clock;
+ 378:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 379:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in Us
+ 380:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        This is done to ensure that the register has been written before the next register access. T
+ 381:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        pipeline architecture so the next instruction could be executed before the previous write ha
+ 382:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     */
+ 383:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if((uint16_t)tmp_clock ==  SYSTEM.SCKCR2.WORD)
+ 384:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 385:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 386:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 387:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 388:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Choose clock source. Default for r_bsp_config.h is PLL. */
+ 389:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     tmp_clock = ((uint16_t)BSP_CFG_CLOCK_SOURCE) << 8;
+ 390:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 391:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Casting is valid because it matches the type to the retern value. */
+ 392:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.SCKCR3.WORD = (uint16_t)tmp_clock;
+ 393:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 394:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in Us
+ 395:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        This is done to ensure that the register has been written before the next register access. T
+ 396:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        pipeline architecture so the next instruction could be executed before the previous write ha
+ 397:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     */
+ 398:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if((uint16_t)tmp_clock ==  SYSTEM.SCKCR3.WORD)
+ 399:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 400:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 401:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 402:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 403:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_CLOCK_SOURCE != 0
+ 404:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* We can now turn LOCO off since it is not going to be used. */
+ 405:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.LOCOCR.BYTE = 0x01;
+ 406:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 407:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Wait for five the LOCO cycles */
+ 408:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* 5 count of LOCO : (1000000/216000)*5 = 23.148148148us
+ 409:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        23 + 2 = 25us ("+2" is overhead cycle) */
+ 410:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     R_BSP_SoftwareDelay((uint32_t)25, BSP_DELAY_MICROSECS);
+ 411:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 412:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 413:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Protect on. */
+ 414:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.PRCR.WORD = 0xA500;
+ 415:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function operating_frequency_set() */
+ 416:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 417:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** /**************************************************************************************************
+ 418:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Function name: clock_source_select
+ 419:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Description  : Enables and disables clocks as chosen by the user. This function also implements t
+ 420:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** *                needed for the clocks to stabilize.
+ 421:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Arguments    : none
+ 422:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** * Return value : none
+ 423:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** ***************************************************************************************************
+ 424:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** static void clock_source_select (void)
+ 425:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** {
+ 426:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     volatile uint8_t i;
+ 196                             		.loc 1 426 5
+ 427:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     volatile uint8_t dummy;
+ 197                             		.loc 1 427 5
+ 428:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 3) || (BSP_CFG_RTC_ENABLE == 1)
+ 429:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     uint8_t tmp;
+ 430:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 431:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 432:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Main clock will be not oscillate in software standby or deep software standby modes. */
+ 433:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.MOFCR.BIT.MOFXIN = 0;
+ 198                             		.loc 1 433 5
+ 199                             		.loc 1 433 29 is_stmt 0
+ 200 000f F2 58 93 C2             		bclr	#0, 49811[r5].B
+ 434:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 435:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set the oscillation source of the main clock oscillator. */
+ 436:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.MOFCR.BIT.MOSEL = BSP_CFG_MAIN_CLOCK_SOURCE;
+ 201                             		.loc 1 436 5 is_stmt 1
+ 202                             		.loc 1 436 28 is_stmt 0
+ 203 0013 F2 5E 93 C2             		bclr	#6, 49811[r5].B
+ 437:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 438:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Use HOCO if HOCO is chosen or if PLL is chosen with HOCO as source. */
+ 439:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 1) || ((BSP_CFG_CLOCK_SOURCE == 4) && (BSP_CFG_PLL_SRC == 1))
+ 440:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* HOCO is chosen. Start it operating if it is not already operating. */
+ 441:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if (1 == SYSTEM.HOCOCR.BIT.HCSTP)
+ 204                             		.loc 1 441 5 is_stmt 1
+ 205                             		.loc 1 441 31 is_stmt 0
+ 206 0017 CD 54 36                		mov.B	54[r5], r4
+ 207                             		.loc 1 441 8
+ 208 001a 64 14                   		and #1, r4
+ 209 001c 61 14                   		cmp	#1, r4
+ 210 001e 3A 7C 01                		beq	.L67
+ 211                             		.balign 8,3,4
+ 212                             	.L14:
+ 442:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 443:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Turn on power to HOCO. */
+ 444:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.HOCOPCR.BYTE = 0x00;
+ 445:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 446:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Stop HOCO. */
+ 447:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.HOCOCR.BYTE = 0x01;
+ 448:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 449:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while(1 == SYSTEM.OSCOVFSR.BIT.HCOVF)
+ 451:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 452:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* The delay period needed is to make sure that the HOCO has stopped. */
+ 453:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 454:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 455:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 456:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Set HOCO frequency. */
+ 457:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #if   (BSP_CFG_HOCO_FREQUENCY == 0)
+ 458:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.HOCOCR2.BYTE = 0x00;         //16MHz
+ 459:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #elif (BSP_CFG_HOCO_FREQUENCY == 1)
+ 460:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.HOCOCR2.BYTE = 0x01;         //18MHz
+ 461:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #elif (BSP_CFG_HOCO_FREQUENCY == 2)
+ 462:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.HOCOCR2.BYTE = 0x02;         //20MHz
+ 463:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #else
+ 464:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             #error "Error! Invalid setting for BSP_CFG_HOCO_FREQUENCY in r_bsp_config.h"
+ 465:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #endif
+ 466:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 467:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* HOCO is chosen. Start it operating. */
+ 468:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.HOCOCR.BYTE = 0x00;
+ 469:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 470:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" i
+ 471:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            This is done to ensure that the register has been written before the next register acces
+ 472:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            pipeline architecture so the next instruction could be executed before the previous writ
+ 473:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****          */
+ 474:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if(0x00 ==  SYSTEM.HOCOCR.BYTE)
+ 475:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 476:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 477:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 478:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 479:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 480:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* WAIT_LOOP */
+ 481:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     while(0 == SYSTEM.OSCOVFSR.BIT.HCOVF)
+ 213                             		.loc 1 481 35
+ 214 0021 FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 215 0026 CD 54 3C                		mov.B	60[r5], r4
+ 216                             		.loc 1 481 10
+ 217 0029 7C 34                   		btst	#3, r4
+ 218 002b 21 0D                   		bne	.L18
+ 219                             	.L19:
+ 482:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 483:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* The delay period needed is to make sure that the HOCO has stabilized. */
+ 484:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 220                             		.loc 1 484 9 is_stmt 1
+ 221                             	 ; 484 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 222 002d 03                      		nop
+ 223                             	 ; 0 "" 2
+ 481:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 224                             		.loc 1 481 35 is_stmt 0
+ 225 002e CD 54 3C                		mov.B	60[r5], r4
+ 481:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 226                             		.loc 1 481 10
+ 227 0031 7C 34                   		btst	#3, r4
+ 228 0033 20 FA                   		beq	.L19
+ 229 0035 FC 13 00                		.balign 8,3,4
+ 230                             	.L18:
+ 485:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 486:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else /* (BSP_CFG_CLOCK_SOURCE != 1) || ((BSP_CFG_CLOCK_SOURCE == 4) && (BSP_CFG_PLL_SRC == 0)) */
+ 487:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* If HOCO is already operating, it doesn't stop. */
+ 488:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if (1 == SYSTEM.HOCOCR.BIT.HCSTP)
+ 489:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 490:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Turn off power to HOCO. */
+ 491:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.HOCOPCR.BYTE = 0x01;
+ 492:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 493:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     else
+ 494:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 495:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 496:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while(0 == SYSTEM.OSCOVFSR.BIT.HCOVF)
+ 497:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 498:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* The delay period needed is to make sure that the HOCO has stabilized. */
+ 499:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 500:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 501:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 502:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif /* (BSP_CFG_CLOCK_SOURCE == 1) || ((BSP_CFG_CLOCK_SOURCE == 4) && (BSP_CFG_PLL_SRC == 1)) */
+ 503:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 504:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Use Main clock if Main clock is chosen or if PLL is chosen with Main clock as source. */
+ 505:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 2) || ((BSP_CFG_CLOCK_SOURCE == 4) && (BSP_CFG_PLL_SRC == 0))
+ 506:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Main clock oscillator is chosen. Start it operating. */
+ 507:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 508:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* If the main oscillator is >10MHz then the main clock oscillator forced oscillation control r
+ 509:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        be changed. */
+ 510:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if (BSP_CFG_XTAL_HZ > 20000000)
+ 511:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 512:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* 20 - 24MHz. */
+ 513:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.MOFCR.BIT.MODRV2 = 0;
+ 514:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 515:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     else if (BSP_CFG_XTAL_HZ > 16000000)
+ 516:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 517:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* 16 - 20MHz. */
+ 518:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.MOFCR.BIT.MODRV2 = 1;
+ 519:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 520:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     else if (BSP_CFG_XTAL_HZ > 8000000)
+ 521:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 522:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* 8 - 16MHz. */
+ 523:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.MOFCR.BIT.MODRV2 = 2;
+ 524:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 525:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     else
+ 526:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 527:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* 8MHz. */
+ 528:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.MOFCR.BIT.MODRV2 = 3;
+ 529:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 530:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 531:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set the oscillation stabilization wait time of the main clock oscillator. */
+ 532:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_MAIN_CLOCK_SOURCE == 0 /* Resonator */
+ 533:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.MOSCWTCR.BYTE = BSP_CFG_MOSC_WAIT_TIME;
+ 534:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_MAIN_CLOCK_SOURCE == 1 /* External oscillator input */
+ 535:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.MOSCWTCR.BYTE = 0x00;
+ 536:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 537:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #error "Error! Invalid setting for BSP_CFG_MAIN_CLOCK_SOURCE in r_bsp_config.h"
+ 538:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 539:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 540:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set the main clock to operating. */
+ 541:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.MOSCCR.BYTE = 0x00;
+ 542:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 543:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" in Us
+ 544:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        This is done to ensure that the register has been written before the next register access. T
+ 545:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        pipeline architecture so the next instruction could be executed before the previous write ha
+ 546:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****      */
+ 547:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if(0x00 ==  SYSTEM.MOSCCR.BYTE)
+ 548:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 549:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 550:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 551:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 552:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* WAIT_LOOP */
+ 553:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     while(0 == SYSTEM.OSCOVFSR.BIT.MOOVF)
+ 554:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 555:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* The delay period needed is to make sure that the Main clock has stabilized. */
+ 556:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 557:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 558:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else /* (BSP_CFG_CLOCK_SOURCE != 2) || ((BSP_CFG_CLOCK_SOURCE == 4) && (BSP_CFG_PLL_SRC == 1)) */
+ 559:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Main clock is stopped after reset. */
+ 560:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif /* (BSP_CFG_CLOCK_SOURCE == 2) || ((BSP_CFG_CLOCK_SOURCE == 4) && (BSP_CFG_PLL_SRC == 0)) */
+ 561:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 562:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Sub-clock setting. */
+ 563:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 564:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Cold start setting */
+ 565:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if (0 == SYSTEM.RSTSR1.BIT.CWSF)
+ 231                             		.loc 1 565 5 is_stmt 1
+ 232                             		.loc 1 565 31 is_stmt 0
+ 233 0038 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 234 003d CE 75 91 C2             		mov.B	49809[r7], r5
+ 235                             		.loc 1 565 8
+ 236 0041 7C 05                   		btst	#0, r5
+ 237 0043 3B 33 01                		bne	.L20
+ 566:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 567:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Stop the sub-clock oscillator */
+ 568:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* RCR4 - RTC Control Register 4
+ 569:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7:b1    Reserved - The write value should be 0.
+ 570:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b0       RCKSEL   - Count Source Select - Sub-clock oscillator is selected. */
+ 571:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         RTC.RCR4.BIT.RCKSEL = 0;
+ 238                             		.loc 1 571 9 is_stmt 1
+ 239                             		.loc 1 571 29 is_stmt 0
+ 240 0046 FB 5E 00 C4 08          		mov.L	#0x8c400, r5
+ 241 004b F1 58 28                		bclr	#0, 40[r5].B
+ 572:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 573:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 574:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         for (i = 0; i < 4; i++)
+ 242                             		.loc 1 574 9 is_stmt 1
+ 243                             		.loc 1 574 16 is_stmt 0
+ 244 004e 3C 01 00                		mov.B	#0, 1[r0]
+ 245                             		.loc 1 574 9
+ 246 0051 B0 0F                   		movu.B	1[r0], r7
+ 247 0053 61 37                   		cmp	#3, r7
+ 248 0055 24 15                   		bgtu	.L21
+ 575:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 576:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* dummy read four times */
+ 577:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             dummy = RTC.RCR4.BYTE;
+ 249                             		.loc 1 577 29
+ 250 0057 EF 54                   		mov.L	r5, r4
+ 251                             		.balign 8,3,5
+ 252                             	.L22:
+ 253                             		.loc 1 577 13 is_stmt 1
+ 254                             		.loc 1 577 29 is_stmt 0
+ 255 0059 CD 47 28                		mov.B	40[r4], r7
+ 256                             		.loc 1 577 19
+ 257 005c C3 07                   		mov.B	r7, [r0]
+ 574:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 258                             		.loc 1 574 29
+ 259 005e 88 0D                   		mov.B	1[r0], r5
+ 260 0060 62 15                   		add	#1, r5
+ 261 0062 80 0D                   		mov.B	r5, 1[r0]
+ 574:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 262                             		.loc 1 574 9
+ 263 0064 B0 0D                   		movu.B	1[r0], r5
+ 264 0066 61 35                   		cmp	#3, r5
+ 265 0068 25 F1                   		bleu	.L22
+ 266                             		.balign 8,3,4
+ 267                             	.L21:
+ 578:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 579:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 580:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Confirm that the written */
+ 581:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (0 != RTC.RCR4.BIT.RCKSEL)
+ 268                             		.loc 1 581 9 is_stmt 1
+ 269                             		.loc 1 581 30 is_stmt 0
+ 270 006a FB 7E 00 C4 08          		mov.L	#0x8c400, r7
+ 271 006f CD 75 28                		mov.B	40[r7], r5
+ 272                             		.loc 1 581 12
+ 273 0072 7C 05                   		btst	#0, r5
+ 274 0074 14                      		beq	.L23
+ 582:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 583:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 275                             		.loc 1 583 13 is_stmt 1
+ 276                             	 ; 583 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 277 0075 03                      		nop
+ 278                             	 ; 0 "" 2
+ 279 0076 EF 00                   		.balign 8,3,4
+ 280                             	.L23:
+ 584:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 585:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 586:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* RCR3 - RTC Control Register 3
+ 587:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7:b4    Reserved - The write value should be 0.
+ 588:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b3:b1    RTCDV    - Sub-clock oscillator Drive Ability Control.
+ 589:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b0       RTCEN    - Sub-clock oscillator is stopped. */
+ 590:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         RTC.RCR3.BIT.RTCEN = 0;
+ 281                             		.loc 1 590 9
+ 282                             		.loc 1 590 28 is_stmt 0
+ 283 0078 FB 5E 00 C4 08          		mov.L	#0x8c400, r5
+ 284 007d F1 58 26                		bclr	#0, 38[r5].B
+ 591:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 592:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 593:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         for (i = 0; i < 4; i++)
+ 285                             		.loc 1 593 9 is_stmt 1
+ 286                             		.loc 1 593 16 is_stmt 0
+ 287 0080 3C 01 00                		mov.B	#0, 1[r0]
+ 288                             		.loc 1 593 9
+ 289 0083 B0 0F                   		movu.B	1[r0], r7
+ 290 0085 61 37                   		cmp	#3, r7
+ 291 0087 24 1A                   		bgtu	.L24
+ 594:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 595:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* dummy read four times */
+ 596:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             dummy = RTC.RCR3.BYTE;
+ 292                             		.loc 1 596 29
+ 293 0089 EF 54                   		mov.L	r5, r4
+ 294 008b 77 10 01 00 00          		.balign 8,3,5
+ 295                             	.L25:
+ 296                             		.loc 1 596 13 is_stmt 1
+ 297                             		.loc 1 596 29 is_stmt 0
+ 298 0090 CD 47 26                		mov.B	38[r4], r7
+ 299                             		.loc 1 596 19
+ 300 0093 C3 07                   		mov.B	r7, [r0]
+ 593:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 301                             		.loc 1 593 29
+ 302 0095 88 0D                   		mov.B	1[r0], r5
+ 303 0097 62 15                   		add	#1, r5
+ 304 0099 80 0D                   		mov.B	r5, 1[r0]
+ 593:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 305                             		.loc 1 593 9
+ 306 009b B0 0D                   		movu.B	1[r0], r5
+ 307 009d 61 35                   		cmp	#3, r5
+ 308 009f 25 F1                   		bleu	.L25
+ 309                             		.balign 8,3,4
+ 310                             	.L24:
+ 597:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 598:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 599:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Confirm that the written */
+ 600:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (0 != RTC.RCR3.BIT.RTCEN)
+ 311                             		.loc 1 600 9 is_stmt 1
+ 312                             		.loc 1 600 30 is_stmt 0
+ 313 00a1 FB 7E 00 C4 08          		mov.L	#0x8c400, r7
+ 314 00a6 CD 75 26                		mov.B	38[r7], r5
+ 315                             		.loc 1 600 12
+ 316 00a9 7C 05                   		btst	#0, r5
+ 317 00ab 15                      		beq	.L26
+ 601:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 602:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 318                             		.loc 1 602 13 is_stmt 1
+ 319                             	 ; 602 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 320 00ac 03                      		nop
+ 321                             	 ; 0 "" 2
+ 322 00ad FC 13 00                		.balign 8,3,4
+ 323                             	.L26:
+ 603:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 604:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 605:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* SOSCCR - Sub-Clock Oscillator Control Register
+ 606:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7:b1    Reserved - The write value should be 0.
+ 607:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b0       SOSTP    - Sub-clock oscillator Stop - Sub-clock oscillator is stopped. */
+ 608:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCCR.BYTE = 0x01;
+ 324                             		.loc 1 608 9
+ 325                             		.loc 1 608 28 is_stmt 0
+ 326 00b0 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 327 00b5 F9 74 33 01             		mov.B	#1, 51[r7]
+ 609:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 610:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" i
+ 611:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            This is done to ensure that the register has been written before the next register acces
+ 612:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            pipeline architecture so the next instruction could be executed before the previous writ
+ 613:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****          */
+ 614:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (0x01 != SYSTEM.SOSCCR.BYTE)
+ 328                             		.loc 1 614 9 is_stmt 1
+ 329                             		.loc 1 614 12 is_stmt 0
+ 330 00b9 59 77 33                		movu.B	51[r7], r7
+ 331 00bc 61 17                   		cmp	#1, r7
+ 332 00be 20 03                   		beq	.L27
+ 615:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 616:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 333                             		.loc 1 616 13 is_stmt 1
+ 334                             	 ; 616 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 335 00c0 03                      		nop
+ 336                             	 ; 0 "" 2
+ 337                             		.balign 8,3,4
+ 338                             	.L27:
+ 617:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 618:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 619:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 620:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while (0 != SYSTEM.OSCOVFSR.BIT.SOOVF)
+ 339                             		.loc 1 620 40 is_stmt 0
+ 340 00c1 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 341 00c6 CD 75 3C                		mov.B	60[r7], r5
+ 342                             		.loc 1 620 15
+ 343 00c9 7C 15                   		btst	#1, r5
+ 344 00cb 20 0D                   		beq	.L28
+ 345                             	.L29:
+ 621:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {        
+ 622:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* The delay period needed is to make sure that the sub-clock has stopped. */
+ 623:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 346                             		.loc 1 623 13 is_stmt 1
+ 347                             	 ; 623 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 348 00cd 03                      		nop
+ 349                             	 ; 0 "" 2
+ 620:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {        
+ 350                             		.loc 1 620 40 is_stmt 0
+ 351 00ce CD 75 3C                		mov.B	60[r7], r5
+ 620:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {        
+ 352                             		.loc 1 620 15
+ 353 00d1 7C 15                   		btst	#1, r5
+ 354 00d3 21 FA                   		bne	.L29
+ 355 00d5 FC 13 00                		.balign 8,3,4
+ 356                             	.L28:
+ 624:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 625:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 626:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 3) || (BSP_CFG_RTC_ENABLE == 1)
+ 627:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Set the drive capacity of the sub-clock oscillator */
+ 628:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #if   (BSP_CFG_SOSC_DRV_CAP == 0) /* Standard CL */
+ 629:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             tmp = 0x06;
+ 630:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #elif (BSP_CFG_SOSC_DRV_CAP == 1) /* Low CL */
+ 631:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             tmp = 0x01;
+ 632:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #else
+ 633:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             #error "Error! Invalid setting for BSP_CFG_SOSC_DRV_CAP in r_bsp_config.h"
+ 634:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #endif
+ 635:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 636:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Set the Sub-Clock Oscillator Drive Capacity Control. */
+ 637:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         RTC.RCR3.BIT.RTCDV = tmp;
+ 638:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 639:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 640:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         for (i = 0; i < 4; i++)
+ 641:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 642:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* dummy read four times */
+ 643:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             dummy = RTC.RCR3.BYTE;
+ 644:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 645:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 646:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Confirm that the written */
+ 647:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (tmp != RTC.RCR3.BIT.RTCDV)
+ 648:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 649:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 650:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 651:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 652:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Set wait time until the sub-clock oscillator stabilizes */
+ 653:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* SOSCWTCR - Sub-Clock Oscillator Wait Control Register
+ 654:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7:b5    Reserved - The write value should be 0.
+ 655:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b4:b0    SSTS - Sub-Clock Oscillator Waiting Time - Waiting time is 2.044ms(the maximum val
+ 656:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCWTCR.BYTE = BSP_CFG_SOSC_WAIT_TIME;
+ 657:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 658:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Operate the Sub-clock oscillator */
+ 659:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCCR.BYTE = 0x00;
+ 660:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 661:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" i
+ 662:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            This is done to ensure that the register has been written before the next register acces
+ 663:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            pipeline architecture so the next instruction could be executed before the previous writ
+ 664:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****          */
+ 665:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (0x00 != SYSTEM.SOSCCR.BYTE)
+ 666:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 667:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 668:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 669:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 670:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 671:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while (1 != SYSTEM.OSCOVFSR.BIT.SOOVF)
+ 672:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 673:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* The delay period needed is to make sure that the sub-clock  has stabilized. */
+ 674:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 675:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 676:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif /* (BSP_CFG_CLOCK_SOURCE == 3) || (BSP_CFG_RTC_ENABLE == 1) */
+ 677:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 678:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_RTC_ENABLE == 1
+ 679:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* ---- Set wait time until the sub-clock oscillator stabilizes ---- */
+ 680:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCWTCR.BYTE = 0x00;
+ 681:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 682:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* ---- Operate the sub-clock oscillator ---- */
+ 683:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         RTC.RCR3.BIT.RTCEN = 1;
+ 684:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 685:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 686:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         for (i = 0; i < 4; i++)
+ 687:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 688:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****              /* dummy read four times */
+ 689:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****              dummy = RTC.RCR3.BIT.RTCEN;
+ 690:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 691:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 692:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Confirm that the written value can be read correctly. */
+ 693:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (1 != RTC.RCR3.BIT.RTCEN)
+ 694:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 695:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 696:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 697:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 698:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 699:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 3) || (BSP_CFG_RTC_ENABLE == 1)
+ 700:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Wait for six the sub-clock cycles */
+ 701:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* 6 count of sub-clock : (1000000/32768)*6=183.10546875us
+ 702:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            In the case of LOCO frequency is 264kHz : 183.10546875/(1000000/264000)=48.33984375cycle
+ 703:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            (48.33984375+2)*(1000000/240000)=209.7493489583333us ("+2" is overhead cycle) */
+ 704:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_SoftwareDelay((uint32_t)210, BSP_DELAY_MICROSECS);
+ 705:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 706:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 707:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 3) && (BSP_CFG_RTC_ENABLE == 0)
+ 708:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Stop prescaler and counter */
+ 709:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* RCR2 - RTC Control Register 2
+ 710:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7  CNTMD - Count Mode Select - The calendar count mode.
+ 711:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b6  HR24  - Hours Mode - The RTC operates in 24-hour mode.
+ 712:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b5  AADJP - Automatic Adjustment Period Select - The RADJ.ADJ[5:0] setting value is adjuste
+ 713:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****                                                            the count value of the prescaler every 1
+ 714:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b4  AADJE - Automatic Adjustment Enable - Automatic adjustment is enabled.
+ 715:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b3  RTCOE - RTCOUT Output Enable - RTCOUT output enabled.
+ 716:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b2  ADJ30 - 30-Second Adjustment - 30-second adjustment is executed.
+ 717:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b1  RESET - RTC Software Reset - The prescaler and the target registers for RTC software re
+ 718:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b0  START - start - Prescaler is stopped. */
+ 719:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         RTC.RCR2.BYTE &= 0x7E;
+ 720:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 721:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 722:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while (0 != RTC.RCR2.BIT.START)
+ 723:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 724:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Confirm that the written value can be read correctly. */
+ 725:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****              R_BSP_NOP();
+ 726:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 727:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 728:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* RTC Software Reset */
+ 729:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         RTC.RCR2.BIT.RESET = 1;
+ 730:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 731:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 732:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while (0 != RTC.RCR2.BIT.RESET)
+ 733:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 734:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Confirm that the written value can be read correctly. */
+ 735:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 736:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 737:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 738:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* An alarm interrupt request is disabled */
+ 739:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* RCR1 - RTC Control Register 1
+ 740:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7:b4  PES   - Periodic Interrupt Select - These bits specify the period for the periodic i
+ 741:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b3     RTCOS - RTCOUT Output Select - RTCOUT outputs 1 Hz.
+ 742:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b2     PIE   - Periodic Interrupt Enable - A periodic interrupt request is disabled.
+ 743:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b1     CIE   - Carry Interrupt Enable - A carry interrupt request is disabled.
+ 744:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b0     AIE   - Alarm Interrupt Enable - An alarm interrupt request is disabled. */
+ 745:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         RTC.RCR1.BYTE &= 0xF8;
+ 746:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 747:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Wait for one the sub-clock cycles */
+ 748:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* 1 count of sub-clock : (1000000/32768)=30.517578125us
+ 749:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            In the case of LOCO frequency is 264kHz : 30.517578125/(1000000/264000)=8.056640625cycle
+ 750:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            (8.056640625+2)*(1000000/240000)=41.902669270833us ("+2" is overhead cycle) */
+ 751:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_SoftwareDelay((uint32_t)42, BSP_DELAY_MICROSECS);
+ 752:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 753:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Confirm that the written value can be read correctly. */
+ 754:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (0x00 != (RTC.RCR1.BYTE & 0x07))
+ 755:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 756:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 757:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 758:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif /* (BSP_CFG_CLOCK_SOURCE == 3) && (BSP_CFG_RTC_ENABLE == 0) */
+ 759:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 760:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Warm start setting */
+ 761:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     else
+ 762:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 763:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 3) || ((BSP_CFG_CLOCK_SOURCE != 3) && (BSP_CFG_RTC_ENABLE == 0))
+ 764:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* SOSCCR - Sub-Clock Oscillator Control Register
+ 765:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7:b1    Reserved - The write value should be 0.
+ 766:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b0       SOSTP    - Sub-clock oscillator Stop - Sub-clock oscillator is stopped. */
+ 767:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCCR.BYTE = 0x01;
+ 768:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 769:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" i
+ 770:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            This is done to ensure that the register has been written before the next register acces
+ 771:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            pipeline architecture so the next instruction could be executed before the previous writ
+ 772:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****          */
+ 773:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (0x01 != SYSTEM.SOSCCR.BYTE)
+ 774:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 775:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 776:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 777:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 778:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 779:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while (0 != SYSTEM.OSCOVFSR.BIT.SOOVF)
+ 780:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 781:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* Confirm that the Sub clock stopped. */
+ 782:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 783:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 784:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 785:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 786:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_CLOCK_SOURCE == 3
+ 787:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Set wait time until the sub-clock oscillator stabilizes */
+ 788:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* SOSCWTCR - Sub-Clock Oscillator Wait Control Register
+ 789:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b7:b5    Reserved - The write value should be 0.
+ 790:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         b4:b0    SSTS - Sub-Clock Oscillator Waiting Time - Waiting time is 2.044ms(the maximum val
+ 791:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCWTCR.BYTE = BSP_CFG_SOSC_WAIT_TIME;
+ 792:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 793:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Operate the Sub-clock oscillator */
+ 794:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCCR.BYTE = 0x00;
+ 795:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 796:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" i
+ 797:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            This is done to ensure that the register has been written before the next register acces
+ 798:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            pipeline architecture so the next instruction could be executed before the previous writ
+ 799:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****          */
+ 800:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if (0x00 != SYSTEM.SOSCCR.BYTE)
+ 801:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 802:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 803:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 804:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 805:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 806:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if (BSP_CFG_CLOCK_SOURCE == 3) || (BSP_CFG_RTC_ENABLE == 1)
+ 807:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* WAIT_LOOP */
+ 808:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         while (1 != SYSTEM.OSCOVFSR.BIT.SOOVF)
+ 809:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 810:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             /* The delay period needed is to make sure that the sub-clock  has stabilized. */
+ 811:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 812:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 813:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 814:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 815:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_RTC_ENABLE == 1
+ 816:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* ---- Set wait time until the sub-clock oscillator stabilizes ---- */
+ 817:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.SOSCWTCR.BYTE = 0x00;
+ 818:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 819:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 820:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 821:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_CLOCK_SOURCE == 4
+ 822:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 823:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set PLL Input Divisor. */
+ 824:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.PLLCR.BIT.PLIDIV = BSP_CFG_PLL_DIV - 1;
+ 357                             		.loc 1 824 5 is_stmt 1
+ 358                             		.loc 1 824 29 is_stmt 0
+ 359 00d8 FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 360 00dd 9D 54                   		mov.W	40[r5], r4
+ 361 00df 75 24 FC                		and #-4, r4
+ 362 00e2 95 54                   		mov.W	r4, 40[r5]
+ 825:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 826:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #if BSP_CFG_PLL_SRC == 0
+ 827:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Clear PLL clock source if PLL clock source is Main clock. */
+ 828:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.PLLCR.BIT.PLLSRCSEL = 0;
+ 829:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #else
+ 830:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set PLL clock source if PLL clock source is HOCO clock. */
+ 831:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.PLLCR.BIT.PLLSRCSEL = 1;
+ 363                             		.loc 1 831 5 is_stmt 1
+ 364                             		.loc 1 831 32 is_stmt 0
+ 365 00e4 9D 57                   		mov.W	40[r5], r7
+ 366 00e6 78 47                   		bset	#4, r7
+ 367 00e8 95 57                   		mov.W	r7, 40[r5]
+ 832:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     #endif
+ 833:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 834:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set PLL Multiplier. */
+ 835:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.PLLCR.BIT.STC = ((uint8_t)((float)BSP_CFG_PLL_MUL * 2.0)) - 1;
+ 368                             		.loc 1 835 5 is_stmt 1
+ 369                             		.loc 1 835 26 is_stmt 0
+ 370 00ea 9D 54                   		mov.W	40[r5], r4
+ 371 00ec 76 24 FF C0             		and #-16129, r4
+ 372 00f0 76 34 00 17             		or	#0x1700, r4
+ 373 00f4 95 54                   		mov.W	r4, 40[r5]
+ 836:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 837:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* Set the PLL to operating. */
+ 838:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     SYSTEM.PLLCR2.BYTE = 0x00;
+ 374                             		.loc 1 838 5 is_stmt 1
+ 375                             		.loc 1 838 24 is_stmt 0
+ 376 00f6 F9 54 2A 00             		mov.B	#0, 42[r5]
+ 839:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 840:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* WAIT_LOOP */
+ 841:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     while(0 == SYSTEM.OSCOVFSR.BIT.PLOVF)
+ 377                             		.loc 1 841 5 is_stmt 1
+ 378                             		.loc 1 841 35 is_stmt 0
+ 379 00fa CD 54 3C                		mov.B	60[r5], r4
+ 380                             		.loc 1 841 10
+ 381 00fd 7C 24                   		btst	#2, r4
+ 382 00ff 19                      		bne	.L32
+ 383                             	.L33:
+ 842:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 843:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* The delay period needed is to make sure that the PLL has stabilized. */
+ 844:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         R_BSP_NOP();
+ 384                             		.loc 1 844 9 is_stmt 1
+ 385                             	 ; 844 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 386 0100 03                      		nop
+ 387                             	 ; 0 "" 2
+ 841:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 388                             		.loc 1 841 35 is_stmt 0
+ 389 0101 CD 54 3C                		mov.B	60[r5], r4
+ 841:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 390                             		.loc 1 841 10
+ 391 0104 7C 24                   		btst	#2, r4
+ 392 0106 20 FA                   		beq	.L33
+ 393                             		.balign 8,3,4
+ 394                             	.L32:
+ 845:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 846:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 847:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* PLL is stopped after reset. */
+ 848:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 849:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 850:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* LOCO is saved for last since it is what is running by default out of reset. This means you d
+ 851:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        it off until another clock has been enabled and is ready to use. */
+ 852:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #if BSP_CFG_CLOCK_SOURCE == 0
+ 853:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* LOCO is chosen. This is the default out of reset. */
+ 854:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 855:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* LOCO is not chosen but it cannot be turned off yet since it is still being used. */
+ 856:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 857:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 858:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     /* RX65N has a ROMWT register which controls the cycle waiting for access to code flash memory.
+ 859:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        It is set as zero coming out of reset.
+ 860:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        When setting ICLK to [50 MHz < ICLK <= 100 MHz], set the ROMWT.ROMWT[1:0] bits to 01b.
+ 861:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****        When setting ICLK to [100 MHz < ICLK <= 120 MHz], set the ROMWT.ROMWT[1:0] bits to 10b. */
+ 862:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     if (BSP_ICLK_HZ > BSP_MCU_ROMWT_FREQ_THRESHOLD_02)
+ 395                             		.loc 1 862 5 is_stmt 1
+ 863:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 864:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Set the ROMWT.ROMWT[1:0] bits to 10b. */
+ 865:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         SYSTEM.ROMWT.BYTE = 0x02;
+ 396                             		.loc 1 865 9
+ 397                             		.loc 1 865 27 is_stmt 0
+ 398 0108 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 399 010d FA 74 1C 10 02          		mov.B	#2, 4124[r7]
+ 866:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 867:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         /* Dummy read and compare. cf."5. I/O Registers", "(2) Notes on writing to I/O registers" i
+ 868:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            This is done to ensure that the register has been written before the next register acces
+ 869:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****            pipeline architecture so the next instruction could be executed before the previous writ
+ 870:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         */
+ 871:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         if(0x02 == SYSTEM.ROMWT.BYTE)
+ 400                             		.loc 1 871 9 is_stmt 1
+ 401                             		.loc 1 871 11 is_stmt 0
+ 402 0112 5A 75 1C 10             		movu.B	4124[r7], r5
+ 403 0116 61 25                   		cmp	#2, r5
+ 404 0118 21 03                   		bne	.L34
+ 872:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 873:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****             R_BSP_NOP();
+ 405                             		.loc 1 873 13 is_stmt 1
+ 406                             	 ; 873 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 407 011a 03                      		nop
+ 408                             	 ; 0 "" 2
+ 409                             		.balign 8,3,4
+ 410                             	.L34:
+ 411                             	.LBE9:
+ 412                             	.LBE8:
+ 185:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_FCK_DIV == 8
+ 413                             		.loc 1 185 5
+ 414                             	.LVL27:
+ 202:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_ICK_DIV == 4
+ 415                             		.loc 1 202 5
+ 221:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCK_DIV == 4
+ 416                             		.loc 1 221 5
+ 239:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_BCLK_OUTPUT == 1
+ 417                             		.loc 1 239 5
+ 264:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_SDCLK_OUTPUT == 1
+ 418                             		.loc 1 264 5
+ 278:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKA_DIV == 8
+ 419                             		.loc 1 278 5
+ 297:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKB_DIV == 8
+ 420                             		.loc 1 297 5
+ 316:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKC_DIV == 8
+ 421                             		.loc 1 316 5
+ 335:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #elif BSP_CFG_PCKD_DIV == 8
+ 422                             		.loc 1 335 5
+ 349:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 423                             		.loc 1 349 5
+ 349:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 424                             		.loc 1 349 23 is_stmt 0
+ 425 011b FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 426 0120 F9 72 08 22 22 C1 21    		mov.L	#0x21c12222, 32[r7]
+ 355:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 427                             		.loc 1 355 5 is_stmt 1
+ 355:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 428                             		.loc 1 355 34 is_stmt 0
+ 429 0127 AA 77                   		mov.L	32[r7], r7
+ 355:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 430                             		.loc 1 355 7
+ 431 0129 74 07 22 22 C1 21       		cmp	#0x21c12222, r7
+ 432 012f 21 03                   		bne	.L35
+ 357:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 433                             		.loc 1 357 9 is_stmt 1
+ 434                             	 ; 357 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 435 0131 03                      		nop
+ 436                             	 ; 0 "" 2
+ 437                             		.balign 8,3,4
+ 438                             	.L35:
+ 361:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 439                             		.loc 1 361 5
+ 440                             	.LVL28:
+ 371:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #else
+ 441                             		.loc 1 371 5
+ 377:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 442                             		.loc 1 377 5
+ 377:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 443                             		.loc 1 377 24 is_stmt 0
+ 444 0132 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 445 0137 3D F2 41                		mov.W	#0x41, 36[r7]
+ 383:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 446                             		.loc 1 383 5 is_stmt 1
+ 383:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 447                             		.loc 1 383 7 is_stmt 0
+ 448 013a BC F5                   		movu.W	36[r7], r5
+ 449 013c 75 55 41                		cmp	#0x41, r5
+ 450 013f 21 03                   		bne	.L36
+ 385:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 451                             		.loc 1 385 9 is_stmt 1
+ 452                             	 ; 385 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 453 0141 03                      		nop
+ 454                             	 ; 0 "" 2
+ 455                             		.balign 8,3,4
+ 456                             	.L36:
+ 389:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 457                             		.loc 1 389 5
+ 458                             	.LVL29:
+ 392:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 459                             		.loc 1 392 5
+ 392:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 460                             		.loc 1 392 24 is_stmt 0
+ 461 0142 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 462 0147 F9 79 13 00 04          		mov.W	#0x400, 38[r7]
+ 398:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 463                             		.loc 1 398 5 is_stmt 1
+ 398:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     {
+ 464                             		.loc 1 398 7 is_stmt 0
+ 465 014c BC FD                   		movu.W	38[r7], r5
+ 466 014e 76 05 00 04             		cmp	#0x400, r5
+ 467 0152 1E                      		bne	.L37
+ 400:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****     }
+ 468                             		.loc 1 400 9 is_stmt 1
+ 469                             	 ; 400 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 470 0153 03                      		nop
+ 471                             	 ; 0 "" 2
+ 472 0154 76 10 01 00             		.balign 8,3,4
+ 473                             	.L37:
+ 405:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 474                             		.loc 1 405 5
+ 405:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 475                             		.loc 1 405 24 is_stmt 0
+ 476 0158 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 410:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 477                             		.loc 1 410 5
+ 478 015d FB 2E 40 42 0F          		mov.L	#0xf4240, r2
+ 479 0162 75 41 19                		mov.L	#25, r1
+ 405:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 480                             		.loc 1 405 24
+ 481 0165 F9 74 34 01             		mov.B	#1, 52[r7]
+ 410:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** #endif
+ 482                             		.loc 1 410 5 is_stmt 1
+ 483 0169 05 00 00 00             		bsr	_R_BSP_SoftwareDelay
+ 484                             	.LVL30:
+ 414:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function operating_frequency_set() */
+ 485                             		.loc 1 414 5
+ 414:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** } /* End of function operating_frequency_set() */
+ 486                             		.loc 1 414 22 is_stmt 0
+ 487 016d FA 79 FF 01 00 A5       		mov.W	#-23296, 1022[r7]
+ 488                             	.LBE7:
+ 489                             	.LBE6:
+ 160:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 490                             		.loc 1 160 1
+ 491 0173 3F 77 02                		rtsd	#8, r7-r7
+ 492                             	.LVL31:
+ 493                             	.L20:
+ 494                             	.LBB13:
+ 495                             	.LBB12:
+ 496                             	.LBB11:
+ 497                             	.LBB10:
+ 767:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 498                             		.loc 1 767 9 is_stmt 1
+ 767:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 499                             		.loc 1 767 28 is_stmt 0
+ 500 0176 F9 74 33 01             		mov.B	#1, 51[r7]
+ 773:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 501                             		.loc 1 773 9 is_stmt 1
+ 773:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 502                             		.loc 1 773 12 is_stmt 0
+ 503 017a 59 77 33                		movu.B	51[r7], r7
+ 504 017d 61 17                   		cmp	#1, r7
+ 505 017f 20 03                   		beq	.L30
+ 775:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 506                             		.loc 1 775 13 is_stmt 1
+ 507                             	 ; 775 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 508 0181 03                      		nop
+ 509                             	 ; 0 "" 2
+ 510                             		.balign 8,3,4
+ 511                             	.L30:
+ 779:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 512                             		.loc 1 779 40 is_stmt 0
+ 513 0182 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 514 0187 CD 75 3C                		mov.B	60[r7], r5
+ 779:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 515                             		.loc 1 779 15
+ 516 018a 7C 15                   		btst	#1, r5
+ 517 018c 3A 4C FF                		beq	.L28
+ 518                             	.L31:
+ 782:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 519                             		.loc 1 782 13 is_stmt 1
+ 520                             	 ; 782 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 521 018f 03                      		nop
+ 522                             	 ; 0 "" 2
+ 779:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 523                             		.loc 1 779 40 is_stmt 0
+ 524 0190 CD 75 3C                		mov.B	60[r7], r5
+ 779:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 525                             		.loc 1 779 15
+ 526 0193 7C 15                   		btst	#1, r5
+ 527 0195 21 FA                   		bne	.L31
+ 528 0197 38 41 FF                		bra	.L28
+ 529                             	.L67:
+ 444:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 530                             		.loc 1 444 9 is_stmt 1
+ 444:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 531                             		.loc 1 444 29 is_stmt 0
+ 532 019a FA 54 94 C2 00          		mov.B	#0, 49812[r5]
+ 447:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 533                             		.loc 1 447 9 is_stmt 1
+ 447:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 534                             		.loc 1 447 28 is_stmt 0
+ 535 019f C7 54 36                		mov.B	r4, 54[r5]
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 536                             		.loc 1 450 9 is_stmt 1
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 537                             		.loc 1 450 39 is_stmt 0
+ 538 01a2 CD 54 3C                		mov.B	60[r5], r4
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 539                             		.loc 1 450 14
+ 540 01a5 7C 34                   		btst	#3, r4
+ 541 01a7 11                      		beq	.L15
+ 542                             	.L16:
+ 453:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 543                             		.loc 1 453 13 is_stmt 1
+ 544                             	 ; 453 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 545 01a8 03                      		nop
+ 546                             	 ; 0 "" 2
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 547                             		.loc 1 450 39 is_stmt 0
+ 548 01a9 CD 54 3C                		mov.B	60[r5], r4
+ 450:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 549                             		.loc 1 450 14
+ 550 01ac 7C 34                   		btst	#3, r4
+ 551 01ae 21 FA                   		bne	.L16
+ 552                             		.balign 8,3,4
+ 553                             	.L15:
+ 462:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #else
+ 554                             		.loc 1 462 9 is_stmt 1
+ 462:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         #else
+ 555                             		.loc 1 462 29 is_stmt 0
+ 556 01b0 FB 7E 00 00 08          		mov.L	#0x80000, r7
+ 557 01b5 F9 74 37 02             		mov.B	#2, 55[r7]
+ 468:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 558                             		.loc 1 468 9 is_stmt 1
+ 468:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c **** 
+ 559                             		.loc 1 468 28 is_stmt 0
+ 560 01b9 F9 74 36 00             		mov.B	#0, 54[r7]
+ 474:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 561                             		.loc 1 474 9 is_stmt 1
+ 474:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         {
+ 562                             		.loc 1 474 11 is_stmt 0
+ 563 01bd 59 77 36                		movu.B	54[r7], r7
+ 564 01c0 61 07                   		cmp	#0, r7
+ 565 01c2 3B 5F FE                		bne	.L14
+ 476:../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c ****         }
+ 566                             		.loc 1 476 13 is_stmt 1
+ 567                             	 ; 476 "../src/smc_gen/r_bsp/mcu/rx65n/mcu_clocks.c" 1
+ 568 01c5 03                      		nop
+ 569                             	 ; 0 "" 2
+ 570 01c6 38 5B FE                		bra	.L14
+ 571                             	.LBE10:
+ 572                             	.LBE11:
+ 573                             	.LBE12:
+ 574                             	.LBE13:
+ 575                             	.LFE4:
+ 625                             	.Letext0:
+ 626                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 627                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 628                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 629                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 630                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 631                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 632                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 633                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 634                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 635                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm

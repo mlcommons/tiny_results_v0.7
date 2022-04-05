@@ -1,0 +1,495 @@
+   1                             		.file	"arm_depthwise_conv_s8_opt.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_depthwise_conv_s8_opt,"ax",@progbits
+   5                             		.global	_arm_depthwise_conv_s8_opt
+   7                             	_arm_depthwise_conv_s8_opt:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c"
+   1:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** /*
+   2:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+   4:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+   6:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+  10:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+  12:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  */
+  18:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  19:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Title:        arm_depthwise_conv_s8_opt.c
+  22:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Description:  Optimized s8 depthwise separable convolution function for
+  23:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *               channel multiplier of 1.
+  24:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+  25:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * $Date:        January 26, 2021
+  26:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * $Revision:    V.2.0.3
+  27:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+  28:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Target Processor:  Cortex-M CPUs
+  29:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+  30:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * -------------------------------------------------------------------- */
+  31:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  32:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #include "arm_nnfunctions.h"
+  33:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #include "arm_nnsupportfunctions.h"
+  34:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  35:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** /**
+  36:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *  @ingroup groupNN
+  37:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  */
+  38:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  39:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** /**
+  40:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * @addtogroup NNConv
+  41:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * @{
+  42:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  */
+  43:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  44:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** /*
+  45:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  * Optimized s8 depthwise convolution function with constraint that in_channel equals out_channel
+  46:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+  47:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *  Refer prototype header file for details.
+  48:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  *
+  49:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****  */
+  50:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  51:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** arm_status arm_depthwise_conv_s8_opt(const cmsis_nn_context *ctx,
+  52:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const cmsis_nn_dw_conv_params *dw_conv_params,
+  53:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const cmsis_nn_per_channel_quant_params *quant_params,
+  54:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const cmsis_nn_dims *input_dims,
+  55:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const q7_t *input,
+  56:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const cmsis_nn_dims *filter_dims,
+  57:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const q7_t *kernel,
+  58:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const cmsis_nn_dims *bias_dims,
+  59:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const int32_t *bias,
+  60:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      const cmsis_nn_dims *output_dims,
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                      q7_t *output)
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** {
+  10                             		.loc 1 62 1
+  11                             	.LVL0:
+  12 0000 7E A7                   		push.l	r7
+  13                             	.LCFI0:
+  14 0002 71 00 E4                		add	#-28, r0
+  15                             	.LCFI1:
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  64:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t input_ch = input_dims->c;
+  16                             		.loc 1 64 5
+  17                             	.LVL1:
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t output_ch = output_dims->c;
+  18                             		.loc 1 65 5
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  19                             		.loc 1 62 1 is_stmt 0
+  20 0005 75 47 24                		mov.L	#36, r7
+  21 0008 4B 07                   		add	r0, r7
+  66:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  67:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* Check input constraints input_ch == output_ch */
+  68:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     if (input_ch != output_ch)
+  22                             		.loc 1 68 8
+  23 000a ED 4E 03                		mov.L	12[r4], r14
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  24                             		.loc 1 62 1
+  25 000d A9 7D                   		mov.L	20[r7], r5
+  26                             	.LVL2:
+  27                             		.loc 1 68 5 is_stmt 1
+  28                             		.loc 1 68 8 is_stmt 0
+  29 000f 06 85 5E 03             		cmp	12[r5].L, r14
+  30 0013 1A                      		bne	.L2
+  69:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     {
+  70:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         return ARM_MATH_SIZE_MISMATCH;
+  71:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     }
+  72:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #ifdef ARM_MATH_DSP
+  73:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t input_x = input_dims->w;
+  74:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t input_y = input_dims->h;
+  75:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t kernel_x = filter_dims->w;
+  76:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t kernel_y = filter_dims->h;
+  77:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t pad_x = dw_conv_params->padding.w;
+  78:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t pad_y = dw_conv_params->padding.h;
+  79:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t stride_x = dw_conv_params->stride.w;
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t stride_y = dw_conv_params->stride.h;
+  81:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t *output_shift = quant_params->shift;
+  82:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t *output_mult = quant_params->multiplier;
+  83:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t output_x = output_dims->w;
+  84:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t output_y = output_dims->h;
+  85:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t output_offset = dw_conv_params->output_offset;
+  86:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t input_offset = dw_conv_params->input_offset;
+  87:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t output_activation_min = dw_conv_params->activation.min;
+  88:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t output_activation_max = dw_conv_params->activation.max;
+  89:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     q15_t *buffer_a = (q15_t *)ctx->buf;
+  90:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+  91:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #ifdef ARM_MATH_MVEI
+  92:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     (void)bias_dims;
+  93:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* Generate two columns from the input tensor */
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     q7_t *lhs_buffer = (q7_t *)buffer_a;
+  95:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     q7_t *out = output;
+  96:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     int padded = 0;
+  97:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     int buffer_count = 0;
+  98:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t kernel_size = kernel_x * kernel_y;
+  99:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 100:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* This part implements the im2col function */
+ 101:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     for (int i_out_y = 0, base_idx_y = -pad_y; i_out_y < output_y; base_idx_y += stride_y, i_out_y+
+ 102:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     {
+ 103:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         for (int i_out_x = 0, base_idx_x = -pad_x; i_out_x < output_x; base_idx_x += stride_x, i_ou
+ 104:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         {
+ 105:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             for (int i_ker_y = base_idx_y; i_ker_y < base_idx_y + kernel_y; i_ker_y++)
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 for (int i_ker_x = base_idx_x; i_ker_x < base_idx_x + kernel_x; i_ker_x++)
+ 108:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 {
+ 109:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     if (i_ker_y < 0 || i_ker_y >= input_y || i_ker_x < 0 || i_ker_x >= input_x)
+ 110:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     {
+ 111:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                         arm_memset_q7(lhs_buffer, (int8_t)-input_offset, (uint32_t)input_ch);
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                         padded = 1;
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     }
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     else
+ 115:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     {
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                         arm_memcpy_q7(lhs_buffer, input + (i_ker_y * input_x + i_ker_x) * input_ch,
+ 117:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     }
+ 118:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     lhs_buffer += input_ch;
+ 119:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 }
+ 120:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             buffer_count++;
+ 122:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 123:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             if (buffer_count == 4)
+ 124:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 125:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 lhs_buffer = (q7_t *)buffer_a;
+ 126:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 if (padded == 0)
+ 127:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 {
+ 128:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     out = arm_nn_depthwise_conv_nt_t_s8(lhs_buffer,
+ 129:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         kernel,
+ 130:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         input_offset,
+ 131:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         input_ch,
+ 132:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         output_shift,
+ 133:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         output_mult,
+ 134:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         output_offset,
+ 135:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         output_activation_min,
+ 136:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         output_activation_max,
+ 137:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         kernel_size,
+ 138:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         bias,
+ 139:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                         out);
+ 140:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 }
+ 141:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 else
+ 142:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 {
+ 143:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     out = arm_nn_depthwise_conv_nt_t_padded_s8(lhs_buffer,
+ 144:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                kernel,
+ 145:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                input_offset,
+ 146:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                input_ch,
+ 147:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                output_shift,
+ 148:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                output_mult,
+ 149:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                output_offset,
+ 150:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                output_activation_min,
+ 151:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                output_activation_max,
+ 152:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                kernel_size,
+ 153:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                bias,
+ 154:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                                out);
+ 155:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     padded = 0;
+ 156:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 }
+ 157:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 buffer_count = 0;
+ 158:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 159:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         }
+ 160:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     }
+ 161:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 162:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* Handle left over buffers */
+ 163:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     lhs_buffer = (q7_t *)buffer_a;
+ 164:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 165:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     for (int i_buf = 0; i_buf < buffer_count; i_buf++)
+ 166:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     {
+ 167:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         int32_t loop_count = (input_ch + 3) / 4;
+ 168:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 169:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         int32_t num_ch_to_process = input_ch;
+ 170:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         for (int i_loop_cnt = 0, offset = 0; i_loop_cnt < loop_count; num_ch_to_process -= 4, offse
+ 171:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         {
+ 172:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int8_t *col_0 = lhs_buffer + (kernel_size * input_ch * i_buf) + offset;
+ 173:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int8_t *row_0 = kernel + offset;
+ 174:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             int32x4_t out_0 = vldrwq_s32(&bias[offset]);
+ 175:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 176:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             for (int i_ker = 0; i_ker < kernel_size; i_ker++)
+ 177:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 178:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 const int32x4_t ker_0 = vldrbq_s32(row_0);
+ 179:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 180:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 int32x4_t ip_0 = vldrbq_s32(col_0);
+ 181:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 ip_0 = vaddq_n_s32(ip_0, input_offset);
+ 182:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 out_0 += vmulq_s32(ip_0, ker_0);
+ 183:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 184:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 col_0 += input_ch;
+ 185:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 row_0 += input_ch;
+ 186:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 187:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 188:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int32x4_t mult = vldrwq_s32(&output_mult[offset]);
+ 189:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int32x4_t shift = vldrwq_s32(&output_shift[offset]);
+ 190:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 191:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             out_0 = arm_requantize_mve_32x4(out_0, mult, shift);
+ 192:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             out_0 = vaddq_n_s32(out_0, output_offset);
+ 193:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             out_0 = vmaxq_s32(out_0, vdupq_n_s32(output_activation_min));
+ 194:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             out_0 = vminq_s32(out_0, vdupq_n_s32(output_activation_max));
+ 195:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             mve_pred16_t p = vctp32q((uint32_t)num_ch_to_process);
+ 196:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             vstrbq_p_s32(out, out_0, p);
+ 197:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 198:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             out += 4;
+ 199:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         }
+ 200:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 201:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         const int tail_ch = input_ch & 0x3;
+ 202:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         if (tail_ch != 0)
+ 203:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         {
+ 204:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             out -= (4 - tail_ch);
+ 205:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         }
+ 206:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     }
+ 207:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 208:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #else // ARM_MATH_DSP
+ 209:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     (void)bias_dims;
+ 210:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* Run the following code in cores using DSP extension */
+ 211:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     q15_t *const col_buffer_start = buffer_a;
+ 212:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     q15_t *col_buffer = col_buffer_start;
+ 213:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const int32_t *const bias_start_pos = bias;
+ 214:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const q31_t *const out_mult_start_pos = output_mult;
+ 215:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     const q31_t *const out_shift_start_pos = output_shift;
+ 216:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     uint16_t row_count;
+ 217:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     uint16_t row_shift;
+ 218:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 219:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     for (int i_out_y = 0; i_out_y < output_y; i_out_y++)
+ 220:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     {
+ 221:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         const int16_t base_idx_y = (i_out_y * stride_y) - pad_y;
+ 222:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         for (int i_out_x = 0; i_out_x < output_x; i_out_x++)
+ 223:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         {
+ 224:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int16_t base_idx_x = (i_out_x * stride_x) - pad_x;
+ 225:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 226:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             /* Out of bounds is only considered for the y axis as it provides a contiguous zero'ing
+ 227:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                along the x axis */
+ 228:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int ker_y_start = MAX(0, -base_idx_y);
+ 229:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             /* Condition for kernel end dimension: (base_idx_y + ker_y_end) < input_y */
+ 230:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int ker_y_end = MIN(kernel_y, input_y - base_idx_y);
+ 231:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 232:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             int32_t index = 0;
+ 233:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             if (ker_y_start != 0)
+ 234:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 235:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 memset(&col_buffer[index], 0, (kernel_x * input_ch) * ker_y_start * sizeof(q15_t));
+ 236:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 index += (kernel_x * input_ch) * ker_y_start;
+ 237:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 238:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 239:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             for (int i_ker_y = ker_y_start; i_ker_y < ker_y_end; i_ker_y++)
+ 240:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 241:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 const int32_t idx_y = base_idx_y + i_ker_y;
+ 242:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 243:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 for (int i_ker_x = 0; i_ker_x < kernel_x; i_ker_x++)
+ 244:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 {
+ 245:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     const int32_t idx_x = base_idx_x + i_ker_x;
+ 246:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     if (idx_x < 0 || idx_x >= input_x)
+ 247:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     {
+ 248:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                         memset(&col_buffer[index], 0, input_ch * sizeof(q15_t));
+ 249:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     }
+ 250:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     else
+ 251:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     {
+ 252:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                         arm_q7_to_q15_with_offset((q7_t *)input + (idx_y * input_x + idx_x) * input
+ 253:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                   &col_buffer[index],
+ 254:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                   input_ch,
+ 255:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                                   input_offset);
+ 256:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     }
+ 257:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     index += input_ch;
+ 258:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 }
+ 259:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 260:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 261:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             const int diff = kernel_y - ker_y_end;
+ 262:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             if (diff != 0)
+ 263:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 264:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 memset(&col_buffer[index], 0, (kernel_x * input_ch) * diff * sizeof(q15_t));
+ 265:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 266:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 267:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             row_count = output_ch / 4;
+ 268:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             row_shift = 0;
+ 269:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             bias = bias_start_pos;
+ 270:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             output_mult = out_mult_start_pos;
+ 271:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             output_shift = out_shift_start_pos;
+ 272:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 273:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             while (row_count)
+ 274:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 275:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 q31_t sum = *bias++;
+ 276:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 q31_t sum_2 = *bias++;
+ 277:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 q31_t sum_3 = *bias++;
+ 278:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 q31_t sum_4 = *bias++;
+ 279:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 280:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 uint16_t col_count = (kernel_x * kernel_y) / 2;
+ 281:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 q15_t *col_pos = col_buffer_start + row_shift;
+ 282:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 const q7_t *row_pos = kernel + row_shift;
+ 283:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 row_shift += 4;
+ 284:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 285:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 while (col_count)
+ 286:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 {
+ 287:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     /* General idea is to read 4 + 4 (input, kernel) pair and re-arrange them in th
+ 288:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     use in a SMLAD instruction . One run of this loop produces 4 partial outputs wi
+ 289:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     /* Note: variable names can be improved here to align with rows and columns. */
+ 290:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     q31_t ip_a1, ip_a2, ip_b1, ip_b2, op_a, op_b, op_c;
+ 291:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     /* Read 4 weights */
+ 292:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     ip_b1 = arm_nn_read_q7x4(row_pos);
+ 293:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     ip_a1 = arm_nn_read_q7x4(row_pos + input_ch);
+ 294:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_a = arm_nn_read_q15x2(col_pos);
+ 295:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_b = arm_nn_read_q15x2(col_pos + input_ch);
+ 296:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 297:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     ip_a2 = __SXTB16(ip_b1);
+ 298:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     ip_b1 = __SXTB16(__ROR(ip_b1, 8));
+ 299:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 300:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     ip_b2 = __SXTB16(ip_a1);
+ 301:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     ip_a1 = __SXTB16(__ROR(ip_a1, 8));
+ 302:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 303:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_c = __PKHBT(op_b, op_a, 16);
+ 304:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_a = __PKHTB(op_b, op_a, 16);
+ 305:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_b = __PKHBT(ip_b2, ip_a2, 16);
+ 306:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum = __SMLAD(op_c, op_b, sum);
+ 307:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 308:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_b = __PKHBT(ip_b1, ip_a1, 16);
+ 309:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum_2 = __SMLAD(op_a, op_b, sum_2);
+ 310:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 311:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_a = arm_nn_read_q15x2(col_pos + 2);
+ 312:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_b = arm_nn_read_q15x2(col_pos + input_ch + 2);
+ 313:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 314:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_c = __PKHBT(op_b, op_a, 16);
+ 315:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_a = __PKHTB(op_b, op_a, 16);
+ 316:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_b = __PKHTB(ip_a2, ip_b2, 16);
+ 317:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum_3 = __SMLAD(op_c, op_b, sum_3);
+ 318:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 319:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     op_b = __PKHTB(ip_a1, ip_b1, 16);
+ 320:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum_4 = __SMLAD(op_a, op_b, sum_4);
+ 321:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 322:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     row_pos += input_ch << 1;
+ 323:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     col_pos += input_ch << 1;
+ 324:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     col_count--;
+ 325:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 }
+ 326:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 327:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 col_count = (kernel_x * kernel_y) & 0x1;
+ 328:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 while (col_count)
+ 329:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 {
+ 330:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum += row_pos[0] * col_pos[0];
+ 331:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum_2 += row_pos[1] * col_pos[1];
+ 332:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum_3 += row_pos[2] * col_pos[2];
+ 333:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum_4 += row_pos[3] * col_pos[3];
+ 334:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 335:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     row_pos += input_ch;
+ 336:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     col_pos += input_ch;
+ 337:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 338:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     col_count--;
+ 339:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 }
+ 340:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum = arm_nn_requantize(sum, *output_mult++, *output_shift++);
+ 341:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum += output_offset;
+ 342:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum = MAX(sum, output_activation_min);
+ 343:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum = MIN(sum, output_activation_max);
+ 344:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 *output++ = (q7_t)sum;
+ 345:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 346:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_2 = arm_nn_requantize(sum_2, *output_mult++, *output_shift++);
+ 347:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_2 += output_offset;
+ 348:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_2 = MAX(sum_2, output_activation_min);
+ 349:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_2 = MIN(sum_2, output_activation_max);
+ 350:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 *output++ = (q7_t)sum_2;
+ 351:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_3 = arm_nn_requantize(sum_3, *output_mult++, *output_shift++);
+ 352:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_3 += output_offset;
+ 353:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_3 = MAX(sum_3, output_activation_min);
+ 354:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_3 = MIN(sum_3, output_activation_max);
+ 355:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 *output++ = (q7_t)sum_3;
+ 356:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 357:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_4 = arm_nn_requantize(sum_4, *output_mult++, *output_shift++);
+ 358:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_4 += output_offset;
+ 359:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_4 = MAX(sum_4, output_activation_min);
+ 360:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum_4 = MIN(sum_4, output_activation_max);
+ 361:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 *output++ = (q7_t)sum_4;
+ 362:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 363:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 row_count--;
+ 364:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 365:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 366:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             row_count = output_ch & 0x3;
+ 367:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             while (row_count)
+ 368:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             {
+ 369:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 q15_t *col_pos = col_buffer_start + row_shift;
+ 370:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 const q7_t *row_pos = kernel + row_shift;
+ 371:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 q31_t sum = *bias++;
+ 372:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 const uint16_t col_count = (kernel_x * kernel_y);
+ 373:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 row_shift += 1;
+ 374:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 375:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 for (int i = 0; i < col_count; i++)
+ 376:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 {
+ 377:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                     sum += row_pos[i * input_ch] * col_pos[i * input_ch];
+ 378:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 }
+ 379:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum = arm_nn_requantize(sum, *output_mult++, *output_shift++);
+ 380:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum += output_offset;
+ 381:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum = MAX(sum, output_activation_min);
+ 382:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 sum = MIN(sum, output_activation_max);
+ 383:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 *output++ = (q7_t)sum;
+ 384:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 385:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                 row_count--;
+ 386:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             }
+ 387:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 388:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             // clear counter and pointers
+ 389:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****             col_buffer = col_buffer_start;
+ 390:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****         }
+ 391:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     }
+ 392:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #endif
+ 393:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #else
+ 394:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* Run the following code as reference implementation for Cortex-M0 and Cortex-M3 */
+ 395:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     return arm_depthwise_conv_s8(ctx,
+  31                             		.loc 1 395 5 is_stmt 1
+ 396:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  dw_conv_params,
+ 397:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  quant_params,
+ 398:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  input_dims,
+ 399:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  input,
+ 400:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  filter_dims,
+ 401:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  kernel,
+ 402:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  bias_dims,
+ 403:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  bias,
+ 404:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  output_dims,
+ 405:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  output);
+ 406:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #endif /* ARM_MATH_MVEI | ARM_MATH_DSP */
+ 407:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 408:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* Return to application */
+ 409:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     return ARM_MATH_SUCCESS;
+ 410:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** }
+  32                             		.loc 1 410 1 is_stmt 0
+  33 0014 71 00 1C                		add	#28, r0
+  34 0017 7E B7                   		pop	r7
+ 395:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****                                  dw_conv_params,
+  35                             		.loc 1 395 12
+  36 0019 04 00 00 00             		bra	_arm_depthwise_conv_s8
+  37                             	.LVL3:
+  38                             	.L2:
+  39                             		.loc 1 410 1
+  40 001d FB 16 FD                		mov.L	#-3, r1
+  41                             	.LVL4:
+  42 0020 3F 77 08                		rtsd	#32, r7-r7
+  43                             	.LFE82:
+  45                             		.section	.text.arm_depthwise_conv_s8_opt_get_buffer_size,"ax",@progbits
+  46                             		.global	_arm_depthwise_conv_s8_opt_get_buffer_size
+  48                             	_arm_depthwise_conv_s8_opt_get_buffer_size:
+  49                             	.LFB83:
+ 411:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** 
+ 412:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** int32_t arm_depthwise_conv_s8_opt_get_buffer_size(const cmsis_nn_dims *input_dims, const cmsis_nn_d
+ 413:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** {
+  50                             		.loc 1 413 1 is_stmt 1
+  51                             	.LVL5:
+ 414:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #if defined(ARM_MATH_MVEI)
+ 415:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     /* The + 4 accounts for out of bounds read of the lhs buffers in the *_nt_t_* functions.  */
+ 416:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     return (2 * input_dims->c * filter_dims->w * filter_dims->h) * (int32_t)sizeof(int16_t) + 4;
+ 417:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #elif defined(ARM_MATH_DSP)
+ 418:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     return (input_dims->c * filter_dims->w * filter_dims->h) * sizeof(int16_t);
+ 419:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #else
+ 420:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     (void)input_dims;
+  52                             		.loc 1 420 5
+ 421:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     (void)filter_dims;
+  53                             		.loc 1 421 5
+ 422:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c ****     return 0;
+  54                             		.loc 1 422 5
+ 423:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** #endif
+ 424:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_depthwise_conv_s8_opt.c **** }
+  55                             		.loc 1 424 1 is_stmt 0
+  56 0000 66 01                   		mov.L	#0, r1
+  57                             	.LVL6:
+  58 0002 02                      		rts
+  59                             	.LFE83:
+ 105                             	.Letext0:
+ 106                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 107                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 108                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 109                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 110                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 111                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 112                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 113                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 114                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 115                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 116                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

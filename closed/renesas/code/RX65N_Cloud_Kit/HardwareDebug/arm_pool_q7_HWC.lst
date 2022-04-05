@@ -1,0 +1,1180 @@
+   1                             		.file	"arm_pool_q7_HWC.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_maxpool_q7_HWC,"ax",@progbits
+   5                             		.global	_arm_maxpool_q7_HWC
+   7                             	_arm_maxpool_q7_HWC:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c"
+   1:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** /*
+   2:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * Copyright (C) 2010-2018 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+   4:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+   6:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+  10:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+  12:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  */
+  18:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  19:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * Title:        arm_pool_q7_HWC.c
+  22:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * Description:  Pooling function implementations
+  23:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+  24:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * $Revision:    V.1.0.1
+  26:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+  27:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+  29:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  31:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  34:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #if defined(ARM_MATH_DSP)
+  35:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  36:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** /**
+  37:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @brief A few utility functions used by pooling functions
+  38:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+  39:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+  40:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  */
+  41:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  42:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** static void buffer_scale_back_q15_to_q7(q15_t *buffer, q7_t *target, uint16_t length, uint16_t scal
+  43:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** {
+  44:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int i;
+  45:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  46:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     for (i = 0; i < length; i++)
+  47:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+  48:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         target[i] = (q7_t)(buffer[i] / scale);
+  49:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+  50:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** }
+  51:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  52:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** static void compare_and_replace_if_larger_q7(q7_t *base,           // base data
+  53:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                                              const q7_t *target,   // compare target
+  54:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                                              const uint16_t length // data length
+  55:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** )
+  56:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** {
+  57:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     q7_t *pIn = base;
+  58:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     const q7_t *pCom = target;
+  59:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     union arm_nnword in;
+  60:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     union arm_nnword com;
+  61:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     uint16_t cnt = length >> 2;
+  62:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  63:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     while (cnt > 0u)
+  64:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+  65:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         in.word = arm_nn_read_q7x4((const q7_t *)pIn);
+  66:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         com.word = arm_nn_read_q7x4_ia((const q7_t **)&pCom);
+  67:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  68:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         // if version
+  69:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (com.bytes[0] > in.bytes[0])
+  70:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             in.bytes[0] = com.bytes[0];
+  71:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (com.bytes[1] > in.bytes[1])
+  72:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             in.bytes[1] = com.bytes[1];
+  73:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (com.bytes[2] > in.bytes[2])
+  74:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             in.bytes[2] = com.bytes[2];
+  75:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (com.bytes[3] > in.bytes[3])
+  76:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             in.bytes[3] = com.bytes[3];
+  77:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  78:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         *__SIMD32(pIn)++ = in.word;
+  79:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  80:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         cnt--;
+  81:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+  82:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  83:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     cnt = length & 0x3;
+  84:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     while (cnt > 0u)
+  85:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+  86:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (*pCom > *pIn)
+  87:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+  88:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             *pIn = *pCom;
+  89:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+  90:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         pIn++;
+  91:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         pCom++;
+  92:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         cnt--;
+  93:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+  94:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** }
+  95:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+  96:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** static void accumulate_q7_to_q15(q15_t *base, q7_t *target, const uint16_t length)
+  97:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** {
+  98:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     q15_t *pCnt = base;
+  99:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     q7_t *pV = target;
+ 100:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     q31_t v1, v2, vo1, vo2;
+ 101:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     uint16_t cnt = length >> 2;
+ 102:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     q31_t in;
+ 103:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 104:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     while (cnt > 0u)
+ 105:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 106:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         q31_t value = arm_nn_read_q7x4_ia((const q7_t **)&pV);
+ 107:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         v1 = __SXTB16(__ROR(value, 8));
+ 108:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         v2 = __SXTB16(value);
+ 109:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #ifndef ARM_MATH_BIG_ENDIAN
+ 110:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 111:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         vo2 = __PKHTB(v1, v2, 16);
+ 112:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         vo1 = __PKHBT(v2, v1, 16);
+ 113:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 114:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #else
+ 115:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 116:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         vo1 = __PKHTB(v1, v2, 16);
+ 117:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         vo2 = __PKHBT(v2, v1, 16);
+ 118:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 119:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #endif
+ 120:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 121:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         in = arm_nn_read_q15x2(pCnt);
+ 122:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         *__SIMD32(pCnt)++ = __QADD16(vo1, in);
+ 123:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 124:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         in = arm_nn_read_q15x2(pCnt);
+ 125:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         *__SIMD32(pCnt)++ = __QADD16(vo2, in);
+ 126:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 127:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         cnt--;
+ 128:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 129:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     cnt = length & 0x3;
+ 130:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     while (cnt > 0u)
+ 131:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 132:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         *pCnt++ += *pV++;
+ 133:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         cnt--;
+ 134:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 135:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** }
+ 136:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 137:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #endif // ARM_MATH_DSP
+ 138:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 139:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** /**
+ 140:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *  @ingroup groupNN
+ 141:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  */
+ 142:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 143:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** /**
+ 144:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @addtogroup Pooling
+ 145:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @{
+ 146:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  */
+ 147:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 148:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** /**
+ 149:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @brief Q7 max pooling function
+ 150:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in, out]  Im_in       pointer to input tensor
+ 151:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       dim_im_in   input tensor dimention
+ 152:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       ch_im_in    number of input tensor channels
+ 153:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       dim_kernel  filter kernel size
+ 154:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       padding     padding sizes
+ 155:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       stride      convolution stride
+ 156:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       dim_im_out  output tensor dimension
+ 157:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in,out]   bufferA     Not used
+ 158:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in,out]   Im_out      pointer to output tensor
+ 159:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 160:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @details
+ 161:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 162:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * The pooling function is implemented as split x-pooling then
+ 163:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * y-pooling.
+ 164:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 165:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * This pooling function is input-destructive. Input data is undefined
+ 166:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * after calling this function.
+ 167:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 168:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  */
+ 169:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 170:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** void arm_maxpool_q7_HWC(q7_t *Im_in,
+ 171:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t dim_im_in,
+ 172:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t ch_im_in,
+ 173:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t dim_kernel,
+ 174:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t padding,
+ 175:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t stride,
+ 176:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t dim_im_out,
+ 177:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         q7_t *bufferA,
+ 178:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         q7_t *Im_out)
+ 179:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** {
+  10                             		.loc 1 179 1
+  11                             	.LVL0:
+  12 0000 6E 6D                   		pushm	r6-r13
+  13                             	.LCFI0:
+  14 0002 71 00 B8                		add	#-72, r0
+  15                             	.LCFI1:
+ 180:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     (void)bufferA;
+  16                             		.loc 1 180 5
+ 181:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #if defined(ARM_MATH_DSP)
+ 182:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* Run the following code for Cortex-M4 and Cortex-M7 */
+ 183:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 184:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int16_t i_x, i_y;
+ 185:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 186:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* first does the pooling along x axis */
+ 187:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     for (i_y = 0; i_y < dim_im_in; i_y++)
+ 188:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 189:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 190:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         for (i_x = 0; i_x < dim_im_out; i_x++)
+ 191:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 192:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             /* for each output pixel */
+ 193:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             q7_t *target = Im_in + (i_y * dim_im_in + i_x) * ch_im_in;
+ 194:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             q7_t *win_start;
+ 195:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             q7_t *win_stop;
+ 196:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             if (i_x * stride - padding < 0)
+ 197:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 198:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_start = target;
+ 199:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 200:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             else
+ 201:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 202:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_start = Im_in + (i_y * dim_im_in + i_x * stride - padding) * ch_im_in;
+ 203:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 204:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 205:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             if (i_x * stride - padding + dim_kernel >= dim_im_in)
+ 206:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 207:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_stop = Im_in + (i_y * dim_im_in + dim_im_in) * ch_im_in;
+ 208:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 209:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             else
+ 210:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 211:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_stop = Im_in + (i_y * dim_im_in + i_x * stride - padding + dim_kernel) * ch_im_
+ 212:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 213:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 214:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             /* first step is to copy over initial data */
+ 215:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             /* arm_copy_q7(win_start, target, ch_im_in); */
+ 216:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             memmove(target, win_start, ch_im_in);
+ 217:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 218:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             /* start the max operation from the second part */
+ 219:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             win_start += ch_im_in;
+ 220:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             for (; win_start < win_stop; win_start += ch_im_in)
+ 221:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 222:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 compare_and_replace_if_larger_q7(target, win_start, ch_im_in);
+ 223:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 224:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 225:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 226:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 227:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* then does the pooling along y axis */
+ 228:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     for (i_y = 0; i_y < dim_im_out; i_y++)
+ 229:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 230:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 231:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* for each output row */
+ 232:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         q7_t *target = Im_out + i_y * dim_im_out * ch_im_in;
+ 233:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         q7_t *row_start;
+ 234:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         q7_t *row_end;
+ 235:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* setting the starting row */
+ 236:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (i_y * stride - padding < 0)
+ 237:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 238:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_start = Im_in;
+ 239:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 240:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         else
+ 241:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 242:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_start = Im_in + (i_y * stride - padding) * dim_im_in * ch_im_in;
+ 243:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 244:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* setting the stopping row */
+ 245:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (i_y * stride - padding + dim_kernel >= dim_im_in)
+ 246:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 247:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_end = Im_in + dim_im_in * dim_im_in * ch_im_in;
+ 248:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 249:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         else
+ 250:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 251:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_end = Im_in + (i_y * stride - padding + dim_kernel) * dim_im_in * ch_im_in;
+ 252:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 253:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 254:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* copy over the first row */
+ 255:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* arm_copy_q7(row_start, target, dim_im_out * ch_im_in); */
+ 256:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         memmove(target, row_start, dim_im_out * ch_im_in);
+ 257:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 258:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* move over to next row */
+ 259:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         row_start += ch_im_in * dim_im_in;
+ 260:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 261:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         for (; row_start < row_end; row_start += dim_im_in * ch_im_in)
+ 262:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 263:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             compare_and_replace_if_larger_q7(target, row_start, dim_im_out * ch_im_in);
+ 264:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 265:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 266:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 267:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #else
+ 268:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* Run the following code as reference implementation for Cortex-M0 and Cortex-M3 */
+ 269:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int16_t i_ch_in, i_x, i_y;
+  17                             		.loc 1 269 5
+ 270:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int16_t k_x, k_y;
+  18                             		.loc 1 270 5
+ 271:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 272:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     for (i_ch_in = 0; i_ch_in < ch_im_in; i_ch_in++)
+  19                             		.loc 1 272 5
+  20                             	.LVL1:
+ 179:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     (void)bufferA;
+  21                             		.loc 1 179 1 is_stmt 0
+  22 0005 75 47 6C                		mov.L	#0x6c, r7
+  23 0008 4B 07                   		add	r0, r7
+  24                             		.loc 1 272 31
+  25 000a 5F 38                   		movu.W	r3, r8
+ 179:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     (void)bufferA;
+  26                             		.loc 1 179 1
+  27 000c A2 89                   		mov.L	r1, 44[r0]
+  28 000e DC 75                   		mov.W	[r7], r5
+  29 0010 D5 70 01 04             		mov.W	2[r7], 8[r0]
+  30 0014 DD 7A 02                		mov.W	4[r7], r10
+  31 0017 E5 70 03 0C             		mov.L	12[r7], 48[r0]
+  32                             		.loc 1 272 5
+  33 001b 61 08                   		cmp	#0, r8
+  34 001d 3A EC 00                		beq	.L1
+ 273:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 274:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         for (i_y = 0; i_y < dim_im_out; i_y++)
+  35                             		.loc 1 274 27
+  36 0020 5F A6                   		movu.W	r10, r6
+  37 0022 E3 06                   		mov.L	r6, [r0]
+  38 0024 61 06                   		cmp	#0, r6
+  39 0026 3A E3 00                		beq	.L1
+ 272:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+  40                             		.loc 1 272 18
+  41 0029 3D 80 00                		mov.W	#0, 32[r0]
+ 272:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+  42                             		.loc 1 272 31
+  43 002c 66 0A                   		mov.L	#0, r10
+  44 002e B9 06                   		movu.W	8[r0], r6
+  45 0030 A1 86                   		mov.L	r6, 24[r0]
+  46 0032 5F 57                   		movu.W	r5, r7
+  47 0034 A1 0F                   		mov.L	r7, 20[r0]
+  48 0036 5F 44                   		movu.W	r4, r4
+  49 0038 A1 04                   		mov.L	r4, 16[r0]
+  50 003a 7E 15                   		neg	r5
+  51 003c 95 05                   		mov.W	r5, 40[r0]
+  52                             	.LBB2:
+ 275:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 276:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             for (i_x = 0; i_x < dim_im_out; i_x++)
+ 277:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 278:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 int max = -129;
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 for (k_y = i_y * stride - padding; k_y < i_y * stride - padding + dim_kernel; k_y++
+ 280:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     for (k_x = i_x * stride - padding; k_x < i_x * stride - padding + dim_kernel; k
+ 282:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         if (k_y >= 0 && k_x >= 0 && k_y < dim_im_in && k_x < dim_im_in)
+  53                             		.loc 1 283 57
+  54 003e 5F 2D                   		movu.W	r2, r13
+  55                             	.LVL2:
+  56                             		.balign 8,3,1
+  57                             	.L3:
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+  58                             		.loc 1 279 17
+  59 0040 D5 00 14 02             		mov.W	40[r0], 4[r0]
+  60                             	.LBE2:
+ 274:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+  61                             		.loc 1 274 18
+  62 0044 3D 82 00                		mov.W	#0, 36[r0]
+ 274:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+  63                             		.loc 1 274 27
+  64 0047 66 05                   		mov.L	#0, r5
+  65                             	.LBB3:
+ 284:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             if (Im_in[i_ch_in + ch_im_in * (k_x + k_y * dim_im_in)] > max)
+  66                             		.loc 1 285 38
+  67 0049 ED 0F 0B                		mov.L	44[r0], r15
+  68 004c 4B AF                   		add	r10, r15
+ 286:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             {
+ 287:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                                 max = Im_in[i_ch_in + ch_im_in * (k_x + k_y * dim_im_in)];
+ 288:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             }
+ 289:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         }
+ 290:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     }
+ 291:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 }
+ 292:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 Im_out[i_ch_in + ch_im_in * (i_x + i_y * dim_im_out)] = max;
+  69                             		.loc 1 292 71
+  70 004e AB 06                   		mov.L	48[r0], r6
+  71 0050 4B A6                   		add	r10, r6
+  72 0052 A1 8E                   		mov.L	r6, 28[r0]
+  73                             	.LVL3:
+  74                             		.balign 8,3,1
+  75                             	.L14:
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+  76                             		.loc 1 279 62
+  77 0054 A9 81                   		mov.L	24[r0], r1
+  78 0056 4F 51                   		mul	r5, r1
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+  79                             		.loc 1 279 56
+  80 0058 DD 0E 02                		mov.W	4[r0], r14
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+  81                             		.loc 1 279 71
+  82 005b ED 0A 05                		mov.L	20[r0], r10
+  83 005e 43 A1                   		sub	r10, r1
+  84                             		.loc 1 292 56
+  85 0060 EC 06                   		mov.L	[r0], r6
+  86 0062 4F 56                   		mul	r5, r6
+  87 0064 A0 8E                   		mov.L	r6, 12[r0]
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+  88                             		.loc 1 279 81
+  89 0066 06 89 01 04             		add	16[r0], r1
+  90                             		.loc 1 292 56
+  91 006a 9D 02                   		mov.W	40[r0], r2
+  92                             	.LBE3:
+ 276:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+  93                             		.loc 1 276 22
+  94 006c 66 09                   		mov	#0, r9
+ 276:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+  95                             		.loc 1 276 31
+  96 006e 66 0B                   		mov.L	#0, r11
+  97                             	.LVL4:
+  98                             		.balign 8,3,1
+  99                             	.L12:
+ 100                             	.LBB4:
+ 278:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 for (k_y = i_y * stride - padding; k_y < i_y * stride - padding + dim_kernel; k_y++
+ 101                             		.loc 1 278 17 is_stmt 1
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 102                             		.loc 1 279 17
+ 103 0070 47 1E                   		cmp	r1, r14
+ 104 0072 29 05 38 C1 00          		bge	.L16
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 105                             		.loc 1 281 66 is_stmt 0
+ 106 0077 ED 0A 06                		mov.L	24[r0], r10
+ 107 007a 4F BA                   		mul	r11, r10
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 108                             		.loc 1 281 60
+ 109 007c DF 23                   		mov.W	r2, r3
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 110                             		.loc 1 281 75
+ 111 007e A9 0F                   		mov.L	20[r0], r7
+ 112 0080 43 7A                   		sub	r7, r10
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 113                             		.loc 1 279 26
+ 114 0082 98 84                   		mov.W	4[r0], r4
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 115                             		.loc 1 281 85
+ 116 0084 06 89 0A 04             		add	16[r0], r10
+ 117 0088 EF E7                   		mov.L	r14, r7
+ 278:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 for (k_y = i_y * stride - padding; k_y < i_y * stride - padding + dim_kernel; k_y++
+ 118                             		.loc 1 278 21
+ 119 008a FB CA 7F FF             		mov.L	#-129, r12
+ 120                             	.LVL5:
+ 121                             		.balign 8,3,1
+ 122                             	.L11:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 123                             		.loc 1 281 21 is_stmt 1
+ 124 008e 47 A3                   		cmp	r10, r3
+ 125 0090 28 30                   		bge	.L5
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             {
+ 126                             		.loc 1 285 71 is_stmt 0
+ 127 0092 FF 36 D7                		mul	r13, r7, r6
+ 128 0095 7C F4                   		btst	#15, r4
+ 129 0097 3B 87 00                		bne	.L29
+ 130 009a 47 7D                   		cmp	r7, r13
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 131                             		.loc 1 281 30
+ 132 009c DF 27                   		mov.W	r2, r7
+ 133 009e 2B 6E                   		ble	.L9
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             {
+ 134                             		.loc 1 285 71
+ 135 00a0 EF 35                   		mov.L	r3, r5
+ 136 00a2 A3 0E                   		mov.L	r6, 52[r0]
+ 137                             	.LVL6:
+ 138                             		.balign 8,3,2
+ 139                             	.L8:
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 140                             		.loc 1 283 25 is_stmt 1
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 141                             		.loc 1 283 38 is_stmt 0
+ 142 00a4 7C F7                   		btst	#15, r7
+ 143 00a6 21 12                   		bne	.L10
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             {
+ 144                             		.loc 1 285 29 is_stmt 1 discriminator 3
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 145                             		.loc 1 283 69 is_stmt 0 discriminator 3
+ 146 00a8 47 5D                   		cmp	r5, r13
+ 147 00aa 2B 0E                   		ble	.L10
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             {
+ 148                             		.loc 1 285 65
+ 149 00ac 06 89 05 0D             		add	52[r0], r5
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             {
+ 150                             		.loc 1 285 58
+ 151 00b0 4F 85                   		mul	r8, r5
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             {
+ 152                             		.loc 1 285 38
+ 153 00b2 FE 45 F5                		mov.B	[r5,r15], r5
+ 154 00b5 FC 13 5C                		max	r5, r12
+ 155                             	.LVL7:
+ 156                             		.balign 8,3,1
+ 157                             	.L10:
+ 158 00b8 62 17                   		add	#1, r7
+ 159                             	.LVL8:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 160                             		.loc 1 281 60 discriminator 2
+ 161 00ba DF 75                   		mov.W	r7, r5
+ 162                             	.LVL9:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 163                             		.loc 1 281 21 discriminator 2
+ 164 00bc 47 A5                   		cmp	r10, r5
+ 165 00be 29 E6                   		blt	.L8
+ 166                             	.LVL10:
+ 167                             		.balign 8,3,1
+ 168                             	.L5:
+ 169 00c0 62 14                   		add	#1, r4
+ 170                             	.LVL11:
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 171                             		.loc 1 279 56 discriminator 2
+ 172 00c2 DF 47                   		mov.W	r4, r7
+ 173                             	.LVL12:
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 174                             		.loc 1 279 17 discriminator 2
+ 175 00c4 47 17                   		cmp	r1, r7
+ 176 00c6 29 C8                   		blt	.L11
+ 177                             	.LVL13:
+ 178                             		.balign 8,3,1
+ 179                             	.L4:
+ 180                             		.loc 1 292 17 is_stmt 1 discriminator 2
+ 181                             		.loc 1 292 50 is_stmt 0 discriminator 2
+ 182 00c8 A8 8F                   		mov.L	12[r0], r7
+ 183 00ca 4B B7                   		add	r11, r7
+ 184 00cc 62 19                   		add	#1, r9
+ 185                             	.LVL14:
+ 186                             		.loc 1 292 43 discriminator 2
+ 187 00ce 4F 87                   		mul	r8, r7
+ 188                             	.LBE4:
+ 276:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 189                             		.loc 1 276 31 discriminator 2
+ 190 00d0 DF 9B                   		mov.W	r9, r11
+ 191                             	.LVL15:
+ 192                             	.LBB5:
+ 193                             		.loc 1 292 71 discriminator 2
+ 194 00d2 ED 0A 07                		mov.L	28[r0], r10
+ 195 00d5 FE 07 AC                		mov.B	r12, [r7,r10]
+ 196 00d8 99 05                   		mov.W	8[r0], r5
+ 197 00da 4B 52                   		add	r5, r2
+ 198                             	.LBE5:
+ 276:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 199                             		.loc 1 276 13 discriminator 2
+ 200 00dc EC 06                   		mov.L	[r0], r6
+ 201 00de 47 6B                   		cmp	r6, r11
+ 202 00e0 29 90                   		blt	.L12
+ 203 00e2 9C 87                   		mov.W	36[r0], r7
+ 204 00e4 62 17                   		add	#1, r7
+ 205 00e6 DD 0A 02                		mov.W	4[r0], r10
+ 206 00e9 4B A5                   		add	r10, r5
+ 207 00eb 90 85                   		mov.W	r5, 4[r0]
+ 274:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 208                             		.loc 1 274 27 discriminator 2
+ 209 00ed DF 75                   		mov.W	r7, r5
+ 210 00ef 94 87                   		mov.W	r7, 36[r0]
+ 211                             	.LVL16:
+ 274:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 212                             		.loc 1 274 9 discriminator 2
+ 213 00f1 EC 07                   		mov.L	[r0], r7
+ 214                             	.LVL17:
+ 215 00f3 47 75                   		cmp	r7, r5
+ 216 00f5 28 05 38 5D FF          		blt	.L14
+ 217 00fa 9C 07                   		mov.W	32[r0], r7
+ 218 00fc 62 17                   		add	#1, r7
+ 272:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 219                             		.loc 1 272 31
+ 220 00fe DF 7A                   		mov.W	r7, r10
+ 221 0100 94 07                   		mov.W	r7, 32[r0]
+ 222                             	.LVL18:
+ 272:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 223                             		.loc 1 272 5
+ 224 0102 47 8A                   		cmp	r8, r10
+ 225 0104 28 05 38 3A FF          		blt	.L3
+ 226                             	.LVL19:
+ 227                             		.balign 8,3,2
+ 228                             	.L1:
+ 293:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 294:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 295:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 296:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 297:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #endif /* ARM_MATH_DSP */
+ 298:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** }
+ 229                             		.loc 1 298 1
+ 230 0109 3F 6D 1A                		rtsd	#104, r6-r13
+ 231                             	.LVL20:
+ 232                             	.L9:
+ 233                             	.LBB6:
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 234                             		.loc 1 283 25 is_stmt 1
+ 235 010c 62 17                   		add	#1, r7
+ 236                             	.LVL21:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 237                             		.loc 1 281 60 is_stmt 0
+ 238 010e DF 75                   		mov.W	r7, r5
+ 239                             	.LVL22:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 240                             		.loc 1 281 21
+ 241 0110 47 A5                   		cmp	r10, r5
+ 242 0112 28 AE                   		bge	.L5
+ 243                             	.LVL23:
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 244                             		.loc 1 283 25 is_stmt 1
+ 245 0114 62 17                   		add	#1, r7
+ 246                             	.LVL24:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 247                             		.loc 1 281 60 is_stmt 0
+ 248 0116 DF 75                   		mov.W	r7, r5
+ 249                             	.LVL25:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 250                             		.loc 1 281 21
+ 251 0118 47 A5                   		cmp	r10, r5
+ 252 011a 29 F2                   		blt	.L9
+ 253 011c 2E A4                   		bra	.L5
+ 254                             	.LVL26:
+ 255                             	.L29:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 256                             		.loc 1 281 30
+ 257 011e DF 27                   		mov.W	r2, r7
+ 258                             	.LVL27:
+ 259                             		.balign 8,3,1
+ 260                             	.L7:
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 261                             		.loc 1 283 25 is_stmt 1
+ 262 0120 62 17                   		add	#1, r7
+ 263                             	.LVL28:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 264                             		.loc 1 281 60 is_stmt 0
+ 265 0122 DF 75                   		mov.W	r7, r5
+ 266                             	.LVL29:
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 267                             		.loc 1 281 21
+ 268 0124 47 5A                   		cmp	r5, r10
+ 269 0126 2A FA                   		bgt	.L7
+ 270 0128 62 14                   		add	#1, r4
+ 271                             	.LVL30:
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 272                             		.loc 1 279 56
+ 273 012a DF 47                   		mov.W	r4, r7
+ 274                             	.LVL31:
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 275                             		.loc 1 279 17
+ 276 012c 47 17                   		cmp	r1, r7
+ 277 012e 28 05 38 5E FF          		blt	.L11
+ 278 0133 2E 95                   		bra	.L4
+ 279                             	.LVL32:
+ 280                             	.L16:
+ 281 0135 75 4C 7F                		mov	#0x7f, r12
+ 282 0138 2E 90                   		bra	.L4
+ 283                             	.LBE6:
+ 284                             	.LFE82:
+ 286 013a 74 10 01 00 00 00       		.section	.text.arm_avepool_q7_HWC,"ax",@progbits
+ 287                             		.global	_arm_avepool_q7_HWC
+ 289                             	_arm_avepool_q7_HWC:
+ 290                             	.LFB83:
+ 299:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 300:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** /**
+ 301:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @brief Q7 average pooling function
+ 302:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in,out]   Im_in       pointer to input tensor
+ 303:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       dim_im_in   input tensor dimention
+ 304:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       ch_im_in    number of input tensor channels
+ 305:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       dim_kernel  filter kernel size
+ 306:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       padding     padding sizes
+ 307:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       stride      convolution stride
+ 308:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in]       dim_im_out  output tensor dimension
+ 309:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in,out]   bufferA     pointer to buffer space for input
+ 310:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @param[in,out]   Im_out      pointer to output tensor
+ 311:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 312:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * @details
+ 313:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 314:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * <b>Buffer size:</b>
+ 315:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 316:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * bufferA size:  2*dim_im_out*ch_im_in
+ 317:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 318:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * The pooling function is implemented as split x-pooling then
+ 319:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * y-pooling.
+ 320:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 321:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * This pooling function is input-destructive. Input data is undefined
+ 322:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  * after calling this function.
+ 323:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  *
+ 324:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****  */
+ 325:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 326:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** void arm_avepool_q7_HWC(q7_t *Im_in,
+ 327:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t dim_im_in,
+ 328:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t ch_im_in,
+ 329:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t dim_kernel,
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t padding,
+ 331:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t stride,
+ 332:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         const uint16_t dim_im_out,
+ 333:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         q7_t *bufferA,
+ 334:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         q7_t *Im_out)
+ 335:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** {
+ 291                             		.loc 1 335 1 is_stmt 1
+ 292                             	.LVL33:
+ 293 0000 6E 6D                   		pushm	r6-r13
+ 294                             	.LCFI2:
+ 295 0002 71 00 AC                		add	#-84, r0
+ 296                             	.LCFI3:
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 337:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #if defined(ARM_MATH_DSP)
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* Run the following code for Cortex-M4 and Cortex-M7 */
+ 339:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     q15_t *buffer = (q15_t *)bufferA;
+ 341:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int16_t i_x, i_y;
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int16_t count = 0;
+ 343:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 344:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* first does the pooling along x axis */
+ 345:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     for (i_y = 0; i_y < dim_im_in; i_y++)
+ 346:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 347:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 348:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         for (i_x = 0; i_x < dim_im_out; i_x++)
+ 349:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 350:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             /* for each output pixel */
+ 351:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             q7_t *target = Im_in + (i_y * dim_im_in + i_x) * ch_im_in;
+ 352:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             q7_t *win_start;
+ 353:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             q7_t *win_stop;
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             if (i_x * stride - padding < 0)
+ 355:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 356:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_start = target;
+ 357:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 358:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             else
+ 359:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 360:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_start = Im_in + (i_y * dim_im_in + i_x * stride - padding) * ch_im_in;
+ 361:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 362:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 363:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             if (i_x * stride - padding + dim_kernel >= dim_im_in)
+ 364:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 365:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_stop = Im_in + (i_y * dim_im_in + dim_im_in) * ch_im_in;
+ 366:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 367:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             else
+ 368:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 369:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 win_stop = Im_in + (i_y * dim_im_in + i_x * stride - padding + dim_kernel) * ch_im_
+ 370:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 371:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 372:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             /* first step is to copy over initial data */
+ 373:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             arm_q7_to_q15_no_shift(win_start, buffer, ch_im_in);
+ 374:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             count = 1;
+ 375:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 376:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             /* start the max operation from the second part */
+ 377:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             win_start += ch_im_in;
+ 378:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             for (; win_start < win_stop; win_start += ch_im_in)
+ 379:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 380:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 accumulate_q7_to_q15(buffer, win_start, ch_im_in);
+ 381:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 count++;
+ 382:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 383:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             buffer_scale_back_q15_to_q7(buffer, target, ch_im_in, count);
+ 384:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 385:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 386:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 387:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* then does the pooling along y axis */
+ 388:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     for (i_y = 0; i_y < dim_im_out; i_y++)
+ 389:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 390:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* for each output row */
+ 391:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         q7_t *target = Im_out + i_y * dim_im_out * ch_im_in;
+ 392:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         q7_t *row_start;
+ 393:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         q7_t *row_end;
+ 394:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* setting the starting row */
+ 395:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (i_y * stride - padding < 0)
+ 396:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 397:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_start = Im_in;
+ 398:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 399:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         else
+ 400:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 401:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_start = Im_in + (i_y * stride - padding) * dim_im_in * ch_im_in;
+ 402:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 403:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* setting the stopping row */
+ 404:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         if (i_y * stride - padding + dim_kernel >= dim_im_in)
+ 405:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 406:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_end = Im_in + dim_im_in * dim_im_in * ch_im_in;
+ 407:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 408:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         else
+ 409:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 410:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             row_end = Im_in + (i_y * stride - padding + dim_kernel) * dim_im_in * ch_im_in;
+ 411:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 412:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 413:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* copy over the first row */
+ 414:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         arm_q7_to_q15_no_shift(row_start, buffer, dim_im_out * ch_im_in);
+ 415:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         count = 1;
+ 416:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 417:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         /* move over to next row */
+ 418:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         row_start += ch_im_in * dim_im_in;
+ 419:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 420:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         for (; row_start < row_end; row_start += dim_im_in * ch_im_in)
+ 421:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 422:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             accumulate_q7_to_q15(buffer, row_start, dim_im_out * ch_im_in);
+ 423:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             count++;
+ 424:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 425:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         buffer_scale_back_q15_to_q7(buffer, target, dim_im_out * ch_im_in, count);
+ 426:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 427:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 428:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #else
+ 429:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     /* Run the following code as reference implementation for Cortex-M0 and Cortex-M3 */
+ 430:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 431:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     (void)bufferA;
+ 297                             		.loc 1 431 5
+ 432:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int16_t i_ch_in, i_x, i_y;
+ 298                             		.loc 1 432 5
+ 433:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     int16_t k_x, k_y;
+ 299                             		.loc 1 433 5
+ 434:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 435:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     for (i_ch_in = 0; i_ch_in < ch_im_in; i_ch_in++)
+ 300                             		.loc 1 435 5
+ 301                             	.LVL34:
+ 335:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 302                             		.loc 1 335 1 is_stmt 0
+ 303 0005 75 47 78                		mov.L	#0x78, r7
+ 304 0008 4B 07                   		add	r0, r7
+ 305                             		.loc 1 435 31
+ 306 000a 5F 3D                   		movu.W	r3, r13
+ 335:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 307                             		.loc 1 335 1
+ 308 000c A3 09                   		mov.L	r1, 52[r0]
+ 309 000e 97 04                   		mov.W	r4, 56[r0]
+ 310 0010 D4 70 16                		mov.W	[r7], 44[r0]
+ 311 0013 D5 70 01 0C             		mov.W	2[r7], 24[r0]
+ 312 0017 DD 7A 02                		mov.W	4[r7], r10
+ 313 001a E5 70 03 0F             		mov.L	12[r7], 60[r0]
+ 314                             		.loc 1 435 5
+ 315 001e 61 0D                   		cmp	#0, r13
+ 316 0020 3A 29 01                		beq	.L30
+ 436:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 437:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         for (i_y = 0; i_y < dim_im_out; i_y++)
+ 317                             		.loc 1 437 27
+ 318 0023 5F A1                   		movu.W	r10, r1
+ 319                             	.LVL35:
+ 320 0025 A0 09                   		mov.L	r1, 4[r0]
+ 435:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 321                             		.loc 1 435 18
+ 322 0027 3D 82 00                		mov.W	#0, 36[r0]
+ 435:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 323                             		.loc 1 435 31
+ 324 002a 66 07                   		mov.L	#0, r7
+ 325 002c 9D 85                   		mov.W	44[r0], r5
+ 326 002e 7E 15                   		neg	r5
+ 327 0030 96 05                   		mov.W	r5, 48[r0]
+ 328 0032 5D 0A 0C                		movu.W	24[r0], r10
+ 329 0035 E7 0A 05                		mov.L	r10, 20[r0]
+ 330                             	.LBB7:
+ 438:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 439:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             for (i_x = 0; i_x < dim_im_out; i_x++)
+ 440:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 441:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 int sum = 0;
+ 442:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 int count = 0;
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 for (k_y = i_y * stride - padding; k_y < i_y * stride - padding + dim_kernel; k_y++
+ 444:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     for (k_x = i_x * stride - padding; k_x < i_x * stride - padding + dim_kernel; k
+ 446:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 447:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         if (k_y >= 0 && k_x >= 0 && k_y < dim_im_in && k_x < dim_im_in)
+ 331                             		.loc 1 447 57
+ 332 0038 5F 28                   		movu.W	r2, r8
+ 333 003a EF DF                   		mov.L	r13, r15
+ 334                             	.LVL36:
+ 335                             		.balign 8,3,1
+ 336                             	.L32:
+ 337                             	.LBE7:
+ 437:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 338                             		.loc 1 437 9
+ 339 003c ED 0A 01                		mov.L	4[r0], r10
+ 340 003f 61 0A                   		cmp	#0, r10
+ 341 0041 3A F7 00                		beq	.L41
+ 342 0044 D1 00 18                		mov.W	48[r0], [r0]
+ 437:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 343                             		.loc 1 437 18
+ 344 0047 3D 84 00                		mov.W	#0, 40[r0]
+ 437:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 345                             		.loc 1 437 27
+ 346 004a 66 0A                   		mov.L	#0, r10
+ 347 004c BD 81                   		movu.W	44[r0], r1
+ 348 004e A1 01                   		mov.L	r1, 16[r0]
+ 349 0050 BF 05                   		movu.W	56[r0], r5
+ 350 0052 A0 8D                   		mov.L	r5, 12[r0]
+ 351                             	.LBB8:
+ 448:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             sum += Im_in[i_ch_in + ch_im_in * (k_x + k_y * dim_im_in)];
+ 352                             		.loc 1 449 41
+ 353 0054 ED 0E 0D                		mov.L	52[r0], r14
+ 354 0057 4B 7E                   		add	r7, r14
+ 450:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 451:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         }
+ 452:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     }
+ 453:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 }
+ 454:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 Im_out[i_ch_in + ch_im_in * (i_x + i_y * dim_im_out)] = sum / count;
+ 355                             		.loc 1 454 71
+ 356 0059 06 89 07 0F             		add	60[r0], r7
+ 357 005d A2 07                   		mov.L	r7, 32[r0]
+ 358                             	.LVL37:
+ 359 005f 03                      		.balign 8,3,1
+ 360                             	.L44:
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 361                             		.loc 1 443 62
+ 362 0060 A9 0E                   		mov.L	20[r0], r6
+ 363 0062 4F A6                   		mul	r10, r6
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 364                             		.loc 1 443 56
+ 365 0064 DC 05                   		mov.W	[r0], r5
+ 366 0066 A0 85                   		mov.L	r5, 8[r0]
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 367                             		.loc 1 443 71
+ 368 0068 A9 07                   		mov.L	16[r0], r7
+ 369 006a 43 76                   		sub	r7, r6
+ 370                             		.loc 1 454 56
+ 371 006c A8 09                   		mov.L	4[r0], r1
+ 372 006e 4F A1                   		mul	r10, r1
+ 373 0070 A1 89                   		mov.L	r1, 28[r0]
+ 441:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 int count = 0;
+ 374                             		.loc 1 441 17 is_stmt 1
+ 375                             	.LVL38:
+ 442:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 for (k_y = i_y * stride - padding; k_y < i_y * stride - padding + dim_kernel; k_y++
+ 376                             		.loc 1 442 17
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 377                             		.loc 1 443 17
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 378                             		.loc 1 443 81 is_stmt 0
+ 379 0072 06 89 06 03             		add	12[r0], r6
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 380                             		.loc 1 443 17
+ 381 0076 47 65                   		cmp	r6, r5
+ 382 0078 29 05 38 D2 00          		bge	.L61
+ 383 007d 9E 02                   		mov.W	48[r0], r2
+ 384 007f 66 1D                   		mov	#1, r13
+ 385                             	.LBE8:
+ 439:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 386                             		.loc 1 439 31
+ 387 0081 66 0B                   		mov.L	#0, r11
+ 388                             	.LVL39:
+ 389                             		.balign 8,3,1
+ 390                             	.L42:
+ 391                             	.LBB9:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 392                             		.loc 1 445 66
+ 393 0083 ED 0A 05                		mov.L	20[r0], r10
+ 394 0086 4F BA                   		mul	r11, r10
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 395                             		.loc 1 445 60
+ 396 0088 DF 23                   		mov.W	r2, r3
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 397                             		.loc 1 445 75
+ 398 008a A9 05                   		mov.L	16[r0], r5
+ 399 008c 43 5A                   		sub	r5, r10
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 400                             		.loc 1 443 26
+ 401 008e DC 04                   		mov.W	[r0], r4
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 402                             		.loc 1 445 85
+ 403 0090 06 89 0A 03             		add	12[r0], r10
+ 404 0094 A8 87                   		mov.L	8[r0], r7
+ 442:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 for (k_y = i_y * stride - padding; k_y < i_y * stride - padding + dim_kernel; k_y++
+ 405                             		.loc 1 442 21
+ 406 0096 66 09                   		mov.L	#0, r9
+ 441:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 int count = 0;
+ 407                             		.loc 1 441 21
+ 408 0098 66 0C                   		mov.L	#0, r12
+ 409                             	.LVL40:
+ 410                             		.balign 8,3,1
+ 411                             	.L39:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 412                             		.loc 1 445 21 is_stmt 1
+ 413 009a 47 A3                   		cmp	r10, r3
+ 414 009c 28 31                   		bge	.L33
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 415                             		.loc 1 449 74 is_stmt 0
+ 416 009e FF 31 78                		mul	r7, r8, r1
+ 417 00a1 7C F4                   		btst	#15, r4
+ 418 00a3 21 62                   		bne	.L62
+ 419 00a5 47 78                   		cmp	r7, r8
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 420                             		.loc 1 445 30
+ 421 00a7 DF 27                   		mov.W	r2, r7
+ 422 00a9 2B 4A                   		ble	.L37
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 423                             		.loc 1 449 74
+ 424 00ab EF 35                   		mov.L	r3, r5
+ 425 00ad A4 01                   		mov.L	r1, 64[r0]
+ 426                             	.LVL41:
+ 427 00af 03                      		.balign 8,3,2
+ 428                             	.L36:
+ 447:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 429                             		.loc 1 447 25 is_stmt 1
+ 447:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 430                             		.loc 1 447 38 is_stmt 0
+ 431 00b0 7C F7                   		btst	#15, r7
+ 432 00b2 21 13                   		bne	.L38
+ 447:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 433                             		.loc 1 447 69 discriminator 3
+ 434 00b4 47 58                   		cmp	r5, r8
+ 435 00b6 2B 0F                   		ble	.L38
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 436                             		.loc 1 449 29 is_stmt 1
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 437                             		.loc 1 449 68 is_stmt 0
+ 438 00b8 06 89 05 10             		add	64[r0], r5
+ 450:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         }
+ 439                             		.loc 1 450 34
+ 440 00bc 62 19                   		add	#1, r9
+ 441                             	.LVL42:
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 442                             		.loc 1 449 61
+ 443 00be 4F F5                   		mul	r15, r5
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 444                             		.loc 1 449 41
+ 445 00c0 FE 45 E5                		mov.B	[r5,r14], r5
+ 449:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                             count++;
+ 446                             		.loc 1 449 33
+ 447 00c3 4B 5C                   		add	r5, r12
+ 448                             	.LVL43:
+ 450:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         }
+ 449                             		.loc 1 450 29 is_stmt 1
+ 450                             		.balign 8,3,1
+ 451                             	.L38:
+ 452 00c5 62 17                   		add	#1, r7
+ 453                             	.LVL44:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 454                             		.loc 1 445 60 is_stmt 0 discriminator 2
+ 455 00c7 DF 75                   		mov.W	r7, r5
+ 456                             	.LVL45:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 457                             		.loc 1 445 21 discriminator 2
+ 458 00c9 47 A5                   		cmp	r10, r5
+ 459 00cb 29 E5                   		blt	.L36
+ 460                             	.LVL46:
+ 461                             		.balign 8,3,1
+ 462                             	.L33:
+ 463 00cd 62 14                   		add	#1, r4
+ 464                             	.LVL47:
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 465                             		.loc 1 443 56 discriminator 2
+ 466 00cf DF 47                   		mov.W	r4, r7
+ 467                             	.LVL48:
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 468                             		.loc 1 443 17 discriminator 2
+ 469 00d1 47 67                   		cmp	r6, r7
+ 470 00d3 29 C7                   		blt	.L39
+ 471                             	.LVL49:
+ 472                             		.balign 8,3,2
+ 473                             	.L64:
+ 474                             		.loc 1 454 17 is_stmt 1 discriminator 2
+ 475                             		.loc 1 454 77 is_stmt 0 discriminator 2
+ 476 00d5 FC 23 9C                		div	r9, r12
+ 477                             	.LVL50:
+ 478                             		.loc 1 454 50 discriminator 2
+ 479 00d8 A9 8F                   		mov.L	28[r0], r7
+ 480 00da 4B B7                   		add	r11, r7
+ 481                             		.loc 1 454 43 discriminator 2
+ 482 00dc 4F F7                   		mul	r15, r7
+ 483                             	.LBE9:
+ 439:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 484                             		.loc 1 439 31 discriminator 2
+ 485 00de DF DB                   		mov.W	r13, r11
+ 486                             	.LBB10:
+ 487                             		.loc 1 454 71 discriminator 2
+ 488 00e0 AA 05                   		mov.L	32[r0], r5
+ 489 00e2 FE 07 5C                		mov.B	r12, [r7,r5]
+ 490                             	.LVL51:
+ 491                             	.LBE10:
+ 439:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             {
+ 492                             		.loc 1 439 13 discriminator 2
+ 493 00e5 A8 0F                   		mov.L	4[r0], r7
+ 494 00e7 47 7B                   		cmp	r7, r11
+ 495 00e9 28 31                   		bge	.L63
+ 496                             	.LBB11:
+ 441:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 int count = 0;
+ 497                             		.loc 1 441 17 is_stmt 1
+ 498                             	.LVL52:
+ 442:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 for (k_y = i_y * stride - padding; k_y < i_y * stride - padding + dim_kernel; k_y++
+ 499                             		.loc 1 442 17
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 500                             		.loc 1 443 17
+ 501 00eb 9B 01                   		mov.W	24[r0], r1
+ 502 00ed 4B 12                   		add	r1, r2
+ 503 00ef 62 1D                   		add	#1, r13
+ 504                             	.LVL53:
+ 505 00f1 2E 92                   		bra	.L42
+ 506                             	.LVL54:
+ 507                             	.L37:
+ 447:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 508                             		.loc 1 447 25
+ 509 00f3 62 17                   		add	#1, r7
+ 510                             	.LVL55:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 511                             		.loc 1 445 60 is_stmt 0
+ 512 00f5 DF 75                   		mov.W	r7, r5
+ 513                             	.LVL56:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 514                             		.loc 1 445 21
+ 515 00f7 47 A5                   		cmp	r10, r5
+ 516 00f9 28 D4                   		bge	.L33
+ 517                             	.LVL57:
+ 447:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 518                             		.loc 1 447 25 is_stmt 1
+ 519 00fb 62 17                   		add	#1, r7
+ 520                             	.LVL58:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 521                             		.loc 1 445 60 is_stmt 0
+ 522 00fd DF 75                   		mov.W	r7, r5
+ 523                             	.LVL59:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 524                             		.loc 1 445 21
+ 525 00ff 47 A5                   		cmp	r10, r5
+ 526 0101 29 F2                   		blt	.L37
+ 527 0103 2E CA                   		bra	.L33
+ 528                             	.LVL60:
+ 529                             	.L62:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 530                             		.loc 1 445 30
+ 531 0105 DF 27                   		mov.W	r2, r7
+ 532                             	.LVL61:
+ 533 0107 03                      		.balign 8,3,1
+ 534                             	.L35:
+ 447:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                         {
+ 535                             		.loc 1 447 25 is_stmt 1
+ 536 0108 62 17                   		add	#1, r7
+ 537                             	.LVL62:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 538                             		.loc 1 445 60 is_stmt 0
+ 539 010a DF 75                   		mov.W	r7, r5
+ 540                             	.LVL63:
+ 445:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                     {
+ 541                             		.loc 1 445 21
+ 542 010c 47 5A                   		cmp	r5, r10
+ 543 010e 2A FA                   		bgt	.L35
+ 544 0110 62 14                   		add	#1, r4
+ 545                             	.LVL64:
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 546                             		.loc 1 443 56
+ 547 0112 DF 47                   		mov.W	r4, r7
+ 548                             	.LVL65:
+ 443:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****                 {
+ 549                             		.loc 1 443 17
+ 550 0114 47 67                   		cmp	r6, r7
+ 551 0116 29 84                   		blt	.L39
+ 552 0118 2E BD                   		bra	.L64
+ 553                             	.LVL66:
+ 554                             	.L63:
+ 555 011a 9D 07                   		mov.W	40[r0], r7
+ 556 011c 62 17                   		add	#1, r7
+ 557                             	.LBE11:
+ 437:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 558                             		.loc 1 437 27 discriminator 2
+ 559 011e DF 7A                   		mov.W	r7, r10
+ 560 0120 95 07                   		mov.W	r7, 40[r0]
+ 561                             	.LVL67:
+ 562 0122 9B 05                   		mov.W	24[r0], r5
+ 563 0124 DC 07                   		mov.W	[r0], r7
+ 564                             	.LVL68:
+ 565 0126 4B 75                   		add	r7, r5
+ 566 0128 D3 05                   		mov.W	r5, [r0]
+ 437:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         {
+ 567                             		.loc 1 437 9 discriminator 2
+ 568 012a A8 09                   		mov.L	4[r0], r1
+ 569 012c 47 1A                   		cmp	r1, r10
+ 570 012e 28 05 38 30 FF          		blt	.L44
+ 571                             	.LVL69:
+ 572 0133 77 10 01 00 00          		.balign 8,3,5
+ 573                             	.L41:
+ 574 0138 DD 0A 12                		mov.W	36[r0], r10
+ 575 013b 62 1A                   		add	#1, r10
+ 435:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 576                             		.loc 1 435 31
+ 577 013d DF A7                   		mov.W	r10, r7
+ 578 013f D7 0A 12                		mov.W	r10, 36[r0]
+ 579                             	.LVL70:
+ 435:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     {
+ 580                             		.loc 1 435 5
+ 581 0142 47 7F                   		cmp	r7, r15
+ 582 0144 2B 05 38 F6 FE          		bgt	.L32
+ 583                             	.LVL71:
+ 584                             		.balign 8,3,2
+ 585                             	.L30:
+ 455:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 456:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****         }
+ 457:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****     }
+ 458:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** 
+ 459:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** #endif /* ARM_MATH_DSP */
+ 460:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c **** }
+ 586                             		.loc 1 460 1
+ 587 0149 3F 6D 1D                		rtsd	#116, r6-r13
+ 588                             	.LVL72:
+ 589                             	.L61:
+ 590                             	.LBB12:
+ 454:../src/CMSIS/NN/Source/PoolingFunctions/arm_pool_q7_HWC.c ****             }
+ 591                             		.loc 1 454 17 is_stmt 1
+ 592 014c 05 00 00 00             		bsr	_abort
+ 593                             	.LVL73:
+ 594                             	.LBE12:
+ 595                             	.LFE83:
+ 679                             	.Letext0:
+ 680                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 681                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 682                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 683                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 684                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 685                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 686                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 687                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 688                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 689                             		.file 11 "<built-in>"

@@ -1,0 +1,168 @@
+   1                             		.file	"arm_q7_to_q15_no_shift.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_q7_to_q15_no_shift,"ax",@progbits
+   5                             		.global	_arm_q7_to_q15_no_shift
+   7                             	_arm_q7_to_q15_no_shift:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c"
+   1:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** /*
+   2:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+   4:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+   6:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  10:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  12:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  */
+  18:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  19:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * Title:        arm_q7_to_q15_no_shift.c
+  22:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * Description:  Converts the elements of the Q7 vector to Q15 vector without left-shift
+  23:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  24:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * $Date:        May 29, 2020
+  25:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * $Revision:    V.1.0.2
+  26:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  27:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  29:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  31:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** #include "arm_nnsupportfunctions.h"
+  32:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  33:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** /**
+  34:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * @ingroup groupSupport
+  35:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  */
+  36:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  37:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** /**
+  38:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * @addtogroup nndata_convert
+  39:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * @{
+  40:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  */
+  41:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  42:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** /**
+  43:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * @brief Converts the elements of the Q7 vector to Q15 vector without left-shift
+  44:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * @param[in]       *pSrc points to the Q7 input vector
+  45:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * @param[out]      *pDst points to the Q15 output vector
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * @param[in]       blockSize length of the input vector
+  47:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  48:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * \par Description:
+  49:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  50:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * The equation used for the conversion process is:
+  51:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  52:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * <pre>
+  53:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * 	pDst[n] = (q15_t) pSrc[n];   0 <= n < blockSize.
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  * </pre>
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  *
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****  */
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  58:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** void arm_q7_to_q15_no_shift(const q7_t *pSrc, q15_t *pDst, uint32_t blockSize)
+  59:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** {
+  10                             		.loc 1 59 1
+  11                             	.LVL0:
+  60:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     const q7_t *pIn = pSrc;
+  12                             		.loc 1 60 5
+  61:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     uint32_t blkCnt;
+  13                             		.loc 1 61 5
+  62:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** #if defined(ARM_MATH_DSP)
+  64:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     q31_t in;
+  65:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     q31_t in1, in2;
+  66:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     q31_t out1, out2;
+  67:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  68:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     /*loop Unrolling */
+  69:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     blkCnt = blockSize >> 2u;
+  70:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  71:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     /* First part of the processing with loop unrolling.  Compute 4 outputs at a time. */
+  72:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     while (blkCnt > 0u)
+  73:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     {
+  74:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         in = arm_nn_read_q7x4_ia(&pIn);
+  75:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  76:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         /* rotatate in by 8 and extend two q7_t values to q15_t values */
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         in1 = __SXTB16(__ROR((uint32_t)in, 8));
+  78:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  79:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         /* extend remaining two q7_t values to q15_t values */
+  80:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         in2 = __SXTB16(in);
+  81:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  82:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** #ifndef ARM_MATH_BIG_ENDIAN
+  83:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         out2 = (int32_t)__PKHTB(in1, in2, 16);
+  84:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         out1 = (int32_t)__PKHBT(in2, in1, 16);
+  85:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** #else
+  86:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         out1 = (int32_t)__PKHTB(in1, in2, 16);
+  87:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         out2 = (int32_t)__PKHBT(in2, in1, 16);
+  88:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** #endif
+  89:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         arm_nn_write_q15x2_ia(&pDst, out1);
+  90:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         arm_nn_write_q15x2_ia(&pDst, out2);
+  91:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  92:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         /* Decrement the loop counter */
+  93:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         blkCnt--;
+  94:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     }
+  95:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+  96:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     /* If the blockSize is not a multiple of 4, compute any remaining output samples here.
+  97:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****      ** No loop unrolling is used. */
+  98:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     blkCnt = blockSize % 0x4u;
+  99:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+ 100:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** #else
+ 101:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+ 102:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     /* Run the below code for Cortex-M0 */
+ 103:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+ 104:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     /* Loop over blockSize number of values */
+ 105:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     blkCnt = blockSize;
+  14                             		.loc 1 105 5
+ 106:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+ 107:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** #endif /* #ifndef ARM_MATH_CM0_FAMILY */
+ 108:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     while (blkCnt > 0u)
+  15                             		.loc 1 109 5
+  16                             		.loc 1 109 11 is_stmt 0
+  17 0000 61 03                   		cmp	#0, r3
+  18 0002 20 12                   		beq	.L1
+  19 0004 4B 13                   		add	r1, r3
+  20                             	.LVL1:
+  21                             		.balign 8,3,1
+  22                             	.L3:
+ 110:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     {
+ 111:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         /* convert from q7 to q15 and then store the results in the destination buffer */
+ 112:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         *pDst++ = (q15_t)*pIn++;
+  23                             		.loc 1 112 9 is_stmt 1
+  24                             		.loc 1 112 30 is_stmt 0
+  25 0006 62 11                   		add	#1, r1
+  26                             	.LVL2:
+  27                             		.loc 1 112 26
+  28 0008 71 15 FF                		add	#-1, r1, r5
+  29                             		.loc 1 112 19
+  30 000b CC 55                   		mov.B	[r5], r5
+  31 000d FD 21 25                		mov.W	r5, [r2+]
+  32                             	.LVL3:
+ 113:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** 
+ 114:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         /* Decrement the loop counter */
+ 115:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****         blkCnt--;
+  33                             		.loc 1 115 9 is_stmt 1
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     {
+  34                             		.loc 1 109 11 is_stmt 0
+  35 0010 47 31                   		cmp	r3, r1
+  36 0012 21 F4                   		bne	.L3
+  37                             	.LVL4:
+  38                             	.L1:
+ 116:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c ****     }
+ 117:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_no_shift.c **** }
+  39                             		.loc 1 117 1
+  40 0014 02                      		rts
+  41                             	.LFE82:
+  69                             	.Letext0:
+  70                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  71                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  72                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  73                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  74                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  75                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  76                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  77                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  78                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

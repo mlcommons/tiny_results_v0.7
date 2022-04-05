@@ -1,0 +1,344 @@
+   1                             		.file	"micro_profiler.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite8Profiler8EndEventEmxx,"axG",@progbits,_ZN6tflite8Profiler8EndEventEmxx,c
+   5                             		.weak	__ZN6tflite8Profiler8EndEventEmxx
+   7                             	__ZN6tflite8Profiler8EndEventEmxx:
+   8                             	.LFB9:
+   9                             		.file 1 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** /* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** #ifndef TENSORFLOW_LITE_CORE_API_PROFILER_H_
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** #define TENSORFLOW_LITE_CORE_API_PROFILER_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** #include <cstdint>
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** namespace tflite {
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** // A simple utility for enabling profiled event tracing in TensorFlow Lite.
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** class Profiler {
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****  public:
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // As certain Profiler instance might be only interested in certain event
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // types, we define each event type value to allow a Profiler to use
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // bitmasking bitwise operations to determine whether an event should be
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // recorded or not.
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   enum class EventType {
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // Default event type, the metadata field has no special significance.
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     DEFAULT = 1,
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // The event is an operator invocation and the event_metadata field is the
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // index of operator node.
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     OPERATOR_INVOKE_EVENT = 2,
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // The event is an invocation for an internal operator of a TFLite delegate.
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // The event_metadata field is the index of operator node that's specific to
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // the delegate.
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     DELEGATE_OPERATOR_INVOKE_EVENT = 4,
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // The event is a recording of runtime instrumentation such as the overall
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // TFLite runtime status, the TFLite delegate status (if a delegate
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // is applied), and the overall model inference latency etc.
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // Note, the delegate status and overall status are stored as separate
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // event_metadata fields. In particular, the delegate status is encoded
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     // as DelegateStatus::full_status().
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     GENERAL_RUNTIME_INSTRUMENTATION_EVENT = 8,
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   };
+  50:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  51:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   virtual ~Profiler() {}
+  52:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  53:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // Signals the beginning of an event and returns a handle to the profile
+  54:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // event. The `event_metadata1` and `event_metadata2` have different
+  55:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // interpretations based on the actual Profiler instance and the `event_type`.
+  56:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // For example, as for the 'SubgraphAwareProfiler' defined in
+  57:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // lite/core/subgraph.h, when the event_type is OPERATOR_INVOKE_EVENT,
+  58:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // `event_metadata1` represents the index of a TFLite node, and
+  59:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // `event_metadata2` represents the index of the subgraph that this event
+  60:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // comes from.
+  61:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   virtual uint32_t BeginEvent(const char* tag, EventType event_type,
+  62:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****                               int64_t event_metadata1,
+  63:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****                               int64_t event_metadata2) = 0;
+  64:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // Similar w/ the above, but `event_metadata2` defaults to 0.
+  65:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   uint32_t BeginEvent(const char* tag, EventType event_type,
+  66:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****                       int64_t event_metadata) {
+  67:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****     return BeginEvent(tag, event_type, event_metadata, /*event_metadata2*/ 0);
+  68:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   }
+  69:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h **** 
+  70:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // Signals an end to the specified profile event with 'event_metadata's, This
+  71:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // is useful when 'event_metadata's are not available when the event begins
+  72:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   // or when one wants to overwrite the 'event_metadata's set at the beginning.
+  73:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****   virtual void EndEvent(uint32_t event_handle, int64_t event_metadata1,
+  10                             		.loc 1 73 16
+  11                             	.LVL0:
+  12 0000 60 80                   		sub	#8, r0
+  13                             	.LCFI0:
+  74:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/core/api\profiler.h ****                         int64_t event_metadata2) {}
+  14                             		.loc 1 74 51 is_stmt 0
+  15 0002 67 02                   		rtsd	#8
+  16                             	.LFE9:
+  18                             		.section	.text._ZN6tflite13MicroProfiler8AddEventEPKcNS_8Profiler9EventTypeEyyxx,"axG",@progbits,_
+  19                             		.weak	__ZN6tflite13MicroProfiler8AddEventEPKcNS_8Profiler9EventTypeEyyxx
+  21                             	__ZN6tflite13MicroProfiler8AddEventEPKcNS_8Profiler9EventTypeEyyxx:
+  22                             	.LFB31:
+  23                             		.file 2 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** #ifndef TENSORFLOW_LITE_MICRO_MICRO_PROFILER_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** #define TENSORFLOW_LITE_MICRO_MICRO_PROFILER_H_
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** #include "tensorflow/lite/core/api/error_reporter.h"
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** #include "tensorflow/lite/core/api/profiler.h"
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** #include "tensorflow/lite/micro/compatibility.h"
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** namespace tflite {
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // MicroProfiler creates a common way to gain fine-grained insight into runtime
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // performance. Bottleck operators can be identified along with slow code
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // sections. This can be used in conjunction with running the relevant micro
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // benchmark to evaluate end-to-end performance.
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** //
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // Usage example:
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // MicroProfiler profiler(error_reporter);
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // {
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** //   ScopedProfile scoped_profile(profiler, tag);
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** //   work_to_profile();
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // }
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** //
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // This will call the following methods in order:
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // int event_handle = profiler->BeginEvent(op_name, EventType::DEFAULT, 0)
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // work_to_profile();
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** // profiler->EndEvent(event_handle)
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** class MicroProfiler : public tflite::Profiler {
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****  public:
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****   explicit MicroProfiler(tflite::ErrorReporter* reporter);
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****   ~MicroProfiler() override = default;
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****   // AddEvent is unused for Tf Micro.
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****   void AddEvent(const char* tag, EventType event_type, uint64_t start,
+  24                             		.loc 2 47 8 is_stmt 1
+  25                             	.LVL1:
+  26 0000 71 00 E0                		add	#-32, r0
+  27                             	.LCFI1:
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****                 uint64_t end, int64_t event_metadata1,
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h ****                 int64_t event_metadata2) override{};
+  28                             		.loc 2 49 51 is_stmt 0
+  29 0003 67 08                   		rtsd	#32
+  30                             	.LFE31:
+  32                             		.section	.text._ZN6tflite13MicroProfilerD2Ev,"axG",@progbits,_ZN6tflite13MicroProfilerD5Ev,comdat
+  33                             		.weak	__ZN6tflite13MicroProfilerD2Ev
+  35                             	__ZN6tflite13MicroProfilerD2Ev:
+  36                             	.LFB49:
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+  37                             		.loc 2 44 3 is_stmt 1
+  38                             	.LVL2:
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+  39                             		.loc 2 44 3 is_stmt 0
+  40 0000 02                      		rts
+  41                             	.LFE49:
+  43                             		.weak	__ZN6tflite13MicroProfilerD1Ev
+  44                             		.set	__ZN6tflite13MicroProfilerD1Ev,__ZN6tflite13MicroProfilerD2Ev
+  45                             		.section	.text._ZN6tflite13MicroProfiler10BeginEventEPKcNS_8Profiler9EventTypeExx,"ax",@progbits
+  46                             		.global	__ZN6tflite13MicroProfiler10BeginEventEPKcNS_8Profiler9EventTypeExx
+  48                             	__ZN6tflite13MicroProfiler10BeginEventEPKcNS_8Profiler9EventTypeExx:
+  49                             	.LFB46:
+  50                             		.file 3 "../src/tensorflow/lite/micro/micro_profiler.cc"
+   1:../src/tensorflow/lite/micro/micro_profiler.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+   3:../src/tensorflow/lite/micro/micro_profiler.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/micro_profiler.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/micro_profiler.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+   7:../src/tensorflow/lite/micro/micro_profiler.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+   9:../src/tensorflow/lite/micro/micro_profiler.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/micro_profiler.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/micro_profiler.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/micro_profiler.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/micro_profiler.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/micro_profiler.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+  16:../src/tensorflow/lite/micro/micro_profiler.cc **** #include "tensorflow/lite/micro/micro_profiler.h"
+  17:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+  18:../src/tensorflow/lite/micro/micro_profiler.cc **** #include "tensorflow/lite/kernels/internal/compatibility.h"
+  19:../src/tensorflow/lite/micro/micro_profiler.cc **** #include "tensorflow/lite/micro/micro_time.h"
+  20:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+  21:../src/tensorflow/lite/micro/micro_profiler.cc **** namespace tflite {
+  22:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+  23:../src/tensorflow/lite/micro/micro_profiler.cc **** MicroProfiler::MicroProfiler(tflite::ErrorReporter* reporter)
+  24:../src/tensorflow/lite/micro/micro_profiler.cc ****     : reporter_(reporter) {}
+  25:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+  26:../src/tensorflow/lite/micro/micro_profiler.cc **** uint32_t MicroProfiler::BeginEvent(const char* tag, EventType event_type,
+  27:../src/tensorflow/lite/micro/micro_profiler.cc ****                                    int64_t event_metadata1,
+  28:../src/tensorflow/lite/micro/micro_profiler.cc ****                                    int64_t event_metadata2) {
+  51                             		.loc 3 28 61 is_stmt 1
+  52                             	.LVL3:
+  53 0000 6E 7A                   		pushm	r7-r10
+  54                             	.LCFI2:
+  55 0002 71 00 F0                		add	#-16, r0
+  56                             	.LCFI3:
+  29:../src/tensorflow/lite/micro/micro_profiler.cc ****   start_time_ = GetCurrentTimeTicks();
+  57                             		.loc 3 29 3
+  28:../src/tensorflow/lite/micro/micro_profiler.cc ****   start_time_ = GetCurrentTimeTicks();
+  58                             		.loc 3 28 61 is_stmt 0
+  59 0005 EF 17                   		mov.L	r1, r7
+  60 0007 EF 2A                   		mov.L	r2, r10
+  61                             		.loc 3 29 36
+  62 0009 05 00 00 00             		bsr	__ZN6tflite19GetCurrentTimeTicksEv
+  63                             	.LVL4:
+  64                             		.loc 3 29 15
+  65 000d A0 F1                   		mov.L	r1, 8[r7]
+  30:../src/tensorflow/lite/micro/micro_profiler.cc ****   TFLITE_DCHECK(tag != nullptr);
+  66                             		.loc 3 30 3 is_stmt 1
+  67 000f 61 0A                   		cmp	#0, r10
+  68 0011 11                      		beq	.L10
+  31:../src/tensorflow/lite/micro/micro_profiler.cc ****   event_tag_ = tag;
+  69                             		.loc 3 31 3
+  32:../src/tensorflow/lite/micro/micro_profiler.cc ****   return 0;
+  33:../src/tensorflow/lite/micro/micro_profiler.cc **** }
+  70                             		.loc 3 33 1 is_stmt 0
+  71 0012 66 01                   		mov.L	#0, r1
+  31:../src/tensorflow/lite/micro/micro_profiler.cc ****   event_tag_ = tag;
+  72                             		.loc 3 31 14
+  73 0014 E7 7A 03                		mov.L	r10, 12[r7]
+  32:../src/tensorflow/lite/micro/micro_profiler.cc ****   return 0;
+  74                             		.loc 3 32 3 is_stmt 1
+  75                             		.loc 3 33 1 is_stmt 0
+  76 0017 3F 7A 08                		rtsd	#32, r7-r10
+  77                             	.LVL5:
+  78                             	.L10:
+  30:../src/tensorflow/lite/micro/micro_profiler.cc ****   event_tag_ = tag;
+  79                             		.loc 3 30 3 discriminator 1
+  80 001a 05 00 00 00             		bsr	_abort
+  81                             	.LVL6:
+  82                             	.LFE46:
+  84                             		.section	.text._ZN6tflite13MicroProfiler8EndEventEm,"ax",@progbits
+  85                             		.global	__ZN6tflite13MicroProfiler8EndEventEm
+  87                             	__ZN6tflite13MicroProfiler8EndEventEm:
+  88                             	.LFB47:
+  34:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+  35:../src/tensorflow/lite/micro/micro_profiler.cc **** void MicroProfiler::EndEvent(uint32_t event_handle) {
+  89                             		.loc 3 35 53 is_stmt 1
+  90                             	.LVL7:
+  91 0000 7E A7                   		push.l	r7
+  92                             	.LCFI4:
+  93 0002 60 C0                   		sub	#12, r0
+  94                             	.LCFI5:
+  36:../src/tensorflow/lite/micro/micro_profiler.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  37:../src/tensorflow/lite/micro/micro_profiler.cc ****   int32_t end_time = GetCurrentTimeTicks();
+  95                             		.loc 3 37 3
+  35:../src/tensorflow/lite/micro/micro_profiler.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  96                             		.loc 3 35 53 is_stmt 0
+  97 0004 EF 17                   		mov.L	r1, r7
+  98                             		.loc 3 37 41
+  99 0006 05 00 00 00             		bsr	__ZN6tflite19GetCurrentTimeTicksEv
+ 100                             	.LVL8:
+  38:../src/tensorflow/lite/micro/micro_profiler.cc ****   TF_LITE_REPORT_ERROR(reporter_, "%s took %d cycles\n", event_tag_,
+ 101                             		.loc 3 38 3 is_stmt 1
+ 102                             		.loc 3 38 3
+ 103 000a E5 70 03 01             		mov.L	12[r7], 4[r0]
+ 104 000e A8 F5                   		mov.L	8[r7], r5
+ 105 0010 F8 02 00 00 00 00       		mov.L	#.LC0, [r0]
+ 106 0016 FF 05 51                		sub	r5, r1, r5
+ 107 0019 A8 79                   		mov.L	4[r7], r1
+ 108                             	.LVL9:
+ 109 001b A0 85                   		mov.L	r5, 8[r0]
+ 110 001d 05 00 00 00             		bsr	__ZN6tflite13ErrorReporter6ReportEPKcz
+ 111                             	.LVL10:
+  39:../src/tensorflow/lite/micro/micro_profiler.cc ****                        end_time - start_time_);
+  40:../src/tensorflow/lite/micro/micro_profiler.cc **** #endif
+  41:../src/tensorflow/lite/micro/micro_profiler.cc **** }
+ 112                             		.loc 3 41 1 is_stmt 0
+ 113 0021 3F 77 04                		rtsd	#16, r7-r7
+ 114                             	.LFE47:
+ 116                             		.section	.text._ZN6tflite13MicroProfilerD0Ev,"axG",@progbits,_ZN6tflite13MicroProfilerD5Ev,comdat
+ 117                             		.weak	__ZN6tflite13MicroProfilerD0Ev
+ 119                             	__ZN6tflite13MicroProfilerD0Ev:
+ 120                             	.LFB51:
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+ 121                             		.loc 2 44 3 is_stmt 1
+ 122                             	.LVL11:
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro\micro_profiler.h **** 
+ 123                             		.loc 2 44 3 is_stmt 0
+ 124 0000 75 42 10                		mov.L	#16, r2
+ 125 0003 04 00 00 00             		bra	__ZdlPvm
+ 126                             	.LVL12:
+ 127                             	.LFE51:
+ 129                             		.section	.text._ZN6tflite13MicroProfilerC2EPNS_13ErrorReporterE,"ax",@progbits
+ 130                             		.global	__ZN6tflite13MicroProfilerC2EPNS_13ErrorReporterE
+ 132                             	__ZN6tflite13MicroProfilerC2EPNS_13ErrorReporterE:
+ 133                             	.LFB44:
+  23:../src/tensorflow/lite/micro/micro_profiler.cc ****     : reporter_(reporter) {}
+ 134                             		.loc 3 23 1 is_stmt 1
+ 135                             	.LVL13:
+ 136                             	.LBB17:
+  24:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+ 137                             		.loc 3 24 25 is_stmt 0
+ 138 0000 F8 12 00 00 00 00       		mov.L	#__ZTVN6tflite13MicroProfilerE+8, [r1]
+ 139 0006 A0 1A                   		mov.L	r2, 4[r1]
+ 140                             	.LBE17:
+  24:../src/tensorflow/lite/micro/micro_profiler.cc **** 
+ 141                             		.loc 3 24 28
+ 142 0008 02                      		rts
+ 143                             	.LFE44:
+ 145                             		.global	__ZN6tflite13MicroProfilerC1EPNS_13ErrorReporterE
+ 146                             		.set	__ZN6tflite13MicroProfilerC1EPNS_13ErrorReporterE,__ZN6tflite13MicroProfilerC2EPNS_13ErrorRep
+ 147                             		.weak	__ZTVN6tflite13MicroProfilerE
+ 148                             		.section	.rodata._ZTVN6tflite13MicroProfilerE,"aG",@progbits,_ZTVN6tflite13MicroProfilerE,comdat
+ 149                             		.balign 4
+ 152                             	__ZTVN6tflite13MicroProfilerE:
+ 153 0000 00 00 00 00             		.long	0
+ 154 0004 00 00 00 00             		.long	0
+ 155 0008 00 00 00 00             		.long	__ZN6tflite13MicroProfilerD1Ev
+ 156 000c 00 00 00 00             		.long	__ZN6tflite13MicroProfilerD0Ev
+ 157 0010 00 00 00 00             		.long	__ZN6tflite13MicroProfiler10BeginEventEPKcNS_8Profiler9EventTypeExx
+ 158 0014 00 00 00 00             		.long	__ZN6tflite8Profiler8EndEventEmxx
+ 159 0018 00 00 00 00             		.long	__ZN6tflite13MicroProfiler8EndEventEm
+ 160 001c 00 00 00 00             		.long	__ZN6tflite13MicroProfiler8AddEventEPKcNS_8Profiler9EventTypeEyyxx
+ 161                             		.section	.rodata._ZN6tflite13MicroProfiler8EndEventEm.str1.1,"aMS",@progbits,1
+ 162                             	.LC0:
+ 163 0000 25 73 20 74 6F 6F 6B 20 		.string	"%s took %d cycles\n"
+ 163      25 64 20 63 79 63 6C 65 
+ 163      73 0A 00 
+ 272                             	.Letext0:
+ 273                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 274                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 275                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 276                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 277                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 278                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 279                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\
+ 280                             		.file 11 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_st
+ 281                             		.file 12 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdint.h
+ 282                             		.file 13 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 283                             		.file 14 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.2
+ 284                             		.file 15 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\loc
+ 285                             		.file 16 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_ty
+ 286                             		.file 17 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\ree
+ 287                             		.file 18 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 288                             		.file 19 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 289                             		.file 20 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 290                             		.file 21 "<built-in>"

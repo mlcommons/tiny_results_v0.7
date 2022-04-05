@@ -1,0 +1,59 @@
+   1                             		.file	"ethosu.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite3ops5micro6custom15Register_ETHOSUEv,"ax",@progbits
+   5                             		.global	__ZN6tflite3ops5micro6custom15Register_ETHOSUEv
+   7                             	__ZN6tflite3ops5micro6custom15Register_ETHOSUEv:
+   8                             	.LFB0:
+   9                             		.file 1 "../src/tensorflow/lite/micro/kernels/ethosu.cc"
+   1:../src/tensorflow/lite/micro/kernels/ethosu.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/kernels/ethosu.cc **** 
+   3:../src/tensorflow/lite/micro/kernels/ethosu.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/kernels/ethosu.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/kernels/ethosu.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/kernels/ethosu.cc **** 
+   7:../src/tensorflow/lite/micro/kernels/ethosu.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/kernels/ethosu.cc **** 
+   9:../src/tensorflow/lite/micro/kernels/ethosu.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/kernels/ethosu.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/kernels/ethosu.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/kernels/ethosu.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/kernels/ethosu.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/kernels/ethosu.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/kernels/ethosu.cc **** 
+  16:../src/tensorflow/lite/micro/kernels/ethosu.cc **** //
+  17:../src/tensorflow/lite/micro/kernels/ethosu.cc **** // This is a stub file for non-Ethos platforms
+  18:../src/tensorflow/lite/micro/kernels/ethosu.cc **** //
+  19:../src/tensorflow/lite/micro/kernels/ethosu.cc **** #include "tensorflow/lite/c/common.h"
+  20:../src/tensorflow/lite/micro/kernels/ethosu.cc **** 
+  21:../src/tensorflow/lite/micro/kernels/ethosu.cc **** namespace tflite {
+  22:../src/tensorflow/lite/micro/kernels/ethosu.cc **** namespace ops {
+  23:../src/tensorflow/lite/micro/kernels/ethosu.cc **** namespace micro {
+  24:../src/tensorflow/lite/micro/kernels/ethosu.cc **** namespace custom {
+  25:../src/tensorflow/lite/micro/kernels/ethosu.cc **** TfLiteRegistration* Register_ETHOSU() { return nullptr; }
+  10                             		.loc 1 25 39
+  11                             		.loc 1 25 41
+  12                             		.loc 1 25 57 is_stmt 0
+  13 0000 66 01                   		mov.L	#0, r1
+  14 0002 02                      		rts
+  15                             	.LFE0:
+  17                             		.section	.text._ZN6tflite3ops5micro6custom16GetString_ETHOSUEv,"ax",@progbits
+  18                             		.global	__ZN6tflite3ops5micro6custom16GetString_ETHOSUEv
+  20                             	__ZN6tflite3ops5micro6custom16GetString_ETHOSUEv:
+  21                             	.LFB1:
+  26:../src/tensorflow/lite/micro/kernels/ethosu.cc **** 
+  27:../src/tensorflow/lite/micro/kernels/ethosu.cc **** const char* GetString_ETHOSU() { return ""; }
+  22                             		.loc 1 27 32 is_stmt 1
+  23                             		.loc 1 27 34
+  24                             		.loc 1 27 45 is_stmt 0
+  25 0000 FB 12 00 00 00 00       		mov.L	#.LC0, r1
+  26 0006 02                      		rts
+  27                             	.LFE1:
+  29                             		.section	.rodata._ZN6tflite3ops5micro6custom16GetString_ETHOSUEv.str1.1,"aMS",@progbits,1
+  30                             	.LC0:
+  31 0000 00                      		.string	""
+  66                             	.Letext0:
+  67                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  68                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  69                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  70                             		.file 5 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens

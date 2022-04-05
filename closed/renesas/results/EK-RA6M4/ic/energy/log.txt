@@ -1,0 +1,204 @@
+00120.690 session: m-session-start-id[20220218100515]
+00120.690 parser: m-bmark-run-name[ML Energy 1.0.1]-code[ulp-ml]
+00120.692 sequencer: m-sequencer-start
+00120.692 sequencer: m-sequencing-i[1]-command[version]-ack[/parser: m-ready/]-ms[5000]-acc[0]-total_ms[320760]
+00120.692 parser: Command "version"
+00120.692 parser: m-version[3.0.6]
+00120.692 parser: m-ready-finished[version]
+00120.692 sequencer: m-sequencing-i[2]-command[bm cfg ulp-ml]-ack[/parser: m-ready/]-ms[5000]-acc[5000]-total_ms[320760]
+00120.692 parser: Command "bm cfg ulp-ml"
+00121.192 parser: m-bm-cfg-name[ulp-ml]-key[iterWarmup]-val[1]
+00121.193 parser: m-bm-cfg-name[ulp-ml]-key[iterInfer]-val[50]
+00121.193 parser: m-bm-cfg-name[ulp-ml]-key[runMode]-val[bmark]
+00121.193 parser: m-bm-cfg-name[ulp-ml]-key[model]-val[ic01]
+00121.193 parser: m-bm-cfg-name[ulp-ml]-key[sourceDir]-val[C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets]
+00121.193 parser: m-bm-cfg-name[ulp-ml]-key[singleInputFn]-val[emu_s_002009.bin]
+00121.193 parser: m-ready-finished[bm]
+00121.193 sequencer: m-sequencing-i[3]-command[emon power on]-ack[/dut.: m-ready/]-ms[5000]-acc[10000]-total_ms[320760]
+00121.193 parser: Command "emon power on"
+00121.208 emon: m-power[on]
+00121.208 emon: m-ready
+00121.208 parser: m-ready-finished[emon]
+00121.309 io: [dut]: m-timestamp-mode-energy
+00121.317 io: [dut]: m-init-done
+00121.317 io: [dut]: m-ready
+00121.317 sequencer: m-sequencing-i[4]-command[io dut profile]-ack[/dut.: m-ready/]-ms[5000]-acc[15000]-total_ms[320760]
+00121.317 parser: Command "io dut profile"
+00121.317 parser: m-ready-finished[io]
+00121.333 io: m-dut-passthrough(profile)
+00121.337 io: m-ready
+00121.408 io: [dut]: m-profile-[ULPMark for tinyML Firmware V0.0.1]
+00121.408 io: [dut]: m-model-[ic01]
+00121.411 io: [dut]: m-ready
+00121.411 sequencer: m-sequencing-i[5]-command[io tm 0]-ack[/io: m-ready/]-ms[5000]-acc[20000]-total_ms[320760]
+00121.411 parser: Command "io tm 0"
+00121.412 parser: m-ready-finished[io]
+00121.420 io: m-timestmp-mode-FALLING
+00121.420 io: m-[Timer disabled after mode change]
+00121.423 io: m-ready
+00121.424 sequencer: m-sequencing-i[6]-command[io enable-timer]-ack[/io: m-ready/]-ms[5000]-acc[25000]-total_ms[320760]
+00121.424 parser: Command "io enable-timer"
+00121.424 parser: m-ready-finished[io]
+00121.432 io: m-timer-enabled
+00121.432 io: m-ready
+00121.432 sequencer: m-sequencing-i[7]-command[emon timer on]-ack[/emon: m-ready/]-ms[5000]-acc[30000]-total_ms[320760]
+00121.432 parser: Command "emon timer on"
+00121.433 emon: m-timer[on]
+00121.433 emon: m-ready
+00121.433 parser: m-ready-finished[emon]
+00121.433 sequencer: m-sequencing-i[8]-command[emon trace on trace1]-ack[/emon: m-ready/]-ms[5000]-acc[35000]-total_ms[320760]
+00121.433 parser: Command "emon trace on trace1"
+00121.459 emon: m-trace[on]
+00121.459 emon: m-ready
+00121.460 parser: m-ready-finished[emon]
+00121.460 sequencer: m-sequencing-i[9]-command[io dut timestamp]-ack[/dut.: m-ready/]-ms[5000]-acc[40000]-total_ms[320760]
+00121.460 parser: Command "io dut timestamp"
+00121.460 parser: m-ready-finished[io]
+00121.472 io: m-dut-passthrough(timestamp)
+00121.480 io: m-ready
+00121.485 io: [dut]: m-ready
+00121.485 sequencer: m-sequencing-i[10]-command[echo head 1000]-ack[/echo-message\[head\]/]-ms[5000]-acc[45000]-total_ms[320760]
+00121.485 parser: Command "echo head 1000"
+00121.485 parser: Echoing message in 1000 ms...
+00121.485 parser: m-ready-finished[echo]
+00122.485 parser: m-echo-message[head]
+00122.486 sequencer: m-sequencing-i[11]-command[bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\emu_s_002009.bin"]-ack[/parser: m-ready/]-ms[49152]-acc[50000]-total_ms[320760]
+00122.486 parser: Command "bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\emu_s_002009.bin""
+00122.486 parser: File size is 3072, loading...
+00122.487 parser: Starting at byte offset 0
+00122.487 parser: Sending 3072 bytes
+00122.487 parser: m-mute
+00132.019 parser: m-unmute
+00132.019 parser: m-bloadp-done
+00132.019 parser: Binary load took 9.532 sec, or 2.578 kb/sec
+00132.019 parser: m-ready-finished[bloadp]
+00132.019 sequencer: m-sequencing-i[12]-command[io dut infer 50 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[99152]-total_ms[320760]
+00132.019 parser: Command "io dut infer 50 1"
+00132.020 parser: m-ready-finished[io]
+00132.035 io: m-dut-passthrough(infer 50 1)
+00132.039 io: m-ready
+00132.056 io: [dut]: m-warmup-start-1
+00132.310 io: [dut]: m-warmup-done
+00132.319 io: [dut]: m-infer-start-50
+00144.652 io: [dut]: m-infer-done
+00144.737 io: [dut]: m-results-[0.000,0.000,0.843,0.128,0.027,0.000,0.000,0.000,0.000,0.000]
+00144.737 io: [dut]: m-ready
+00144.737 sequencer: m-sequencing-i[13]-command[bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\taxi_s_001241.bin"]-ack[/parser: m-ready/]-ms[49152]-acc[99151]-total_ms[320760]
+00144.737 parser: Command "bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\taxi_s_001241.bin""
+00144.738 parser: File size is 3072, loading...
+00144.738 parser: Starting at byte offset 0
+00144.738 parser: Sending 3072 bytes
+00144.738 parser: m-mute
+00154.285 parser: m-unmute
+00154.285 parser: m-bloadp-done
+00154.285 parser: Binary load took 9.546 sec, or 2.574 kb/sec
+00154.285 parser: m-ready-finished[bloadp]
+00154.285 sequencer: m-sequencing-i[14]-command[io dut infer 50 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[148303]-total_ms[320760]
+00154.285 parser: Command "io dut infer 50 1"
+00154.285 parser: m-ready-finished[io]
+00154.301 io: m-dut-passthrough(infer 50 1)
+00154.305 io: m-ready
+00154.321 io: [dut]: m-warmup-start-1
+00154.575 io: [dut]: m-warmup-done
+00154.584 io: [dut]: m-infer-start-50
+00166.916 io: [dut]: m-infer-done
+00167.003 io: [dut]: m-results-[0.000,0.000,0.890,0.082,0.027,0.000,0.000,0.000,0.000,0.000]
+00167.003 io: [dut]: m-ready
+00167.003 sequencer: m-sequencing-i[15]-command[bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\accentor_s_001031.bin"]-ack[/parser: m-ready/]-ms[49152]-acc[148302]-total_ms[320760]
+00167.003 parser: Command "bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\accentor_s_001031.bin""
+00167.003 parser: File size is 3072, loading...
+00167.004 parser: Starting at byte offset 0
+00167.004 parser: Sending 3072 bytes
+00167.004 parser: m-mute
+00176.537 parser: m-unmute
+00176.537 parser: m-bloadp-done
+00176.537 parser: Binary load took 9.534 sec, or 2.578 kb/sec
+00176.537 parser: m-ready-finished[bloadp]
+00176.537 sequencer: m-sequencing-i[16]-command[io dut infer 50 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[197454]-total_ms[320760]
+00176.537 parser: Command "io dut infer 50 1"
+00176.538 parser: m-ready-finished[io]
+00176.553 io: m-dut-passthrough(infer 50 1)
+00176.558 io: m-ready
+00176.575 io: [dut]: m-warmup-start-1
+00176.828 io: [dut]: m-warmup-done
+00176.837 io: [dut]: m-infer-start-50
+00189.169 io: [dut]: m-infer-done
+00189.255 io: [dut]: m-results-[0.000,0.000,0.890,0.082,0.027,0.000,0.003,0.000,0.000,0.000]
+00189.255 io: [dut]: m-ready
+00189.255 sequencer: m-sequencing-i[17]-command[bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\mongrel_s_000686.bin"]-ack[/parser: m-ready/]-ms[49152]-acc[197453]-total_ms[320760]
+00189.255 parser: Command "bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\mongrel_s_000686.bin""
+00189.255 parser: File size is 3072, loading...
+00189.256 parser: Starting at byte offset 0
+00189.256 parser: Sending 3072 bytes
+00189.256 parser: m-mute
+00198.770 parser: m-unmute
+00198.770 parser: m-bloadp-done
+00198.770 parser: Binary load took 9.514 sec, or 2.583 kb/sec
+00198.770 parser: m-ready-finished[bloadp]
+00198.770 sequencer: m-sequencing-i[18]-command[io dut infer 50 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[246605]-total_ms[320760]
+00198.770 parser: Command "io dut infer 50 1"
+00198.770 parser: m-ready-finished[io]
+00198.786 io: m-dut-passthrough(infer 50 1)
+00198.790 io: m-ready
+00198.807 io: [dut]: m-warmup-start-1
+00199.061 io: [dut]: m-warmup-done
+00199.069 io: [dut]: m-infer-start-50
+00211.402 io: [dut]: m-infer-done
+00211.488 io: [dut]: m-results-[0.000,0.000,0.800,0.171,0.027,0.000,0.000,0.000,0.000,0.000]
+00211.488 io: [dut]: m-ready
+00211.488 sequencer: m-sequencing-i[19]-command[bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\stealth_bomber_s_002204.bin"]-ack[/parser: m-ready/]-ms[49152]-acc[246604]-total_ms[320760]
+00211.488 parser: Command "bloadp "C:\Users\a5095317\eembc\runner\benchmarks\ulp-mlperf\datasets\ic01\stealth_bomber_s_002204.bin""
+00211.489 parser: File size is 3072, loading...
+00211.489 parser: Starting at byte offset 0
+00211.489 parser: Sending 3072 bytes
+00211.489 parser: m-mute
+00221.023 parser: m-unmute
+00221.023 parser: m-bloadp-done
+00221.023 parser: Binary load took 9.534 sec, or 2.578 kb/sec
+00221.023 parser: m-ready-finished[bloadp]
+00221.023 sequencer: m-sequencing-i[20]-command[io dut infer 50 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[295756]-total_ms[320760]
+00221.023 parser: Command "io dut infer 50 1"
+00221.023 parser: m-ready-finished[io]
+00221.039 io: m-dut-passthrough(infer 50 1)
+00221.043 io: m-ready
+00221.060 io: [dut]: m-warmup-start-1
+00221.314 io: [dut]: m-warmup-done
+00221.322 io: [dut]: m-infer-start-50
+00233.655 io: [dut]: m-infer-done
+00233.741 io: [dut]: m-results-[0.000,0.000,0.863,0.093,0.039,0.000,0.003,0.000,0.000,0.000]
+00233.741 io: [dut]: m-ready
+00233.741 sequencer: m-sequencing-i[21]-command[echo tail 1000]-ack[/echo-message\[tail\]/]-ms[5000]-acc[295755]-total_ms[320760]
+00233.741 parser: Command "echo tail 1000"
+00233.741 parser: Echoing message in 1000 ms...
+00233.741 parser: m-ready-finished[echo]
+00234.742 parser: m-echo-message[tail]
+00234.742 sequencer: m-sequencing-i[22]-command[emon trace off]-ack[/emon: m-ready/]-ms[-1]-acc[300755]-total_ms[320760]
+00234.742 parser: Command "emon trace off"
+00234.803 emon: m-regfile-fn[trace1-energy.bin]-type[emon]-name[lpm01a]
+00234.803 emon: m-regfile-fn[trace1-timestamps.json]-type[etime]-name[lpm01a]
+00234.803 emon: m-trace[off]
+00234.803 emon: m-ready
+00234.803 parser: m-ready-finished[emon]
+00234.803 sequencer: m-sequencing-i[23]-command[emon timer off]-ack[/emon: m-ready/]-ms[5000]-acc[300754]-total_ms[320760]
+00234.803 parser: Command "emon timer off"
+00234.804 emon: m-timer[off]
+00234.804 emon: m-ready
+00234.804 parser: m-ready-finished[emon]
+00234.804 sequencer: m-sequencing-i[24]-command[io disable-timer]-ack[/io: m-ready/]-ms[5000]-acc[305754]-total_ms[320760]
+00234.804 parser: Command "io disable-timer"
+00234.804 parser: m-ready-finished[io]
+00234.810 io: m-timer-disabled
+00234.810 io: m-ready
+00234.810 sequencer: m-sequencing-i[25]-command[emon voltage]-ack[/emon: m-ready/]-ms[5000]-acc[310754]-total_ms[320760]
+00234.810 parser: Command "emon voltage"
+00234.811 emon: m-voltage-mv[3000]
+00234.811 emon: m-ready
+00234.811 parser: m-ready-finished[emon]
+00234.811 sequencer: m-sequencing-i[26]-command[emon power off]-ack[/emon: m-ready/]-ms[5000]-acc[315754]-total_ms[320760]
+00234.811 parser: Command "emon power off"
+00234.823 emon: m-power[off]
+00234.823 emon: m-ready
+00234.823 parser: m-ready-finished[emon]
+00234.823 sequencer: m-sequencer-stop
+00234.828 session: m-session-stop-id[20220218100515]
+00234.828 session: Saved this run to session ID 20220218100515

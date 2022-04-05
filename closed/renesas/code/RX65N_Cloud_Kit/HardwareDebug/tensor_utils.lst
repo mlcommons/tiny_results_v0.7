@@ -1,0 +1,134 @@
+   1                             		.file	"tensor_utils.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite19ResetVariableTensorEP12TfLiteTensor,"ax",@progbits
+   5                             		.global	__ZN6tflite19ResetVariableTensorEP12TfLiteTensor
+   7                             	__ZN6tflite19ResetVariableTensorEP12TfLiteTensor:
+   8                             	.LFB0:
+   9                             		.file 1 "../src/tensorflow/lite/core/api/tensor_utils.cc"
+   1:../src/tensorflow/lite/core/api/tensor_utils.cc **** /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+   3:../src/tensorflow/lite/core/api/tensor_utils.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/core/api/tensor_utils.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/core/api/tensor_utils.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+   7:../src/tensorflow/lite/core/api/tensor_utils.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+   9:../src/tensorflow/lite/core/api/tensor_utils.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/core/api/tensor_utils.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/core/api/tensor_utils.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/core/api/tensor_utils.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/core/api/tensor_utils.cc **** limitations under the License.
+  14:../src/tensorflow/lite/core/api/tensor_utils.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+  16:../src/tensorflow/lite/core/api/tensor_utils.cc **** #include "tensorflow/lite/core/api/tensor_utils.h"
+  17:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+  18:../src/tensorflow/lite/core/api/tensor_utils.cc **** #include <string.h>
+  19:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+  20:../src/tensorflow/lite/core/api/tensor_utils.cc **** #include "tensorflow/lite/c/common.h"
+  21:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+  22:../src/tensorflow/lite/core/api/tensor_utils.cc **** namespace tflite {
+  23:../src/tensorflow/lite/core/api/tensor_utils.cc **** 
+  24:../src/tensorflow/lite/core/api/tensor_utils.cc **** TfLiteStatus ResetVariableTensor(TfLiteTensor* tensor) {
+  10                             		.loc 1 24 56
+  11                             	.LVL0:
+  25:../src/tensorflow/lite/core/api/tensor_utils.cc ****   if (!tensor->is_variable) {
+  12                             		.loc 1 25 3
+  13 0000 59 15 2D                		movu.B	45[r1], r5
+  14 0003 61 05                   		cmp	#0, r5
+  15 0005 20 20                   		beq	.L8
+  26:../src/tensorflow/lite/core/api/tensor_utils.cc ****     return kTfLiteOk;
+  27:../src/tensorflow/lite/core/api/tensor_utils.cc ****   }
+  28:../src/tensorflow/lite/core/api/tensor_utils.cc ****   // TODO(b/115961645): Implement - If a variable tensor has a buffer, reset it
+  29:../src/tensorflow/lite/core/api/tensor_utils.cc ****   // to the value of the buffer.
+  30:../src/tensorflow/lite/core/api/tensor_utils.cc ****   int value = 0;
+  16                             		.loc 1 30 3
+  17                             	.LVL1:
+  31:../src/tensorflow/lite/core/api/tensor_utils.cc ****   if (tensor->type == kTfLiteInt8) {
+  18                             		.loc 1 31 3
+  19 0007 EC 15                   		mov.L	[r1], r5
+  20 0009 61 95                   		cmp	#9, r5
+  21 000b 20 1D                   		beq	.L12
+  30:../src/tensorflow/lite/core/api/tensor_utils.cc ****   if (tensor->type == kTfLiteInt8) {
+  22                             		.loc 1 30 7 is_stmt 0
+  23 000d 66 02                   		mov.L	#0, r2
+  24                             	.LVL2:
+  25 000f 03                      		.balign 8,3,1
+  26                             	.L3:
+  32:../src/tensorflow/lite/core/api/tensor_utils.cc ****     value = tensor->params.zero_point;
+  33:../src/tensorflow/lite/core/api/tensor_utils.cc ****   }
+  34:../src/tensorflow/lite/core/api/tensor_utils.cc ****   // TODO(b/139446230): Provide a platform header to better handle these
+  35:../src/tensorflow/lite/core/api/tensor_utils.cc ****   // specific scenarios.
+  36:../src/tensorflow/lite/core/api/tensor_utils.cc **** #if __ANDROID__ || defined(__x86_64__) || defined(__i386__) || \
+  37:../src/tensorflow/lite/core/api/tensor_utils.cc ****     defined(__i386) || defined(__x86__) || defined(__X86__) || \
+  38:../src/tensorflow/lite/core/api/tensor_utils.cc ****     defined(_X86_) || defined(_M_IX86) || defined(_M_X64)
+  39:../src/tensorflow/lite/core/api/tensor_utils.cc ****   memset(tensor->data.raw, value, tensor->bytes);
+  40:../src/tensorflow/lite/core/api/tensor_utils.cc **** #else
+  41:../src/tensorflow/lite/core/api/tensor_utils.cc ****   char* raw_ptr = tensor->data.raw;
+  27                             		.loc 1 41 3 is_stmt 1
+  28                             	.LBB2:
+  42:../src/tensorflow/lite/core/api/tensor_utils.cc ****   for (size_t i = 0; i < tensor->bytes; ++i) {
+  29                             		.loc 1 42 24 is_stmt 0
+  30 0010 A9 95                   		mov.L	24[r1], r5
+  31                             	.LBE2:
+  41:../src/tensorflow/lite/core/api/tensor_utils.cc ****   for (size_t i = 0; i < tensor->bytes; ++i) {
+  32                             		.loc 1 41 9
+  33 0012 A8 1C                   		mov.L	4[r1], r4
+  34                             	.LVL3:
+  35                             		.loc 1 42 3 is_stmt 1
+  36                             	.LBB3:
+  37                             		.loc 1 42 24 is_stmt 0
+  38 0014 61 05                   		cmp	#0, r5
+  39 0016 20 0F                   		beq	.L8
+  40                             		.loc 1 42 15
+  41 0018 66 05                   		mov.L	#0, r5
+  42                             	.LVL4:
+  43                             		.balign 8,3,1
+  44                             	.L5:
+  43:../src/tensorflow/lite/core/api/tensor_utils.cc ****     *raw_ptr = value;
+  45                             		.loc 1 43 5 is_stmt 1 discriminator 2
+  42:../src/tensorflow/lite/core/api/tensor_utils.cc ****   for (size_t i = 0; i < tensor->bytes; ++i) {
+  46                             		.loc 1 42 3 is_stmt 0 discriminator 2
+  47 001a 62 15                   		add	#1, r5
+  48                             	.LVL5:
+  49                             		.loc 1 43 14 discriminator 2
+  50 001c FD 20 42                		mov.B	r2, [r4+]
+  51                             	.LVL6:
+  44:../src/tensorflow/lite/core/api/tensor_utils.cc ****     raw_ptr++;
+  52                             		.loc 1 44 5 is_stmt 1 discriminator 2
+  42:../src/tensorflow/lite/core/api/tensor_utils.cc ****     *raw_ptr = value;
+  53                             		.loc 1 42 24 is_stmt 0 discriminator 2
+  54 001f A9 93                   		mov.L	24[r1], r3
+  55 0021 47 53                   		cmp	r5, r3
+  56 0023 24 F7                   		bgtu	.L5
+  57                             	.LVL7:
+  58                             		.balign 8,3,1
+  59                             	.L8:
+  60                             	.LBE3:
+  45:../src/tensorflow/lite/core/api/tensor_utils.cc ****   }
+  46:../src/tensorflow/lite/core/api/tensor_utils.cc **** #endif
+  47:../src/tensorflow/lite/core/api/tensor_utils.cc ****   return kTfLiteOk;
+  48:../src/tensorflow/lite/core/api/tensor_utils.cc **** }
+  61                             		.loc 1 48 1
+  62 0025 66 01                   		mov.L	#0, r1
+  63                             	.LVL8:
+  64 0027 02                      		rts
+  65                             	.LVL9:
+  66                             	.L12:
+  32:../src/tensorflow/lite/core/api/tensor_utils.cc ****   }
+  67                             		.loc 1 32 5 is_stmt 1
+  32:../src/tensorflow/lite/core/api/tensor_utils.cc ****   }
+  68                             		.loc 1 32 11 is_stmt 0
+  69 0028 A9 12                   		mov.L	16[r1], r2
+  70                             	.LVL10:
+  71 002a 2E E6                   		bra	.L3
+  72                             	.LFE0:
+ 100                             	.Letext0:
+ 101                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 102                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 103                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 104                             		.file 5 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 105                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 106                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 107                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 108                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens

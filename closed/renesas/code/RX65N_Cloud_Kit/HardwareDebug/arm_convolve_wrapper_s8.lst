@@ -1,0 +1,388 @@
+   1                             		.file	"arm_convolve_wrapper_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_convolve_wrapper_s8,"ax",@progbits
+   5                             		.global	_arm_convolve_wrapper_s8
+   7                             	_arm_convolve_wrapper_s8:
+   8                             	.LFB27:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c"
+   1:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** /*
+   2:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Copyright (C) 2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+   4:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+   6:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+  10:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+  12:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  */
+  18:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** 
+  19:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Title:        arm_convolve_wrapper_s8.c
+  22:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Description:  s8 convolution layer wrapper function with the main purpose to call the optimal ke
+  23:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * cmsis-nn to perform the convolution.
+  24:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+  25:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * $Date:        09. October 2020
+  26:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * $Revision:    V.1.0.1
+  27:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+  28:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Target Processor:  Cortex-M cores
+  29:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+  30:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * -------------------------------------------------------------------- */
+  31:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** 
+  32:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** #include "arm_nnfunctions.h"
+  33:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** 
+  34:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** /**
+  35:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *  @ingroup groupNN
+  36:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  */
+  37:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** 
+  38:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** /**
+  39:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * @addtogroup NNConv
+  40:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * @{
+  41:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  */
+  42:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** 
+  43:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** /*
+  44:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Convolution layer
+  45:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+  46:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  * Refer header file for details.
+  47:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  *
+  48:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****  */
+  49:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** 
+  50:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** arm_status arm_convolve_wrapper_s8(const cmsis_nn_context *ctx,
+  51:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const cmsis_nn_conv_params *conv_params,
+  52:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const cmsis_nn_per_channel_quant_params *quant_params,
+  53:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const cmsis_nn_dims *input_dims,
+  54:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const q7_t *input_data,
+  55:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const cmsis_nn_dims *filter_dims,
+  56:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const q7_t *filter_data,
+  57:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const cmsis_nn_dims *bias_dims,
+  58:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const int32_t *bias_data,
+  59:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    const cmsis_nn_dims *output_dims,
+  60:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                    q7_t *output_data)
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** {
+  10                             		.loc 1 61 1
+  11                             	.LVL0:
+  12 0000 6E 6D                   		pushm	r6-r13
+  13                             	.LCFI0:
+  14 0002 71 00 DC                		add	#-36, r0
+  15                             	.LCFI1:
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     if ((conv_params->padding.w == 0) && (conv_params->padding.h == 0) && (input_dims->c % 4 == 0) 
+  16                             		.loc 1 62 5
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     if ((conv_params->padding.w == 0) && (conv_params->padding.h == 0) && (input_dims->c % 4 == 0) 
+  17                             		.loc 1 61 1 is_stmt 0
+  18 0005 EF 25                   		mov.L	r2, r5
+  19 0007 75 47 48                		mov.L	#0x48, r7
+  20 000a 4B 07                   		add	r0, r7
+  21 000c EF 16                   		mov.L	r1, r6
+  22 000e EF 3B                   		mov.L	r3, r11
+  23 0010 EF 4F                   		mov.L	r4, r15
+  24 0012 E0 70                   		mov.L	[r7], [r0]
+  25 0014 ED 7A 01                		mov.L	4[r7], r10
+  26 0017 ED 7D 02                		mov.L	8[r7], r13
+  27 001a E5 70 03 01             		mov.L	12[r7], 4[r0]
+  28 001e ED 79 04                		mov.L	16[r7], r9
+  29 0021 ED 7E 05                		mov.L	20[r7], r14
+  30 0024 ED 78 06                		mov.L	24[r7], r8
+  31                             		.loc 1 62 8
+  32 0027 ED 2C 04                		mov.L	16[r2], r12
+  33 002a 61 0C                   		cmp	#0, r12
+  34 002c 18                      		bne	.L2
+  35                             		.loc 1 62 39 discriminator 1
+  36 002d ED 2C 05                		mov.L	20[r2], r12
+  37 0030 61 0C                   		cmp	#0, r12
+  38 0032 20 4C                   		beq	.L6
+  39                             		.balign 8,3,1
+  40                             	.L2:
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+  64:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         return arm_convolve_1x1_s8_fast(ctx,
+  66:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         conv_params,
+  67:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         quant_params,
+  68:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         input_dims,
+  69:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         input_data,
+  70:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         filter_dims,
+  71:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         filter_data,
+  72:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         bias_dims,
+  73:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         bias_data,
+  74:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         output_dims,
+  75:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         output_data);
+  76:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+  77:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     else if ((output_dims->h == 1) && (input_dims->h == 1) && (filter_dims->h == 1) && (output_dims
+  41                             		.loc 1 77 10 is_stmt 1
+  42                             		.loc 1 77 13 is_stmt 0
+  43 0034 ED E4 01                		mov.L	4[r14], r4
+  44                             	.LVL1:
+  45 0037 61 14                   		cmp	#1, r4
+  46 0039 21 1F                   		bne	.L3
+  47                             		.loc 1 77 36 discriminator 1
+  48 003b ED F4 01                		mov.L	4[r15], r4
+  49 003e 61 14                   		cmp	#1, r4
+  50 0040 21 18                   		bne	.L3
+  51                             		.loc 1 77 60 discriminator 2
+  52 0042 ED A4 01                		mov.L	4[r10], r4
+  53 0045 61 14                   		cmp	#1, r4
+  54 0047 21 11                   		bne	.L3
+  55                             		.loc 1 77 108 discriminator 3
+  56 0049 ED E4 02                		mov.L	8[r14], r4
+  57                             		.loc 1 77 85 discriminator 3
+  58 004c FD 74 C4 03             		tst	#3, r4
+  59 0050 18                      		bne	.L3
+  60                             		.loc 1 77 114 discriminator 4
+  61 0051 EC F4                   		mov.L	[r15], r4
+  62 0053 61 14                   		cmp	#1, r4
+  63 0055 20 57                   		beq	.L7
+  64 0057 03                      		.balign 8,3,5
+  65                             	.L3:
+  78:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****              (input_dims->n == 1))
+  79:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         return arm_convolve_1_x_n_s8(ctx,
+  81:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      conv_params,
+  82:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      quant_params,
+  83:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      input_dims,
+  84:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      input_data,
+  85:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      filter_dims,
+  86:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      filter_data,
+  87:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      bias_dims,
+  88:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      bias_data,
+  89:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      output_dims,
+  90:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      output_data);
+  91:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+  92:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     else
+  93:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         return arm_convolve_s8(ctx,
+  66                             		.loc 1 94 9 is_stmt 1
+  67                             		.loc 1 94 16 is_stmt 0
+  68 0058 E7 78 06                		mov.L	r8, 24[r7]
+  69 005b E7 7E 05                		mov.L	r14, 20[r7]
+  70 005e E7 79 04                		mov.L	r9, 16[r7]
+  71 0061 E5 07 01 03             		mov.L	4[r0], 12[r7]
+  72 0065 E7 7D 02                		mov.L	r13, 8[r7]
+  73 0068 E0 07                   		mov.L	[r0], [r7]
+  74 006a E7 7A 01                		mov.L	r10, 4[r7]
+  75 006d EF F4                   		mov.L	r15, r4
+  76 006f EF B3                   		mov.L	r11, r3
+  77                             	.LVL2:
+  78 0071 EF 52                   		mov.L	r5, r2
+  79                             	.LVL3:
+  80 0073 EF 61                   		mov.L	r6, r1
+  81                             	.LVL4:
+  95:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                conv_params,
+  96:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                quant_params,
+  97:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                input_dims,
+  98:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                input_data,
+  99:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                filter_dims,
+ 100:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                filter_data,
+ 101:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                bias_dims,
+ 102:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                bias_data,
+ 103:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                output_dims,
+ 104:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                output_data);
+ 105:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** }
+  82                             		.loc 1 106 1
+  83 0075 71 00 24                		add	#36, r0
+  84 0078 6F 6D                   		popm	r6-r13
+  85                             	.LVL5:
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                conv_params,
+  86                             		.loc 1 94 16
+  87 007a 04 00 00 00             		bra	_arm_convolve_s8
+  88                             	.LVL6:
+  89                             	.L6:
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+  90                             		.loc 1 62 72 discriminator 2
+  91 007e ED 4C 03                		mov.L	12[r4], r12
+  92 0081 FD 74 CC 03             		tst	#3, r12
+  93 0085 21 AF                   		bne	.L2
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+  94                             		.loc 1 62 100 discriminator 3
+  95 0087 ED 2C 02                		mov.L	8[r2], r12
+  96 008a 61 1C                   		cmp	#1, r12
+  97 008c 21 A8                   		bne	.L2
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+  98                             		.loc 1 63 38
+  99 008e ED 2C 03                		mov.L	12[r2], r12
+ 100 0091 61 1C                   		cmp	#1, r12
+ 101 0093 21 A1                   		bne	.L2
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+ 102                             		.loc 1 63 70 discriminator 1
+ 103 0095 ED AC 02                		mov.L	8[r10], r12
+ 104 0098 61 1C                   		cmp	#1, r12
+ 105 009a 21 9A                   		bne	.L2
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+ 106                             		.loc 1 63 95 discriminator 2
+ 107 009c ED AC 01                		mov.L	4[r10], r12
+ 108 009f 61 1C                   		cmp	#1, r12
+ 109 00a1 21 93                   		bne	.L2
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         conv_params,
+ 110                             		.loc 1 65 9 is_stmt 1
+ 111                             		.loc 1 106 1 is_stmt 0
+ 112 00a3 71 00 24                		add	#36, r0
+ 113 00a6 6F 6D                   		popm	r6-r13
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                         conv_params,
+ 114                             		.loc 1 65 16
+ 115 00a8 04 00 00 00             		bra	_arm_convolve_1x1_s8_fast
+ 116                             	.LVL7:
+ 117                             	.L7:
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      conv_params,
+ 118                             		.loc 1 80 9 is_stmt 1
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      conv_params,
+ 119                             		.loc 1 80 16 is_stmt 0
+ 120 00ac E7 78 06                		mov.L	r8, 24[r7]
+ 121 00af E7 7E 05                		mov.L	r14, 20[r7]
+ 122 00b2 E7 79 04                		mov.L	r9, 16[r7]
+ 123 00b5 E5 07 01 03             		mov.L	4[r0], 12[r7]
+ 124 00b9 E7 7D 02                		mov.L	r13, 8[r7]
+ 125 00bc E0 07                   		mov.L	[r0], [r7]
+ 126 00be E7 7A 01                		mov.L	r10, 4[r7]
+ 127 00c1 EF F4                   		mov.L	r15, r4
+ 128 00c3 EF B3                   		mov.L	r11, r3
+ 129                             	.LVL8:
+ 130 00c5 EF 52                   		mov.L	r5, r2
+ 131                             	.LVL9:
+ 132 00c7 EF 61                   		mov.L	r6, r1
+ 133                             	.LVL10:
+ 134                             		.loc 1 106 1
+ 135 00c9 71 00 24                		add	#36, r0
+ 136 00cc 6F 6D                   		popm	r6-r13
+ 137                             	.LVL11:
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                      conv_params,
+ 138                             		.loc 1 80 16
+ 139 00ce 04 00 00 00             		bra	_arm_convolve_1_x_n_s8
+ 140                             	.LVL12:
+ 141                             	.LFE27:
+ 143 00d2 74 10 01 00 00 00       		.section	.text.arm_convolve_wrapper_s8_get_buffer_size,"ax",@progbits
+ 144                             		.global	_arm_convolve_wrapper_s8_get_buffer_size
+ 146                             	_arm_convolve_wrapper_s8_get_buffer_size:
+ 147                             	.LFB28:
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** 
+ 108:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** int32_t arm_convolve_wrapper_s8_get_buffer_size(const cmsis_nn_conv_params *conv_params,
+ 109:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                                 const cmsis_nn_dims *input_dims,
+ 110:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                                 const cmsis_nn_dims *filter_dims,
+ 111:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****                                                 const cmsis_nn_dims *output_dims)
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c **** {
+ 148                             		.loc 1 112 1 is_stmt 1
+ 149                             	.LVL13:
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     if ((conv_params->padding.w == 0) && (conv_params->padding.h == 0) && (input_dims->c % 4 == 0) 
+ 150                             		.loc 1 113 5
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     if ((conv_params->padding.w == 0) && (conv_params->padding.h == 0) && (input_dims->c % 4 == 0) 
+ 151                             		.loc 1 112 1 is_stmt 0
+ 152 0000 EF 25                   		mov.L	r2, r5
+ 153                             		.loc 1 113 8
+ 154 0002 A9 12                   		mov.L	16[r1], r2
+ 155                             	.LVL14:
+ 156 0004 61 02                   		cmp	#0, r2
+ 157 0006 1F                      		bne	.L9
+ 158                             		.loc 1 113 39 discriminator 1
+ 159 0007 A9 1A                   		mov.L	20[r1], r2
+ 160 0009 61 02                   		cmp	#0, r2
+ 161 000b 20 29                   		beq	.L11
+ 162                             		.balign 8,3,1
+ 163                             	.L9:
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+ 115:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         return arm_convolve_1x1_s8_fast_get_buffer_size(input_dims);
+ 117:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+ 118:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     else if ((output_dims->h == 1) && (input_dims->h == 1) && (filter_dims->h == 1) && (output_dims
+ 164                             		.loc 1 118 10 is_stmt 1
+ 165                             		.loc 1 118 13 is_stmt 0
+ 166 000d A8 4A                   		mov.L	4[r4], r2
+ 167 000f 61 12                   		cmp	#1, r2
+ 168 0011 21 1B                   		bne	.L10
+ 169                             		.loc 1 118 36 discriminator 1
+ 170 0013 A8 5A                   		mov.L	4[r5], r2
+ 171 0015 61 12                   		cmp	#1, r2
+ 172 0017 21 15                   		bne	.L10
+ 173                             		.loc 1 118 60 discriminator 2
+ 174 0019 A8 3A                   		mov.L	4[r3], r2
+ 175 001b 61 12                   		cmp	#1, r2
+ 176 001d 21 0F                   		bne	.L10
+ 177                             		.loc 1 118 108 discriminator 3
+ 178 001f A8 C4                   		mov.L	8[r4], r4
+ 179                             	.LVL15:
+ 180                             		.loc 1 118 85 discriminator 3
+ 181 0021 FD 74 C4 03             		tst	#3, r4
+ 182 0025 1F                      		bne	.L10
+ 183                             		.loc 1 118 114 discriminator 4
+ 184 0026 EC 54                   		mov.L	[r5], r4
+ 185 0028 61 14                   		cmp	#1, r4
+ 186 002a 20 30                   		beq	.L12
+ 187                             		.balign 8,3,1
+ 188                             	.L10:
+ 119:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****              (input_dims->n == 1))
+ 120:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         return arm_convolve_1_x_n_s8_get_buffer_size(input_dims, filter_dims);
+ 122:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+ 123:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     else
+ 124:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     {
+ 125:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         return arm_convolve_s8_get_buffer_size(input_dims, filter_dims);
+ 189                             		.loc 1 125 9 is_stmt 1
+ 190                             		.loc 1 125 16 is_stmt 0
+ 191 002c EF 32                   		mov.L	r3, r2
+ 192 002e EF 51                   		mov.L	r5, r1
+ 193                             	.LVL16:
+ 194 0030 04 00 00 00             		bra	_arm_convolve_s8_get_buffer_size
+ 195                             	.LVL17:
+ 196                             	.L11:
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+ 197                             		.loc 1 113 94 discriminator 2
+ 198 0034 A8 DA                   		mov.L	12[r5], r2
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+ 199                             		.loc 1 113 72 discriminator 2
+ 200 0036 FD 74 C2 03             		tst	#3, r2
+ 201 003a 21 D3                   		bne	.L9
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+ 202                             		.loc 1 113 100 discriminator 3
+ 203 003c A8 92                   		mov.L	8[r1], r2
+ 204 003e 61 12                   		cmp	#1, r2
+ 205 0040 21 CD                   		bne	.L9
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+ 206                             		.loc 1 114 38
+ 207 0042 A8 9A                   		mov.L	12[r1], r2
+ 208 0044 61 12                   		cmp	#1, r2
+ 209 0046 21 C7                   		bne	.L9
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+ 210                             		.loc 1 114 70 discriminator 1
+ 211 0048 A8 B2                   		mov.L	8[r3], r2
+ 212 004a 61 12                   		cmp	#1, r2
+ 213 004c 21 C1                   		bne	.L9
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****         (conv_params->stride.w == 1) && (conv_params->stride.h == 1) && (filter_dims->w == 1) && (f
+ 214                             		.loc 1 114 95 discriminator 2
+ 215 004e A8 3A                   		mov.L	4[r3], r2
+ 216 0050 61 12                   		cmp	#1, r2
+ 217 0052 21 BB                   		bne	.L9
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+ 218                             		.loc 1 116 9 is_stmt 1
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+ 219                             		.loc 1 116 16 is_stmt 0
+ 220 0054 EF 51                   		mov.L	r5, r1
+ 221                             	.LVL18:
+ 222 0056 04 00 00 00             		bra	_arm_convolve_1x1_s8_fast_get_buffer_size
+ 223                             	.LVL19:
+ 224                             	.L12:
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+ 225                             		.loc 1 121 9 is_stmt 1
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_wrapper_s8.c ****     }
+ 226                             		.loc 1 121 16 is_stmt 0
+ 227 005a EF 32                   		mov.L	r3, r2
+ 228 005c EF 51                   		mov.L	r5, r1
+ 229                             	.LVL20:
+ 230 005e 04 00 00 00             		bra	_arm_convolve_1_x_n_s8_get_buffer_size
+ 231                             	.LVL21:
+ 232                             	.LFE28:
+ 292                             	.Letext0:
+ 293                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 294                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 295                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 296                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 297                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 298                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 299                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 300                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 301                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 302                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

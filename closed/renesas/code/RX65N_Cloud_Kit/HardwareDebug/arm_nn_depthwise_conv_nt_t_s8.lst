@@ -1,0 +1,206 @@
+   1                             		.file	"arm_nn_depthwise_conv_nt_t_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_nn_depthwise_conv_nt_t_s8,"ax",@progbits
+   5                             		.global	_arm_nn_depthwise_conv_nt_t_s8
+   7                             	_arm_nn_depthwise_conv_nt_t_s8:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c"
+   1:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** /*
+   2:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+   4:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+   6:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+  10:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+  12:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  */
+  18:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  19:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Title:        arm_nn_depthwise_conv_nt_t_s8.c
+  22:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Description:  Depthwise convolution on matrices with no padding.
+  23:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+  24:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * $Revision:    V.1.0.2
+  26:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+  27:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Target Processor:  Cortex-M processors with MVE extension.
+  28:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * -------------------------------------------------------------------- */
+  29:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  30:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** #include "arm_nnsupportfunctions.h"
+  31:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  32:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** /**
+  33:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * @ingroup groupSupport
+  34:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  */
+  35:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  36:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** /**
+  37:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * @addtogroup NNBasicMath
+  38:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * @{
+  39:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  */
+  40:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  41:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** /*
+  42:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Depthwise convolution of rhs matrix with 4 lhs matrices with no padding. Dimensions are the same
+  43:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+  44:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  * Refer header file for details.
+  45:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  *
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****  */
+  47:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  48:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** q7_t *arm_nn_depthwise_conv_nt_t_s8(const q7_t *lhs,
+  49:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const q7_t *rhs,
+  50:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const int32_t input_offset,
+  51:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const uint16_t num_ch,
+  52:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const int32_t *out_shift,
+  53:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const int32_t *out_mult,
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const int32_t out_offset,
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const int32_t activation_min,
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const int32_t activation_max,
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const uint16_t row_x_col,
+  58:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     const int32_t *const output_bias,
+  59:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****                                     q7_t *out)
+  60:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** {
+  10                             		.loc 1 60 1
+  11                             	.LVL0:
+  12 0000 71 00 E0                		add	#-32, r0
+  13                             	.LCFI0:
+  61:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** #if defined(ARM_MATH_MVEI)
+  62:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     const int32_t *bias = output_bias;
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     int32_t loop_count = (num_ch + 3) / 4;
+  64:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     uint32_t num_ch_to_process = num_ch;
+  65:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  66:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     for (int i_loop_cnt = 0, offset = 0; i_loop_cnt < loop_count;
+  67:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****          num_ch_to_process -= 4, offset += 4, out += 4, i_loop_cnt++)
+  68:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     {
+  69:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         int32x4_t out_0 = vldrwq_s32(bias);
+  70:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         int32x4_t out_1 = out_0;
+  71:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         int32x4_t out_2 = out_0;
+  72:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         int32x4_t out_3 = out_0;
+  73:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         bias += 4;
+  74:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  75:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         const int8_t *rhs_0 = rhs + offset;
+  76:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         const int8_t *lhs_0 = lhs + offset;
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         const int8_t *lhs_1 = lhs + row_x_col * num_ch + offset;
+  78:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         const int8_t *lhs_2 = lhs + (row_x_col * num_ch * 2) + offset;
+  79:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         const int8_t *lhs_3 = lhs + (row_x_col * num_ch * 3) + offset;
+  80:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         int32x4_t ker_sum = vdupq_n_s32(0);
+  81:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  82:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         for (int i_row_x_col = 0; i_row_x_col < row_x_col; i_row_x_col++)
+  83:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         {
+  84:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             const int32x4_t ker_0 = vldrbq_s32(rhs_0);
+  85:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             ker_sum = vaddq_s32(ker_sum, ker_0);
+  86:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  87:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             int32x4_t ip_0 = vldrbq_s32(lhs_0);
+  88:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             out_0 += vmulq_s32(ip_0, ker_0);
+  89:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  90:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             int32x4_t ip_1 = vldrbq_s32(lhs_1);
+  91:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             out_1 += vmulq_s32(ip_1, ker_0);
+  92:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  93:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             int32x4_t ip_2 = vldrbq_s32(lhs_2);
+  94:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             out_2 += vmulq_s32(ip_2, ker_0);
+  95:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  96:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             int32x4_t ip_3 = vldrbq_s32(lhs_3);
+  97:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             out_3 += vmulq_s32(ip_3, ker_0);
+  98:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+  99:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             lhs_0 += num_ch;
+ 100:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             lhs_1 += num_ch;
+ 101:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             lhs_2 += num_ch;
+ 102:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             lhs_3 += num_ch;
+ 103:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 104:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****             rhs_0 += num_ch;
+ 105:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         }
+ 106:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 107:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         ker_sum = vmulq_n_s32(ker_sum, input_offset);
+ 108:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_0 = ker_sum + out_0;
+ 109:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_1 = ker_sum + out_1;
+ 110:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_2 = ker_sum + out_2;
+ 111:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_3 = ker_sum + out_3;
+ 112:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 113:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         const int32x4_t mult = vldrwq_s32(out_mult);
+ 114:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         const int32x4_t shift = vldrwq_s32(out_shift);
+ 115:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_mult += 4;
+ 116:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_shift += 4;
+ 117:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         mve_pred16_t p = vctp32q(num_ch_to_process);
+ 118:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 119:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_0 = arm_requantize_mve_32x4(out_0, mult, shift);
+ 120:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_0 = vaddq_n_s32(out_0, out_offset);
+ 121:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_0 = vmaxq_s32(out_0, vdupq_n_s32(activation_min));
+ 122:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_0 = vminq_s32(out_0, vdupq_n_s32(activation_max));
+ 123:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         vstrbq_p_s32(out, out_0, p);
+ 124:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 125:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_1 = arm_requantize_mve_32x4(out_1, mult, shift);
+ 126:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_1 = vaddq_n_s32(out_1, out_offset);
+ 127:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_1 = vmaxq_s32(out_1, vdupq_n_s32(activation_min));
+ 128:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_1 = vminq_s32(out_1, vdupq_n_s32(activation_max));
+ 129:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         vstrbq_p_s32(out + num_ch, out_1, p);
+ 130:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 131:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_2 = arm_requantize_mve_32x4(out_2, mult, shift);
+ 132:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_2 = vaddq_n_s32(out_2, out_offset);
+ 133:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_2 = vmaxq_s32(out_2, vdupq_n_s32(activation_min));
+ 134:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_2 = vminq_s32(out_2, vdupq_n_s32(activation_max));
+ 135:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         vstrbq_p_s32(out + 2 * num_ch, out_2, p);
+ 136:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 137:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_3 = arm_requantize_mve_32x4(out_3, mult, shift);
+ 138:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_3 = vaddq_n_s32(out_3, out_offset);
+ 139:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_3 = vmaxq_s32(out_3, vdupq_n_s32(activation_min));
+ 140:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out_3 = vminq_s32(out_3, vdupq_n_s32(activation_max));
+ 141:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         vstrbq_p_s32(out + 3 * num_ch, out_3, p);
+ 142:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     }
+ 143:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 144:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     const int tail_ch = num_ch & 0x3;
+ 145:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     if (tail_ch != 0)
+ 146:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     {
+ 147:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****         out -= (4 - tail_ch);
+ 148:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     }
+ 149:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** 
+ 150:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     return out + (3 * num_ch);
+ 151:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** #else
+ 152:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)lhs;
+  14                             		.loc 1 152 5
+ 153:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)rhs;
+  15                             		.loc 1 153 5
+ 154:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)input_offset;
+  16                             		.loc 1 154 5
+ 155:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)num_ch;
+  17                             		.loc 1 155 5
+ 156:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)out_shift;
+  18                             		.loc 1 156 5
+ 157:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)out_mult;
+  19                             		.loc 1 157 5
+ 158:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)out_offset;
+  20                             		.loc 1 158 5
+ 159:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)activation_min;
+  21                             		.loc 1 159 5
+ 160:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)activation_max;
+  22                             		.loc 1 160 5
+ 161:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)row_x_col;
+  23                             		.loc 1 161 5
+ 162:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)output_bias;
+  24                             		.loc 1 162 5
+ 163:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     (void)out;
+  25                             		.loc 1 163 5
+ 164:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c ****     return NULL;
+  26                             		.loc 1 164 5
+ 165:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** #endif
+ 166:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_depthwise_conv_nt_t_s8.c **** }
+  27                             		.loc 1 166 1 is_stmt 0
+  28 0003 66 01                   		mov.L	#0, r1
+  29                             	.LVL1:
+  30 0005 67 08                   		rtsd	#32
+  31                             	.LFE82:
+  63                             	.Letext0:
+  64                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  65                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  66                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  67                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  68                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  69                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  70                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  71                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  72                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

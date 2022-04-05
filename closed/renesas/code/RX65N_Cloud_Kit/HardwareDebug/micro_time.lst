@@ -1,0 +1,61 @@
+   1                             		.file	"micro_time.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite16ticks_per_secondEv,"ax",@progbits
+   5                             		.global	__ZN6tflite16ticks_per_secondEv
+   7                             	__ZN6tflite16ticks_per_secondEv:
+   8                             	.LFB0:
+   9                             		.file 1 "../src/tensorflow/lite/micro/micro_time.cc"
+   1:../src/tensorflow/lite/micro/micro_time.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/micro_time.cc **** 
+   3:../src/tensorflow/lite/micro/micro_time.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/micro_time.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/micro_time.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/micro_time.cc **** 
+   7:../src/tensorflow/lite/micro/micro_time.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/micro_time.cc **** 
+   9:../src/tensorflow/lite/micro/micro_time.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/micro_time.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/micro_time.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/micro_time.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/micro_time.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/micro_time.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/micro_time.cc **** 
+  16:../src/tensorflow/lite/micro/micro_time.cc **** // Reference implementation of timer functions.  Platforms are not required to
+  17:../src/tensorflow/lite/micro/micro_time.cc **** // implement these timer methods, but they are required to enable profiling.
+  18:../src/tensorflow/lite/micro/micro_time.cc **** 
+  19:../src/tensorflow/lite/micro/micro_time.cc **** // On platforms that have a POSIX stack or C library, it can be written using
+  20:../src/tensorflow/lite/micro/micro_time.cc **** // methods from <sys/time.h> or clock() from <time.h>.
+  21:../src/tensorflow/lite/micro/micro_time.cc **** 
+  22:../src/tensorflow/lite/micro/micro_time.cc **** // To add an equivalent function for your own platform, create your own
+  23:../src/tensorflow/lite/micro/micro_time.cc **** // implementation file, and place it in a subfolder with named after the OS
+  24:../src/tensorflow/lite/micro/micro_time.cc **** // you're targeting. For example, see the Cortex M bare metal version in
+  25:../src/tensorflow/lite/micro/micro_time.cc **** // tensorflow/lite/micro/bluepill/micro_time.cc or the mbed one on
+  26:../src/tensorflow/lite/micro/micro_time.cc **** // tensorflow/lite/micro/mbed/micro_time.cc.
+  27:../src/tensorflow/lite/micro/micro_time.cc **** 
+  28:../src/tensorflow/lite/micro/micro_time.cc **** #include "tensorflow/lite/micro/micro_time.h"
+  29:../src/tensorflow/lite/micro/micro_time.cc **** 
+  30:../src/tensorflow/lite/micro/micro_time.cc **** namespace tflite {
+  31:../src/tensorflow/lite/micro/micro_time.cc **** 
+  32:../src/tensorflow/lite/micro/micro_time.cc **** // Reference implementation of the ticks_per_second() function that's required
+  33:../src/tensorflow/lite/micro/micro_time.cc **** // for a platform to support Tensorflow Lite for Microcontrollers profiling.
+  34:../src/tensorflow/lite/micro/micro_time.cc **** // This returns 0 by default because timing is an optional feature that builds
+  35:../src/tensorflow/lite/micro/micro_time.cc **** // without errors on platforms that do not need it.
+  36:../src/tensorflow/lite/micro/micro_time.cc **** int32_t ticks_per_second() { return 0; }
+  10                             		.loc 1 36 28
+  11                             		.loc 1 36 30
+  12                             		.loc 1 36 40 is_stmt 0
+  13 0000 66 01                   		mov.L	#0, r1
+  14 0002 02                      		rts
+  15                             	.LFE0:
+  17                             		.section	.text._ZN6tflite19GetCurrentTimeTicksEv,"ax",@progbits
+  18                             		.global	__ZN6tflite19GetCurrentTimeTicksEv
+  20                             	__ZN6tflite19GetCurrentTimeTicksEv:
+  21                             	.LFB3:
+  22 0000 66 01                   		mov.L	#0, r1
+  23 0002 02                      		rts
+  24                             	.LFE3:
+  60                             	.Letext0:
+  61                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  62                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  63                             		.file 4 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens

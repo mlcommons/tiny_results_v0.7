@@ -1,0 +1,1340 @@
+   1                             		.file	"r_bsp_cpu.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.R_BSP_InterruptsDisable,"ax",@progbits
+   5                             		.global	_R_BSP_InterruptsDisable
+   7                             	_R_BSP_InterruptsDisable:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c"
+   1:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+   2:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * DISCLAIMER
+   3:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * other uses are authorized. This software is owned by Renesas Electronics Corporation and is prote
+   5:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * applicable laws, including copyright laws.
+   6:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+   7:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF 
+   8:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIM
+   9:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AF
+  10:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY RE
+  11:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * this software. 
+  14:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *
+  15:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Copyright (C) 2013 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  17:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+  18:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * File Name    : r_bsp_cpu.c
+  19:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Description  : This module implements CPU specific functions. An example is enabling/disabling in
+  20:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  21:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+  22:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * History : DD.MM.YYYY Version  Description
+  23:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *         : 28.02.2019 3.00     Merged processing of all devices.
+  24:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               Added support for GNUC and ICCRX.
+  25:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               Fixed coding style.
+  26:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *         : 26.07.2019 3.10     Added the API function(R_BSP_SoftwareReset).
+  27:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               Modified comment of API function to Doxygen style.
+  28:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               Added the vbatt_voltage_stability_wait function.
+  29:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               Modified the following functions.
+  30:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               - R_BSP_RegisterProtectEnable
+  31:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               - R_BSP_RegisterProtectDisable
+  32:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *         : 31.07.2019 3.11     Deleted the compile condition for R_BSP_SoftwareReset.
+  33:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *         : 08.10.2019 3.12     Changed the following functions.
+  34:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               - R_BSP_InterruptsDisable
+  35:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               - R_BSP_InterruptsEnable
+  36:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               - R_BSP_CpuInterruptLevelWrite
+  37:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *         : 10.12.2019 3.13     Modified the following functions.
+  38:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               - R_BSP_RegisterProtectEnable
+  39:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** *                               - R_BSP_RegisterProtectDisable
+  40:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  41:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+  42:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+  43:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** Includes   <System Includes> , "Project Includes"
+  44:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  45:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* Platform support. */
+  46:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #include "platform.h"
+  47:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+  48:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+  49:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** Macro definitions
+  50:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  51:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+  52:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* Key code for writing PRCR register. */
+  53:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #define BSP_PRV_PRCR_KEY        (0xA500)
+  54:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+  55:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+  56:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_VOLTAGE_LEVEL_SETTING
+  57:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* The macro definition for combinations where settings of USBVON bit conflict. */
+  58:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #define BSP_PRV_USBVON_CONFLICT (BSP_VOL_USB_POWEROFF | BSP_VOL_USB_POWERON)
+  59:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* The macro definition for combinations where settings of PGAVLS bit conflict. */
+  60:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #define BSP_PRV_PGAVLS_CONFLICT (BSP_VOL_AD_NEGATIVE_VOLTAGE_INPUT | BSP_VOL_AD_NEGATIVE_VOLTAGE_NO
+  61:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* The macro definition for combinations where settings of RICVLS bit conflict. */
+  62:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #define BSP_PRV_RICVLS_CONFLICT (BSP_VOL_RIIC_4_5V_OROVER | BSP_VOL_RIIC_UNDER_4_5V)
+  63:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* Bit number of VOLSR register. */
+  64:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #define BSP_PRV_VOLSR_RICVLS_BIT_NUM  (7)
+  65:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #define BSP_PRV_VOLSR_PGAVLS_BIT_NUM  (6)
+  66:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #define BSP_PRV_VOLSR_USBVON_BIT_NUM  (2)
+  67:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+  68:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+  69:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+  70:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** Typedef definitions
+  71:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  72:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+  73:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+  74:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** Exported global variables (to be accessed by other files)
+  75:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  76:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+  77:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+  78:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** Private global variables and functions
+  79:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+  80:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+  81:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* Used for holding reference counters for protection bits. */
+  82:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** static volatile uint16_t s_protect_counters[BSP_REG_PROTECT_TOTAL_ITEMS];
+  83:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+  84:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /* Masks for setting or clearing the PRCR register. Use -1 for size because PWPR in MPC is used dif
+  85:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** static const    uint16_t s_prcr_masks[BSP_REG_PROTECT_TOTAL_ITEMS-1] = 
+  86:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+  87:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_RCPC_PRC0
+  88:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     0x0001,         /* PRC0. */
+  89:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+  90:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_RCPC_PRC1
+  91:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     0x0002,         /* PRC1. */
+  92:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+  93:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_RCPC_PRC2
+  94:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     0x0004,         /* PRC2. */
+  95:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+  96:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_RCPC_PRC3
+  97:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     0x0008,         /* PRC3. */
+  98:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+  99:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** };
+ 100:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+ 101:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 102:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 103:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_InterruptsDisable
+ 104:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 105:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @brief Globally disables interrupts.
+ 106:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details This function globally disables interrupts. This is performed by clearing the 'I' bit i
+ 107:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Processor Status Word (PSW) register.
+ 108:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @note The 'I' bit of the PSW can only be modified when in Supervisor Mode. If the CPU is in User
+ 109:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * function is called, this function does nothing.
+ 110:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 111:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** void R_BSP_InterruptsDisable (void)
+ 112:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+  10                             		.loc 1 112 1
+ 113:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     uint32_t    pmode;
+  11                             		.loc 1 113 5
+ 114:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 115:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Read current processor mode. */
+ 116:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     pmode = (R_BSP_GET_PSW() & 0x00100000);
+  12                             		.loc 1 116 5
+  13                             		.loc 1 116 14 is_stmt 0
+  14 0000 FD 6A 05                		mvfc	psw, r5
+  15                             	.LVL0:
+ 117:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 118:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Check current processor mode. */
+ 119:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (0 == pmode)
+  16                             		.loc 1 119 5 is_stmt 1
+  17                             		.loc 1 119 8 is_stmt 0
+  18 0003 7D 45                   		btst	#20, r5
+  19 0005 1B                      		bne	.L1
+ 120:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 121:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         /* Use the compiler intrinsic function to clear the I flag. */
+ 122:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_CLRPSW_I();
+  20                             		.loc 1 122 9 is_stmt 1
+  21 0006 7F B8                   		clrpsw	I
+  22                             	.L1:
+ 123:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 124:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 125:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_InterruptsDisable() */
+  23                             		.loc 1 125 1 is_stmt 0
+  24 0008 02                      		rts
+  25                             	.LFE3:
+  27                             		.section	.text.R_BSP_InterruptsEnable,"ax",@progbits
+  28                             		.global	_R_BSP_InterruptsEnable
+  30                             	_R_BSP_InterruptsEnable:
+  31                             	.LFB4:
+ 126:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 127:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 128:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_InterruptsEnable
+ 129:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 130:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @brief Globally enable interrupts.
+ 131:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details This function globally enables interrupts. This is performed by setting the 'I' bit in 
+ 132:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Status Word (PSW) register.
+ 133:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @note The 'I' bit of the PSW can only be modified when in Supervisor Mode. If the CPU is in User
+ 134:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * function is called, this function does nothing.
+ 135:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 136:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** void R_BSP_InterruptsEnable (void)
+ 137:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+  32                             		.loc 1 137 1 is_stmt 1
+ 138:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     uint32_t    pmode;
+  33                             		.loc 1 138 5
+ 139:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 140:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Read current processor mode. */
+ 141:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     pmode = (R_BSP_GET_PSW() & 0x00100000);
+  34                             		.loc 1 141 5
+  35                             		.loc 1 141 14 is_stmt 0
+  36 0000 FD 6A 05                		mvfc	psw, r5
+  37                             	.LVL1:
+ 142:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 143:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Check current processor mode. */
+ 144:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (0 == pmode)
+  38                             		.loc 1 144 5 is_stmt 1
+  39                             		.loc 1 144 8 is_stmt 0
+  40 0003 7D 45                   		btst	#20, r5
+  41 0005 1B                      		bne	.L4
+ 145:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 146:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         /* Use the compiler intrinsic function to set the I flag. */
+ 147:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_SETPSW_I();
+  42                             		.loc 1 147 9 is_stmt 1
+  43 0006 7F A8                   		setpsw	I
+  44                             	.L4:
+ 148:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 149:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 150:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_InterruptsEnable() */
+  45                             		.loc 1 150 1 is_stmt 0
+  46 0008 02                      		rts
+  47                             	.LFE4:
+  49                             		.section	.text.R_BSP_CpuInterruptLevelRead,"ax",@progbits
+  50                             		.global	_R_BSP_CpuInterruptLevelRead
+  52                             	_R_BSP_CpuInterruptLevelRead:
+  53                             	.LFB5:
+ 151:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 152:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 153:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_CpuInterruptLevelRead
+ 154:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 155:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @brief Reads the CPU's Interrupt Priority Level.
+ 156:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @return The CPU's Interrupt Priority Level.
+ 157:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details This function reads the CPU's Interrupt Priority Level. This level is stored in the IPL
+ 158:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Processor Status Word (PSW) register.
+ 159:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 160:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** uint32_t R_BSP_CpuInterruptLevelRead (void)
+ 161:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+  54                             		.loc 1 161 1 is_stmt 1
+ 162:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Use the compiler intrinsic function to read the CPU IPL. */
+ 163:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     uint32_t psw_value;
+  55                             		.loc 1 163 5
+ 164:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 165:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Casting is valid because it matches the type to the right side or argument. */
+ 166:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     psw_value = (uint32_t)R_BSP_GET_PSW();
+  56                             		.loc 1 166 5
+  57                             		.loc 1 166 27 is_stmt 0
+  58 0000 FD 6A 01                		mvfc	psw, r1
+  59                             	.LVL2:
+ 167:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     psw_value = psw_value & 0x0f000000;
+  60                             		.loc 1 167 5 is_stmt 1
+ 168:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     psw_value = psw_value >> 24;
+  61                             		.loc 1 168 5
+  62 0003 69 81                   		shlr	#24, r1
+  63                             	.LVL3:
+ 169:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 170:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     return psw_value;
+  64                             		.loc 1 170 5
+ 171:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelRead() */
+  65                             		.loc 1 171 1 is_stmt 0
+  66 0005 64 F1                   		and #15, r1
+  67                             	.LVL4:
+  68 0007 02                      		rts
+  69                             	.LFE5:
+  71                             		.section	.text.R_BSP_CpuInterruptLevelWrite,"ax",@progbits
+  72                             		.global	_R_BSP_CpuInterruptLevelWrite
+  74                             	_R_BSP_CpuInterruptLevelWrite:
+  75                             	.LFB6:
+ 172:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 173:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 174:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_CpuInterruptLevelWrite
+ 175:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 176:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @brief Writes the CPU's Interrupt Priority Level.
+ 177:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @param[in] level The level to write to the CPU's IPL.
+ 178:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @retval true Successful, CPU's IPL has been written.
+ 179:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @retval false Failure, provided 'level' has invalid IPL value or called when the CPU is in User 
+ 180:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details This function writes the CPU's Interrupt Priority Level. This level is stored in the IP
+ 181:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Processor Status Word (PSW) register. This function does check to make sure that the IPL being w
+ 182:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * The maximum and minimum valid settings for the CPU IPL are defined in mcu_info.h using the BSP_M
+ 183:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * BSP_MCU_IPL_MIN macros.
+ 184:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @note The CPU's IPL can only be modified by the user when in Supervisor Mode. If the CPU is in U
+ 185:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * function is called, this function does not control IPL and return false.
+ 186:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 187:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** bool R_BSP_CpuInterruptLevelWrite (uint32_t level)
+ 188:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+  76                             		.loc 1 188 1 is_stmt 1
+  77                             	.LVL5:
+ 189:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     bool ret;
+  78                             		.loc 1 189 5
+ 190:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     uint32_t pmode;
+  79                             		.loc 1 190 5
+ 191:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 192:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* The R_BSP_SET_IPL() function use the MVTIPL instruction.
+ 193:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****        The MVTIPL instruction needs to set an immediate value to src. */
+ 194:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 195:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     ret = false;
+  80                             		.loc 1 195 5
+ 196:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 197:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Read current processor mode. */
+ 198:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     pmode = (R_BSP_GET_PSW() & 0x00100000);
+  81                             		.loc 1 198 5
+  82                             		.loc 1 198 14 is_stmt 0
+  83 0000 FD 6A 05                		mvfc	psw, r5
+  84                             	.LVL6:
+ 199:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 200:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Check current processor mode. */
+ 201:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (0 == pmode)
+  85                             		.loc 1 201 5 is_stmt 1
+  86                             		.loc 1 201 8 is_stmt 0
+  87 0003 7D 45                   		btst	#20, r5
+  88 0005 21 12                   		bne	.L27
+ 202:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         ret = true;
+  89                             		.loc 1 203 9 is_stmt 1
+  90                             	.LVL7:
+ 204:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 205:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         /* Use the compiler intrinsic function to set the CPU IPL. */
+ 206:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         switch (level)
+  91                             		.loc 1 206 9
+  92 0007 61 F1                   		cmp	#15, r1
+  93 0009 24 0E                   		bgtu	.L27
+  94 000b 6C 21                   		shll	#2, r1
+  95                             	.LVL8:
+  96 000d 70 11 00 00 00 00       		add	#.L10, r1
+  97 0013 EC 15                   		mov.L	[r1], r5
+  98                             	.LVL9:
+  99                             		
+ 100 0015 7F 05                   	1:jmp	r5
+ 101                             		.section	.rodata.R_BSP_CpuInterruptLevelWrite,"a",@progbits
+ 102                             		.balign 4
+ 103                             		.balign 4
+ 104                             	.L10:
+ 105 0000 2C 00 00 00             		.long .L25
+ 106 0004 34 00 00 00             		.long .L24
+ 107 0008 3C 00 00 00             		.long .L23
+ 108 000c 44 00 00 00             		.long .L22
+ 109 0010 4C 00 00 00             		.long .L21
+ 110 0014 54 00 00 00             		.long .L20
+ 111 0018 5C 00 00 00             		.long .L19
+ 112 001c 64 00 00 00             		.long .L18
+ 113 0020 6C 00 00 00             		.long .L17
+ 114 0024 74 00 00 00             		.long .L16
+ 115 0028 7C 00 00 00             		.long .L15
+ 116 002c 84 00 00 00             		.long .L14
+ 117 0030 8C 00 00 00             		.long .L13
+ 118 0034 94 00 00 00             		.long .L12
+ 119 0038 1C 00 00 00             		.long .L11
+ 120 003c 24 00 00 00             		.long .L9
+ 121                             		.section	.text.R_BSP_CpuInterruptLevelWrite
+ 122                             	.LVL10:
+ 123                             	.L27:
+ 207:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 208:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (0):
+ 209:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 210:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 0 */
+ 211:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(0);
+ 212:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 213:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 214:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (1):
+ 215:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 216:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 1 */
+ 217:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(1);
+ 218:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 219:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 220:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (2):
+ 221:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 222:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 2 */
+ 223:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(2);
+ 224:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 225:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 226:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (3):
+ 227:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 228:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 3 */
+ 229:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(3);
+ 230:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 231:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 232:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (4):
+ 233:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 234:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 4 */
+ 235:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(4);
+ 236:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 237:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 238:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (5):
+ 239:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 240:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 5 */
+ 241:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(5);
+ 242:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 243:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 244:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (6):
+ 245:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 246:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 6 */
+ 247:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(6);
+ 248:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 249:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 250:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (7):
+ 251:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 252:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 7 */
+ 253:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(7);
+ 254:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 255:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 256:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     #if 7 < BSP_MCU_IPL_MAX
+ 257:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (8):
+ 258:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 259:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 8 */
+ 260:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(8);
+ 261:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 262:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 263:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (9):
+ 264:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 265:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 9 */
+ 266:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(9);
+ 267:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 268:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 269:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (10):
+ 270:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 271:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 10 */
+ 272:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(10);
+ 273:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 274:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 275:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (11):
+ 276:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 277:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 11 */
+ 278:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(11);
+ 279:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 280:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 281:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (12):
+ 282:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 283:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 12 */
+ 284:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(12);
+ 285:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 286:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 287:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (13):
+ 288:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 289:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 13 */
+ 290:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(13);
+ 291:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 292:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 293:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (14):
+ 294:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 295:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 14 */
+ 296:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(14);
+ 297:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 298:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 299:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             case (15):
+ 300:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 301:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 /* IPL = 15 */
+ 302:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 R_BSP_SET_IPL(15);
+ 303:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 304:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     #endif /* BSP_MCU_IPL_MAX */
+ 305:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 306:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             default:
+ 307:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 ret = false;
+ 124                             		.loc 1 307 21 is_stmt 0
+ 125 0017 66 01                   		mov	#0, r1
+ 126                             	.LVL11:
+ 308:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 309:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 310:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 311:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     return ret;
+ 127                             		.loc 1 312 5 is_stmt 1
+ 313:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 128                             		.loc 1 313 1 is_stmt 0
+ 129 0019 64 11                   		and #1, r1
+ 130                             	.LVL12:
+ 131 001b 02                      		rts
+ 132                             	.LVL13:
+ 133                             	.L11:
+ 296:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 134                             		.loc 1 296 17 is_stmt 1
+ 135 001c 75 70 0E                		mvtipl	#14
+ 297:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 136                             		.loc 1 297 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 137                             		.loc 1 203 13 is_stmt 0
+ 138 001f 66 11                   		mov	#1, r1
+ 139                             	.LVL14:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 140                             		.loc 1 312 5 is_stmt 1
+ 141                             		.loc 1 313 1 is_stmt 0
+ 142 0021 64 11                   		and #1, r1
+ 143                             	.LVL15:
+ 144 0023 02                      		rts
+ 145                             	.L9:
+ 302:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 146                             		.loc 1 302 17 is_stmt 1
+ 147 0024 75 70 0F                		mvtipl	#15
+ 303:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     #endif /* BSP_MCU_IPL_MAX */
+ 148                             		.loc 1 303 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 149                             		.loc 1 203 13 is_stmt 0
+ 150 0027 66 11                   		mov	#1, r1
+ 151                             	.LVL16:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 152                             		.loc 1 312 5 is_stmt 1
+ 153                             		.loc 1 313 1 is_stmt 0
+ 154 0029 64 11                   		and #1, r1
+ 155                             	.LVL17:
+ 156 002b 02                      		rts
+ 157                             	.L25:
+ 211:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 158                             		.loc 1 211 17 is_stmt 1
+ 159 002c 75 70 00                		mvtipl	#0
+ 212:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 160                             		.loc 1 212 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 161                             		.loc 1 203 13 is_stmt 0
+ 162 002f 66 11                   		mov	#1, r1
+ 163                             	.LVL18:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 164                             		.loc 1 312 5 is_stmt 1
+ 165                             		.loc 1 313 1 is_stmt 0
+ 166 0031 64 11                   		and #1, r1
+ 167                             	.LVL19:
+ 168 0033 02                      		rts
+ 169                             	.L24:
+ 217:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 170                             		.loc 1 217 17 is_stmt 1
+ 171 0034 75 70 01                		mvtipl	#1
+ 218:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 172                             		.loc 1 218 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 173                             		.loc 1 203 13 is_stmt 0
+ 174 0037 66 11                   		mov	#1, r1
+ 175                             	.LVL20:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 176                             		.loc 1 312 5 is_stmt 1
+ 177                             		.loc 1 313 1 is_stmt 0
+ 178 0039 64 11                   		and #1, r1
+ 179                             	.LVL21:
+ 180 003b 02                      		rts
+ 181                             	.L23:
+ 223:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 182                             		.loc 1 223 17 is_stmt 1
+ 183 003c 75 70 02                		mvtipl	#2
+ 224:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 184                             		.loc 1 224 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 185                             		.loc 1 203 13 is_stmt 0
+ 186 003f 66 11                   		mov	#1, r1
+ 187                             	.LVL22:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 188                             		.loc 1 312 5 is_stmt 1
+ 189                             		.loc 1 313 1 is_stmt 0
+ 190 0041 64 11                   		and #1, r1
+ 191                             	.LVL23:
+ 192 0043 02                      		rts
+ 193                             	.L22:
+ 229:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 194                             		.loc 1 229 17 is_stmt 1
+ 195 0044 75 70 03                		mvtipl	#3
+ 230:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 196                             		.loc 1 230 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 197                             		.loc 1 203 13 is_stmt 0
+ 198 0047 66 11                   		mov	#1, r1
+ 199                             	.LVL24:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 200                             		.loc 1 312 5 is_stmt 1
+ 201                             		.loc 1 313 1 is_stmt 0
+ 202 0049 64 11                   		and #1, r1
+ 203                             	.LVL25:
+ 204 004b 02                      		rts
+ 205                             	.L21:
+ 235:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 206                             		.loc 1 235 17 is_stmt 1
+ 207 004c 75 70 04                		mvtipl	#4
+ 236:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 208                             		.loc 1 236 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 209                             		.loc 1 203 13 is_stmt 0
+ 210 004f 66 11                   		mov	#1, r1
+ 211                             	.LVL26:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 212                             		.loc 1 312 5 is_stmt 1
+ 213                             		.loc 1 313 1 is_stmt 0
+ 214 0051 64 11                   		and #1, r1
+ 215                             	.LVL27:
+ 216 0053 02                      		rts
+ 217                             	.L20:
+ 241:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 218                             		.loc 1 241 17 is_stmt 1
+ 219 0054 75 70 05                		mvtipl	#5
+ 242:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 220                             		.loc 1 242 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 221                             		.loc 1 203 13 is_stmt 0
+ 222 0057 66 11                   		mov	#1, r1
+ 223                             	.LVL28:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 224                             		.loc 1 312 5 is_stmt 1
+ 225                             		.loc 1 313 1 is_stmt 0
+ 226 0059 64 11                   		and #1, r1
+ 227                             	.LVL29:
+ 228 005b 02                      		rts
+ 229                             	.L19:
+ 247:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 230                             		.loc 1 247 17 is_stmt 1
+ 231 005c 75 70 06                		mvtipl	#6
+ 248:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 232                             		.loc 1 248 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 233                             		.loc 1 203 13 is_stmt 0
+ 234 005f 66 11                   		mov	#1, r1
+ 235                             	.LVL30:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 236                             		.loc 1 312 5 is_stmt 1
+ 237                             		.loc 1 313 1 is_stmt 0
+ 238 0061 64 11                   		and #1, r1
+ 239                             	.LVL31:
+ 240 0063 02                      		rts
+ 241                             	.L18:
+ 253:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 242                             		.loc 1 253 17 is_stmt 1
+ 243 0064 75 70 07                		mvtipl	#7
+ 254:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 244                             		.loc 1 254 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 245                             		.loc 1 203 13 is_stmt 0
+ 246 0067 66 11                   		mov	#1, r1
+ 247                             	.LVL32:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 248                             		.loc 1 312 5 is_stmt 1
+ 249                             		.loc 1 313 1 is_stmt 0
+ 250 0069 64 11                   		and #1, r1
+ 251                             	.LVL33:
+ 252 006b 02                      		rts
+ 253                             	.L17:
+ 260:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 254                             		.loc 1 260 17 is_stmt 1
+ 255 006c 75 70 08                		mvtipl	#8
+ 261:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 256                             		.loc 1 261 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 257                             		.loc 1 203 13 is_stmt 0
+ 258 006f 66 11                   		mov	#1, r1
+ 259                             	.LVL34:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 260                             		.loc 1 312 5 is_stmt 1
+ 261                             		.loc 1 313 1 is_stmt 0
+ 262 0071 64 11                   		and #1, r1
+ 263                             	.LVL35:
+ 264 0073 02                      		rts
+ 265                             	.L16:
+ 266:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 266                             		.loc 1 266 17 is_stmt 1
+ 267 0074 75 70 09                		mvtipl	#9
+ 267:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 268                             		.loc 1 267 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 269                             		.loc 1 203 13 is_stmt 0
+ 270 0077 66 11                   		mov	#1, r1
+ 271                             	.LVL36:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 272                             		.loc 1 312 5 is_stmt 1
+ 273                             		.loc 1 313 1 is_stmt 0
+ 274 0079 64 11                   		and #1, r1
+ 275                             	.LVL37:
+ 276 007b 02                      		rts
+ 277                             	.L15:
+ 272:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 278                             		.loc 1 272 17 is_stmt 1
+ 279 007c 75 70 0A                		mvtipl	#10
+ 273:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 280                             		.loc 1 273 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 281                             		.loc 1 203 13 is_stmt 0
+ 282 007f 66 11                   		mov	#1, r1
+ 283                             	.LVL38:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 284                             		.loc 1 312 5 is_stmt 1
+ 285                             		.loc 1 313 1 is_stmt 0
+ 286 0081 64 11                   		and #1, r1
+ 287                             	.LVL39:
+ 288 0083 02                      		rts
+ 289                             	.L14:
+ 278:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 290                             		.loc 1 278 17 is_stmt 1
+ 291 0084 75 70 0B                		mvtipl	#11
+ 279:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 292                             		.loc 1 279 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 293                             		.loc 1 203 13 is_stmt 0
+ 294 0087 66 11                   		mov	#1, r1
+ 295                             	.LVL40:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 296                             		.loc 1 312 5 is_stmt 1
+ 297                             		.loc 1 313 1 is_stmt 0
+ 298 0089 64 11                   		and #1, r1
+ 299                             	.LVL41:
+ 300 008b 02                      		rts
+ 301                             	.L13:
+ 284:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 302                             		.loc 1 284 17 is_stmt 1
+ 303 008c 75 70 0C                		mvtipl	#12
+ 285:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 304                             		.loc 1 285 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 305                             		.loc 1 203 13 is_stmt 0
+ 306 008f 66 11                   		mov	#1, r1
+ 307                             	.LVL42:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 308                             		.loc 1 312 5 is_stmt 1
+ 309                             		.loc 1 313 1 is_stmt 0
+ 310 0091 64 11                   		and #1, r1
+ 311                             	.LVL43:
+ 312 0093 02                      		rts
+ 313                             	.L12:
+ 290:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                 break;
+ 314                             		.loc 1 290 17 is_stmt 1
+ 315 0094 75 70 0D                		mvtipl	#13
+ 291:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 316                             		.loc 1 291 17
+ 203:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 317                             		.loc 1 203 13 is_stmt 0
+ 318 0097 66 11                   		mov	#1, r1
+ 319                             	.LVL44:
+ 312:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_CpuInterruptLevelWrite() */
+ 320                             		.loc 1 312 5 is_stmt 1
+ 321                             		.loc 1 313 1 is_stmt 0
+ 322 0099 64 11                   		and #1, r1
+ 323                             	.LVL45:
+ 324 009b 02                      		rts
+ 325                             	.LFE6:
+ 327                             		.section	.text.R_BSP_RegisterProtectEnable,"ax",@progbits
+ 328                             		.global	_R_BSP_RegisterProtectEnable
+ 330                             	_R_BSP_RegisterProtectEnable:
+ 331                             	.LFB7:
+ 314:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 315:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 316:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_RegisterProtectEnable
+ 317:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 318:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @brief Enables write protection for selected registers.
+ 319:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @param[in] regs_to_protect Which registers to enable write protection for.
+ 320:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details This function enables write protection for the input registers. Only certain MCU regist
+ 321:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * ability to be write protected. To see which registers are available to be protected by this func
+ 322:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * bsp_reg_protect_t enum in r_bsp_cpu.h for your MCU.
+ 323:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * This function, and R_BSP_RegisterProtectDisable(), use counters for each entry in the bsp_reg_pr
+ 324:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * that users can call these functions multiple times without problem. This function uses the inter
+ 325:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * enable function by controlling the Processor Interrupt Priority Level (IPL) of the R_BSP_Interru
+ 326:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * because counter control is the critical section. If the function is executed while the processor
+ 327:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * mode, interrupts that are at or below the specified interrupt priority level will be disabled by
+ 328:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * IPL. If the function is executed while the processor mode is user mode, the IPL controlling does
+ 329:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * example of why this is needed is shown below in the Special Notes section below.
+ 330:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @note 
+ 331:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * (1) About why counters are needed. \n
+ 332:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * See Section 5.7 in the application note for details.\n
+ 333:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * (2) Notes on user mode \n
+ 334:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * The R_BSP_InterruptControl function used to secure atomicity in the critical section of the coun
+ 335:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * this function is valid only in supervisor mode. When this function is executed in user mode, the
+ 336:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * R_BSP_InterruptControl function is executed but atomicity is not to secure.
+ 337:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 338:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** void R_BSP_RegisterProtectEnable (bsp_reg_protect_t regs_to_protect)
+ 339:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+ 332                             		.loc 1 339 1 is_stmt 1
+ 333                             	.LVL46:
+ 334 0000 7E A7                   		push.l	r7
+ 335                             	.LCFI0:
+ 336 0002 60 40                   		sub	#4, r0
+ 337                             	.LCFI1:
+ 340:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+ 341:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     bsp_int_ctrl_t int_ctrl;
+ 338                             		.loc 1 341 5
+ 342:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 343:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Set IPL to the maximum value to disable all interrupts,
+ 344:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****      * so the scheduler can not be scheduled in critical region.
+ 345:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****      * Note: Please set this macro more than IPR for other FIT module interrupts. */
+ 346:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     R_BSP_InterruptControl(BSP_INT_SRC_EMPTY, BSP_INT_CMD_FIT_INTERRUPT_DISABLE, &int_ctrl);
+ 339                             		.loc 1 346 5
+ 339:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+ 340                             		.loc 1 339 1 is_stmt 0
+ 341 0004 EF 17                   		mov.L	r1, r7
+ 342                             		.loc 1 346 5
+ 343 0006 EF 03                   		mov.L	r0, r3
+ 344 0008 66 62                   		mov.L	#6, r2
+ 345 000a 75 41 5E                		mov.L	#0x5e, r1
+ 346                             	.LVL47:
+ 347 000d 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 348                             	.LVL48:
+ 347:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 348:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Is it safe to disable write access? */
+ 349:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (0 != s_protect_counters[regs_to_protect])
+ 349                             		.loc 1 349 5 is_stmt 1
+ 350                             		.loc 1 349 32 is_stmt 0
+ 351 0011 FB 52 00 00 00 00       		mov.L	#.LANCHOR0, r5
+ 352                             		.loc 1 349 8
+ 353 0017 FE D7 54                		movu.W	[r7,r5], r4
+ 354 001a 61 04                   		cmp	#0, r4
+ 355 001c 20 0C                   		beq	.L29
+ 350:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 351:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         /* Decrement the protect counter */
+ 352:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         s_protect_counters[regs_to_protect]--;
+ 356                             		.loc 1 352 9 is_stmt 1
+ 357                             		.loc 1 352 27 is_stmt 0
+ 358 001e FE 57 54                		mov.W	[r7,r5], r4
+ 359                             		.loc 1 352 44
+ 360 0021 60 14                   		sub	#1, r4
+ 361 0023 FE 17 54                		mov.W	r4, [r7,r5]
+ 362 0026 EF 00                   		.balign 8,3,3
+ 363                             	.L29:
+ 353:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 354:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 355:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Is it safe to disable write access? */
+ 356:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (0 == s_protect_counters[regs_to_protect])
+ 364                             		.loc 1 356 5 is_stmt 1
+ 365                             		.loc 1 356 8 is_stmt 0
+ 366 0028 FE D7 55                		movu.W	[r7,r5], r5
+ 367 002b 61 05                   		cmp	#0, r5
+ 368 002d 21 24                   		bne	.L30
+ 357:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 358:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         if (BSP_REG_PROTECT_MPC != regs_to_protect)
+ 369                             		.loc 1 358 9 is_stmt 1
+ 370                             		.loc 1 358 12 is_stmt 0
+ 371 002f 61 37                   		cmp	#3, r7
+ 372 0031 20 2E                   		beq	.L31
+ 359:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 360:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Enable protection using PRCR register. */
+ 361:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* When writing to the PRCR register the upper 8-bits must be the correct key. Set lowe
+ 362:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                disable writes.
+ 363:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b15:b8 PRKEY - Write 0xA5 to upper byte to enable writing to lower byte
+ 364:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b7:b4  Reserved (set to 0)
+ 365:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b3     PRC3  - Please check the user's manual.
+ 366:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b2     PRC2  - Please check the user's manual.
+ 367:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b1     PRC1  - Please check the user's manual.
+ 368:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b0     PRC0  - Please check the user's manual.
+ 369:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             */
+ 370:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             SYSTEM.PRCR.WORD = (uint16_t)((SYSTEM.PRCR.WORD | BSP_PRV_PRCR_KEY) & (~s_prcr_masks[re
+ 373                             		.loc 1 370 13 is_stmt 1
+ 374                             		.loc 1 370 55 is_stmt 0
+ 375 0033 FB 3E 00 00 08          		mov.L	#0x80000, r3
+ 376 0038 DE 34 FF 01             		mov.W	1022[r3], r4
+ 377                             		.loc 1 370 81
+ 378 003c FB 52 00 00 00 00       		mov.L	#.LANCHOR1, r5
+ 379 0042 FE 57 55                		mov.W	[r7,r5], r5
+ 380 0045 76 34 00 A5             		or	#-23296, r4
+ 381 0049 7E 05                   		not	r5
+ 382 004b 53 45                   		and	r4, r5
+ 383                             		.loc 1 370 30
+ 384 004d DB 35 FF 01             		mov.W	r5, 1022[r3]
+ 385                             		.balign 8,3,1
+ 386                             	.L30:
+ 371:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 372:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         else
+ 373:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 374:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Enable protection for MPC using PWPR register. */
+ 375:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Enable writing of PFSWE bit. It could be assumed that the B0WI bit is still cleared 
+ 376:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                protection disable function, but it is written here to make sure that the PFSWE bit 
+ 377:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                cleared. */
+ 378:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             MPC.PWPR.BIT.B0WI = 0;
+ 379:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 380:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Disable writing to PFS registers. */
+ 381:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             MPC.PWPR.BIT.PFSWE = 0;
+ 382:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 383:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Disable writing of PFSWE bit. */
+ 384:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             MPC.PWPR.BIT.B0WI = 1;
+ 385:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 386:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 387:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 388:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Restore the IPL. */
+ 389:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     R_BSP_InterruptControl(BSP_INT_SRC_EMPTY, BSP_INT_CMD_FIT_INTERRUPT_ENABLE, &int_ctrl);
+ 387                             		.loc 1 389 5 is_stmt 1
+ 388 0051 EF 03                   		mov.L	r0, r3
+ 389 0053 66 52                   		mov.L	#5, r2
+ 390 0055 75 41 5E                		mov.L	#0x5e, r1
+ 391 0058 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 392                             	.LVL49:
+ 390:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 391:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #else /* BSP_MCU_REGISTER_WRITE_PROTECTION */
+ 392:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* No registers to protect. */
+ 393:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* This code is only used to remove compiler info messages about this parameter not being used.
+ 394:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     INTERNAL_NOT_USED(regs_to_protect);
+ 395:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif /* BSP_MCU_REGISTER_WRITE_PROTECTION */
+ 396:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_RegisterProtectEnable() */
+ 393                             		.loc 1 396 1 is_stmt 0
+ 394 005c 3F 77 02                		rtsd	#8, r7-r7
+ 395                             	.LVL50:
+ 396                             	.L31:
+ 378:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 397                             		.loc 1 378 13 is_stmt 1
+ 378:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 398                             		.loc 1 378 31 is_stmt 0
+ 399 005f FB 7E 00 C1 08          		mov.L	#0x8c100, r7
+ 400                             	.LVL51:
+ 401 0064 8F FD                   		mov.B	31[r7], r5
+ 402 0066 7A 75                   		bclr	#7, r5
+ 403 0068 87 FD                   		mov.B	r5, 31[r7]
+ 381:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 404                             		.loc 1 381 13 is_stmt 1
+ 381:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 405                             		.loc 1 381 32 is_stmt 0
+ 406 006a F1 7E 1F                		bclr	#6, 31[r7].B
+ 384:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 407                             		.loc 1 384 13 is_stmt 1
+ 384:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 408                             		.loc 1 384 31 is_stmt 0
+ 409 006d 8F FD                   		mov.B	31[r7], r5
+ 410 006f 78 75                   		bset	#7, r5
+ 411 0071 87 FD                   		mov.B	r5, 31[r7]
+ 389:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 412                             		.loc 1 389 5 is_stmt 1
+ 413 0073 EF 03                   		mov.L	r0, r3
+ 414 0075 66 52                   		mov.L	#5, r2
+ 415 0077 75 41 5E                		mov.L	#0x5e, r1
+ 416 007a 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 417                             	.LVL52:
+ 418                             		.loc 1 396 1 is_stmt 0
+ 419 007e 3F 77 02                		rtsd	#8, r7-r7
+ 420                             	.LFE7:
+ 422 0081 FD 70 40 00 00 00 80    		.section	.text.R_BSP_RegisterProtectDisable,"ax",@progbits
+ 423                             		.global	_R_BSP_RegisterProtectDisable
+ 425                             	_R_BSP_RegisterProtectDisable:
+ 426                             	.LFB8:
+ 397:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 398:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 399:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_RegisterProtectDisable
+ 400:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 401:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @brief Disables write protection for selected registers.
+ 402:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @param[in] regs_to_unprotect Which registers to disable write protection for.
+ 403:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details This function disables write protection for the input registers. Only certain MCU regis
+ 404:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * ability to be write protected. To see which registers are available to be protected by this func
+ 405:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * bsp_reg_protect_t enum in r_bsp_cpu.h for your MCU.
+ 406:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * This function, and R_BSP_RegisterProtectEnable(), use counters for each entry in the bsp_reg_pro
+ 407:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * users can call these functions multiple times without problem. This function uses the interrupt 
+ 408:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * enable function by controlling the Processor Interrupt Priority Level (IPL) of the R_BSP_Interru
+ 409:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * because counter control is the critical section. If the function is executed while the processor
+ 410:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * mode, interrupts that are at or below the specified interrupt priority level will be disabled by
+ 411:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * IPL. If the function is executed while the processor mode is user mode, the IPL controlling does
+ 412:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @note The R_BSP_InterruptControl function used to secure atomicity in the critical section of th
+ 413:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * with this function is valid only in supervisor mode. When this function is executed in user mode
+ 414:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * R_BSP_InterruptControl function is executed but atomicity is not to secure.
+ 415:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 416:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** void R_BSP_RegisterProtectDisable (bsp_reg_protect_t regs_to_unprotect)
+ 417:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+ 427                             		.loc 1 417 1 is_stmt 1
+ 428                             	.LVL53:
+ 429 0000 7E A7                   		push.l	r7
+ 430                             	.LCFI2:
+ 431 0002 60 40                   		sub	#4, r0
+ 432                             	.LCFI3:
+ 418:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+ 419:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     bsp_int_ctrl_t int_ctrl;
+ 433                             		.loc 1 419 5
+ 420:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 421:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Set IPL to the maximum value to disable all interrupts,
+ 422:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****      * so the scheduler can not be scheduled in critical region.
+ 423:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****      * Note: Please set this macro more than IPR for other FIT module interrupts. */
+ 424:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     R_BSP_InterruptControl(BSP_INT_SRC_EMPTY, BSP_INT_CMD_FIT_INTERRUPT_DISABLE, &int_ctrl);
+ 434                             		.loc 1 424 5
+ 417:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+ 435                             		.loc 1 417 1 is_stmt 0
+ 436 0004 EF 17                   		mov.L	r1, r7
+ 437                             		.loc 1 424 5
+ 438 0006 EF 03                   		mov.L	r0, r3
+ 439 0008 66 62                   		mov.L	#6, r2
+ 440 000a 75 41 5E                		mov.L	#0x5e, r1
+ 441                             	.LVL54:
+ 442 000d 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 443                             	.LVL55:
+ 425:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 426:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* If this is first entry then disable protection. */
+ 427:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (0 == s_protect_counters[regs_to_unprotect])
+ 444                             		.loc 1 427 5 is_stmt 1
+ 445                             		.loc 1 427 32 is_stmt 0
+ 446 0011 FB 52 00 00 00 00       		mov.L	#.LANCHOR0, r5
+ 447                             		.loc 1 427 8
+ 448 0017 FE D7 54                		movu.W	[r7,r5], r4
+ 449 001a 61 04                   		cmp	#0, r4
+ 450 001c 21 22                   		bne	.L37
+ 428:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 429:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         if (BSP_REG_PROTECT_MPC != regs_to_unprotect)
+ 451                             		.loc 1 429 9 is_stmt 1
+ 452                             		.loc 1 429 12 is_stmt 0
+ 453 001e 61 37                   		cmp	#3, r7
+ 454 0020 20 34                   		beq	.L38
+ 430:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 431:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Enable protection using PRCR register. */
+ 432:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* When writing to the PRCR register the upper 8-bits must be the correct key.
+ 433:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                Set lower bits to 1 to enable writes.
+ 434:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b15:b8 PRKEY - Write 0xA5 to upper byte to enable writing to lower byte
+ 435:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b7:b4  Reserved (set to 0)
+ 436:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b3     PRC3  - Please check the user's manual.
+ 437:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b2     PRC2  - Please check the user's manual.
+ 438:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b1     PRC1  - Please check the user's manual.
+ 439:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****                b0     PRC0  - Please check the user's manual.
+ 440:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             */
+ 441:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             SYSTEM.PRCR.WORD = (uint16_t)((SYSTEM.PRCR.WORD | BSP_PRV_PRCR_KEY) | s_prcr_masks[regs
+ 455                             		.loc 1 441 13 is_stmt 1
+ 456                             		.loc 1 441 55 is_stmt 0
+ 457 0022 FB 3E 00 00 08          		mov.L	#0x80000, r3
+ 458 0027 DE 32 FF 01             		mov.W	1022[r3], r2
+ 459                             		.loc 1 441 32
+ 460 002b FB 42 00 00 00 00       		mov.L	#.LANCHOR1, r4
+ 461 0031 FE 57 44                		mov.W	[r7,r4], r4
+ 462 0034 57 24                   		or	r2, r4
+ 463 0036 76 34 00 A5             		or	#-23296, r4
+ 464                             		.loc 1 441 30
+ 465 003a DB 34 FF 01             		mov.W	r4, 1022[r3]
+ 466                             		.balign 8,3,1
+ 467                             	.L37:
+ 442:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 443:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         else
+ 444:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 445:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Disable protection for MPC using PWPR register. */
+ 446:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Enable writing of PFSWE bit. */
+ 447:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             MPC.PWPR.BIT.B0WI = 0;
+ 448:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 449:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             /* Enable writing to PFS registers. */
+ 450:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             MPC.PWPR.BIT.PFSWE = 1;
+ 451:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 452:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 453:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 454:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Increment the protect counter */
+ 455:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     s_protect_counters[regs_to_unprotect]++;
+ 468                             		.loc 1 455 5 is_stmt 1
+ 456:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 457:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Restore the IPL. */
+ 458:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     R_BSP_InterruptControl(BSP_INT_SRC_EMPTY, BSP_INT_CMD_FIT_INTERRUPT_ENABLE, &int_ctrl);
+ 469                             		.loc 1 458 5 is_stmt 0
+ 470 003e EF 03                   		mov.L	r0, r3
+ 471 0040 66 52                   		mov.L	#5, r2
+ 472 0042 75 41 5E                		mov.L	#0x5e, r1
+ 455:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 473                             		.loc 1 455 23
+ 474 0045 FE 57 54                		mov.W	[r7,r5], r4
+ 455:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 475                             		.loc 1 455 42
+ 476 0048 62 14                   		add	#1, r4
+ 477 004a FE 17 54                		mov.W	r4, [r7,r5]
+ 478                             		.loc 1 458 5 is_stmt 1
+ 479 004d 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 480                             	.LVL56:
+ 459:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 460:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #else /* BSP_MCU_REGISTER_WRITE_PROTECTION */
+ 461:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* No registers to protect. */
+ 462:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* This code is only used to remove compiler info messages about this parameter not being used.
+ 463:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     INTERNAL_NOT_USED(regs_to_unprotect);
+ 464:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif /* BSP_MCU_REGISTER_WRITE_PROTECTION */
+ 465:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_RegisterProtectDisable() */
+ 481                             		.loc 1 465 1 is_stmt 0
+ 482 0051 3F 77 02                		rtsd	#8, r7-r7
+ 483                             	.LVL57:
+ 484                             	.L38:
+ 447:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 485                             		.loc 1 447 13 is_stmt 1
+ 447:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 486                             		.loc 1 447 31 is_stmt 0
+ 487 0054 FB 4E 00 C1 08          		mov.L	#0x8c100, r4
+ 488 0059 8F CB                   		mov.B	31[r4], r3
+ 489 005b 7A 73                   		bclr	#7, r3
+ 490 005d 87 CB                   		mov.B	r3, 31[r4]
+ 450:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 491                             		.loc 1 450 13 is_stmt 1
+ 450:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 492                             		.loc 1 450 32 is_stmt 0
+ 493 005f F1 46 1F                		bset	#6, 31[r4].B
+ 455:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 494                             		.loc 1 455 5 is_stmt 1
+ 458:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 495                             		.loc 1 458 5 is_stmt 0
+ 496 0062 EF 03                   		mov.L	r0, r3
+ 497 0064 66 52                   		mov.L	#5, r2
+ 498 0066 75 41 5E                		mov.L	#0x5e, r1
+ 455:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 499                             		.loc 1 455 23
+ 500 0069 FE 57 54                		mov.W	[r7,r5], r4
+ 455:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 501                             		.loc 1 455 42
+ 502 006c 62 14                   		add	#1, r4
+ 503 006e FE 17 54                		mov.W	r4, [r7,r5]
+ 458:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 504                             		.loc 1 458 5 is_stmt 1
+ 505 0071 05 00 00 00             		bsr	_R_BSP_InterruptControl
+ 506                             	.LVL58:
+ 507                             		.loc 1 465 1 is_stmt 0
+ 508 0075 3F 77 02                		rtsd	#8, r7-r7
+ 509                             	.LFE8:
+ 511                             		.section	.text.R_BSP_SoftwareReset,"ax",@progbits
+ 512                             		.global	_R_BSP_SoftwareReset
+ 514                             	_R_BSP_SoftwareReset:
+ 515                             	.LFB9:
+ 466:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 467:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_VOLTAGE_LEVEL_SETTING
+ 468:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 469:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_VoltageLevelSetting
+ 470:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 471:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @brief This API function is used excessively with the RX66T and RX72T. It makes settings to the 
+ 472:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * setting register (VOLSR) that are necessary in order to use the USB, AD, and RIIC peripheral mod
+ 473:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * function only when it is necessary to change the register settings.
+ 474:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @param[in] ctrl_ptn Register Setting Patterns
+ 475:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * The following setting patterns cannot be selected at the same time.
+ 476:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * When specifying more than one pattern at the same time, use the "|" (OR) operator.
+ 477:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * - BSP_VOL_USB_POWEROFF and BSP_VOL_USB_POWERON
+ 478:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * - BSP_VOL_AD_NEGATIVE_VOLTAGE_INPUT and BSP_VOL_AD_NEGATIVE_VOLTAGE_NOINPUT
+ 479:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * - BSP_VOL_RIIC_4_5V_OROVER and BSP_VOL_RIIC_UNDER_4_5V
+ 480:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *
+ 481:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *   BSP_VOL_USB_POWEROFF: Updates the USBVON bit to 0.
+ 482:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *
+ 483:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *   BSP_VOL_USB_POWERON: Updates the USBVON bit to 1.
+ 484:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *
+ 485:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *   BSP_VOL_AD_NEGATIVE_VOLTAGE_INPUT: Updates the PGAVLS bit to 0.
+ 486:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *
+ 487:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *   BSP_VOL_AD_NEGATIVE_VOLTAGE_NOINPUT: Updates the PGAVLS bit to 1.
+ 488:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *
+ 489:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *   BSP_VOL_RIIC_4_5V_OROVER: Updates the RICVLS bit to 0.
+ 490:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *
+ 491:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  *   BSP_VOL_RIIC_UNDER_4_5V: Updates the RICVLS bit to 1.
+ 492:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @retval true Processing completed, register successfully updated.
+ 493:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @retval false The function was called under the following conditions, so the register setting wa
+ 494:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * - Setting patterns that cannot be selected at the same time were selected.
+ 495:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * - A setting pattern related to the USB was selected when the USB was not in the module stop stat
+ 496:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * - A setting pattern related to the AD was selected when the AD was not in the module stop state.
+ 497:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * - A setting pattern related to the RIIC was selected when the RIIC was not in the module stop st
+ 498:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details This function initializes the voltage level setting register (VOLSR), which is necessar
+ 499:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * the USB, AD and RIIC peripheral modules. When specifying a setting pattern related to the USB, c
+ 500:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * before the USB is released from the module stop state. When specifying a setting pattern related
+ 501:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * this function before the AD (unit 0 and unit 1) is released from the module stop state. When spe
+ 502:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * pattern related to the RIIC, call this function before the RIIC is released from the module stop
+ 503:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * function is called with a setting pattern related to the USB specified after the USB is released
+ 504:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * stop state, the function returns "false" as the return value and does not update the register se
+ 505:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * function is called with a setting pattern related to the AD specified after the AD (unit 0 and u
+ 506:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * from the module stop state, the function returns "false" as the return value and does not update
+ 507:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * settings. Finally, if the function is called with a setting pattern related to the RIIC specifie
+ 508:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * released from the module stop state, the function returns "false" as the return value and does n
+ 509:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * register settings.
+ 510:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 511:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** bool R_BSP_VoltageLevelSetting (uint8_t ctrl_ptn)
+ 512:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+ 513:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     uint8_t  *p_volsr_addr;
+ 514:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 515:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #if BSP_CFG_PARAM_CHECKING_ENABLE == 1
+ 516:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* ---- CHECK ARGUMENTS ---- */
+ 517:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (BSP_PRV_USBVON_CONFLICT == (ctrl_ptn & BSP_PRV_USBVON_CONFLICT))
+ 518:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 519:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         return false;
+ 520:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 521:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 522:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (BSP_PRV_PGAVLS_CONFLICT == (ctrl_ptn & BSP_PRV_PGAVLS_CONFLICT))
+ 523:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 524:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         return false;
+ 525:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 526:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 527:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if (BSP_PRV_RICVLS_CONFLICT == (ctrl_ptn & BSP_PRV_RICVLS_CONFLICT))
+ 528:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 529:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         return false;
+ 530:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 531:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+ 532:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 533:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Check USB module stop state. */
+ 534:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_PRV_USBVON_CONFLICT))
+ 535:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 536:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         /* Casting is valid because it matches the type to the right side or argument. */
+ 537:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         if(0 == MSTP(USB0))
+ 538:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 539:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             return false;
+ 540:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 541:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 542:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 543:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Check AD module stop state. */
+ 544:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_PRV_PGAVLS_CONFLICT))
+ 545:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 546:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         /* Casting is valid because it matches the type to the right side or argument. */
+ 547:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         if((0 == MSTP(S12AD)) || (0 == MSTP(S12AD1)))
+ 548:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 549:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             return false;
+ 550:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 551:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 552:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 553:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Check RIIC module stop state. */
+ 554:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_PRV_RICVLS_CONFLICT))
+ 555:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 556:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         /* Casting is valid because it matches the type to the right side or argument. */
+ 557:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         if(0 == MSTP(RIIC0))
+ 558:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         {
+ 559:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****             return false;
+ 560:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         }
+ 561:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 562:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 563:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Protect off. */
+ 564:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     SYSTEM.PRCR.WORD = 0xA502;
+ 565:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 566:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Casting is valid because it matches the type to the right side or argument. */
+ 567:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     p_volsr_addr = (uint8_t *)&SYSTEM.VOLSR.BYTE;
+ 568:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 569:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Updated the RICVLS bit. */
+ 570:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_VOL_RIIC_UNDER_4_5V))
+ 571:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 572:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_BIT_SET(p_volsr_addr, BSP_PRV_VOLSR_RICVLS_BIT_NUM);
+ 573:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 574:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 575:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_VOL_RIIC_4_5V_OROVER))
+ 576:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 577:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_BIT_CLEAR(p_volsr_addr, BSP_PRV_VOLSR_RICVLS_BIT_NUM);
+ 578:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 579:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 580:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Updated the PGAVLS bit. */
+ 581:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_VOL_AD_NEGATIVE_VOLTAGE_NOINPUT))
+ 582:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 583:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_BIT_SET(p_volsr_addr, BSP_PRV_VOLSR_PGAVLS_BIT_NUM);
+ 584:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 585:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 586:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_VOL_AD_NEGATIVE_VOLTAGE_INPUT))
+ 587:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 588:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_BIT_CLEAR(p_volsr_addr, BSP_PRV_VOLSR_PGAVLS_BIT_NUM);
+ 589:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 590:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 591:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Updated the USBVON bit. */
+ 592:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_VOL_USB_POWERON))
+ 593:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 594:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_BIT_SET(p_volsr_addr, BSP_PRV_VOLSR_USBVON_BIT_NUM);
+ 595:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 596:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 597:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     if(0 != (ctrl_ptn & BSP_VOL_USB_POWEROFF))
+ 598:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 599:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         R_BSP_BIT_CLEAR(p_volsr_addr, BSP_PRV_VOLSR_USBVON_BIT_NUM);
+ 600:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 601:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 602:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Protect on. */
+ 603:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     SYSTEM.PRCR.WORD = 0xA500;
+ 604:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 605:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     return true;
+ 606:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** }  /* End of function R_BSP_VoltageLevelSetting() */ 
+ 607:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif /* BSP_MCU_VOLTAGE_LEVEL_SETTING */
+ 608:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 609:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 610:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * Function Name: R_BSP_SoftwareReset
+ 611:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  **************************************************************************************************
+ 612:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  * @details Reset the MCU by Software Reset.
+ 613:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****  */
+ 614:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** void R_BSP_SoftwareReset(void)
+ 615:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+ 516                             		.loc 1 615 1 is_stmt 1
+ 616:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+ 617:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Protect off. */
+ 618:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     R_BSP_RegisterProtectDisable(BSP_REG_PROTECT_LPC_CGC_SWR);
+ 517                             		.loc 1 618 5
+ 518 0000 66 11                   		mov.L	#1, r1
+ 519 0002 05 00 00 00             		bsr	_R_BSP_RegisterProtectDisable
+ 520                             	.LVL59:
+ 619:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+ 620:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 621:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Resets the MCU. */
+ 622:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     SYSTEM.SWRR = 0xA501;
+ 521                             		.loc 1 622 5
+ 522                             		.loc 1 622 17 is_stmt 0
+ 523 0006 FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 524 000b F9 59 61 01 A5          		mov.W	#-23295, 194[r5]
+ 525                             	.L41:
+ 623:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 624:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* WAIT_LOOP */
+ 625:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     while(1)
+ 526                             		.loc 1 625 5 is_stmt 1 discriminator 1
+ 626:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 627:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****          R_BSP_NOP();
+ 527                             		.loc 1 627 10 discriminator 1
+ 528                             	 ; 627 "../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c" 1
+ 529 0010 03                      		nop
+ 530                             	 ; 0 "" 2
+ 531 0011 2E FF                   		bra	.L41
+ 532                             	.LFE9:
+ 534                             		.section	.text.bsp_register_protect_open,"ax",@progbits
+ 535                             		.global	_bsp_register_protect_open
+ 537                             	_bsp_register_protect_open:
+ 538                             	.LFB10:
+ 628:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 629:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function R_BSP_SoftwareReset() */
+ 630:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 631:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 632:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Function Name: bsp_register_protect_open
+ 633:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Description  : Initializes variables needed for register protection functionality.
+ 634:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Arguments    : none
+ 635:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Return Value : none
+ 636:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+ 637:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** void bsp_register_protect_open (void)
+ 638:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+ 539                             		.loc 1 638 1
+ 639:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #ifdef BSP_MCU_REGISTER_WRITE_PROTECTION
+ 640:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     uint32_t i;
+ 540                             		.loc 1 640 5
+ 641:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 642:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Initialize reference counters to 0. */
+ 643:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* WAIT_LOOP */
+ 644:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     for (i = 0; i < BSP_REG_PROTECT_TOTAL_ITEMS; i++)
+ 541                             		.loc 1 644 5
+ 542                             	.LVL60:
+ 645:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 646:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         s_protect_counters[i] = 0;
+ 543                             		.loc 1 646 9
+ 544                             		.loc 1 646 31 is_stmt 0
+ 545 0000 FB 52 00 00 00 00       		mov.L	#.LANCHOR0, r5
+ 546 0006 F8 55 00                		mov.W	#0, [r5]
+ 547                             	.LVL61:
+ 548                             		.loc 1 646 9 is_stmt 1
+ 549                             		.loc 1 646 31 is_stmt 0
+ 550 0009 3D 51 00                		mov.W	#0, 2[r5]
+ 551                             	.LVL62:
+ 552                             		.loc 1 646 9 is_stmt 1
+ 553                             		.loc 1 646 31 is_stmt 0
+ 554 000c 3D 52 00                		mov.W	#0, 4[r5]
+ 555                             	.LVL63:
+ 556                             		.loc 1 646 9 is_stmt 1
+ 557                             		.loc 1 646 31 is_stmt 0
+ 558 000f 3D 53 00                		mov.W	#0, 6[r5]
+ 559                             	.LVL64:
+ 647:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 648:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #else
+ 649:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* No registers to protect. */
+ 650:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** #endif
+ 651:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function bsp_register_protect_open() */
+ 560                             		.loc 1 651 1
+ 561 0012 02                      		rts
+ 562                             	.LFE10:
+ 564                             		.section	.text.bsp_ram_initialize,"ax",@progbits
+ 565                             		.global	_bsp_ram_initialize
+ 567                             	_bsp_ram_initialize:
+ 568                             	.LFB11:
+ 652:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 653:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** /**************************************************************************************************
+ 654:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Function Name: bsp_ram_initialize
+ 655:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Description  : Initialize ram variable.
+ 656:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Arguments    : none
+ 657:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** * Return Value : none
+ 658:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** ***************************************************************************************************
+ 659:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** void bsp_ram_initialize (void)
+ 660:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** {
+ 569                             		.loc 1 660 1 is_stmt 1
+ 661:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     uint32_t i;
+ 570                             		.loc 1 661 5
+ 662:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** 
+ 663:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* Initialize g_bsp_Locks to 0. */
+ 664:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     /* WAIT_LOOP */
+ 665:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     for (i = 0; i < BSP_NUM_LOCKS; i++)
+ 571                             		.loc 1 665 5
+ 572                             	.LVL65:
+ 573 0000 FB 12 00 00 00 00       		mov.L	#_g_bsp_Locks, r1
+ 574 0006 FB 3A D0 01             		mov.L	#0x1d0, r3
+ 575 000a 66 02                   		mov	#0, r2
+ 576 000c 7F 88                   		sstr.b
+ 666:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     {
+ 667:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****         g_bsp_Locks[i].lock = 0;
+ 668:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c ****     }
+ 669:../src/smc_gen/r_bsp/mcu/all/r_bsp_cpu.c **** } /* End of function bsp_ram_initialize() */
+ 577                             		.loc 1 669 1 is_stmt 0
+ 578 000e 02                      		rts
+ 579                             	.LFE11:
+ 581                             		.section	.bss.s_protect_counters,"aw",@nobits
+ 582                             		.balign 4
+ 583                             		.set	.LANCHOR0,. + 0
+ 586                             	_s_protect_counters:
+ 587 0000 00 00 00 00 00 00 00 00 		.zero	8
+ 588                             		.section	.rodata.s_prcr_masks,"a"
+ 589                             		.balign 4
+ 590                             		.set	.LANCHOR1,. + 0
+ 593                             	_s_prcr_masks:
+ 594 0000 01 00                   		.short	1
+ 595 0002 02 00                   		.short	2
+ 596 0004 08 00                   		.short	8
+ 707                             	.Letext0:
+ 708                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 709                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 710                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 711                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 712                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 713                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 714                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 715                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 716                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 717                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 718                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 719                             		.file 13 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm

@@ -1,0 +1,155 @@
+   1                             		.file	"arm_relu_q15.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_relu_q15,"ax",@progbits
+   5                             		.global	_arm_relu_q15
+   7                             	_arm_relu_q15:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c"
+   1:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** /*
+   2:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+   4:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+   6:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  10:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  12:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  */
+  18:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  19:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Title:        arm_relu_q15.c
+  22:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Description:  Q15 version of ReLU
+  23:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  24:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * $Revision:    V.1.0.2
+  26:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  27:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  29:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  31:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  34:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** /**
+  35:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *  @ingroup groupNN
+  36:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  */
+  37:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  38:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** /**
+  39:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * @addtogroup Acti
+  40:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * @{
+  41:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  */
+  42:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  43:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** /**
+  44:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * @brief Q15 RELU function
+  45:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * @param[in,out]   data        pointer to input
+  46:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * @param[in]       size        number of elements
+  47:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  48:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * @details
+  49:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  50:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  * Optimized relu with QSUB instructions.
+  51:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  *
+  52:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****  */
+  53:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  54:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** void arm_relu_q15(q15_t *data, uint16_t size)
+  55:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** {
+  10                             		.loc 1 55 1
+  11                             	.LVL0:
+  56:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  57:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** #if defined(ARM_MATH_DSP)
+  58:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     /* Run the following code for M cores with DSP extension */
+  59:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  60:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     uint16_t i = size >> 1;
+  61:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     q15_t *input = data;
+  62:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     q15_t *output = data;
+  63:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     q31_t in;
+  64:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     q31_t buf;
+  65:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     q31_t mask;
+  66:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  67:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     while (i)
+  68:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     {
+  69:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         in = read_q15x2_ia(&input);
+  70:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  71:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         /* extract the first bit */
+  72:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         buf = __ROR(in & 0x80008000, 15);
+  73:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  74:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         /* if MSB=1, mask will be 0xFF, 0x0 otherwise */
+  75:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         mask = __QSUB16(0x00000000, buf);
+  76:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  77:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         arm_nn_write_q15x2_ia(&output, in & (~mask));
+  78:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         i--;
+  79:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     }
+  80:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  81:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     if (size & 0x1)
+  82:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     {
+  83:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         if (*input < 0)
+  84:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         {
+  85:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****             *input = 0;
+  86:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         }
+  87:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         input++;
+  88:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     }
+  89:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** #else
+  90:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     /* Run the following code as reference implementation for M cores without DSP extension */
+  91:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     uint16_t i;
+  12                             		.loc 1 91 5
+  92:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  93:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     for (i = 0; i < size; i++)
+  13                             		.loc 1 93 5
+  14 0000 5F 25                   		movu.W	r2, r5
+  15 0002 61 05                   		cmp	#0, r5
+  16 0004 20 1E                   		beq	.L1
+  17 0006 60 12                   		sub	#1, r2
+  18                             	.LVL1:
+  19 0008 5F 22                   		movu.W	r2, r2
+  20 000a 71 15 02                		add	#2, r1, r5
+  21                             	.LVL2:
+  22 000d 4B 22                   		add	r2, r2
+  23 000f 4B 25                   		add	r2, r5
+  24                             	.LVL3:
+  25                             		.balign 8,3,5
+  26                             	.L4:
+  94:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     {
+  95:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****         if (data[i] < 0)
+  27                             		.loc 1 95 9
+  96:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****             data[i] = 0;
+  28                             		.loc 1 96 13
+  95:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****             data[i] = 0;
+  29                             		.loc 1 95 12 is_stmt 0
+  30 0011 FD 29 14                		mov.W	[r1+], r4
+  31 0014 61 04                   		cmp	#0, r4
+  32 0016 28 08                   		bge	.L3
+  33                             		.loc 1 96 21
+  34 0018 71 14 FE                		add	#-2, r1, r4
+  35 001b F8 45 00                		mov.W	#0, [r4]
+  36                             		.balign 8,3,1
+  37                             	.L3:
+  93:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     {
+  38                             		.loc 1 93 5 discriminator 2
+  39 001e 47 51                   		cmp	r5, r1
+  40 0020 21 F1                   		bne	.L4
+  41                             	.L1:
+  97:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c ****     }
+  98:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** 
+  99:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** #endif /* ARM_MATH_DSP */
+ 100:../src/CMSIS/NN/Source/ActivationFunctions/arm_relu_q15.c **** }
+  42                             		.loc 1 100 1
+  43 0022 02                      		rts
+  44                             	.LFE82:
+  72                             	.Letext0:
+  73                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  74                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  75                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  76                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  77                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  78                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  79                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  80                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  81                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

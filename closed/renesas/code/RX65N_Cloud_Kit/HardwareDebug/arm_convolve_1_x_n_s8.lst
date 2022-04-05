@@ -1,0 +1,269 @@
+   1                             		.file	"arm_convolve_1_x_n_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_convolve_1_x_n_s8,"ax",@progbits
+   5                             		.global	_arm_convolve_1_x_n_s8
+   7                             	_arm_convolve_1_x_n_s8:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c"
+   1:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** /*
+   2:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+   4:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+   6:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+  10:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+  12:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  */
+  18:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  19:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Title:        arm_convolve_1_x_n_s8.c
+  22:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Description:  s8 version of 1xN convolution using symmetric quantization.
+  23:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+  24:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * $Date:        January 26, 2021
+  25:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * $Revision:    V.2.0.3
+  26:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+  27:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+  29:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  31:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  34:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** /**
+  35:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *  @ingroup groupNN
+  36:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  */
+  37:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  38:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** /**
+  39:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * @addtogroup NNConv
+  40:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * @{
+  41:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  */
+  42:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  43:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** /*
+  44:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * 1xN s8 convolution function.
+  45:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+  46:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  * Refer header file for details.
+  47:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  *
+  48:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****  */
+  49:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  50:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** arm_status arm_convolve_1_x_n_s8(const cmsis_nn_context *ctx,
+  51:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const cmsis_nn_conv_params *conv_params,
+  52:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const cmsis_nn_per_channel_quant_params *quant_params,
+  53:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const cmsis_nn_dims *input_dims,
+  54:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const q7_t *input_data,
+  55:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const cmsis_nn_dims *filter_dims,
+  56:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const q7_t *filter_data,
+  57:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const cmsis_nn_dims *bias_dims,
+  58:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const int32_t *bias_data,
+  59:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  const cmsis_nn_dims *output_dims,
+  60:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                  q7_t *output_data)
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** {
+  10                             		.loc 1 61 1
+  11                             	.LVL0:
+  12 0000 7E A7                   		push.l	r7
+  13                             	.LCFI0:
+  14 0002 71 00 E4                		add	#-28, r0
+  15                             	.LCFI1:
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     (void)bias_dims;
+  16                             		.loc 1 62 5
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     arm_status status = ARM_MATH_SUCCESS;
+  17                             		.loc 1 63 5
+  18                             	.LVL1:
+  64:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     if (output_dims->w % 4 != 0)
+  19                             		.loc 1 64 5
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     (void)bias_dims;
+  20                             		.loc 1 61 1 is_stmt 0
+  21 0005 75 47 24                		mov.L	#36, r7
+  22 0008 4B 07                   		add	r0, r7
+  23 000a A9 7D                   		mov.L	20[r7], r5
+  24                             		.loc 1 64 28
+  25 000c A8 D5                   		mov.L	8[r5], r5
+  26                             		.loc 1 64 8
+  27 000e FD 74 C5 03             		tst	#3, r5
+  28 0012 1A                      		bne	.L2
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     {
+  66:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         status = ARM_MATH_SIZE_MISMATCH;
+  67:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         goto out;
+  68:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     }
+  69:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  70:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #if defined(ARM_MATH_MVEI)
+  71:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     (void)ctx;
+  72:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  73:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const uint16_t input_x = input_dims->w;
+  74:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const uint16_t kernel_x = filter_dims->w;
+  75:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const uint16_t output_x = output_dims->w;
+  76:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const uint16_t output_ch = output_dims->c;
+  77:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const uint16_t input_ch = input_dims->c;
+  78:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const uint16_t pad_x = conv_params->padding.w;
+  79:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const uint16_t stride_x = conv_params->stride.w;
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  81:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const int32_t input_offset = conv_params->input_offset;
+  82:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const int32_t out_offset = conv_params->output_offset;
+  83:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const int32_t out_activation_min = conv_params->activation.min;
+  84:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     const int32_t out_activation_max = conv_params->activation.max;
+  85:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     int32_t *output_mult = quant_params->multiplier;
+  86:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     int32_t *output_shift = quant_params->shift;
+  87:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  88:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     for (int i_out_x = 0; i_out_x <= (output_x - 4); i_out_x += 4)
+  89:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     {
+  90:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         int32_t input_begin_idx[4];
+  91:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         int32_t ker_begin_idx[4];
+  92:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         int32_t ker_end_idx[4];
+  93:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         for (int i = 0; i < 4; i++)
+  95:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         {
+  96:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             const int32_t est_input_x_idx = stride_x * (i_out_x + i) - pad_x;
+  97:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             input_begin_idx[i] = MAX(0, est_input_x_idx);
+  98:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             ker_begin_idx[i] = MAX(0, -est_input_x_idx);
+  99:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             ker_end_idx[i] = MIN(kernel_x, input_x - est_input_x_idx);
+ 100:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         }
+ 101:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 102:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         for (int i_out_ch = 0; i_out_ch < output_ch; i_out_ch++)
+ 103:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         {
+ 104:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             int32x4_t s_offset;
+ 105:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             int32_t acc[4];
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             if ((ker_begin_idx[0] != 0) || (ker_end_idx[3] != kernel_x))
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             {
+ 108:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 int32_t sum_row[4];
+ 109:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 110:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 (void)arm_nn_mat_mul_core_1x_s8((ker_end_idx[0] - ker_begin_idx[0]) * input_ch,
+ 111:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 input_data + input_begin_idx[0] * input_ch,
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 filter_data + (input_ch * kernel_x * i_out_ch) +
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                     (ker_begin_idx[0] * input_ch),
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &sum_row[0],
+ 115:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &acc[0]);
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 (void)arm_nn_mat_mul_core_1x_s8((ker_end_idx[1] - ker_begin_idx[1]) * input_ch,
+ 117:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 input_data + input_begin_idx[1] * input_ch,
+ 118:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 filter_data + (input_ch * kernel_x * i_out_ch) +
+ 119:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                     (ker_begin_idx[1] * input_ch),
+ 120:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &sum_row[1],
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &acc[1]);
+ 122:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 123:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 (void)arm_nn_mat_mul_core_1x_s8((ker_end_idx[2] - ker_begin_idx[2]) * input_ch,
+ 124:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 input_data + input_begin_idx[2] * input_ch,
+ 125:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 filter_data + (input_ch * kernel_x * i_out_ch) +
+ 126:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                     (ker_begin_idx[2] * input_ch),
+ 127:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &sum_row[2],
+ 128:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &acc[2]);
+ 129:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 130:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 (void)arm_nn_mat_mul_core_1x_s8((ker_end_idx[3] - ker_begin_idx[3]) * input_ch,
+ 131:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 input_data + input_begin_idx[3] * input_ch,
+ 132:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 filter_data + (input_ch * kernel_x * i_out_ch) +
+ 133:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                     (ker_begin_idx[3] * input_ch),
+ 134:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &sum_row[3],
+ 135:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &acc[3]);
+ 136:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 137:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 s_offset = vldrwq_s32(sum_row);
+ 138:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             }
+ 139:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             else
+ 140:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             {
+ 141:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 int32_t sum_row;
+ 142:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 (void)arm_nn_mat_mul_core_4x_s8(kernel_x * input_ch,
+ 143:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 stride_x * input_ch,
+ 144:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 input_data + input_begin_idx[0] * input_ch,
+ 145:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 filter_data + (input_ch * kernel_x * i_out_ch),
+ 146:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 &sum_row,
+ 147:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                                                 acc);
+ 148:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 149:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 s_offset = vdupq_n_s32(sum_row);
+ 150:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             }
+ 151:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             int32x4_t res = vldrwq_s32(acc);
+ 152:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             s_offset = vmulq_n_s32(s_offset, input_offset);
+ 153:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             res = vaddq_s32(res, s_offset);
+ 154:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             if (bias_data)
+ 155:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             {
+ 156:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                 res = vaddq_n_s32(res, bias_data[i_out_ch]);
+ 157:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             }
+ 158:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             res = arm_requantize_mve(res, output_mult[i_out_ch], output_shift[i_out_ch]);
+ 159:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             res = vaddq_n_s32(res, out_offset);
+ 160:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 161:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             res = vmaxq_s32(res, vdupq_n_s32(out_activation_min));
+ 162:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             res = vminq_s32(res, vdupq_n_s32(out_activation_max));
+ 163:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 164:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             const uint32x4_t scatter_offset = {0, output_ch, output_ch * 2, output_ch * 3};
+ 165:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             vstrbq_scatter_offset_s32(output_data, scatter_offset, res);
+ 166:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****             output_data++;
+ 167:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         }
+ 168:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****         output_data += (3 * output_ch);
+ 169:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     }
+ 170:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 171:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #else
+ 172:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     status = arm_convolve_s8(ctx,
+  29                             		.loc 1 172 5 is_stmt 1
+ 173:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              conv_params,
+ 174:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              quant_params,
+ 175:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              input_dims,
+ 176:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              input_data,
+ 177:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              filter_dims,
+ 178:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              filter_data,
+ 179:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              bias_dims,
+ 180:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              bias_data,
+ 181:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              output_dims,
+ 182:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              output_data);
+ 183:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #endif
+ 184:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 185:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** out:
+ 186:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     /* Return to application */
+ 187:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     return status;
+ 188:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** }
+  30                             		.loc 1 188 1 is_stmt 0
+  31 0013 71 00 1C                		add	#28, r0
+  32 0016 7E B7                   		pop	r7
+ 172:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****                              conv_params,
+  33                             		.loc 1 172 14
+  34 0018 04 00 00 00             		bra	_arm_convolve_s8
+  35                             	.LVL2:
+  36                             	.L2:
+ 187:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** }
+  37                             		.loc 1 187 5 is_stmt 1
+  38                             		.loc 1 188 1 is_stmt 0
+  39 001c FB 16 FD                		mov.L	#-3, r1
+  40                             	.LVL3:
+  41 001f 3F 77 08                		rtsd	#32, r7-r7
+  42                             	.LFE82:
+  44                             		.section	.text.arm_convolve_1_x_n_s8_get_buffer_size,"ax",@progbits
+  45                             		.global	_arm_convolve_1_x_n_s8_get_buffer_size
+  47                             	_arm_convolve_1_x_n_s8_get_buffer_size:
+  48                             	.LFB83:
+ 189:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** 
+ 190:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** int32_t arm_convolve_1_x_n_s8_get_buffer_size(const cmsis_nn_dims *input_dims, const cmsis_nn_dims 
+ 191:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** {
+  49                             		.loc 1 191 1 is_stmt 1
+  50                             	.LVL4:
+ 192:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #if defined(ARM_MATH_DSP) && !defined(ARM_MATH_MVEI)
+ 193:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     return (2 * input_dims->c * filter_dims->w * filter_dims->h) * sizeof(int16_t);
+ 194:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #else
+ 195:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     (void)input_dims;
+  51                             		.loc 1 195 5
+ 196:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     (void)filter_dims;
+  52                             		.loc 1 196 5
+ 197:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c ****     return 0;
+  53                             		.loc 1 197 5
+ 198:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** #endif
+ 199:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_convolve_1_x_n_s8.c **** }
+  54                             		.loc 1 199 1 is_stmt 0
+  55 0000 66 01                   		mov.L	#0, r1
+  56                             	.LVL5:
+  57 0002 02                      		rts
+  58                             	.LFE83:
+ 104                             	.Letext0:
+ 105                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 106                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 107                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 108                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 109                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 110                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 111                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 112                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 113                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 114                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 115                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

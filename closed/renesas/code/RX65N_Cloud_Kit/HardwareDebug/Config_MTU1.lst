@@ -1,0 +1,222 @@
+   1                             		.file	"Config_MTU1.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.R_Config_MTU1_Create,"ax",@progbits
+   5                             		.global	_R_Config_MTU1_Create
+   7                             	_R_Config_MTU1_Create:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/Config_MTU1/Config_MTU1.c"
+   1:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+   2:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * DISCLAIMER
+   3:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * applicable laws, including copyright laws. 
+   6:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHE
+   7:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * of this software. 
+  14:../src/smc_gen/Config_MTU1/Config_MTU1.c **** *
+  15:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Copyright (C) 2019 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  17:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  18:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+  19:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * File Name    : Config_MTU1.c
+  20:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Version      : 1.9.2
+  21:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Device(s)    : R5F565NEDxFP
+  22:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Description  : This file implements device driver for Config_MTU1.
+  23:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Creation Date: 2021-06-15
+  24:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  25:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  26:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+  27:../src/smc_gen/Config_MTU1/Config_MTU1.c **** Pragma directive
+  28:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  29:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /* Start user code for pragma. Do not edit comment generated here */
+  30:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /* End user code. Do not edit comment generated here */
+  31:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  32:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+  33:../src/smc_gen/Config_MTU1/Config_MTU1.c **** Includes
+  34:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  35:../src/smc_gen/Config_MTU1/Config_MTU1.c **** #include "r_cg_macrodriver.h"
+  36:../src/smc_gen/Config_MTU1/Config_MTU1.c **** #include "Config_MTU1.h"
+  37:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /* Start user code for include. Do not edit comment generated here */
+  38:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /* End user code. Do not edit comment generated here */
+  39:../src/smc_gen/Config_MTU1/Config_MTU1.c **** #include "r_cg_userdefine.h"
+  40:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  41:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+  42:../src/smc_gen/Config_MTU1/Config_MTU1.c **** Global variables and functions
+  43:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  44:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /* Start user code for global. Do not edit comment generated here */
+  45:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /* End user code. Do not edit comment generated here */
+  46:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  47:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+  48:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Function Name: R_Config_MTU1_Create
+  49:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Description  : This function initializes the MTU1 channel
+  50:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Arguments    : None
+  51:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Return Value : None
+  52:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  53:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  54:../src/smc_gen/Config_MTU1/Config_MTU1.c **** void R_Config_MTU1_Create(void)
+  55:../src/smc_gen/Config_MTU1/Config_MTU1.c **** {
+  10                             		.loc 1 55 1
+  56:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* Release MTU channel 1 from stop state */
+  57:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MSTP(MTU3) = 0U;
+  11                             		.loc 1 57 5
+  12                             		.loc 1 57 16 is_stmt 0
+  13 0000 FB 2E 00 00 08          		mov.L	#0x80000, r2
+  58:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  59:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* Stop MTU channel 1 counter */
+  60:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU.TSTRA.BIT.CST1 = 0U;
+  14                             		.loc 1 60 24
+  15 0005 FB 4E 0A 12 0C          		mov.L	#0xc120a, r4
+  57:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  16                             		.loc 1 57 16
+  17 000a A9 21                   		mov.L	16[r2], r1
+  61:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  62:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* Set TCIV1 interrupt priority level */
+  63:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     ICU.SLIAR217.BYTE = 0x0AU;
+  18                             		.loc 1 63 23
+  19 000c FB 3E 00 70 08          		mov.L	#0x87000, r3
+  64:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     IPR(PERIA, INTA217) = _0F_MTU_PRIORITY_LEVEL15;
+  65:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  66:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* MTU channel 1 is used as normal mode */
+  67:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU.TSYRA.BIT.SYNC1 = 0U;
+  68:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU1.TCR.BYTE = _07_MTU_COUNT | _00_MTU_CKCL_DIS;
+  20                             		.loc 1 68 19
+  21 0011 FB 5E 90 12 0C          		mov.L	#0xc1290, r5
+  57:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  22                             		.loc 1 57 16
+  23 0016 7A 91                   		bclr	#9, r1
+  24 0018 A1 21                   		mov.L	r1, 16[r2]
+  60:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  25                             		.loc 1 60 5 is_stmt 1
+  60:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  26                             		.loc 1 60 24 is_stmt 0
+  27 001a F1 49 76                		bclr	#1, 118[r4].B
+  63:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     IPR(PERIA, INTA217) = _0F_MTU_PRIORITY_LEVEL15;
+  28                             		.loc 1 63 5 is_stmt 1
+  63:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     IPR(PERIA, INTA217) = _0F_MTU_PRIORITY_LEVEL15;
+  29                             		.loc 1 63 23 is_stmt 0
+  30 001d FA 34 D9 09 0A          		mov.B	#10, 2521[r3]
+  64:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  31                             		.loc 1 64 5 is_stmt 1
+  64:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  32                             		.loc 1 64 25 is_stmt 0
+  33 0022 CE 32 D9 03             		mov.B	985[r3], r2
+  34 0026 65 F2                   		or	#15, r2
+  35 0028 CB 32 D9 03             		mov.B	r2, 985[r3]
+  67:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU1.TCR.BYTE = _07_MTU_COUNT | _00_MTU_CKCL_DIS;
+  36                             		.loc 1 67 5 is_stmt 1
+  67:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU1.TCR.BYTE = _07_MTU_COUNT | _00_MTU_CKCL_DIS;
+  37                             		.loc 1 67 25 is_stmt 0
+  38 002c F1 49 77                		bclr	#1, 119[r4].B
+  39                             		.loc 1 68 5 is_stmt 1
+  40                             		.loc 1 68 19 is_stmt 0
+  41 002f F9 54 F0 07             		mov.B	#7, 240[r5]
+  69:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU1.TCR2.BYTE = _00_MTU_PCLK_1;
+  42                             		.loc 1 69 5 is_stmt 1
+  43                             		.loc 1 69 20 is_stmt 0
+  44 0033 FA 54 04 01 00          		mov.B	#0, 260[r5]
+  70:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU1.TIER.BYTE = _00_MTU_TGIEA_DISABLE | _00_MTU_TGIEB_DISABLE | _10_MTU_TCIEV_ENABLE | _00_MTU
+  45                             		.loc 1 70 5 is_stmt 1
+  46                             		.loc 1 70 20 is_stmt 0
+  47 0038 F9 54 F4 10             		mov.B	#16, 244[r5]
+  71:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU1.TIOR.BYTE = _00_MTU_IOA_DISABLE | _00_MTU_IOB_DISABLE;
+  48                             		.loc 1 71 5 is_stmt 1
+  49                             		.loc 1 71 20 is_stmt 0
+  50 003c F9 54 F2 00             		mov.B	#0, 242[r5]
+  72:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU1.TGRB = _0063_TGRB1_VALUE;
+  51                             		.loc 1 72 5 is_stmt 1
+  52                             		.loc 1 72 15 is_stmt 0
+  53 0040 F9 55 7D 63             		mov.W	#0x63, 250[r5]
+  73:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  74:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     R_Config_MTU1_Create_UserInit();
+  54                             		.loc 1 74 5 is_stmt 1
+  55 0044 04 00 00 00             		bra	_R_Config_MTU1_Create_UserInit
+  56                             	.LVL0:
+  57                             	.LFE3:
+  59                             		.section	.text.R_Config_MTU1_Start,"ax",@progbits
+  60                             		.global	_R_Config_MTU1_Start
+  62                             	_R_Config_MTU1_Start:
+  63                             	.LFB4:
+  75:../src/smc_gen/Config_MTU1/Config_MTU1.c **** }
+  76:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  77:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+  78:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Function Name: R_Config_MTU1_Start
+  79:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Description  : This function starts the MTU1 channel counter
+  80:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Arguments    : None
+  81:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Return Value : None
+  82:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  83:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  84:../src/smc_gen/Config_MTU1/Config_MTU1.c **** void R_Config_MTU1_Start(void)
+  85:../src/smc_gen/Config_MTU1/Config_MTU1.c **** {
+  64                             		.loc 1 85 1
+  86:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* Enable TCIV1 interrupt in ICU */
+  87:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     IEN(PERIA, INTA217) = 1U;
+  65                             		.loc 1 87 5
+  66                             		.loc 1 87 25 is_stmt 0
+  67 0000 FB 4E 00 70 08          		mov.L	#0x87000, r4
+  88:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     
+  89:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* Start MTU channel 1 counter */
+  90:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU.TSTRA.BIT.CST1 = 1U;
+  68                             		.loc 1 90 24
+  69 0005 FB 5E 0A 12 0C          		mov.L	#0xc120a, r5
+  87:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     
+  70                             		.loc 1 87 25
+  71 000a F2 41 1B 02             		bset	#1, 539[r4].B
+  72                             		.loc 1 90 5 is_stmt 1
+  73                             		.loc 1 90 24 is_stmt 0
+  74 000e F1 51 76                		bset	#1, 118[r5].B
+  91:../src/smc_gen/Config_MTU1/Config_MTU1.c **** }
+  75                             		.loc 1 91 1
+  76 0011 02                      		rts
+  77                             	.LFE4:
+  79                             		.section	.text.R_Config_MTU1_Stop,"ax",@progbits
+  80                             		.global	_R_Config_MTU1_Stop
+  82                             	_R_Config_MTU1_Stop:
+  83                             	.LFB5:
+  92:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+  93:../src/smc_gen/Config_MTU1/Config_MTU1.c **** /**************************************************************************************************
+  94:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Function Name: R_Config_MTU1_Stop
+  95:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Description  : This function stops the MTU1 channel counter
+  96:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Arguments    : None
+  97:../src/smc_gen/Config_MTU1/Config_MTU1.c **** * Return Value : None
+  98:../src/smc_gen/Config_MTU1/Config_MTU1.c **** ***************************************************************************************************
+  99:../src/smc_gen/Config_MTU1/Config_MTU1.c **** 
+ 100:../src/smc_gen/Config_MTU1/Config_MTU1.c **** void R_Config_MTU1_Stop(void)
+ 101:../src/smc_gen/Config_MTU1/Config_MTU1.c **** {
+  84                             		.loc 1 101 1 is_stmt 1
+ 102:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* Disable TCIV1 interrupt in ICU */
+ 103:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     IEN(PERIA, INTA217) = 0U;
+  85                             		.loc 1 103 5
+  86                             		.loc 1 103 25 is_stmt 0
+  87 0000 FB 4E 00 70 08          		mov.L	#0x87000, r4
+ 104:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     
+ 105:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     /* Stop MTU channel 1 counter */
+ 106:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     MTU.TSTRA.BIT.CST1 = 0U;
+  88                             		.loc 1 106 24
+  89 0005 FB 5E 0A 12 0C          		mov.L	#0xc120a, r5
+ 103:../src/smc_gen/Config_MTU1/Config_MTU1.c ****     
+  90                             		.loc 1 103 25
+  91 000a F2 49 1B 02             		bclr	#1, 539[r4].B
+  92                             		.loc 1 106 5 is_stmt 1
+  93                             		.loc 1 106 24 is_stmt 0
+  94 000e F1 59 76                		bclr	#1, 118[r5].B
+ 107:../src/smc_gen/Config_MTU1/Config_MTU1.c **** }
+  95                             		.loc 1 107 1
+  96 0011 02                      		rts
+  97                             	.LFE5:
+ 141                             	.Letext0:
+ 142                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 143                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 144                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 145                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 146                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 147                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 148                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 149                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 150                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 151                             		.file 11 "../src/smc_gen/Config_MTU1/Config_MTU1.h"

@@ -1,0 +1,554 @@
+   1                             		.file	"micro_utils.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite12ElementCountERK14TfLiteIntArray,"ax",@progbits
+   5                             		.global	__ZN6tflite12ElementCountERK14TfLiteIntArray
+   7                             	__ZN6tflite12ElementCountERK14TfLiteIntArray:
+   8                             	.LFB1090:
+   9                             		.file 1 "../src/tensorflow/lite/micro/micro_utils.cc"
+   1:../src/tensorflow/lite/micro/micro_utils.cc **** /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/micro_utils.cc **** 
+   3:../src/tensorflow/lite/micro/micro_utils.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/micro_utils.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/micro_utils.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/micro_utils.cc **** 
+   7:../src/tensorflow/lite/micro/micro_utils.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/micro_utils.cc **** 
+   9:../src/tensorflow/lite/micro/micro_utils.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/micro_utils.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/micro_utils.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/micro_utils.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/micro_utils.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/micro_utils.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  16:../src/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/micro/micro_utils.h"
+  17:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  18:../src/tensorflow/lite/micro/micro_utils.cc **** #include <cmath>
+  19:../src/tensorflow/lite/micro/micro_utils.cc **** #include <cstdint>
+  20:../src/tensorflow/lite/micro/micro_utils.cc **** #include <limits>
+  21:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  22:../src/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/c/common.h"
+  23:../src/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/kernels/op_macros.h"
+  24:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  25:../src/tensorflow/lite/micro/micro_utils.cc **** namespace tflite {
+  26:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  27:../src/tensorflow/lite/micro/micro_utils.cc **** int ElementCount(const TfLiteIntArray& dims) {
+  10                             		.loc 1 27 46
+  11                             	.LVL0:
+  28:../src/tensorflow/lite/micro/micro_utils.cc ****   int result = 1;
+  12                             		.loc 1 28 3
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  13                             		.loc 1 29 3
+  14                             	.LBB11:
+  15                             		.loc 1 29 28 is_stmt 0
+  16 0000 EC 12                   		mov.L	[r1], r2
+  17                             		.loc 1 29 21
+  18 0002 61 02                   		cmp	#0, r2
+  19 0004 2B 16                   		ble	.L4
+  20                             		.loc 1 29 12
+  21 0006 66 05                   		mov.L	#0, r5
+  22                             	.LBE11:
+  28:../src/tensorflow/lite/micro/micro_utils.cc ****   int result = 1;
+  23                             		.loc 1 28 7
+  24 0008 66 14                   		mov.L	#1, r4
+  25                             	.LBB12:
+  30:../src/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+  26                             		.loc 1 30 26
+  27 000a 62 41                   		add	#4, r1
+  28                             	.LVL1:
+  29                             		.balign 8,3,3
+  30                             	.L3:
+  31                             		.loc 1 30 5 is_stmt 1 discriminator 2
+  32                             		.loc 1 30 12 is_stmt 0 discriminator 2
+  33 000c FE 65 13                		mov.L	[r5,r1], r3
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  34                             		.loc 1 29 3 discriminator 2
+  35 000f 62 15                   		add	#1, r5
+  36                             	.LVL2:
+  37                             		.loc 1 30 12 discriminator 2
+  38 0011 4F 34                   		mul	r3, r4
+  39                             	.LVL3:
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  40                             		.loc 1 29 21 discriminator 2
+  41 0013 47 25                   		cmp	r2, r5
+  42 0015 21 F7                   		bne	.L3
+  43                             	.LBE12:
+  31:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+  32:../src/tensorflow/lite/micro/micro_utils.cc ****   return result;
+  33:../src/tensorflow/lite/micro/micro_utils.cc **** }
+  44                             		.loc 1 33 1
+  45 0017 EF 41                   		mov.L	r4, r1
+  46                             	.LVL4:
+  47 0019 02                      		rts
+  48                             	.LVL5:
+  49                             	.L4:
+  28:../src/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  50                             		.loc 1 28 7
+  51 001a 66 14                   		mov.L	#1, r4
+  32:../src/tensorflow/lite/micro/micro_utils.cc **** }
+  52                             		.loc 1 32 3 is_stmt 1
+  53                             		.loc 1 33 1 is_stmt 0
+  54 001c EF 41                   		mov.L	r4, r1
+  55                             	.LVL6:
+  56 001e 02                      		rts
+  57                             	.LFE1090:
+  59 001f 03                      		.section	.text._ZN6tflite33SignedSymmetricPerChannelQuantizeEPKfP14TfLiteIntArrayiPaPf,"ax",@progb
+  60                             		.global	__ZN6tflite33SignedSymmetricPerChannelQuantizeEPKfP14TfLiteIntArrayiPaPf
+  62                             	__ZN6tflite33SignedSymmetricPerChannelQuantizeEPKfP14TfLiteIntArrayiPaPf:
+  63                             	.LFB1091:
+  34:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  35:../src/tensorflow/lite/micro/micro_utils.cc **** void SignedSymmetricPerChannelQuantize(const float* values,
+  36:../src/tensorflow/lite/micro/micro_utils.cc ****                                        TfLiteIntArray* dims,
+  37:../src/tensorflow/lite/micro/micro_utils.cc ****                                        int quantized_dimension,
+  38:../src/tensorflow/lite/micro/micro_utils.cc ****                                        int8_t* quantized_values,
+  39:../src/tensorflow/lite/micro/micro_utils.cc ****                                        float* scaling_factors) {
+  64                             		.loc 1 39 64 is_stmt 1
+  65                             	.LVL7:
+  66 0000 6E 6D                   		pushm	r6-r13
+  67                             	.LCFI0:
+  68 0002 71 00 E8                		add	#-24, r0
+  69                             	.LCFI1:
+  40:../src/tensorflow/lite/micro/micro_utils.cc ****   int input_size = ElementCount(*dims);
+  70                             		.loc 1 40 3
+  71                             	.LVL8:
+  72                             	.LBB13:
+  73                             	.LBB14:
+  28:../src/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  74                             		.loc 1 28 3
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+  75                             		.loc 1 29 3
+  76                             	.LBB15:
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+  77                             		.loc 1 29 28 is_stmt 0
+  78 0005 EC 2B                   		mov.L	[r2], r11
+  79                             	.LBE15:
+  80                             	.LBE14:
+  81                             	.LBE13:
+  39:../src/tensorflow/lite/micro/micro_utils.cc ****   int input_size = ElementCount(*dims);
+  82                             		.loc 1 39 64
+  83 0007 ED 0A 0F                		mov.L	60[r0], r10
+  84                             	.LBB18:
+  85                             	.LBB17:
+  28:../src/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  86                             		.loc 1 28 7
+  87 000a 66 15                   		mov.L	#1, r5
+  88                             	.LBB16:
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+  89                             		.loc 1 29 21
+  90 000c 61 0B                   		cmp	#0, r11
+  91 000e 2B 15                   		ble	.L8
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+  92                             		.loc 1 29 12
+  93 0010 66 07                   		mov.L	#0, r7
+  30:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+  94                             		.loc 1 30 26
+  95 0012 71 28 04                		add	#4, r2, r8
+  96                             	.LVL9:
+  97 0015 FC 13 00                		.balign 8,3,3
+  98                             	.L9:
+  30:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+  99                             		.loc 1 30 5 is_stmt 1
+  30:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 100                             		.loc 1 30 12 is_stmt 0
+ 101 0018 FE 67 86                		mov.L	[r7,r8], r6
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+ 102                             		.loc 1 29 3
+ 103 001b 62 17                   		add	#1, r7
+ 104                             	.LVL10:
+  30:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 105                             		.loc 1 30 12
+ 106 001d 4F 65                   		mul	r6, r5
+ 107                             	.LVL11:
+  29:../src/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+ 108                             		.loc 1 29 21
+ 109 001f 47 B7                   		cmp	r11, r7
+ 110 0021 21 F7                   		bne	.L9
+ 111                             	.LVL12:
+ 112                             		.balign 8,3,2
+ 113                             	.L8:
+ 114                             	.LBE16:
+  32:../src/tensorflow/lite/micro/micro_utils.cc **** }
+ 115                             		.loc 1 32 3 is_stmt 1
+ 116                             	.LBE17:
+ 117                             	.LBE18:
+  41:../src/tensorflow/lite/micro/micro_utils.cc ****   int channel_count = dims->data[quantized_dimension];
+ 118                             		.loc 1 41 3
+ 119                             		.loc 1 41 7 is_stmt 0
+ 120 0023 71 37 01                		add	#1, r3, r7
+ 121 0026 FE 67 27                		mov.L	[r7,r2], r7
+ 122                             	.LVL13:
+  42:../src/tensorflow/lite/micro/micro_utils.cc ****   int per_channel_size = input_size / channel_count;
+ 123                             		.loc 1 42 3 is_stmt 1
+ 124                             		.loc 1 42 7 is_stmt 0
+ 125 0029 EF 58                   		mov.L	r5, r8
+ 126 002b FC 23 78                		div	r7, r8
+ 127                             	.LVL14:
+  43:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  44:../src/tensorflow/lite/micro/micro_utils.cc ****   int stride;
+ 128                             		.loc 1 44 3 is_stmt 1
+  45:../src/tensorflow/lite/micro/micro_utils.cc ****   int channel_stride;
+ 129                             		.loc 1 45 3
+  46:../src/tensorflow/lite/micro/micro_utils.cc ****   if (quantized_dimension == 0) {
+ 130                             		.loc 1 46 3
+ 131 002e 61 03                   		cmp	#0, r3
+ 132 0030 20 13                   		beq	.L26
+  47:../src/tensorflow/lite/micro/micro_utils.cc ****     stride = 1;
+  48:../src/tensorflow/lite/micro/micro_utils.cc ****     channel_stride = per_channel_size;
+  49:../src/tensorflow/lite/micro/micro_utils.cc ****   } else if (quantized_dimension == 3) {
+ 133                             		.loc 1 49 10
+ 134 0032 61 33                   		cmp	#3, r3
+ 135 0034 3B F1 00                		bne	.L31
+  41:../src/tensorflow/lite/micro/micro_utils.cc ****   int per_channel_size = input_size / channel_count;
+ 136                             		.loc 1 41 7 is_stmt 0
+ 137 0037 EF 76                   		mov.L	r7, r6
+  50:../src/tensorflow/lite/micro/micro_utils.cc ****     stride = channel_count;
+  51:../src/tensorflow/lite/micro/micro_utils.cc ****     channel_stride = 1;
+ 138                             		.loc 1 51 20
+ 139 0039 3E 02 01                		mov.L	#1, 8[r0]
+ 140                             	.LVL15:
+  52:../src/tensorflow/lite/micro/micro_utils.cc ****   } else {
+  53:../src/tensorflow/lite/micro/micro_utils.cc ****     TF_LITE_FATAL("quantized dimension must be 0 or 3");
+  54:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+  55:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  56:../src/tensorflow/lite/micro/micro_utils.cc ****   // Calculate scales for each channel.
+  57:../src/tensorflow/lite/micro/micro_utils.cc ****   for (int channel = 0; channel < channel_count; channel++) {
+ 141                             		.loc 1 57 3 is_stmt 1
+ 142                             	.LBB19:
+ 143                             		.loc 1 57 33 is_stmt 0
+ 144 003c 61 07                   		cmp	#0, r7
+ 145 003e 2A 0E                   		bgt	.L32
+ 146                             	.LVL16:
+ 147                             		.balign 8,3,2
+ 148                             	.L7:
+ 149                             	.LBE19:
+  58:../src/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+  59:../src/tensorflow/lite/micro/micro_utils.cc ****     float max = 0;
+  60:../src/tensorflow/lite/micro/micro_utils.cc **** 
+  61:../src/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+  62:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+  63:../src/tensorflow/lite/micro/micro_utils.cc ****       min = fminf(min, values[idx]);
+  64:../src/tensorflow/lite/micro/micro_utils.cc ****       max = fmaxf(max, values[idx]);
+  65:../src/tensorflow/lite/micro/micro_utils.cc ****     }
+  66:../src/tensorflow/lite/micro/micro_utils.cc ****     scaling_factors[channel] =
+  67:../src/tensorflow/lite/micro/micro_utils.cc ****         fmaxf(fabs(min), fabs(max)) / std::numeric_limits<int8_t>::max();
+  68:../src/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+  69:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+  70:../src/tensorflow/lite/micro/micro_utils.cc ****       const int32_t quantized_value =
+  71:../src/tensorflow/lite/micro/micro_utils.cc ****           static_cast<int32_t>(roundf(values[idx] / scaling_factors[channel]));
+  72:../src/tensorflow/lite/micro/micro_utils.cc ****       // Clamp: just in case some odd numeric offset.
+  73:../src/tensorflow/lite/micro/micro_utils.cc ****       quantized_values[idx] =
+  74:../src/tensorflow/lite/micro/micro_utils.cc ****           fminf(std::numeric_limits<int8_t>::max(),
+  75:../src/tensorflow/lite/micro/micro_utils.cc ****                 fmaxf(std::numeric_limits<int8_t>::min() + 1, quantized_value));
+  76:../src/tensorflow/lite/micro/micro_utils.cc ****     }
+  77:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+  78:../src/tensorflow/lite/micro/micro_utils.cc **** }
+ 150                             		.loc 1 78 1
+ 151 0040 3F 6D 0E                		rtsd	#56, r6-r13
+ 152                             	.LVL17:
+ 153                             	.L26:
+  42:../src/tensorflow/lite/micro/micro_utils.cc **** 
+ 154                             		.loc 1 42 7
+ 155 0043 E7 08 02                		mov.L	r8, 8[r0]
+  47:../src/tensorflow/lite/micro/micro_utils.cc ****     channel_stride = per_channel_size;
+ 156                             		.loc 1 47 12
+ 157 0046 66 16                   		mov.L	#1, r6
+ 158                             	.LVL18:
+  57:../src/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+ 159                             		.loc 1 57 3 is_stmt 1
+ 160                             	.LBB31:
+  57:../src/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+ 161                             		.loc 1 57 33 is_stmt 0
+ 162 0048 61 07                   		cmp	#0, r7
+ 163 004a 2B F6                   		ble	.L7
+ 164                             	.LVL19:
+ 165                             		.balign 8,3,1
+ 166                             	.L32:
+ 167 004c 6C 27                   		shll	#2, r7
+ 168                             	.LVL20:
+ 169 004e A8 85                   		mov.L	8[r0], r5
+ 170                             	.LVL21:
+ 171 0050 6C 25                   		shll	#2, r5
+ 172 0052 A1 05                   		mov.L	r5, 16[r0]
+ 173 0054 E3 01                   		mov.L	r1, [r0]
+ 174 0056 A0 0C                   		mov.L	r4, 4[r0]
+ 175 0058 4B A7                   		add	r10, r7
+ 176 005a A0 8F                   		mov.L	r7, 12[r0]
+ 177 005c FD C2 6D                		shll	#2, r6, r13
+ 178                             	.LBB20:
+ 179                             	.LBB21:
+ 180                             	.LBB22:
+  74:../src/tensorflow/lite/micro/micro_utils.cc ****                 fmaxf(std::numeric_limits<int8_t>::min() + 1, quantized_value));
+ 181                             		.loc 1 74 16
+ 182 005f FB 72 00 00 FE 42       		mov.L	#0x42fe0000, r7
+ 183 0065 EF 89                   		mov.L	r8, r9
+ 184                             	.LVL22:
+ 185                             	.LBE22:
+ 186                             	.LBE21:
+ 187                             	.LBB25:
+  61:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 188                             		.loc 1 61 23
+ 189 0067 61 09                   		cmp	#0, r9
+ 190 0069 2A 05 38 9C 00          		ble	.L12
+ 191                             	.LVL23:
+ 192                             		.balign 8,3,1
+ 193                             	.L33:
+ 194 006e EC 01                   		mov.L	[r0], r1
+  61:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 195                             		.loc 1 61 14
+ 196 0070 66 04                   		mov.L	#0, r4
+ 197                             	.LBE25:
+  59:../src/tensorflow/lite/micro/micro_utils.cc **** 
+ 198                             		.loc 1 59 11
+ 199 0072 66 0F                   		mov.L	#0x0, r15
+  58:../src/tensorflow/lite/micro/micro_utils.cc ****     float max = 0;
+ 200                             		.loc 1 58 11
+ 201 0074 EF F3                   		mov.L	r15, r3
+ 202                             	.LVL24:
+ 203                             		.balign 8,3,1
+ 204                             	.L16:
+ 205                             	.LBB27:
+ 206                             	.LBB26:
+  62:../src/tensorflow/lite/micro/micro_utils.cc ****       min = fminf(min, values[idx]);
+ 207                             		.loc 1 62 7 is_stmt 1 discriminator 2
+  63:../src/tensorflow/lite/micro/micro_utils.cc ****       max = fmaxf(max, values[idx]);
+ 208                             		.loc 1 63 7 discriminator 2
+  63:../src/tensorflow/lite/micro/micro_utils.cc ****       max = fmaxf(max, values[idx]);
+ 209                             		.loc 1 63 18 is_stmt 0 discriminator 2
+ 210 0076 EC 15                   		mov.L	[r1], r5
+ 211 0078 FC 87 35                		fcmp	r3, r5
+ 212 007b 26 05                   		bpz	.L13
+ 213 007d EF 53                   		mov.L	r5, r3
+ 214                             	.LVL25:
+ 215 007f 03                      		.balign 8,3,2
+ 216                             	.L13:
+  64:../src/tensorflow/lite/micro/micro_utils.cc ****     }
+ 217                             		.loc 1 64 7 is_stmt 1 discriminator 2
+  64:../src/tensorflow/lite/micro/micro_utils.cc ****     }
+ 218                             		.loc 1 64 18 is_stmt 0 discriminator 2
+ 219 0080 FC 87 5F                		fcmp	r5, r15
+ 220 0083 26 05                   		bpz	.L14
+ 221 0085 EF 5F                   		mov.L	r5, r15
+ 222                             	.LVL26:
+ 223 0087 03                      		.balign 8,3,1
+ 224                             	.L14:
+ 225                             	.LBE26:
+  61:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 226                             		.loc 1 61 5 discriminator 2
+ 227 0088 62 14                   		add	#1, r4
+ 228                             	.LVL27:
+ 229 008a 4B D1                   		add	r13, r1
+  61:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 230                             		.loc 1 61 23 discriminator 2
+ 231 008c 47 49                   		cmp	r4, r9
+ 232 008e 21 E8                   		bne	.L16
+ 233                             	.LBE27:
+  66:../src/tensorflow/lite/micro/micro_utils.cc ****         fmaxf(fabs(min), fabs(max)) / std::numeric_limits<int8_t>::max();
+ 234                             		.loc 1 66 5 is_stmt 1
+  67:../src/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+ 235                             		.loc 1 67 30 is_stmt 0
+ 236 0090 7B FF                   		bclr #31, r15
+ 237                             	.LVL28:
+  67:../src/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+ 238                             		.loc 1 67 19
+ 239 0092 7B F3                   		bclr #31, r3
+ 240                             	.LVL29:
+  67:../src/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+ 241                             		.loc 1 67 14
+ 242 0094 FC 87 3F                		fcmp	r3, r15
+ 243 0097 26 09                   		bpz	.L22
+ 244 0099 EF 3F                   		mov.L	r3, r15
+ 245 009b 77 10 01 00 00          		.balign 8,3,6
+ 246                             	.L22:
+  67:../src/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+ 247                             		.loc 1 67 37
+ 248 00a0 FD 72 4F 00 00 FE 42    		fdiv	#0x42fe0000, r15
+  66:../src/tensorflow/lite/micro/micro_utils.cc ****         fmaxf(fabs(min), fabs(max)) / std::numeric_limits<int8_t>::max();
+ 249                             		.loc 1 66 30
+ 250 00a7 E3 AF                   		mov.L	r15, [r10]
+  68:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 251                             		.loc 1 68 5 is_stmt 1
+ 252                             	.LVL30:
+  66:../src/tensorflow/lite/micro/micro_utils.cc ****         fmaxf(fabs(min), fabs(max)) / std::numeric_limits<int8_t>::max();
+ 253                             		.loc 1 66 30 is_stmt 0
+ 254 00a9 ED 0B 01                		mov.L	4[r0], r11
+ 255 00ac EC 0C                   		mov.L	[r0], r12
+ 256                             	.LBB28:
+  68:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 257                             		.loc 1 68 14
+ 258 00ae 66 08                   		mov.L	#0, r8
+ 259 00b0 0B                      		bra	.L23
+ 260                             	.LVL31:
+ 261                             	.L19:
+ 262 00b1 EC AF                   		mov.L	[r10], r15
+ 263                             	.LVL32:
+ 264                             		.balign 8,3,1
+ 265                             	.L23:
+ 266                             	.LBB23:
+  69:../src/tensorflow/lite/micro/micro_utils.cc ****       const int32_t quantized_value =
+ 267                             		.loc 1 69 7 is_stmt 1 discriminator 2
+  70:../src/tensorflow/lite/micro/micro_utils.cc ****           static_cast<int32_t>(roundf(values[idx] / scaling_factors[channel]));
+ 268                             		.loc 1 70 7 discriminator 2
+  71:../src/tensorflow/lite/micro/micro_utils.cc ****       // Clamp: just in case some odd numeric offset.
+ 269                             		.loc 1 71 38 is_stmt 0 discriminator 2
+ 270 00b3 EC C1                   		mov.L	[r12], r1
+ 271 00b5 FC 93 F1                		fdiv	r15, r1
+ 272 00b8 05 00 00 00             		bsr	_roundf
+ 273                             	.LVL33:
+  73:../src/tensorflow/lite/micro/micro_utils.cc ****           fminf(std::numeric_limits<int8_t>::max(),
+ 274                             		.loc 1 73 7 is_stmt 1 discriminator 2
+  70:../src/tensorflow/lite/micro/micro_utils.cc ****           static_cast<int32_t>(roundf(values[idx] / scaling_factors[channel]));
+ 275                             		.loc 1 70 21 is_stmt 0 discriminator 2
+ 276 00bc FC 97 11                		ftoi	r1, r1
+ 277                             	.LVL34:
+  74:../src/tensorflow/lite/micro/micro_utils.cc ****                 fmaxf(std::numeric_limits<int8_t>::min() + 1, quantized_value));
+ 278                             		.loc 1 74 16 discriminator 2
+ 279 00bf FC 47 11                		itof	r1, r1
+ 280                             	.LVL35:
+ 281 00c2 FD 72 11 00 00 FE C2    		fcmp	#0xc2fe0000, r1
+ 282 00c9 26 08                   		bpz	.L17
+ 283 00cb FB 12 00 00 FE C2       		mov.L	#0xc2fe0000, r1
+ 284                             		.balign 8,3,2
+ 285                             	.L17:
+ 286 00d1 FC 87 17                		fcmp	r1, r7
+ 287 00d4 26 04                   		bpz	.L18
+ 288 00d6 EF 71                   		mov.L	r7, r1
+ 289                             		.balign 8,3,1
+ 290                             	.L18:
+ 291                             	.LBE23:
+  68:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 292                             		.loc 1 68 5 discriminator 2
+ 293 00d8 62 18                   		add	#1, r8
+ 294                             	.LVL36:
+ 295 00da 4B DC                   		add	r13, r12
+ 296                             	.LBB24:
+  73:../src/tensorflow/lite/micro/micro_utils.cc ****           fminf(std::numeric_limits<int8_t>::max(),
+ 297                             		.loc 1 73 29 discriminator 2
+ 298 00dc FC 97 11                		ftoi	r1, r1
+ 299 00df C3 B1                   		mov.B	r1, [r11]
+ 300 00e1 4B 6B                   		add	r6, r11
+ 301                             	.LBE24:
+  68:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 302                             		.loc 1 68 23 discriminator 2
+ 303 00e3 47 89                   		cmp	r8, r9
+ 304 00e5 21 CC                   		bne	.L19
+ 305 00e7 62 4A                   		add	#4, r10
+ 306 00e9 EC 05                   		mov.L	[r0], r5
+ 307 00eb 06 89 05 04             		add	16[r0], r5
+ 308 00ef E3 05                   		mov.L	r5, [r0]
+ 309 00f1 A8 0D                   		mov.L	4[r0], r5
+ 310 00f3 06 89 05 02             		add	8[r0], r5
+ 311 00f7 A0 0D                   		mov.L	r5, 4[r0]
+ 312                             	.LBE28:
+ 313                             	.LBE20:
+  57:../src/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+ 314                             		.loc 1 57 33 discriminator 2
+ 315 00f9 A8 8D                   		mov.L	12[r0], r5
+ 316 00fb 47 A5                   		cmp	r10, r5
+ 317 00fd 3A 43 FF                		beq	.L7
+ 318                             	.LVL37:
+ 319                             		.balign 8,3,1
+ 320                             	.L30:
+ 321                             	.LBB30:
+ 322                             	.LBB29:
+  61:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 323                             		.loc 1 61 23
+ 324 0100 61 09                   		cmp	#0, r9
+ 325 0102 2B 05 38 6A FF          		bgt	.L33
+ 326                             	.L12:
+ 327                             	.LBE29:
+  66:../src/tensorflow/lite/micro/micro_utils.cc ****         fmaxf(fabs(min), fabs(max)) / std::numeric_limits<int8_t>::max();
+ 328                             		.loc 1 66 5 is_stmt 1
+  66:../src/tensorflow/lite/micro/micro_utils.cc ****         fmaxf(fabs(min), fabs(max)) / std::numeric_limits<int8_t>::max();
+ 329                             		.loc 1 66 30 is_stmt 0
+ 330 0107 F8 A6 00                		mov.L	#0x0, [r10]
+  68:../src/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 331                             		.loc 1 68 5 is_stmt 1
+ 332                             	.LVL38:
+ 333 010a 62 4A                   		add	#4, r10
+ 334 010c EC 05                   		mov.L	[r0], r5
+ 335 010e 06 89 05 04             		add	16[r0], r5
+ 336 0112 E3 05                   		mov.L	r5, [r0]
+ 337 0114 A8 0D                   		mov.L	4[r0], r5
+ 338 0116 06 89 05 02             		add	8[r0], r5
+ 339 011a A0 0D                   		mov.L	r5, 4[r0]
+ 340                             	.LBE30:
+  57:../src/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+ 341                             		.loc 1 57 33 is_stmt 0
+ 342 011c A8 8D                   		mov.L	12[r0], r5
+ 343 011e 47 A5                   		cmp	r10, r5
+ 344 0120 21 E0                   		bne	.L30
+ 345 0122 38 1E FF                		bra	.L7
+ 346                             	.LVL39:
+ 347                             	.L31:
+ 348                             	.LBE31:
+  53:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 349                             		.loc 1 53 5 is_stmt 1
+  53:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 350                             		.loc 1 53 5
+  53:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 351                             		.loc 1 53 5
+ 352 0125 FB 72 00 00 00 00       		mov.L	#__impure_ptr, r7
+ 353                             	.LVL40:
+ 354 012b 75 43 22                		mov.L	#34, r3
+ 355                             	.LVL41:
+ 356 012e EC 7A                   		mov.L	[r7], r10
+ 357 0130 66 12                   		mov.L	#1, r2
+ 358                             	.LVL42:
+ 359 0132 FB 12 00 00 00 00       		mov.L	#.LC0, r1
+ 360                             	.LVL43:
+ 361 0138 ED A4 03                		mov.L	12[r10], r4
+ 362                             	.LVL44:
+ 363 013b 05 00 00 00             		bsr	_fwrite
+ 364                             	.LVL45:
+  53:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 365                             		.loc 1 53 5
+  53:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 366                             		.loc 1 53 5
+ 367 013f EC 77                   		mov.L	[r7], r7
+ 368 0141 66 73                   		mov.L	#7, r3
+ 369 0143 A8 FC                   		mov.L	12[r7], r4
+ 370 0145 66 12                   		mov.L	#1, r2
+ 371 0147 FB 12 23 00 00 00       		mov.L	#.LC1, r1
+ 372 014d 05 00 00 00             		bsr	_fwrite
+ 373                             	.LVL46:
+  53:../src/tensorflow/lite/micro/micro_utils.cc ****   }
+ 374                             		.loc 1 53 5
+ 375 0151 05 00 00 00             		bsr	_abort
+ 376                             	.LVL47:
+ 377                             	.LFE1091:
+ 379 0155 FC 13 00                		.section	.rodata._ZN6tflite33SignedSymmetricPerChannelQuantizeEPKfP14TfLiteIntArrayiPaPf.str1.1,"a
+ 380                             	.LC0:
+ 381 0000 71 75 61 6E 74 69 7A 65 		.string	"quantized dimension must be 0 or 3"
+ 381      64 20 64 69 6D 65 6E 73 
+ 381      69 6F 6E 20 6D 75 73 74 
+ 381      20 62 65 20 30 20 6F 72 
+ 381      20 33 00 
+ 382                             	.LC1:
+ 383 0023 0A 46 41 54 41 4C 0A 00 		.string	"\nFATAL\n"
+ 442                             	.Letext0:
+ 443                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 444                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 445                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 446                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 447                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 448                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 449                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 450                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 451                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 452                             		.file 11 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 453                             		.file 12 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 454                             		.file 13 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 455                             		.file 14 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 456                             		.file 15 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.2
+ 457                             		.file 16 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\
+ 458                             		.file 17 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\loc
+ 459                             		.file 18 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_ty
+ 460                             		.file 19 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\ree
+ 461                             		.file 20 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 462                             		.file 21 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 463                             		.file 22 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_st
+ 464                             		.file 23 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdint.h
+ 465                             		.file 24 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 466                             		.file 25 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 467                             		.file 26 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 468                             		.file 27 "<built-in>"

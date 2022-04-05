@@ -1,0 +1,75 @@
+   1                             		.file	"debug_log.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.DebugLog,"ax",@progbits
+   5                             		.global	_DebugLog
+   7                             	_DebugLog:
+   8                             	.LFB1:
+   9                             		.file 1 "../src/tensorflow/lite/micro/debug_log.cc"
+   1:../src/tensorflow/lite/micro/debug_log.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/debug_log.cc **** 
+   3:../src/tensorflow/lite/micro/debug_log.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/debug_log.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/debug_log.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/debug_log.cc **** 
+   7:../src/tensorflow/lite/micro/debug_log.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/debug_log.cc **** 
+   9:../src/tensorflow/lite/micro/debug_log.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/debug_log.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/debug_log.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/debug_log.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/debug_log.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/debug_log.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/debug_log.cc **** 
+  16:../src/tensorflow/lite/micro/debug_log.cc **** // Reference implementation of the DebugLog() function that's required for a
+  17:../src/tensorflow/lite/micro/debug_log.cc **** // platform to support the TensorFlow Lite for Microcontrollers library. This is
+  18:../src/tensorflow/lite/micro/debug_log.cc **** // the only function that's absolutely required to be available on a target
+  19:../src/tensorflow/lite/micro/debug_log.cc **** // device, since it's used for communicating test results back to the host so
+  20:../src/tensorflow/lite/micro/debug_log.cc **** // that we can verify the implementation is working correctly.
+  21:../src/tensorflow/lite/micro/debug_log.cc **** // It's designed to be as easy as possible to supply an implementation though.
+  22:../src/tensorflow/lite/micro/debug_log.cc **** // On platforms that have a POSIX stack or C library, it can be written as a
+  23:../src/tensorflow/lite/micro/debug_log.cc **** // single call to `fprintf(stderr, "%s", s)` to output a string to the error
+  24:../src/tensorflow/lite/micro/debug_log.cc **** // stream of the console, but if there's no OS or C library available, there's
+  25:../src/tensorflow/lite/micro/debug_log.cc **** // almost always an equivalent way to write out a string to some serial
+  26:../src/tensorflow/lite/micro/debug_log.cc **** // interface that can be used instead. For example on Arm M-series MCUs, calling
+  27:../src/tensorflow/lite/micro/debug_log.cc **** // the `bkpt #0xAB` assembler instruction will output the string in r1 to
+  28:../src/tensorflow/lite/micro/debug_log.cc **** // whatever debug serial connection is available. If you're running mbed, you
+  29:../src/tensorflow/lite/micro/debug_log.cc **** // can do the same by creating `Serial pc(USBTX, USBRX)` and then calling
+  30:../src/tensorflow/lite/micro/debug_log.cc **** // `pc.printf("%s", s)`.
+  31:../src/tensorflow/lite/micro/debug_log.cc **** // To add an equivalent function for your own platform, create your own
+  32:../src/tensorflow/lite/micro/debug_log.cc **** // implementation file, and place it in a subfolder with named after the OS
+  33:../src/tensorflow/lite/micro/debug_log.cc **** // you're targeting. For example, see the Cortex M bare metal version in
+  34:../src/tensorflow/lite/micro/debug_log.cc **** // tensorflow/lite/micro/bluepill/debug_log.cc or the mbed one on
+  35:../src/tensorflow/lite/micro/debug_log.cc **** // tensorflow/lite/micro/mbed/debug_log.cc.
+  36:../src/tensorflow/lite/micro/debug_log.cc **** 
+  37:../src/tensorflow/lite/micro/debug_log.cc **** #include "tensorflow/lite/micro/debug_log.h"
+  38:../src/tensorflow/lite/micro/debug_log.cc **** 
+  39:../src/tensorflow/lite/micro/debug_log.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  40:../src/tensorflow/lite/micro/debug_log.cc **** #include <cstdio>
+  41:../src/tensorflow/lite/micro/debug_log.cc **** #endif
+  42:../src/tensorflow/lite/micro/debug_log.cc **** 
+  43:../src/tensorflow/lite/micro/debug_log.cc **** extern "C" void DebugLog(const char* s) {
+  10                             		.loc 1 43 41
+  11                             	.LVL0:
+  44:../src/tensorflow/lite/micro/debug_log.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  45:../src/tensorflow/lite/micro/debug_log.cc ****   // Reusing TF_LITE_STRIP_ERROR_STRINGS to disable DebugLog completely to get
+  46:../src/tensorflow/lite/micro/debug_log.cc ****   // maximum reduction in binary size. This is because we have DebugLog calls
+  47:../src/tensorflow/lite/micro/debug_log.cc ****   // via TF_LITE_CHECK that are not stubbed out by TF_LITE_REPORT_ERROR.
+  48:../src/tensorflow/lite/micro/debug_log.cc ****   fprintf(stderr, "%s", s);
+  12                             		.loc 1 48 3
+  13                             		.loc 1 48 10 is_stmt 0
+  14 0000 FB 52 00 00 00 00       		mov.L	#__impure_ptr, r5
+  15 0006 EC 55                   		mov.L	[r5], r5
+  16 0008 A8 DA                   		mov.L	12[r5], r2
+  17 000a 04 00 00 00             		bra	_fputs
+  18                             	.LVL1:
+  19                             	.LFE1:
+  47                             	.Letext0:
+  48                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+  49                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+  50                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  51                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  52                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  53                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  54                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+  55                             		.file 9 "<built-in>"

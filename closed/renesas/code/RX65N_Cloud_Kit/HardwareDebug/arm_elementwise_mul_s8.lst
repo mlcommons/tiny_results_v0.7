@@ -1,0 +1,1276 @@
+   1                             		.file	"arm_elementwise_mul_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_elementwise_mul_s8,"ax",@progbits
+   5                             		.global	_arm_elementwise_mul_s8
+   7                             	_arm_elementwise_mul_s8:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c"
+   1:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** /*
+   2:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+   4:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+   6:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+  10:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+  12:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  */
+  18:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  19:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * Title:        arm_elementwise_mul_s8
+  22:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * Description:  Element wise multiplication
+  23:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+  24:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * $Date:        January 26, 2021
+  25:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * $Revision:    V.1.0.5
+  26:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+  27:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+  29:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  31:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  34:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** /**
+  35:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *  @ingroup groupNN
+  36:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  */
+  37:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  38:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** /**
+  39:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * @addtogroup BasicMath
+  40:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * @{
+  41:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  */
+  42:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  43:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** /**
+  44:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * @brief s8 element wise multiplication of two vectors
+  45:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+  46:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  * @note   Refer header file for details.
+  47:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  *
+  48:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****  */
+  49:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  50:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** arm_status arm_elementwise_mul_s8(const int8_t *input_1_vect,
+  51:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int8_t *input_2_vect,
+  52:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int32_t input_1_offset,
+  53:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int32_t input_2_offset,
+  54:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   int8_t *output,
+  55:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int32_t out_offset,
+  56:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int32_t out_mult,
+  57:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int32_t out_shift,
+  58:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int32_t out_activation_min,
+  59:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const int32_t out_activation_max,
+  60:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****                                   const uint32_t block_size)
+  61:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** {
+  10                             		.loc 1 61 1
+  11                             	.LVL0:
+  12 0000 6E 6D                   		pushm	r6-r13
+  13                             	.LCFI0:
+  14 0002 71 00 E4                		add	#-28, r0
+  15                             	.LCFI1:
+  16                             		.loc 1 61 1 is_stmt 0
+  17 0005 75 47 40                		mov.L	#0x40, r7
+  18 0008 4B 07                   		add	r0, r7
+  19 000a ED 7F 06                		mov.L	24[r7], r15
+  20 000d EC 7E                   		mov.L	[r7], r14
+  21 000f A8 7E                   		mov.L	4[r7], r6
+  22 0011 ED 7A 02                		mov.L	8[r7], r10
+  23 0014 A8 FD                   		mov.L	12[r7], r5
+  24 0016 ED 7B 04                		mov.L	16[r7], r11
+  25 0019 ED 7C 05                		mov.L	20[r7], r12
+  62:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  63:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     int32_t loop_count;
+  26                             		.loc 1 63 5 is_stmt 1
+  64:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #if defined(ARM_MATH_MVEI)
+  65:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  66:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     loop_count = (block_size + 3) / 4;
+  67:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     uint32_t num_elements = block_size;
+  68:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  69:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     for (int i = 0; i < loop_count; i++)
+  70:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     {
+  71:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mve_pred16_t p = vctp32q(num_elements);
+  72:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  73:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         int32x4_t input_1 = vldrbq_z_s32(input_1_vect, p);
+  74:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1 = vaddq_n_s32(input_1, input_1_offset);
+  75:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  76:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         int32x4_t input_2 = vldrbq_z_s32(input_2_vect, p);
+  77:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = vaddq_n_s32(input_2, input_2_offset);
+  78:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  79:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         int32x4_t res_0 = vmulq_s32(input_1, input_2);
+  80:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  81:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         res_0 = arm_requantize_mve_32x4(res_0, vdupq_n_s32(out_mult), vdupq_n_s32(out_shift));
+  82:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  83:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         res_0 += vdupq_n_s32(out_offset);
+  84:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  85:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         res_0 = vmaxq_s32(res_0, vdupq_n_s32(out_activation_min));
+  86:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         res_0 = vminq_s32(res_0, vdupq_n_s32(out_activation_max));
+  87:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  88:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         vstrbq_p_s32(output, res_0, p);
+  89:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1_vect += 4;
+  90:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2_vect += 4;
+  91:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         output += 4;
+  92:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         num_elements -= 4;
+  93:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     }
+  94:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  95:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #else
+  96:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     int32_t input_1;
+  27                             		.loc 1 96 5
+  97:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     int32_t input_2;
+  28                             		.loc 1 97 5
+  98:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     int32_t mul_res;
+  29                             		.loc 1 98 5
+  99:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 100:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #if defined(ARM_MATH_DSP)
+ 101:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     int32_t a_1, b_1, a_2, b_2;
+ 102:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 103:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     int32_t offset_1_packed, offset_2_packed;
+ 104:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 105:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     int8_t r1, r2, r3, r4;
+ 106:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 107:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     offset_1_packed = (input_1_offset << 16U) | (input_1_offset & 0x0FFFFL);
+ 108:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     offset_2_packed = (input_2_offset << 16U) | (input_2_offset & 0x0FFFFL);
+ 109:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 110:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     loop_count = block_size >> 2;
+ 111:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 112:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     while (loop_count > 0)
+ 113:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     {
+ 114:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         /* 4 outputs are calculated in one loop. The order of calculation is follows the order of o
+ 115:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****            intrinsic */
+ 116:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1_vect = read_and_pad_reordered(input_1_vect, &b_1, &a_1);
+ 117:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2_vect = read_and_pad_reordered(input_2_vect, &b_2, &a_2);
+ 118:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 119:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         a_1 = __SADD16(a_1, offset_1_packed);
+ 120:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         b_1 = __SADD16(b_1, offset_1_packed);
+ 121:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 122:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         a_2 = __SADD16(a_2, offset_2_packed);
+ 123:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         b_2 = __SADD16(b_2, offset_2_packed);
+ 124:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 125:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         /* Mul 1 */
+ 126:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1 = (int16_t)(b_1 & 0x0FFFFL);
+ 127:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = (int16_t)(b_2 & 0x0FFFFL);
+ 128:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 129:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = input_1 * input_2;
+ 130:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = arm_nn_requantize(mul_res, out_mult, out_shift) + out_offset;
+ 131:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 132:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MAX(mul_res, out_activation_min);
+ 133:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 134:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         r1 = (q7_t)mul_res;
+ 135:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 136:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         /* Mul 3 */
+ 137:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1 = (int16_t)((b_1 >> 16U) & 0x0FFFFL);
+ 138:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = (int16_t)((b_2 >> 16U) & 0x0FFFFL);
+ 139:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 140:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = input_1 * input_2;
+ 141:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = arm_nn_requantize(mul_res, out_mult, out_shift) + out_offset;
+ 142:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MAX(mul_res, out_activation_min);
+ 143:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 144:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         r3 = (q7_t)mul_res;
+ 145:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 146:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         /* Mul 2 */
+ 147:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1 = (int16_t)(a_1 & 0x0FFFFL);
+ 148:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = (int16_t)(a_2 & 0x0FFFFL);
+ 149:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 150:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = input_1 * input_2;
+ 151:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = arm_nn_requantize(mul_res, out_mult, out_shift) + out_offset;
+ 152:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MAX(mul_res, out_activation_min);
+ 153:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 154:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         r2 = (q7_t)mul_res;
+ 155:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 156:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         /* Mul 4 */
+ 157:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1 = (int16_t)((a_1 >> 16U) & 0x0FFFFL);
+ 158:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = (int16_t)((a_2 >> 16U) & 0x0FFFFL);
+ 159:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 160:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = input_1 * input_2;
+ 161:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = arm_nn_requantize(mul_res, out_mult, out_shift) + out_offset;
+ 162:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MAX(mul_res, out_activation_min);
+ 163:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 164:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         r4 = (q7_t)mul_res;
+ 165:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 166:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         write_q7x4_ia(&output, __PACKq7(r1, r2, r3, r4));
+ 167:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 168:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         loop_count--;
+ 169:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     }
+ 170:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 171:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     loop_count = block_size & 0x3;
+ 172:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #else
+ 173:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     loop_count = block_size;
+  30                             		.loc 1 173 5
+  31                             	.LVL1:
+ 174:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #endif
+ 175:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 176:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     while (loop_count > 0)
+  32                             		.loc 1 176 5
+  33                             		.loc 1 176 11 is_stmt 0
+  34 001c 61 0F                   		cmp	#0, r15
+  35 001e 2B 57                   		ble	.L7
+  36 0020 66 09                   		mov.L	#0, r9
+  37 0022 FC 13 59                		max	r5, r9
+  38                             	.LBB4:
+  39                             	.LBB5:
+  40                             		.file 2 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /*
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * SPDX-License-Identifier: Apache-2.0
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * not use this file except in compliance with the License.
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * You may obtain a copy of the License at
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * www.apache.org/licenses/LICENSE-2.0
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Unless required by applicable law or agreed to in writing, software
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * See the License for the specific language governing permissions and
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * limitations under the License.
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**************************************************************************************************
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * DISCLAIMER
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * applicable laws, including copyright laws. 
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHE
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * of this software. 
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * 
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * arm_nn_requantize updated for RX devices.
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** * Copyright (C) 2022 Renesas Electronics Corporation. All rights reserved.
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** ***************************************************************************************************
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /* ----------------------------------------------------------------------
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Project:      CMSIS NN Library
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Title:        arm_nnsupportfunctions.h
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Description:  Public header file of support functions for CMSIS NN Library
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * $Date:        15. April 2021
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * $Revision:    V.5.5.0
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Target Processor:  Cortex-M CPUs
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * -------------------------------------------------------------------- */
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #ifndef _ARM_NNSUPPORTFUNCTIONS_H_
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define _ARM_NNSUPPORTFUNCTIONS_H_
+  50:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  51:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #include "arm_common_tables.h"
+  52:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #include "arm_math_types.h"
+  53:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  54:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #ifdef __cplusplus
+  55:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** extern "C" {
+  56:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #endif
+  57:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  58:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define LEFT_SHIFT(_shift) (_shift > 0 ? _shift : 0)
+  59:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define RIGHT_SHIFT(_shift) (_shift > 0 ? 0 : -_shift)
+  60:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define MASK_IF_ZERO(x) (x) == 0 ? ~0 : 0
+  61:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define MASK_IF_NON_ZERO(x) (x) != 0 ? ~0 : 0
+  62:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define SELECT_USING_MASK(mask, a, b) ((mask) & (a)) ^ (~(mask) & (b))
+  63:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  64:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define MAX(A, B) ((A) > (B) ? (A) : (B))
+  65:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define MIN(A, B) ((A) < (B) ? (A) : (B))
+  66:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define CLAMP(x, h, l) MAX(MIN((x), (h)), (l))
+  67:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  68:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+  69:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Union for SIMD access of q31/q15/q7 types
+  70:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+  71:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** union arm_nnword
+  72:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+  73:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t word;
+  74:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     /**< q31 type */
+  75:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q15_t half_words[2];
+  76:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     /**< q15 type */
+  77:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q7_t bytes[4];
+  78:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     /**< q7 type */
+  79:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** };
+  80:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  81:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+  82:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Union for data type long long
+  83:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+  84:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** struct arm_nn_double
+  85:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+  86:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     uint32_t low;
+  87:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     int32_t high;
+  88:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** };
+  89:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  90:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** union arm_nn_long_long
+  91:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+  92:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     int64_t long_long;
+  93:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     struct arm_nn_double word;
+  94:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** };
+  95:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+  96:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+  97:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @defgroup nndata_convert Neural Network Data Conversion Functions
+  98:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+  99:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Perform data type conversion in-between neural network operations
+ 100:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 101:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 102:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 103:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 104:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Converts the elements of the q7 vector to q15 vector without left-shift
+ 105:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       *pSrc points to the q7 input vector
+ 106:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      *pDst points to the q15 output vector
+ 107:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       blockSize length of the input vector
+ 108:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 109:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 110:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_q7_to_q15_no_shift(const q7_t *pSrc, q15_t *pDst, uint32_t blockSize);
+ 111:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 112:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 113:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Non-saturating addition of elements of a q7 vector
+ 114:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       *input Pointer to the q7 input vector
+ 115:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      *output Pointer to the q31 output variable.
+ 116:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       block_size length of the input vector
+ 117:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * \par Description:
+ 118:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 119:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * 2^24 samples can be added without saturating the result.
+ 120:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 121:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * The equation used for the conversion process is:
+ 122:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 123:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * <pre>
+ 124:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *  sum = input[0] + input[1] + .. + input[block_size -1]
+ 125:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * </pre>
+ 126:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 127:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * */
+ 128:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_nn_add_q7(const q7_t *input, q31_t *output, uint32_t block_size);
+ 129:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 130:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 131:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief  Converts the elements of the q7 vector to reordered q15 vector without left-shift
+ 132:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       *pSrc points to the q7 input vector
+ 133:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      *pDst points to the q15 output vector
+ 134:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       blockSize length of the input vector
+ 135:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return none.
+ 136:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 137:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 138:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_q7_to_q15_reordered_no_shift(const q7_t *pSrc, q15_t *pDst, uint32_t blockSize);
+ 139:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 140:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 141:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Converts the elements from a q7 vector to a q15 vector with an added offset
+ 142:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    src        pointer to the q7 input vector
+ 143:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]   dst        pointer to the q15 output vector
+ 144:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    block_size length of the input vector
+ 145:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    offset     q7 offset to be added to each input vector element.
+ 146:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 147:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * \par Description:
+ 148:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 149:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * The equation used for the conversion process is:
+ 150:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 151:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * <pre>
+ 152:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *  dst[n] = (q15_t) src[n] + offset;   0 <= n < block_size.
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * </pre>
+ 154:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 155:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 156:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_q7_to_q15_with_offset(const q7_t *src, q15_t *dst, uint32_t block_size, q15_t offset);
+ 157:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 158:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 159:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Converts the elements of the q7 vector to reordered q15 vector with an added offset
+ 160:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       src        pointer to the q7 input vector
+ 161:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      dst        pointer to the q15 output vector
+ 162:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       block_size length of the input vector
+ 163:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       offset     offset to be added to each input vector element.
+ 164:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return none.
+ 165:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 166:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @details  This function does the q7 to q15 expansion with re-ordering of bytes. Re-ordering is a
+ 167:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *           the sign extension intrinsic(DSP extension). The tail (i.e., last (N % 4) elements) re
+ 168:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * original order.
+ 169:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 170:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 171:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_q7_to_q15_reordered_with_offset(const q7_t *src, q15_t *dst, uint32_t block_size, q15_t of
+ 172:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 173:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 174:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Converts the elements from a q7 vector and accumulate to a q15 vector
+ 175:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    *src       points to the q7 input vector
+ 176:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]   *dst       points to the q15 output vector
+ 177:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    block_size length of the input vector
+ 178:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 179:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * \par Description:
+ 180:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 181:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * The equation used for the conversion process is:
+ 182:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 183:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * <pre>
+ 184:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *  dst[n] += (q15_t) src[n] ;   0 <= n < block_size.
+ 185:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * </pre>
+ 186:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 187:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 188:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_nn_accumulate_q7_to_q15(q15_t *dst, const q7_t *src, uint32_t block_size);
+ 189:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 190:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 191:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Depthwise conv on an im2col buffer where the input channel equals output channel.
+ 192:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    row     pointer to row
+ 193:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    col     pointer to im2col buffer, always consists of 2 columns.
+ 194:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    num_ch   number of channels
+ 195:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    out_shift  pointer to per output channel requantization shift parameter.
+ 196:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    out_mult   pointer to per output channel requantization multiplier parameter.
+ 197:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    out_offset      output tensor offset.
+ 198:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    activation_min   minimum value to clamp the output to. Range : int8
+ 199:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    activation_max   maximum value to clamp the output to. Range : int8
+ 200:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    kernel_size   number of elements in one column.
+ 201:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]    output_bias per output channel bias. Range : int32
+ 202:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]   out         pointer to output
+ 203:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return     The function returns one of the two
+ 204:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *              1. The incremented output pointer for a successful operation or
+ 205:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *              2. NULL if implementation is not available.
+ 206:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 207:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @details     Supported framework: TensorFlow Lite micro.
+ 208:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 209:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** q7_t *arm_nn_depthwise_conv_s8_core(const q7_t *row,
+ 210:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const q15_t *col,
+ 211:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const uint16_t num_ch,
+ 212:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t *out_shift,
+ 213:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t *out_mult,
+ 214:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t out_offset,
+ 215:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t activation_min,
+ 216:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t activation_max,
+ 217:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const uint16_t kernel_size,
+ 218:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t *const output_bias,
+ 219:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     q7_t *out);
+ 220:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 221:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 222:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief General Matrix-multiplication function with per-channel requantization.
+ 223:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       input_row    pointer to row operand
+ 224:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       input_col    pointer to col operand
+ 225:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       output_ch    number of rows of input_row
+ 226:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       col_batches  number of column batches. Range: 1 to 4
+ 227:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       output_shift  pointer to per output channel requantization shift parameter.
+ 228:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       output_mult   pointer to per output channel requantization multiplier parameter
+ 229:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       out_offset    output tensor offset.
+ 230:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       col_offset    input tensor(col) offset.
+ 231:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_offset    kernel offset(row). Not used.
+ 232:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       out_activation_min   minimum value to clamp the output to. Range : int8
+ 233:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       out_activation_max   maximum value to clamp the output to. Range : int8
+ 234:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_len       number of elements in each row
+ 235:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       bias          per output channel bias. Range : int32
+ 236:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in,out]   out           pointer to output
+ 237:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return     The function returns one of the two
+ 238:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *              1. The incremented output pointer for a successful operation or
+ 239:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *              2. NULL if implementation is not available.
+ 240:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 241:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @details   Supported framework: TensorFlow Lite
+ 242:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 243:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** q7_t *arm_nn_mat_mult_s8(const q7_t *input_row,
+ 244:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const q7_t *input_col,
+ 245:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const uint16_t output_ch,
+ 246:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const uint16_t col_batches,
+ 247:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int32_t *output_shift,
+ 248:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int32_t *output_mult,
+ 249:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int32_t out_offset,
+ 250:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int32_t col_offset,
+ 251:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int32_t row_offset,
+ 252:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int16_t out_activation_min,
+ 253:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int16_t out_activation_max,
+ 254:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const uint16_t row_len,
+ 255:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          const int32_t *const bias,
+ 256:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                          q7_t *out);
+ 257:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 258:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 259:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief General Matrix-multiplication without requantization for one row & one column
+ 260:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_elements  number of row elements
+ 261:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_base      pointer to row operand
+ 262:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       col_base      pointer to col operand
+ 263:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      sum_col       pointer to store sum of column elements
+ 264:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      output        pointer to store result of multiply-accumulate
+ 265:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return     The function returns the multiply-accumulated result of the row by column.
+ 266:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 267:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @details Pseudo-code
+ 268:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *      *output = 0
+ 269:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *      sum_col = 0
+ 270:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *      for (i = 0; i < row_elements; i++)
+ 271:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *          *output += row_base[i] * col_base[i]
+ 272:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *          sum_col += col_base[i]
+ 273:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 274:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 275:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** arm_status arm_nn_mat_mul_core_1x_s8(int32_t row_elements,
+ 276:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      const int8_t *row_base,
+ 277:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      const int8_t *col_base,
+ 278:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      int32_t *const sum_col,
+ 279:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      int32_t *const output);
+ 280:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 281:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 282:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief General Matrix-multiplication without requantization for four rows and one column
+ 283:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_elements  number of row elements
+ 284:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       offset        offset between rows. Can be the same as row_elements.
+ 285:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                                For e.g, in a 1x1 conv scenario with stride as 1.
+ 286:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_base      pointer to row operand
+ 287:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       col_base      pointer to col operand
+ 288:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      sum_col       pointer to store sum of column elements
+ 289:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      output        pointer to store result(4 int32's) of multiply-accumulate
+ 290:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return     The function returns the multiply-accumulated result of the row by column
+ 291:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 292:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @details Pseudo-code
+ 293:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *      output[0] = 0
+ 294:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *         ..
+ 295:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *      output[3] = 0
+ 296:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *      sum_col = 0
+ 297:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *      for (i = 0; i < row_elements; i++)
+ 298:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *          output[0] += row_base[i] * col_base[i]
+ 299:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                ..
+ 300:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *          output[3] += row_base[i + (row_elements * 3)] * col_base[i]
+ 301:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *          sum_col += col_base[i]
+ 302:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 303:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** arm_status arm_nn_mat_mul_core_4x_s8(const int32_t row_elements,
+ 304:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      const int32_t offset,
+ 305:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      const int8_t *row_base,
+ 306:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      const int8_t *col_base,
+ 307:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      int32_t *const sum_col,
+ 308:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                      int32_t *const output);
+ 309:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 310:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 311:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief General Matrix-multiplication function with per-channel requantization.
+ 312:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *        This function assumes:
+ 313:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *        - LHS input matrix NOT transposed (nt)
+ 314:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *        - RHS input matrix transposed (t)
+ 315:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 316:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *  @note This operation also performs the broadcast bias addition before the requantization
+ 317:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 318:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  lhs                Pointer to the LHS input matrix
+ 319:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  rhs                Pointer to the RHS input matrix
+ 320:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  bias               Pointer to the bias vector. The length of this vector is equal to
+ 321:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * output columns (or RHS input rows)
+ 322:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out] dst                Pointer to the output matrix with "m" rows and "n" columns
+ 323:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  dst_multipliers    Pointer to the multipliers vector needed for the per-channel requ
+ 324:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                                The length of this vector is equal to the number of output column
+ 325:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * rows)
+ 326:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  dst_shifts         Pointer to the shifts vector needed for the per-channel requantiz
+ 327:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * of this vector is equal to the number of output columns (or RHS input rows)
+ 328:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  lhs_rows           Number of LHS input rows
+ 329:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  rhs_rows           Number of RHS input rows
+ 330:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  rhs_cols           Number of LHS/RHS input columns
+ 331:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  lhs_offset         Offset to be applied to the LHS input value
+ 332:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  dst_offset         Offset to be applied the output result
+ 333:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  activation_min     Minimum value to clamp down the output. Range : int8
+ 334:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]  activation_max     Maximum value to clamp up the output. Range : int8
+ 335:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 336:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return     The function returns <code>ARM_MATH_SUCCESS</code>
+ 337:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 338:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 339:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** arm_status arm_nn_mat_mult_nt_t_s8(const q7_t *lhs,
+ 340:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const q7_t *rhs,
+ 341:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const q31_t *bias,
+ 342:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    q7_t *dst,
+ 343:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t *dst_multipliers,
+ 344:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t *dst_shifts,
+ 345:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t lhs_rows,
+ 346:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t rhs_rows,
+ 347:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t rhs_cols,
+ 348:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t lhs_offset,
+ 349:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t dst_offset,
+ 350:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t activation_min,
+ 351:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                    const int32_t activation_max);
+ 352:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 353:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 354:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief s8 Vector by Matrix (transposed) multiplication
+ 355:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 356:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs             Input left-hand side vector
+ 357:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs             Input right-hand side matrix (transposed)
+ 358:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      bias            Input bias
+ 359:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]     dst             Output vector
+ 360:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs_offset      Offset to be added to the input values of the left-hand side vec
+ 361:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                                 Range: -127 to 128
+ 362:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs_offset      Not used
+ 363:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      dst_offset      Offset to be added to the output values. Range: -127 to 128
+ 364:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      dst_multiplier  Output multiplier
+ 365:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      dst_shift       Output shift
+ 366:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs_cols        Number of columns in the right-hand side input matrix
+ 367:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs_rows        Number of rows in the right-hand side input matrix
+ 368:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_min  Minimum value to clamp the output to. Range: int8
+ 369:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_max  Maximum value to clamp the output to. Range: int8
+ 370:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 371:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return         The function returns <code>ARM_MATH_SUCCESS</code>
+ 372:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 373:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 374:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** arm_status arm_nn_vec_mat_mult_t_s8(const q7_t *lhs,
+ 375:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const q7_t *rhs,
+ 376:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const q31_t *bias,
+ 377:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     q7_t *dst,
+ 378:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t lhs_offset,
+ 379:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t rhs_offset,
+ 380:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t dst_offset,
+ 381:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t dst_multiplier,
+ 382:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t dst_shift,
+ 383:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t rhs_cols,
+ 384:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t rhs_rows,
+ 385:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t activation_min,
+ 386:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t activation_max);
+ 387:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 388:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 389:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief s8 Vector by Matrix (transposed) multiplication with s16 output
+ 390:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 391:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs             Input left-hand side vector
+ 392:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs             Input right-hand side matrix (transposed)
+ 393:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]     dst             Output vector
+ 394:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs_offset      Offset to be added to the input values of the left-hand side
+ 395:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                                 vector. Range: -127 to 128
+ 396:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs_offset      Not used
+ 397:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      scatter_offset  Address offset for dst. First output is stored at 'dst', the
+ 398:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                                 second at 'dst + scatter_offset' and so on.
+ 399:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      dst_multiplier  Output multiplier
+ 400:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      dst_shift       Output shift
+ 401:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs_cols        Number of columns in the right-hand side input matrix
+ 402:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs_rows        Number of rows in the right-hand side input matrix
+ 403:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_min  Minimum value to clamp the output to. Range: int16
+ 404:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_max  Maximum value to clamp the output to. Range: int16
+ 405:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 406:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return         The function returns <code>ARM_MATH_SUCCESS</code>
+ 407:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 408:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 409:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** arm_status arm_nn_vec_mat_mult_t_svdf_s8(const q7_t *lhs,
+ 410:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const q7_t *rhs,
+ 411:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          q15_t *dst,
+ 412:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t lhs_offset,
+ 413:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t rhs_offset,
+ 414:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t scatter_offset,
+ 415:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t dst_multiplier,
+ 416:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t dst_shift,
+ 417:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t rhs_cols,
+ 418:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t rhs_rows,
+ 419:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t activation_min,
+ 420:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                          const int32_t activation_max);
+ 421:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 422:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 423:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Depthwise convolution of transposed rhs matrix with 4 lhs matrices. To be used in padded 
+ 424:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *        the padding is -lhs_offset(Range: int8). Dimensions are the same for lhs and rhs.
+ 425:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 426:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs             Input left-hand side matrix
+ 427:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs             Input right-hand side matrix (transposed)
+ 428:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs_offset      LHS matrix offset(input offset). Range: -127 to 128
+ 429:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      num_ch          Number of channels in LHS/RHS
+ 430:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out_shift       Per channel output shift. Length of vector is equal to number of
+ 431:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out_mult        Per channel output multiplier. Length of vector is equal to numb
+ 432:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out_offset      Offset to be added to the output values. Range: -127 to 128
+ 433:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_min  Minimum value to clamp the output to. Range: int8
+ 434:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_max  Maximum value to clamp the output to. Range: int8
+ 435:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_x_col       (row_dimension * col_dimension) of LHS/RHS matrix
+ 436:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      output_bias     Per channel output bias. Length of vector is equal to number of 
+ 437:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out             Output pointer
+ 438:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 439:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return         The function returns one of the two
+ 440:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Updated output pointer if an implementation is available
+ 441:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - NULL if no implementation is available.
+ 442:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 443:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @note           If number of channels is not a multiple of 4, upto 3 elements outside the bounda
+ 444:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * out for the following.
+ 445:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Output shift
+ 446:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Output multiplier
+ 447:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Output bias
+ 448:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - rhs
+ 449:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 450:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** q7_t *arm_nn_depthwise_conv_nt_t_padded_s8(const q7_t *lhs,
+ 451:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const q7_t *rhs,
+ 452:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const int32_t lhs_offset,
+ 453:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const uint16_t num_ch,
+ 454:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const int32_t *out_shift,
+ 455:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const int32_t *out_mult,
+ 456:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const int32_t out_offset,
+ 457:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const int32_t activation_min,
+ 458:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const int32_t activation_max,
+ 459:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const uint16_t row_x_col,
+ 460:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            const int32_t *const output_bias,
+ 461:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                            q7_t *out);
+ 462:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 463:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 464:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief Depthwise convolution of transposed rhs matrix with 4 lhs matrices. To be used in non-pad
+ 465:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *        Dimensions are the same for lhs and rhs.
+ 466:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 467:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs             Input left-hand side matrix
+ 468:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      rhs             Input right-hand side matrix (transposed)
+ 469:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      lhs_offset      LHS matrix offset(input offset). Range: -127 to 128
+ 470:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      num_ch          Number of channels in LHS/RHS
+ 471:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out_shift       Per channel output shift. Length of vector is equal to number of
+ 472:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out_mult        Per channel output multiplier. Length of vector is equal to numb
+ 473:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out_offset      Offset to be added to the output values. Range: -127 to 128
+ 474:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_min  Minimum value to clamp the output to. Range: int8
+ 475:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      activation_max  Maximum value to clamp the output to. Range: int8
+ 476:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       row_x_col       (row_dimension * col_dimension) of LHS/RHS matrix
+ 477:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      output_bias     Per channel output bias. Length of vector is equal to number of 
+ 478:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]      out             Output pointer
+ 479:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 480:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return         The function returns one of the two
+ 481:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Updated output pointer if an implementation is available
+ 482:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - NULL if no implementation is available.
+ 483:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 484:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @note           If number of channels is not a multiple of 4, upto 3 elements outside the bounda
+ 485:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * out for the following.
+ 486:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Output shift
+ 487:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Output multiplier
+ 488:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - Output bias
+ 489:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  - rhs
+ 490:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 491:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** q7_t *arm_nn_depthwise_conv_nt_t_s8(const q7_t *lhs,
+ 492:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const q7_t *rhs,
+ 493:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t lhs_offset,
+ 494:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const uint16_t num_ch,
+ 495:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t *out_shift,
+ 496:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t *out_mult,
+ 497:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t out_offset,
+ 498:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t activation_min,
+ 499:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t activation_max,
+ 500:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const uint16_t row_x_col,
+ 501:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     const int32_t *const output_bias,
+ 502:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                                     q7_t *out);
+ 503:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 504:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 505:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @brief         Read 2 q15 elements and post increment pointer.
+ 506:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @param[in]     in_q15   Pointer to pointer that holds address of input.
+ 507:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @return        q31 value
+ 508:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 509:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_read_q15x2_ia(const q15_t **in_q15)
+ 510:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 511:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t val;
+ 512:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 513:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     memcpy(&val, *in_q15, 4);
+ 514:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *in_q15 += 2;
+ 515:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 516:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return (val);
+ 517:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 518:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 519:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 520:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @brief         Read 4 q7 from q7 pointer and post increment pointer.
+ 521:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @param[in]     in_q7       Pointer to pointer that holds address of input.
+ 522:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @return        q31 value
+ 523:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 524:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_read_q7x4_ia(const q7_t **in_q7)
+ 525:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 526:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t val;
+ 527:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     memcpy(&val, *in_q7, 4);
+ 528:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *in_q7 += 4;
+ 529:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 530:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return (val);
+ 531:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 532:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 533:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 534:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @brief         Read 2 q15 from q15 pointer.
+ 535:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @param[in]     in_q15   pointer to address of input.
+ 536:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @return        q31 value
+ 537:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 538:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_read_q15x2(const q15_t *in_q15)
+ 539:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 540:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t val;
+ 541:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     memcpy(&val, in_q15, 4);
+ 542:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 543:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return (val);
+ 544:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 545:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 546:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 547:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @brief         Read 4 q7 values.
+ 548:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @param[in]     in_q7       pointer to address of input.
+ 549:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****   @return        q31 value
+ 550:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 551:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_read_q7x4(const q7_t *in_q7)
+ 552:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 553:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t val;
+ 554:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     memcpy(&val, in_q7, 4);
+ 555:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 556:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return (val);
+ 557:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 558:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 559:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 560:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief           memset optimized for MVE
+ 561:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in, out]  dst         Destination pointer
+ 562:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       val         Value to set
+ 563:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       block_size  Number of bytes to copy.
+ 564:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 565:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 566:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE void arm_memset_q7(q7_t *dst, const q7_t val, uint32_t block_size)
+ 567:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 568:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #if defined(ARM_MATH_MVEI)
+ 569:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     __asm volatile("   vdup.8                  q0, %[set_val]             \n"
+ 570:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    "   wlstp.8                 lr, %[cnt], 1f             \n"
+ 571:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    "2:                                                    \n"
+ 572:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    "   vstrb.8                 q0, [%[in]], 16            \n"
+ 573:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    "   letp                    lr, 2b                     \n"
+ 574:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    "1:                                                    \n"
+ 575:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    : [ in ] "+r"(dst)
+ 576:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    : [ cnt ] "r"(block_size), [ set_val ] "r"(val)
+ 577:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                    : "q0", "memory", "r14");
+ 578:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #else
+ 579:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     memset(dst, val, block_size);
+ 580:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #endif
+ 581:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 582:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 583:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #if defined(ARM_MATH_DSP)
+ 584:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 585:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 586:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief read and expand one q7 word into two q15 words
+ 587:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 588:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 589:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE const q7_t *read_and_pad(const q7_t *source, q31_t *out1, q31_t *out2)
+ 590:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 591:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t inA = arm_nn_read_q7x4_ia(&source);
+ 592:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t inAbuf1 = __SXTB16(__ROR((uint32_t)inA, 8));
+ 593:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t inAbuf2 = __SXTB16(inA);
+ 594:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 595:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #ifndef ARM_MATH_BIG_ENDIAN
+ 596:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out2 = (int32_t)(__PKHTB(inAbuf1, inAbuf2, 16));
+ 597:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out1 = (int32_t)(__PKHBT(inAbuf2, inAbuf1, 16));
+ 598:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #else
+ 599:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out1 = (int32_t)(__PKHTB(inAbuf1, inAbuf2, 16));
+ 600:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out2 = (int32_t)(__PKHBT(inAbuf2, inAbuf1, 16));
+ 601:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #endif
+ 602:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 603:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return source;
+ 604:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 605:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 606:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 607:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief read and expand one q7 word into two q15 words with reordering
+ 608:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 609:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 610:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE const q7_t *read_and_pad_reordered(const q7_t *source, q31_t *out1, q31_t *out
+ 611:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 612:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t inA = arm_nn_read_q7x4_ia(&source);
+ 613:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #ifndef ARM_MATH_BIG_ENDIAN
+ 614:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out2 = __SXTB16(__ROR((uint32_t)inA, 8));
+ 615:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out1 = __SXTB16(inA);
+ 616:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #else
+ 617:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out1 = __SXTB16(__ROR((uint32_t)inA, 8));
+ 618:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out2 = __SXTB16(inA);
+ 619:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #endif
+ 620:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 621:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return source;
+ 622:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 623:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 624:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 625:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief read and expand one q7 word into two q15 words with reordering and add an offset
+ 626:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 627:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE const q7_t *
+ 628:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** read_and_pad_reordered_with_offset(const q7_t *source, q31_t *out1, q31_t *out2, q31_t offset)
+ 629:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 630:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t inA = arm_nn_read_q7x4_ia(&source);
+ 631:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 632:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #ifndef ARM_MATH_BIG_ENDIAN
+ 633:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out2 = __SXTB16(__ROR((uint32_t)inA, 8));
+ 634:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out1 = __SXTB16(inA);
+ 635:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #else
+ 636:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out1 = __SXTB16(__ROR((uint32_t)inA, 8));
+ 637:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out2 = __SXTB16(inA);
+ 638:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #endif
+ 639:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out1 = __QADD16(*out1, offset);
+ 640:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     *out2 = __QADD16(*out2, offset);
+ 641:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 642:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return source;
+ 643:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 644:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 645:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #endif
+ 646:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 647:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 648:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @defgroup NNBasicMath Basic Math Functions for Neural Network Computation
+ 649:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 650:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Basic Math Functions for Neural Network Computation
+ 651:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 652:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 653:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 654:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 655:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief           q7 vector multiplication with variable output shifts
+ 656:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       *pSrcA        pointer to the first input vector
+ 657:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       *pSrcB        pointer to the second input vector
+ 658:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      *pDst         pointer to the output vector
+ 659:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       out_shift     amount of right-shift for output
+ 660:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       blockSize     number of samples in each vector
+ 661:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return none.
+ 662:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 663:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * <b>Scaling and Overflow Behavior:</b>
+ 664:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * \par
+ 665:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * The function uses saturating arithmetic.
+ 666:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Results outside of the allowable q15 range [0x8000 0x7FFF] will be saturated.
+ 667:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 668:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 669:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_nn_mult_q15(q15_t *pSrcA, q15_t *pSrcB, q15_t *pDst, const uint16_t out_shift, uint32_t bl
+ 670:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 671:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 672:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief           q7 vector multiplication with variable output shifts
+ 673:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       *pSrcA        pointer to the first input vector
+ 674:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       *pSrcB        pointer to the second input vector
+ 675:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[out]      *pDst         pointer to the output vector
+ 676:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       out_shift     amount of right-shift for output
+ 677:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       blockSize     number of samples in each vector
+ 678:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return none.
+ 679:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 680:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * <b>Scaling and Overflow Behavior:</b>
+ 681:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * \par
+ 682:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * The function uses saturating arithmetic.
+ 683:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * Results outside of the allowable q7 range [0x80 0x7F] will be saturated.
+ 684:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 685:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 686:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** void arm_nn_mult_q7(q7_t *pSrcA, q7_t *pSrcB, q7_t *pDst, const uint16_t out_shift, uint32_t blockS
+ 687:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 688:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 689:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief macro for adding rounding offset
+ 690:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 691:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #ifndef ARM_NN_TRUNCATE
+ 692:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define NN_ROUND(out_shift) ((0x1u << out_shift) >> 1)
+ 693:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #else
+ 694:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define NN_ROUND(out_shift) 0
+ 695:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #endif
+ 696:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 697:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** // Macros for shortening quantization functions' names and avoid long lines
+ 698:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define MUL_SAT(a, b) arm_nn_doubling_high_mult((a), (b))
+ 699:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define MUL_SAT_MVE(a, b) arm_doubling_high_mult_mve_32x4((a), (b))
+ 700:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define MUL_POW2(a, b) arm_nn_mult_by_power_of_two((a), (b))
+ 701:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 702:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define DIV_POW2(a, b) arm_nn_divide_by_power_of_two((a), (b))
+ 703:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define DIV_POW2_MVE(a, b) arm_divide_by_power_of_two_mve((a), (b))
+ 704:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 705:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define EXP_ON_NEG(x) arm_nn_exp_on_negative_values((x))
+ 706:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #define ONE_OVER1(x) arm_nn_one_over_one_plus_x_for_x_in_0_1((x))
+ 707:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 708:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 709:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief           Saturating doubling high multiply. Result matches
+ 710:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  NEON instruction VQRDMULH.
+ 711:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       m1        Multiplicand. Range: {Q31_MIN, Q31_MAX}
+ 712:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       m2        Multiplier. Range: {Q31_MIN, Q31_MAX}
+ 713:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return          Result of multiplication.
+ 714:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 715:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 716:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_doubling_high_mult(const q31_t m1, const q31_t m2)
+ 717:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 718:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t result = 0;
+ 719:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Rounding offset to add for a right shift of 31
+ 720:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q63_t mult = 1 << 30;
+ 721:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 722:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     if ((m1 < 0) ^ (m2 < 0))
+ 723:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     {
+ 724:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         mult = 1 - mult;
+ 725:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     }
+ 726:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Gets resolved as a SMLAL instruction
+ 727:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     mult = mult + (q63_t)m1 * m2;
+ 728:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 729:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Utilize all of the upper 32 bits. This is the doubling step
+ 730:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // as well.
+ 731:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     result = (int32_t)(mult / (1ll << 31));
+ 732:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 733:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     if ((m1 == m2) && (m1 == (int32_t)Q31_MIN))
+ 734:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     {
+ 735:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         result = Q31_MAX;
+ 736:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     }
+ 737:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return result;
+ 738:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 739:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 740:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 741:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief           Doubling high multiply without saturation. This is intended
+ 742:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  for requantization where the scale is a positive integer
+ 743:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 744:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       m1        Multiplicand. Range: {Q31_MIN, Q31_MAX}
+ 745:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       m2        Multiplier Range: {Q31_MIN, Q31_MAX}
+ 746:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return          Result of multiplication.
+ 747:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @note            The result of this matches that of neon instruction
+ 748:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  VQRDMULH for m1 in range {Q31_MIN, Q31_MAX} and m2 in
+ 749:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  range {Q31_MIN + 1, Q31_MAX}. Saturation occurs when
+ 750:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  m1 equals m2 equals Q31_MIN and that is not handled by
+ 751:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                  this function.
+ 752:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 753:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 754:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_doubling_high_mult_no_sat(const q31_t m1, const q31_t m2)
+ 755:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 756:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t result = 0;
+ 757:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     union arm_nn_long_long mult;
+ 758:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 759:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Rounding offset to add for a right shift of 31
+ 760:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     mult.word.low = 1 << 30;
+ 761:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     mult.word.high = 0;
+ 762:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 763:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Gets resolved as a SMLAL instruction
+ 764:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     mult.long_long = mult.long_long + (q63_t)m1 * m2;
+ 765:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 766:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Utilize all of the upper 32 bits. This is the doubling step
+ 767:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // as well.
+ 768:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     result = (int32_t)(mult.long_long >> 31);
+ 769:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 770:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return result;
+ 771:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 772:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 773:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 774:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief           Rounding divide by power of two.
+ 775:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       dividend - Dividend
+ 776:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       exponent - Divisor = power(2, exponent)
+ 777:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *                             Range: [0, 31]
+ 778:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return          Rounded result of division. Midpoint is rounded away from zero.
+ 779:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 780:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 781:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_divide_by_power_of_two(const q31_t dividend, const q31_t exponent
+ 782:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 783:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t result = 0;
+ 784:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     const q31_t remainder_mask = (1 << exponent) - 1;
+ 785:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     int32_t remainder = remainder_mask & dividend;
+ 786:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 787:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Basic division
+ 788:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     result = dividend >> exponent;
+ 789:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 790:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     // Adjust 'result' for rounding (mid point away from zero)
+ 791:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t threshold = remainder_mask >> 1;
+ 792:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     if (result < 0)
+ 793:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     {
+ 794:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         threshold++;
+ 795:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     }
+ 796:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     if (remainder > threshold)
+ 797:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     {
+ 798:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         result++;
+ 799:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     }
+ 800:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 801:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return result;
+ 802:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** }
+ 803:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** 
+ 804:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** /**
+ 805:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @brief           Requantize a given value.
+ 806:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       val         Value to be requantized
+ 807:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       multiplier  multiplier. Range {Q31_MIN + 1, Q32_MAX}
+ 808:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @param[in]       shift       left or right shift for 'val * multiplier'
+ 809:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 810:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  * @return          Returns (val * multiplier)/(2 ^ shift)
+ 811:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  *
+ 812:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****  */
+ 813:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** __STATIC_FORCEINLINE q31_t arm_nn_requantize(const q31_t val, const q31_t multiplier, const q31_t s
+ 814:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** {
+ 815:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h **** #if defined(RX_DSP_INT8)
+ 816:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t tmp1 = val << LEFT_SHIFT(shift);
+ 817:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     asm inline ("emula %0, %1, a0\n"
+ 818:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                 "racl #1, a0\n"
+ 819:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                 "mvfachi #0, a0, %0\n"
+ 820:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                 : "+r" (tmp1)
+ 821:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                 : "r" (multiplier)
+ 822:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                 : );
+ 823:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     q31_t exponent = RIGHT_SHIFT(shift);
+  41                             		.loc 2 823 22
+  42 0025 FC 07 57                		neg	r5, r7
+  43                             	.LVL2:
+  44 0028 61 05                   		cmp	#0, r5
+  45 002a 2B 04                   		ble 1f
+  46 002c 66 07                   		mov #0, r7
+  47                             	1:
+  48 002e 4B 1F                   		add	r1, r15
+  49                             	.LVL3:
+  50                             		.balign 8,3,1
+  51                             	.L3:
+  52                             	.LBE5:
+  53                             	.LBE4:
+ 177:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     {
+ 178:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         /* C = A * B */
+ 179:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 180:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_1 = *input_1_vect++ + input_1_offset;
+  54                             		.loc 1 180 9 is_stmt 1
+  55                             	.LBB10:
+  56                             	.LBB6:
+ 824:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     if (tmp1 < 0) {
+ 825:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         asm inline ("neg %0\n"
+  57                             		.loc 2 825 9
+ 826:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     "shlr %1, %0\n"
+ 827:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     "adc #0, %0\n"
+ 828:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     "neg %0\n"
+ 829:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     : "+r" (tmp1)
+ 830:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     : "r" (exponent)
+ 831:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     : );
+ 832:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     } else {
+ 833:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         asm inline ("shlr %1, %0\n"
+  58                             		.loc 2 833 9
+  59                             	.LBE6:
+  60                             	.LBE10:
+  61                             		.loc 1 180 32 is_stmt 0
+  62 0030 62 11                   		add	#1, r1
+  63                             	.LVL4:
+ 181:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = *input_2_vect++ + input_2_offset;
+  64                             		.loc 1 181 9 is_stmt 1
+  65                             		.loc 1 181 32 is_stmt 0
+  66 0032 62 12                   		add	#1, r2
+  67                             	.LVL5:
+ 182:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 183:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = input_1 * input_2;
+  68                             		.loc 1 183 9 is_stmt 1
+ 184:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = arm_nn_requantize(mul_res, out_mult, out_shift) + out_offset;
+  69                             		.loc 1 184 9
+  70                             	.LBB11:
+  71                             	.LBB7:
+ 816:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     asm inline ("emula %0, %1, a0\n"
+  72                             		.loc 2 816 5
+  73                             	.LBE7:
+  74                             	.LBE11:
+ 180:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = *input_2_vect++ + input_2_offset;
+  75                             		.loc 1 180 19 is_stmt 0
+  76 0034 71 15 FF                		add	#-1, r1, r5
+  77                             	.LVL6:
+ 181:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  78                             		.loc 1 181 19
+  79 0037 71 28 FF                		add	#-1, r2, r8
+  80                             	.LVL7:
+ 180:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = *input_2_vect++ + input_2_offset;
+  81                             		.loc 1 180 19
+  82 003a CC 55                   		mov.B	[r5], r5
+  83                             	.LVL8:
+ 181:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  84                             		.loc 1 181 19
+  85 003c CC 88                   		mov.B	[r8], r8
+  86                             	.LVL9:
+ 180:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         input_2 = *input_2_vect++ + input_2_offset;
+  87                             		.loc 1 180 17
+  88 003e 4B 35                   		add	r3, r5
+  89                             	.LVL10:
+ 181:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+  90                             		.loc 1 181 17
+  91 0040 4B 48                   		add	r4, r8
+  92                             	.LVL11:
+ 183:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = arm_nn_requantize(mul_res, out_mult, out_shift) + out_offset;
+  93                             		.loc 1 183 17
+  94 0042 4F 85                   		mul	r8, r5
+  95                             	.LVL12:
+  96                             	.LBB12:
+  97                             	.LBB8:
+ 816:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     asm inline ("emula %0, %1, a0\n"
+  98                             		.loc 2 816 11
+  99 0044 FD 62 95                		shll	r9, r5
+ 100                             	.LVL13:
+ 817:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                 "racl #1, a0\n"
+ 101                             		.loc 2 817 5 is_stmt 1
+ 102                             	 ; 817 "C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Incl
+ 103 0047 FD 03 5A                		emula r5, r10, a0
+ 104 004a FD 19 00                	racl #1, a0
+ 105 004d FD 1F 05                	mvfachi #0, a0, r5
+ 106                             	
+ 107                             	 ; 0 "" 2
+ 108                             	.LVL14:
+ 823:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     if (tmp1 < 0) {
+ 109                             		.loc 2 823 5
+ 824:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         asm inline ("neg %0\n"
+ 110                             		.loc 2 824 5
+ 111                             		.loc 2 833 9 is_stmt 0
+ 112 0050 EF 58                   		mov.L	r5, r8
+ 113                             	.LVL15:
+ 824:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****         asm inline ("neg %0\n"
+ 114                             		.loc 2 824 8
+ 115 0052 71 5D 00                		add	#0, r5, r13
+ 116 0055 28 25                   		bge	.L4
+ 825:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     "shlr %1, %0\n"
+ 117                             		.loc 2 825 9
+ 118                             	 ; 825 "C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Incl
+ 119 0057 7E 1D                   		neg r13
+ 120 0059 FD 60 7D                	shlr r7, r13
+ 121 005c FD 74 2D 00             	adc #0, r13
+ 122 0060 7E 1D                   	neg r13
+ 123                             	
+ 124                             	 ; 0 "" 2
+ 125                             	.LVL16:
+ 834:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     "adc #0, %0\n"
+ 835:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     : "+r" (tmp1)
+ 836:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     : "r" (exponent)
+ 837:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     : );
+ 838:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     }
+ 839:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****     return tmp1;
+ 126                             		.loc 2 839 5 is_stmt 1
+ 127                             	.LBE8:
+ 128                             	.LBE12:
+ 129                             		.loc 1 184 17 is_stmt 0
+ 130 0062 4B 6D                   		add	r6, r13
+ 131                             	.LVL17:
+ 185:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 186:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MAX(mul_res, out_activation_min);
+ 132                             		.loc 1 186 9 is_stmt 1
+ 187:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 188:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 189:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         *output++ = (q7_t)mul_res;
+ 133                             		.loc 1 189 16 is_stmt 0
+ 134 0064 62 1E                   		add	#1, r14
+ 135                             	.LVL18:
+ 186:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 136                             		.loc 1 186 17
+ 137 0066 FC 13 BD                		max	r11, r13
+ 138                             	.LVL19:
+ 187:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 139                             		.loc 1 187 9 is_stmt 1
+ 140                             		.loc 1 189 9
+ 141                             		.loc 1 189 19 is_stmt 0
+ 142 0069 71 E5 FF                		add	#-1, r14, r5
+ 187:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 143                             		.loc 1 187 17
+ 144 006c FC 17 CD                		min	r12, r13
+ 145                             	.LVL20:
+ 146                             		.loc 1 189 21
+ 147 006f C3 5D                   		mov.B	r13, [r5]
+ 148                             	.LVL21:
+ 190:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 191:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         /* Decrement loop counter */
+ 192:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         loop_count--;
+ 149                             		.loc 1 192 9 is_stmt 1
+ 176:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     {
+ 150                             		.loc 1 176 11 is_stmt 0
+ 151 0071 47 F1                   		cmp	r15, r1
+ 152 0073 21 BD                   		bne	.L3
+ 153                             	.LVL22:
+ 154                             		.balign 8,3,1
+ 155                             	.L7:
+ 193:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     }
+ 194:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** #endif
+ 195:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     return ARM_MATH_SUCCESS;
+ 196:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** }
+ 156                             		.loc 1 196 1
+ 157 0075 66 01                   		mov.L	#0, r1
+ 158                             	.LVL23:
+ 159 0077 3F 6D 0F                		rtsd	#60, r6-r13
+ 160                             	.LVL24:
+ 161                             	.L4:
+ 162                             	.LBB13:
+ 163                             	.LBB9:
+ 833:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Include\arm_nnsupportfunctions.h ****                     "adc #0, %0\n"
+ 164                             		.loc 2 833 9
+ 165                             	 ; 833 "C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src\CMSIS\NN\Incl
+ 166 007a FD 60 78                		shlr r7, r8
+ 167 007d FD 74 28 00             	adc #0, r8
+ 168                             	
+ 169                             	 ; 0 "" 2
+ 170                             	.LVL25:
+ 171                             		.loc 2 839 5 is_stmt 1
+ 172                             	.LBE9:
+ 173                             	.LBE13:
+ 184:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 174                             		.loc 1 184 17 is_stmt 0
+ 175 0081 4B 68                   		add	r6, r8
+ 176                             	.LVL26:
+ 186:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 177                             		.loc 1 186 9 is_stmt 1
+ 189:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 178                             		.loc 1 189 16 is_stmt 0
+ 179 0083 62 1E                   		add	#1, r14
+ 180                             	.LVL27:
+ 186:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****         mul_res = MIN(mul_res, out_activation_max);
+ 181                             		.loc 1 186 17
+ 182 0085 FC 13 B8                		max	r11, r8
+ 183                             	.LVL28:
+ 187:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 184                             		.loc 1 187 9 is_stmt 1
+ 189:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 185                             		.loc 1 189 9
+ 189:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 186                             		.loc 1 189 19 is_stmt 0
+ 187 0088 71 E5 FF                		add	#-1, r14, r5
+ 187:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 188                             		.loc 1 187 17
+ 189 008b FC 17 C8                		min	r12, r8
+ 190                             	.LVL29:
+ 189:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c **** 
+ 191                             		.loc 1 189 21
+ 192 008e C3 58                   		mov.B	r8, [r5]
+ 193                             	.LVL30:
+ 192:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     }
+ 194                             		.loc 1 192 9 is_stmt 1
+ 176:../src/CMSIS/NN/Source/BasicMathFunctions/arm_elementwise_mul_s8.c ****     {
+ 195                             		.loc 1 176 11 is_stmt 0
+ 196 0090 47 F1                   		cmp	r15, r1
+ 197 0092 21 9E                   		bne	.L3
+ 198                             		.loc 1 196 1
+ 199 0094 66 01                   		mov.L	#0, r1
+ 200                             	.LVL31:
+ 201 0096 3F 6D 0F                		rtsd	#60, r6-r13
+ 202                             	.LFE82:
+ 254                             	.Letext0:
+ 255                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 256                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 257                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 258                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 259                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 260                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 261                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 262                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 263                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

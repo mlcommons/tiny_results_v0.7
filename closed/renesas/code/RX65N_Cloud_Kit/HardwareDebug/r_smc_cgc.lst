@@ -1,0 +1,79 @@
+   1                             		.file	"r_smc_cgc.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.R_CGC_Create,"ax",@progbits
+   5                             		.global	_R_CGC_Create
+   7                             	_R_CGC_Create:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/general/r_smc_cgc.c"
+   1:../src/smc_gen/general/r_smc_cgc.c **** /**************************************************************************************************
+   2:../src/smc_gen/general/r_smc_cgc.c **** * DISCLAIMER
+   3:../src/smc_gen/general/r_smc_cgc.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/general/r_smc_cgc.c **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/smc_gen/general/r_smc_cgc.c **** * applicable laws, including copyright laws. 
+   6:../src/smc_gen/general/r_smc_cgc.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHE
+   7:../src/smc_gen/general/r_smc_cgc.c **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/smc_gen/general/r_smc_cgc.c **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/smc_gen/general/r_smc_cgc.c **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/smc_gen/general/r_smc_cgc.c **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/smc_gen/general/r_smc_cgc.c **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/general/r_smc_cgc.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/general/r_smc_cgc.c **** * of this software. 
+  14:../src/smc_gen/general/r_smc_cgc.c **** *
+  15:../src/smc_gen/general/r_smc_cgc.c **** * Copyright (C) 2019 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/general/r_smc_cgc.c **** ***************************************************************************************************
+  17:../src/smc_gen/general/r_smc_cgc.c **** 
+  18:../src/smc_gen/general/r_smc_cgc.c **** /**************************************************************************************************
+  19:../src/smc_gen/general/r_smc_cgc.c **** * File Name    : r_smc_cgc.c
+  20:../src/smc_gen/general/r_smc_cgc.c **** * Version      : 1.6.103
+  21:../src/smc_gen/general/r_smc_cgc.c **** * Device(s)    : R5F565NEDxFP
+  22:../src/smc_gen/general/r_smc_cgc.c **** * Description  : This file implements CGC setting.
+  23:../src/smc_gen/general/r_smc_cgc.c **** * Creation Date: 2021-06-15
+  24:../src/smc_gen/general/r_smc_cgc.c **** ***************************************************************************************************
+  25:../src/smc_gen/general/r_smc_cgc.c **** 
+  26:../src/smc_gen/general/r_smc_cgc.c **** /**************************************************************************************************
+  27:../src/smc_gen/general/r_smc_cgc.c **** Pragma directive
+  28:../src/smc_gen/general/r_smc_cgc.c **** ***************************************************************************************************
+  29:../src/smc_gen/general/r_smc_cgc.c **** /* Start user code for pragma. Do not edit comment generated here */
+  30:../src/smc_gen/general/r_smc_cgc.c **** /* End user code. Do not edit comment generated here */
+  31:../src/smc_gen/general/r_smc_cgc.c **** 
+  32:../src/smc_gen/general/r_smc_cgc.c **** /**************************************************************************************************
+  33:../src/smc_gen/general/r_smc_cgc.c **** Includes
+  34:../src/smc_gen/general/r_smc_cgc.c **** ***************************************************************************************************
+  35:../src/smc_gen/general/r_smc_cgc.c **** #include "r_cg_macrodriver.h"
+  36:../src/smc_gen/general/r_smc_cgc.c **** #include "r_smc_cgc.h"
+  37:../src/smc_gen/general/r_smc_cgc.c **** /* Start user code for include. Do not edit comment generated here */
+  38:../src/smc_gen/general/r_smc_cgc.c **** /* End user code. Do not edit comment generated here */
+  39:../src/smc_gen/general/r_smc_cgc.c **** #include "r_cg_userdefine.h"
+  40:../src/smc_gen/general/r_smc_cgc.c **** 
+  41:../src/smc_gen/general/r_smc_cgc.c **** /**************************************************************************************************
+  42:../src/smc_gen/general/r_smc_cgc.c **** Global variables and functions
+  43:../src/smc_gen/general/r_smc_cgc.c **** ***************************************************************************************************
+  44:../src/smc_gen/general/r_smc_cgc.c **** /* Start user code for global. Do not edit comment generated here */
+  45:../src/smc_gen/general/r_smc_cgc.c **** /* End user code. Do not edit comment generated here */
+  46:../src/smc_gen/general/r_smc_cgc.c **** 
+  47:../src/smc_gen/general/r_smc_cgc.c **** /**************************************************************************************************
+  48:../src/smc_gen/general/r_smc_cgc.c **** * Function Name: R_CGC_Create
+  49:../src/smc_gen/general/r_smc_cgc.c **** * Description  : This function initializes the clock generator
+  50:../src/smc_gen/general/r_smc_cgc.c **** * Arguments    : None
+  51:../src/smc_gen/general/r_smc_cgc.c **** * Return Value : None
+  52:../src/smc_gen/general/r_smc_cgc.c **** ***************************************************************************************************
+  53:../src/smc_gen/general/r_smc_cgc.c **** 
+  54:../src/smc_gen/general/r_smc_cgc.c **** void R_CGC_Create(void)
+  55:../src/smc_gen/general/r_smc_cgc.c **** {
+  10                             		.loc 1 55 1
+  56:../src/smc_gen/general/r_smc_cgc.c ****     R_CGC_Create_UserInit();
+  11                             		.loc 1 56 5
+  12 0000 04 00 00 00             		bra	_R_CGC_Create_UserInit
+  13                             	.LVL0:
+  14                             	.LFE3:
+  42                             	.Letext0:
+  43                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  44                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  45                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  46                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  47                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  48                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  49                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+  50                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+  51                             		.file 10 "../src/smc_gen/general/r_smc_cgc.h"

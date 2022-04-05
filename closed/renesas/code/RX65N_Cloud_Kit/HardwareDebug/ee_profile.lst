@@ -1,0 +1,815 @@
+   1                             		.file	"ee_profile.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.ee_profile_parse,"ax",@progbits
+   5                             		.global	_ee_profile_parse
+   7                             	_ee_profile_parse:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/EEMBC/profile/ee_profile.c"
+   1:../src/EEMBC/profile/ee_profile.c **** /**
+   2:../src/EEMBC/profile/ee_profile.c ****  * Copyright (C) EEMBC(R). All Rights Reserved
+   3:../src/EEMBC/profile/ee_profile.c ****  *
+   4:../src/EEMBC/profile/ee_profile.c ****  * All EEMBC Benchmark Software are products of EEMBC and are provided under the
+   5:../src/EEMBC/profile/ee_profile.c ****  * terms of the EEMBC Benchmark License Agreements. The EEMBC Benchmark Software
+   6:../src/EEMBC/profile/ee_profile.c ****  * are proprietary intellectual properties of EEMBC and its Members and is
+   7:../src/EEMBC/profile/ee_profile.c ****  * protected under all applicable laws, including all applicable copyright laws.
+   8:../src/EEMBC/profile/ee_profile.c ****  *
+   9:../src/EEMBC/profile/ee_profile.c ****  * If you received this EEMBC Benchmark Software without having a currently
+  10:../src/EEMBC/profile/ee_profile.c ****  * effective EEMBC Benchmark License Agreement, you must discontinue use.
+  11:../src/EEMBC/profile/ee_profile.c ****  */
+  12:../src/EEMBC/profile/ee_profile.c **** 
+  13:../src/EEMBC/profile/ee_profile.c **** #include "profile/ee_profile.h"
+  14:../src/EEMBC/profile/ee_profile.c **** 
+  15:../src/EEMBC/profile/ee_profile.c **** arg_claimed_t ee_buffer_parse(char *command);
+  16:../src/EEMBC/profile/ee_profile.c **** void          ee_infer(size_t n, size_t w);
+  17:../src/EEMBC/profile/ee_profile.c **** 
+  18:../src/EEMBC/profile/ee_profile.c **** /* These functions are expected from profile/th_api/profile.c */
+  19:../src/EEMBC/profile/ee_profile.c **** void th_load_tensor(void);
+  20:../src/EEMBC/profile/ee_profile.c **** void th_infer(void);
+  21:../src/EEMBC/profile/ee_profile.c **** void th_results(void);
+  22:../src/EEMBC/profile/ee_profile.c **** 
+  23:../src/EEMBC/profile/ee_profile.c **** arg_claimed_t
+  24:../src/EEMBC/profile/ee_profile.c **** ee_profile_parse(char *command)
+  25:../src/EEMBC/profile/ee_profile.c **** {
+  10                             		.loc 1 25 1
+  11                             	.LVL0:
+  12 0000 6E 6A                   		pushm	r6-r10
+  13                             	.LCFI0:
+  14 0002 60 80                   		sub	#8, r0
+  15                             	.LCFI1:
+  26:../src/EEMBC/profile/ee_profile.c ****     char *p_next; /* strtok already primed from ee_main.c */
+  16                             		.loc 1 26 5
+  27:../src/EEMBC/profile/ee_profile.c **** 
+  28:../src/EEMBC/profile/ee_profile.c ****     if (th_strncmp(command, "profile", EE_CMD_SIZE) == 0)
+  17                             		.loc 1 28 5
+  18                             		.loc 1 28 9 is_stmt 0
+  19 0004 75 43 50                		mov.L	#0x50, r3
+  20 0007 FB 22 00 00 00 00       		mov.L	#.LC0, r2
+  25:../src/EEMBC/profile/ee_profile.c ****     char *p_next; /* strtok already primed from ee_main.c */
+  21                             		.loc 1 25 1
+  22 000d EF 17                   		mov.L	r1, r7
+  23                             		.loc 1 28 9
+  24 000f 05 00 00 00             		bsr	_th_strncmp
+  25                             	.LVL1:
+  26                             		.loc 1 28 8
+  27 0013 61 01                   		cmp	#0, r1
+  28 0015 21 29                   		bne	.L2
+  29:../src/EEMBC/profile/ee_profile.c ****     {
+  30:../src/EEMBC/profile/ee_profile.c ****         th_printf("m-profile-[%s]\r\n", EE_FW_VERSION);
+  29                             		.loc 1 30 9 is_stmt 1
+  30 0017 F9 02 01 08 00 00 00    		mov.L	#.LC1, 4[r0]
+  31 001e F8 02 2B 00 00 00       		mov.L	#.LC2, [r0]
+  32 0024 05 00 00 00             		bsr	_th_printf
+  33                             	.LVL2:
+  31:../src/EEMBC/profile/ee_profile.c ****         th_printf("m-model-[%s]\r\n", TH_MODEL_VERSION);
+  34                             		.loc 1 31 9
+  35 0028 F9 02 01 3C 00 00 00    		mov.L	#.LC3, 4[r0]
+  36 002f F8 02 41 00 00 00       		mov.L	#.LC4, [r0]
+  37 0035 05 00 00 00             		bsr	_th_printf
+  38                             	.LVL3:
+  32:../src/EEMBC/profile/ee_profile.c ****     }
+  33:../src/EEMBC/profile/ee_profile.c ****     else if (th_strncmp(command, "help", EE_CMD_SIZE) == 0)
+  34:../src/EEMBC/profile/ee_profile.c ****     {
+  35:../src/EEMBC/profile/ee_profile.c ****         th_printf("%s\r\n", EE_FW_VERSION);
+  36:../src/EEMBC/profile/ee_profile.c ****         th_printf("\r\n");
+  37:../src/EEMBC/profile/ee_profile.c ****         /* These are the three common functions for all IoTConnect f/w. */
+  38:../src/EEMBC/profile/ee_profile.c ****         th_printf("help         : Print this information\r\n");
+  39:../src/EEMBC/profile/ee_profile.c ****         th_printf("name         : Print the name of the device\r\n");
+  40:../src/EEMBC/profile/ee_profile.c ****         th_printf("timestsamp   : Generate a timetsamp\r\n");
+  41:../src/EEMBC/profile/ee_profile.c ****         /* These are profile-specific commands. */
+  42:../src/EEMBC/profile/ee_profile.c ****         th_printf("db SUBCMD    : Manipulate a generic byte buffer\r\n");
+  43:../src/EEMBC/profile/ee_profile.c ****         th_printf("  load N     : Allocate N bytes and set load counter\r\n");
+  44:../src/EEMBC/profile/ee_profile.c ****         th_printf("  db HH[HH]* : Load 8-bit hex byte(s) until N bytes\r\n");
+  45:../src/EEMBC/profile/ee_profile.c ****         th_printf("  print [N=16] [offset=0]\r\n");
+  46:../src/EEMBC/profile/ee_profile.c ****         th_printf("             : Print N bytes at offset as hex\r\n");
+  47:../src/EEMBC/profile/ee_profile.c ****         th_printf("infer N [W=0]: Load input, execute N inferences after W warmup loops\r\n");
+  48:../src/EEMBC/profile/ee_profile.c ****         th_printf("results      : Return the result fp32 vector\r\n");
+  49:../src/EEMBC/profile/ee_profile.c ****     }
+  50:../src/EEMBC/profile/ee_profile.c ****     else if (ee_buffer_parse(command) == EE_ARG_CLAIMED)
+  51:../src/EEMBC/profile/ee_profile.c ****     {
+  52:../src/EEMBC/profile/ee_profile.c ****     }
+  53:../src/EEMBC/profile/ee_profile.c ****     else if (th_strncmp(command, "infer", EE_CMD_SIZE) == 0)
+  54:../src/EEMBC/profile/ee_profile.c ****     {
+  55:../src/EEMBC/profile/ee_profile.c ****         size_t n = 1;
+  56:../src/EEMBC/profile/ee_profile.c ****         size_t w = 10;
+  57:../src/EEMBC/profile/ee_profile.c ****         int    i;
+  58:../src/EEMBC/profile/ee_profile.c **** 
+  59:../src/EEMBC/profile/ee_profile.c ****         /* Check for inference iterations */
+  60:../src/EEMBC/profile/ee_profile.c ****         p_next = th_strtok(NULL, EE_CMD_DELIMITER);
+  61:../src/EEMBC/profile/ee_profile.c ****         if (p_next)
+  62:../src/EEMBC/profile/ee_profile.c ****         {
+  63:../src/EEMBC/profile/ee_profile.c ****             i = th_atoi(p_next);
+  64:../src/EEMBC/profile/ee_profile.c ****             if (i <= 0)
+  65:../src/EEMBC/profile/ee_profile.c ****             {
+  66:../src/EEMBC/profile/ee_profile.c ****                 th_printf("e-[Inference iterations must be >0]\r\n");
+  67:../src/EEMBC/profile/ee_profile.c ****                 return EE_ARG_CLAIMED;
+  68:../src/EEMBC/profile/ee_profile.c ****             }
+  69:../src/EEMBC/profile/ee_profile.c ****             n = (size_t)i;
+  70:../src/EEMBC/profile/ee_profile.c ****             /* Check for warmup iterations */
+  71:../src/EEMBC/profile/ee_profile.c ****             p_next = th_strtok(NULL, EE_CMD_DELIMITER);
+  72:../src/EEMBC/profile/ee_profile.c ****             if (p_next)
+  73:../src/EEMBC/profile/ee_profile.c ****             {
+  74:../src/EEMBC/profile/ee_profile.c ****                 i = th_atoi(p_next);
+  75:../src/EEMBC/profile/ee_profile.c ****                 if (i < 0)
+  76:../src/EEMBC/profile/ee_profile.c ****                 {
+  77:../src/EEMBC/profile/ee_profile.c ****                     th_printf("e-[Inference warmup must be >=0]\r\n");;
+  78:../src/EEMBC/profile/ee_profile.c ****                     return EE_ARG_CLAIMED;
+  79:../src/EEMBC/profile/ee_profile.c ****                 }
+  80:../src/EEMBC/profile/ee_profile.c ****                 w = (size_t)i;
+  81:../src/EEMBC/profile/ee_profile.c ****             }
+  82:../src/EEMBC/profile/ee_profile.c ****         }
+  83:../src/EEMBC/profile/ee_profile.c **** 
+  84:../src/EEMBC/profile/ee_profile.c ****         ee_infer(n, w);
+  85:../src/EEMBC/profile/ee_profile.c ****     }
+  86:../src/EEMBC/profile/ee_profile.c ****     else if (th_strncmp(command, "results", EE_CMD_SIZE) == 0)
+  87:../src/EEMBC/profile/ee_profile.c ****     {
+  88:../src/EEMBC/profile/ee_profile.c ****         th_results();
+  89:../src/EEMBC/profile/ee_profile.c ****     }
+  90:../src/EEMBC/profile/ee_profile.c ****     else
+  91:../src/EEMBC/profile/ee_profile.c ****     {
+  92:../src/EEMBC/profile/ee_profile.c ****         return EE_ARG_UNCLAIMED;
+  93:../src/EEMBC/profile/ee_profile.c ****     }
+  94:../src/EEMBC/profile/ee_profile.c ****     return EE_ARG_CLAIMED;
+  39                             		.loc 1 94 12 is_stmt 0
+  40 0039 66 01                   		mov.L	#0, r1
+  41                             		.balign 8,3,2
+  42                             	.L1:
+  95:../src/EEMBC/profile/ee_profile.c **** }
+  43                             		.loc 1 95 1
+  44 003b 3F 6A 07                		rtsd	#28, r6-r10
+  45                             	.LVL4:
+  46                             	.L2:
+  33:../src/EEMBC/profile/ee_profile.c ****     {
+  47                             		.loc 1 33 10 is_stmt 1
+  33:../src/EEMBC/profile/ee_profile.c ****     {
+  48                             		.loc 1 33 14 is_stmt 0
+  49 003e 75 43 50                		mov.L	#0x50, r3
+  50 0041 FB 22 50 00 00 00       		mov.L	#.LC5, r2
+  51 0047 EF 71                   		mov.L	r7, r1
+  52 0049 05 00 00 00             		bsr	_th_strncmp
+  53                             	.LVL5:
+  33:../src/EEMBC/profile/ee_profile.c ****     {
+  54                             		.loc 1 33 13
+  55 004d 61 01                   		cmp	#0, r1
+  56 004f 3B 87 00                		bne	.L4
+  35:../src/EEMBC/profile/ee_profile.c ****         th_printf("\r\n");
+  57                             		.loc 1 35 9 is_stmt 1
+  58 0052 F9 02 01 08 00 00 00    		mov.L	#.LC1, 4[r0]
+  59 0059 F8 02 55 00 00 00       		mov.L	#.LC6, [r0]
+  60 005f 05 00 00 00             		bsr	_th_printf
+  61                             	.LVL6:
+  36:../src/EEMBC/profile/ee_profile.c ****         /* These are the three common functions for all IoTConnect f/w. */
+  62                             		.loc 1 36 9
+  63 0063 F8 02 5A 00 00 00       		mov.L	#.LC7, [r0]
+  64 0069 05 00 00 00             		bsr	_th_printf
+  65                             	.LVL7:
+  38:../src/EEMBC/profile/ee_profile.c ****         th_printf("name         : Print the name of the device\r\n");
+  66                             		.loc 1 38 9
+  67 006d F8 02 5D 00 00 00       		mov.L	#.LC8, [r0]
+  68 0073 05 00 00 00             		bsr	_th_printf
+  69                             	.LVL8:
+  39:../src/EEMBC/profile/ee_profile.c ****         th_printf("timestsamp   : Generate a timetsamp\r\n");
+  70                             		.loc 1 39 9
+  71 0077 F8 02 85 00 00 00       		mov.L	#.LC9, [r0]
+  72 007d 05 00 00 00             		bsr	_th_printf
+  73                             	.LVL9:
+  40:../src/EEMBC/profile/ee_profile.c ****         /* These are profile-specific commands. */
+  74                             		.loc 1 40 9
+  75 0081 F8 02 B3 00 00 00       		mov.L	#.LC10, [r0]
+  76 0087 05 00 00 00             		bsr	_th_printf
+  77                             	.LVL10:
+  42:../src/EEMBC/profile/ee_profile.c ****         th_printf("  load N     : Allocate N bytes and set load counter\r\n");
+  78                             		.loc 1 42 9
+  79 008b F8 02 D9 00 00 00       		mov.L	#.LC11, [r0]
+  80 0091 05 00 00 00             		bsr	_th_printf
+  81                             	.LVL11:
+  43:../src/EEMBC/profile/ee_profile.c ****         th_printf("  db HH[HH]* : Load 8-bit hex byte(s) until N bytes\r\n");
+  82                             		.loc 1 43 9
+  83 0095 F8 02 0B 01 00 00       		mov.L	#.LC12, [r0]
+  84 009b 05 00 00 00             		bsr	_th_printf
+  85                             	.LVL12:
+  44:../src/EEMBC/profile/ee_profile.c ****         th_printf("  print [N=16] [offset=0]\r\n");
+  86                             		.loc 1 44 9
+  87 009f F8 02 42 01 00 00       		mov.L	#.LC13, [r0]
+  88 00a5 05 00 00 00             		bsr	_th_printf
+  89                             	.LVL13:
+  45:../src/EEMBC/profile/ee_profile.c ****         th_printf("             : Print N bytes at offset as hex\r\n");
+  90                             		.loc 1 45 9
+  91 00a9 F8 02 78 01 00 00       		mov.L	#.LC14, [r0]
+  92 00af 05 00 00 00             		bsr	_th_printf
+  93                             	.LVL14:
+  46:../src/EEMBC/profile/ee_profile.c ****         th_printf("infer N [W=0]: Load input, execute N inferences after W warmup loops\r\n");
+  94                             		.loc 1 46 9
+  95 00b3 F8 02 94 01 00 00       		mov.L	#.LC15, [r0]
+  96 00b9 05 00 00 00             		bsr	_th_printf
+  97                             	.LVL15:
+  47:../src/EEMBC/profile/ee_profile.c ****         th_printf("results      : Return the result fp32 vector\r\n");
+  98                             		.loc 1 47 9
+  99 00bd F8 02 C4 01 00 00       		mov.L	#.LC16, [r0]
+ 100 00c3 05 00 00 00             		bsr	_th_printf
+ 101                             	.LVL16:
+  48:../src/EEMBC/profile/ee_profile.c ****     }
+ 102                             		.loc 1 48 9
+ 103 00c7 F8 02 0B 02 00 00       		mov.L	#.LC17, [r0]
+ 104 00cd 05 00 00 00             		bsr	_th_printf
+ 105                             	.LVL17:
+  94:../src/EEMBC/profile/ee_profile.c **** }
+ 106                             		.loc 1 94 12 is_stmt 0
+ 107 00d1 66 01                   		mov.L	#0, r1
+ 108                             		.loc 1 95 1
+ 109 00d3 3F 6A 07                		rtsd	#28, r6-r10
+ 110                             	.LVL18:
+ 111                             	.L4:
+  50:../src/EEMBC/profile/ee_profile.c ****     {
+ 112                             		.loc 1 50 10 is_stmt 1
+  50:../src/EEMBC/profile/ee_profile.c ****     {
+ 113                             		.loc 1 50 14 is_stmt 0
+ 114 00d6 EF 71                   		mov.L	r7, r1
+ 115 00d8 05 00 00 00             		bsr	_ee_buffer_parse
+ 116                             	.LVL19:
+  50:../src/EEMBC/profile/ee_profile.c ****     {
+ 117                             		.loc 1 50 13
+ 118 00dc 61 01                   		cmp	#0, r1
+ 119 00de 3A 5D FF                		beq	.L1
+  53:../src/EEMBC/profile/ee_profile.c ****     {
+ 120                             		.loc 1 53 10 is_stmt 1
+  53:../src/EEMBC/profile/ee_profile.c ****     {
+ 121                             		.loc 1 53 14 is_stmt 0
+ 122 00e1 75 43 50                		mov.L	#0x50, r3
+ 123 00e4 FB 22 3A 02 00 00       		mov.L	#.LC18, r2
+ 124 00ea EF 71                   		mov.L	r7, r1
+ 125 00ec 05 00 00 00             		bsr	_th_strncmp
+ 126                             	.LVL20:
+  53:../src/EEMBC/profile/ee_profile.c ****     {
+ 127                             		.loc 1 53 13
+ 128 00f0 61 01                   		cmp	#0, r1
+ 129 00f2 21 28                   		bne	.L5
+ 130                             	.LBB5:
+  55:../src/EEMBC/profile/ee_profile.c ****         size_t w = 10;
+ 131                             		.loc 1 55 9 is_stmt 1
+ 132                             	.LVL21:
+  56:../src/EEMBC/profile/ee_profile.c ****         int    i;
+ 133                             		.loc 1 56 9
+  57:../src/EEMBC/profile/ee_profile.c **** 
+ 134                             		.loc 1 57 9
+  60:../src/EEMBC/profile/ee_profile.c ****         if (p_next)
+ 135                             		.loc 1 60 9
+  60:../src/EEMBC/profile/ee_profile.c ****         if (p_next)
+ 136                             		.loc 1 60 18 is_stmt 0
+ 137 00f4 FB 22 40 02 00 00       		mov.L	#.LC19, r2
+ 138 00fa 05 00 00 00             		bsr	_th_strtok
+ 139                             	.LVL22:
+  61:../src/EEMBC/profile/ee_profile.c ****         {
+ 140                             		.loc 1 61 9 is_stmt 1
+  61:../src/EEMBC/profile/ee_profile.c ****         {
+ 141                             		.loc 1 61 12 is_stmt 0
+ 142 00fe 61 01                   		cmp	#0, r1
+ 143 0100 20 67                   		beq	.L25
+  63:../src/EEMBC/profile/ee_profile.c ****             if (i <= 0)
+ 144                             		.loc 1 63 13 is_stmt 1
+  63:../src/EEMBC/profile/ee_profile.c ****             if (i <= 0)
+ 145                             		.loc 1 63 17 is_stmt 0
+ 146 0102 05 00 00 00             		bsr	_th_atoi
+ 147                             	.LVL23:
+  64:../src/EEMBC/profile/ee_profile.c ****             {
+ 148                             		.loc 1 64 16
+ 149 0106 71 16 00                		add	#0, r1, r6
+ 150 0109 2A 2D                   		bgt	.L8
+  66:../src/EEMBC/profile/ee_profile.c ****                 return EE_ARG_CLAIMED;
+ 151                             		.loc 1 66 17 is_stmt 1
+ 152 010b F8 02 56 02 00 00       		mov.L	#.LC21, [r0]
+ 153 0111 05 00 00 00             		bsr	_th_printf
+ 154                             	.LVL24:
+  67:../src/EEMBC/profile/ee_profile.c ****             }
+ 155                             		.loc 1 67 17
+  67:../src/EEMBC/profile/ee_profile.c ****             }
+ 156                             		.loc 1 67 24 is_stmt 0
+ 157 0115 66 01                   		mov.L	#0, r1
+ 158                             	.LBE5:
+ 159                             		.loc 1 95 1
+ 160 0117 3F 6A 07                		rtsd	#28, r6-r10
+ 161                             	.LVL25:
+ 162                             	.L5:
+  86:../src/EEMBC/profile/ee_profile.c ****     {
+ 163                             		.loc 1 86 10 is_stmt 1
+  86:../src/EEMBC/profile/ee_profile.c ****     {
+ 164                             		.loc 1 86 14 is_stmt 0
+ 165 011a 75 43 50                		mov.L	#0x50, r3
+ 166 011d FB 22 D1 02 00 00       		mov.L	#.LC26, r2
+ 167 0123 EF 71                   		mov.L	r7, r1
+ 168 0125 05 00 00 00             		bsr	_th_strncmp
+ 169                             	.LVL26:
+  86:../src/EEMBC/profile/ee_profile.c ****     {
+ 170                             		.loc 1 86 13
+ 171 0129 61 01                   		cmp	#0, r1
+ 172 012b 21 37                   		bne	.L14
+  88:../src/EEMBC/profile/ee_profile.c ****     }
+ 173                             		.loc 1 88 9 is_stmt 1
+ 174 012d 05 00 00 00             		bsr	_th_results
+ 175                             	.LVL27:
+  94:../src/EEMBC/profile/ee_profile.c **** }
+ 176                             		.loc 1 94 12 is_stmt 0
+ 177 0131 66 01                   		mov.L	#0, r1
+ 178                             		.loc 1 95 1
+ 179 0133 3F 6A 07                		rtsd	#28, r6-r10
+ 180                             	.LVL28:
+ 181                             	.L8:
+ 182                             	.LBB14:
+  69:../src/EEMBC/profile/ee_profile.c ****             /* Check for warmup iterations */
+ 183                             		.loc 1 69 13 is_stmt 1
+  71:../src/EEMBC/profile/ee_profile.c ****             if (p_next)
+ 184                             		.loc 1 71 22 is_stmt 0
+ 185 0136 FB 22 40 02 00 00       		mov.L	#.LC19, r2
+ 186 013c 66 01                   		mov.L	#0, r1
+ 187                             	.LVL29:
+  71:../src/EEMBC/profile/ee_profile.c ****             if (p_next)
+ 188                             		.loc 1 71 13 is_stmt 1
+  71:../src/EEMBC/profile/ee_profile.c ****             if (p_next)
+ 189                             		.loc 1 71 22 is_stmt 0
+ 190 013e 05 00 00 00             		bsr	_th_strtok
+ 191                             	.LVL30:
+  72:../src/EEMBC/profile/ee_profile.c ****             {
+ 192                             		.loc 1 72 13 is_stmt 1
+  72:../src/EEMBC/profile/ee_profile.c ****             {
+ 193                             		.loc 1 72 16 is_stmt 0
+ 194 0142 61 01                   		cmp	#0, r1
+ 195 0144 3A 8A 00                		beq	.L26
+  74:../src/EEMBC/profile/ee_profile.c ****                 if (i < 0)
+ 196                             		.loc 1 74 17 is_stmt 1
+  74:../src/EEMBC/profile/ee_profile.c ****                 if (i < 0)
+ 197                             		.loc 1 74 21 is_stmt 0
+ 198 0147 05 00 00 00             		bsr	_th_atoi
+ 199                             	.LVL31:
+  75:../src/EEMBC/profile/ee_profile.c ****                 {
+ 200                             		.loc 1 75 20
+ 201 014b 71 17 00                		add	#0, r1, r7
+ 202                             	.LVL32:
+ 203 014e 29 05 38 96 00          		bge	.L10
+  77:../src/EEMBC/profile/ee_profile.c ****                     return EE_ARG_CLAIMED;
+ 204                             		.loc 1 77 21 is_stmt 1
+ 205 0153 F8 02 7C 02 00 00       		mov.L	#.LC22, [r0]
+ 206 0159 05 00 00 00             		bsr	_th_printf
+ 207                             	.LVL33:
+  77:../src/EEMBC/profile/ee_profile.c ****                     return EE_ARG_CLAIMED;
+ 208                             		.loc 1 77 71
+  78:../src/EEMBC/profile/ee_profile.c ****                 }
+ 209                             		.loc 1 78 21
+  78:../src/EEMBC/profile/ee_profile.c ****                 }
+ 210                             		.loc 1 78 28 is_stmt 0
+ 211 015d 66 01                   		mov.L	#0, r1
+ 212                             	.LBE14:
+ 213                             		.loc 1 95 1
+ 214 015f 3F 6A 07                		rtsd	#28, r6-r10
+ 215                             	.LVL34:
+ 216                             	.L14:
+  92:../src/EEMBC/profile/ee_profile.c ****     }
+ 217                             		.loc 1 92 16
+ 218 0162 66 11                   		mov.L	#1, r1
+ 219                             		.loc 1 95 1
+ 220 0164 3F 6A 07                		rtsd	#28, r6-r10
+ 221                             	.LVL35:
+ 222                             	.L25:
+ 223                             	.LBB15:
+  84:../src/EEMBC/profile/ee_profile.c ****     }
+ 224                             		.loc 1 84 9 is_stmt 1
+ 225                             	.LBB6:
+ 226                             	.LBB7:
+  96:../src/EEMBC/profile/ee_profile.c **** 
+  97:../src/EEMBC/profile/ee_profile.c **** /**
+  98:../src/EEMBC/profile/ee_profile.c ****  * Inference without feature engineering. The inpput tensor is expected to
+  99:../src/EEMBC/profile/ee_profile.c ****  * have been loaded from the buffer via the th_load_tensor() function, which in
+ 100:../src/EEMBC/profile/ee_profile.c ****  * turn was loaded from the interface via `db` commands.
+ 101:../src/EEMBC/profile/ee_profile.c ****  *
+ 102:../src/EEMBC/profile/ee_profile.c ****  * For testing, you can pre-load known-good data into the buffer during the
+ 103:../src/EEMBC/profile/ee_profile.c ****  * th_final_initialize() function.
+ 104:../src/EEMBC/profile/ee_profile.c ****  *
+ 105:../src/EEMBC/profile/ee_profile.c ****  */
+ 106:../src/EEMBC/profile/ee_profile.c **** void
+ 107:../src/EEMBC/profile/ee_profile.c **** ee_infer(size_t n, size_t n_warmup)
+ 108:../src/EEMBC/profile/ee_profile.c **** {
+ 109:../src/EEMBC/profile/ee_profile.c ****     th_load_tensor(); /* if necessary */
+ 227                             		.loc 1 109 5
+ 110:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-start-%d\r\n", n_warmup);
+ 228                             		.loc 1 110 5 is_stmt 0
+ 229 0167 66 0A                   		mov.L	#0, r10
+ 230                             	.LBE7:
+ 231                             	.LBE6:
+  55:../src/EEMBC/profile/ee_profile.c ****         size_t w = 10;
+ 232                             		.loc 1 55 16
+ 233 0169 66 16                   		mov.L	#1, r6
+ 234                             	.LBB11:
+ 235                             	.LBB8:
+ 109:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-start-%d\r\n", n_warmup);
+ 236                             		.loc 1 109 5
+ 237 016b 05 00 00 00             		bsr	_th_load_tensor
+ 238                             	.LVL36:
+ 239                             		.loc 1 110 5 is_stmt 1
+ 240 016f 3E 01 0A                		mov.L	#10, 4[r0]
+ 111:../src/EEMBC/profile/ee_profile.c ****     while (n_warmup-- > 0)
+ 241                             		.loc 1 111 20 is_stmt 0
+ 242 0172 66 97                   		mov.L	#9, r7
+ 243                             	.LVL37:
+ 110:../src/EEMBC/profile/ee_profile.c ****     while (n_warmup-- > 0)
+ 244                             		.loc 1 110 5
+ 245 0174 F8 02 42 02 00 00       		mov.L	#.LC20, [r0]
+ 246 017a 05 00 00 00             		bsr	_th_printf
+ 247                             	.LVL38:
+ 248                             		.loc 1 111 5 is_stmt 1
+ 249                             		.balign 8,3,1
+ 250                             	.L12:
+ 112:../src/EEMBC/profile/ee_profile.c ****     {
+ 113:../src/EEMBC/profile/ee_profile.c ****         th_infer(); /* call the API inference function */
+ 251                             		.loc 1 113 9
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 252                             		.loc 1 111 20 is_stmt 0
+ 253 017e 60 17                   		sub	#1, r7
+ 254                             	.LVL39:
+ 255                             		.loc 1 113 9
+ 256 0180 05 00 00 00             		bsr	_th_infer
+ 257                             	.LVL40:
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 258                             		.loc 1 111 11
+ 259 0184 75 07 FF                		cmp	#-1, r7
+ 260 0187 21 F7                   		bne	.L12
+ 261                             	.LVL41:
+ 262                             	.L11:
+ 114:../src/EEMBC/profile/ee_profile.c ****     }
+ 115:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-done\r\n");
+ 263                             		.loc 1 115 5 is_stmt 1
+ 264 0189 F8 02 9F 02 00 00       		mov.L	#.LC23, [r0]
+ 265 018f 05 00 00 00             		bsr	_th_printf
+ 266                             	.LVL42:
+ 116:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-infer-start-%d\r\n", n);
+ 267                             		.loc 1 116 5
+ 268 0193 A0 0E                   		mov.L	r6, 4[r0]
+ 269 0195 F8 02 AF 02 00 00       		mov.L	#.LC24, [r0]
+ 270 019b 05 00 00 00             		bsr	_th_printf
+ 271                             	.LVL43:
+ 117:../src/EEMBC/profile/ee_profile.c ****     th_timestamp();
+ 272                             		.loc 1 117 5
+ 273 019f 05 00 00 00             		bsr	_th_timestamp
+ 274                             	.LVL44:
+ 118:../src/EEMBC/profile/ee_profile.c ****     th_pre();
+ 275                             		.loc 1 118 5
+ 276 01a3 05 00 00 00             		bsr	_th_pre
+ 277                             	.LVL45:
+ 119:../src/EEMBC/profile/ee_profile.c ****     while (n-- > 0)
+ 278                             		.loc 1 119 5
+ 279 01a7 03                      		.balign 8,3,1
+ 280                             	.L13:
+ 120:../src/EEMBC/profile/ee_profile.c ****     {
+ 121:../src/EEMBC/profile/ee_profile.c ****         th_infer(); /* call the API inference function */
+ 281                             		.loc 1 121 9
+ 119:../src/EEMBC/profile/ee_profile.c ****     while (n-- > 0)
+ 282                             		.loc 1 119 13 is_stmt 0
+ 283 01a8 60 1A                   		sub	#1, r10
+ 284                             	.LVL46:
+ 285                             		.loc 1 121 9
+ 286 01aa 05 00 00 00             		bsr	_th_infer
+ 287                             	.LVL47:
+ 119:../src/EEMBC/profile/ee_profile.c ****     while (n-- > 0)
+ 288                             		.loc 1 119 11
+ 289 01ae 75 0A FF                		cmp	#-1, r10
+ 290 01b1 21 F7                   		bne	.L13
+ 122:../src/EEMBC/profile/ee_profile.c ****     }
+ 123:../src/EEMBC/profile/ee_profile.c ****     th_post();
+ 291                             		.loc 1 123 5 is_stmt 1
+ 292 01b3 05 00 00 00             		bsr	_th_post
+ 293                             	.LVL48:
+ 124:../src/EEMBC/profile/ee_profile.c ****     th_timestamp();
+ 294                             		.loc 1 124 5
+ 295 01b7 05 00 00 00             		bsr	_th_timestamp
+ 296                             	.LVL49:
+ 125:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-infer-done\r\n");
+ 297                             		.loc 1 125 5
+ 298 01bb F8 02 C2 02 00 00       		mov.L	#.LC25, [r0]
+ 299 01c1 05 00 00 00             		bsr	_th_printf
+ 300                             	.LVL50:
+ 126:../src/EEMBC/profile/ee_profile.c ****     th_results();
+ 301                             		.loc 1 126 5
+ 302 01c5 05 00 00 00             		bsr	_th_results
+ 303                             	.LVL51:
+ 304                             	.LBE8:
+ 305                             	.LBE11:
+ 306                             	.LBE15:
+  94:../src/EEMBC/profile/ee_profile.c **** }
+ 307                             		.loc 1 94 12 is_stmt 0
+ 308 01c9 66 01                   		mov.L	#0, r1
+  95:../src/EEMBC/profile/ee_profile.c **** 
+ 309                             		.loc 1 95 1
+ 310 01cb 3F 6A 07                		rtsd	#28, r6-r10
+ 311                             	.LVL52:
+ 312                             	.L26:
+ 313                             	.LBB16:
+  84:../src/EEMBC/profile/ee_profile.c ****     }
+ 314                             		.loc 1 84 9 is_stmt 1
+ 315                             	.LBB12:
+ 316                             	.LBB9:
+ 109:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-start-%d\r\n", n_warmup);
+ 317                             		.loc 1 109 5
+ 318 01ce 71 6A FF                		add	#-1, r6, r10
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 319                             		.loc 1 111 20 is_stmt 0
+ 320 01d1 66 97                   		mov.L	#9, r7
+ 321                             	.LVL53:
+ 109:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-start-%d\r\n", n_warmup);
+ 322                             		.loc 1 109 5
+ 323 01d3 05 00 00 00             		bsr	_th_load_tensor
+ 324                             	.LVL54:
+ 110:../src/EEMBC/profile/ee_profile.c ****     while (n_warmup-- > 0)
+ 325                             		.loc 1 110 5 is_stmt 1
+ 326 01d7 3E 01 0A                		mov.L	#10, 4[r0]
+ 327 01da F8 02 42 02 00 00       		mov.L	#.LC20, [r0]
+ 328 01e0 05 00 00 00             		bsr	_th_printf
+ 329                             	.LVL55:
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 330                             		.loc 1 111 5
+ 331 01e4 2E 9A                   		bra	.L12
+ 332                             	.LVL56:
+ 333                             	.L10:
+ 334                             	.LBE9:
+ 335                             	.LBE12:
+  80:../src/EEMBC/profile/ee_profile.c ****             }
+ 336                             		.loc 1 80 17
+  84:../src/EEMBC/profile/ee_profile.c ****     }
+ 337                             		.loc 1 84 9
+ 338                             	.LBB13:
+ 339                             	.LBB10:
+ 109:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-start-%d\r\n", n_warmup);
+ 340                             		.loc 1 109 5
+ 341 01e6 71 6A FF                		add	#-1, r6, r10
+ 342 01e9 05 00 00 00             		bsr	_th_load_tensor
+ 343                             	.LVL57:
+ 110:../src/EEMBC/profile/ee_profile.c ****     while (n_warmup-- > 0)
+ 344                             		.loc 1 110 5
+ 345 01ed A0 0F                   		mov.L	r7, 4[r0]
+ 346 01ef F8 02 42 02 00 00       		mov.L	#.LC20, [r0]
+ 347 01f5 05 00 00 00             		bsr	_th_printf
+ 348                             	.LVL58:
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 349                             		.loc 1 111 5
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 350                             		.loc 1 111 11 is_stmt 0
+ 351 01f9 61 07                   		cmp	#0, r7
+ 352 01fb 20 8E                   		beq	.L11
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 353                             		.loc 1 111 20
+ 354 01fd 60 17                   		sub	#1, r7
+ 355                             	.LVL59:
+ 356 01ff 38 7F FF                		bra	.L12
+ 357                             	.LBE10:
+ 358                             	.LBE13:
+ 359                             	.LBE16:
+ 360                             	.LFE3:
+ 362 0202 74 10 01 00 00 00       		.section	.text.ee_infer,"ax",@progbits
+ 363                             		.global	_ee_infer
+ 365                             	_ee_infer:
+ 366                             	.LFB4:
+ 108:../src/EEMBC/profile/ee_profile.c ****     th_load_tensor(); /* if necessary */
+ 367                             		.loc 1 108 1 is_stmt 1
+ 368                             	.LVL60:
+ 369 0000 6E 6A                   		pushm	r6-r10
+ 370                             	.LCFI2:
+ 371 0002 60 80                   		sub	#8, r0
+ 372                             	.LCFI3:
+ 109:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-start-%d\r\n", n_warmup);
+ 373                             		.loc 1 109 5
+ 108:../src/EEMBC/profile/ee_profile.c ****     th_load_tensor(); /* if necessary */
+ 374                             		.loc 1 108 1 is_stmt 0
+ 375 0004 EF 26                   		mov.L	r2, r6
+ 376 0006 EF 1A                   		mov.L	r1, r10
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 377                             		.loc 1 111 20
+ 378 0008 71 27 FF                		add	#-1, r2, r7
+ 109:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-warmup-start-%d\r\n", n_warmup);
+ 379                             		.loc 1 109 5
+ 380 000b 05 00 00 00             		bsr	_th_load_tensor
+ 381                             	.LVL61:
+ 110:../src/EEMBC/profile/ee_profile.c ****     while (n_warmup-- > 0)
+ 382                             		.loc 1 110 5 is_stmt 1
+ 383 000f A0 0E                   		mov.L	r6, 4[r0]
+ 384 0011 F8 02 42 02 00 00       		mov.L	#.LC20, [r0]
+ 385 0017 05 00 00 00             		bsr	_th_printf
+ 386                             	.LVL62:
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 387                             		.loc 1 111 5
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 388                             		.loc 1 111 11 is_stmt 0
+ 389 001b 61 06                   		cmp	#0, r6
+ 390 001d 20 0E                   		beq	.L28
+ 391 001f 03                      		.balign 8,3,1
+ 392                             	.L29:
+ 113:../src/EEMBC/profile/ee_profile.c ****     }
+ 393                             		.loc 1 113 9 is_stmt 1
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 394                             		.loc 1 111 20 is_stmt 0
+ 395 0020 60 17                   		sub	#1, r7
+ 396                             	.LVL63:
+ 113:../src/EEMBC/profile/ee_profile.c ****     }
+ 397                             		.loc 1 113 9
+ 398 0022 05 00 00 00             		bsr	_th_infer
+ 399                             	.LVL64:
+ 111:../src/EEMBC/profile/ee_profile.c ****     {
+ 400                             		.loc 1 111 11
+ 401 0026 75 07 FF                		cmp	#-1, r7
+ 402 0029 21 F7                   		bne	.L29
+ 403                             		.balign 8,3,2
+ 404                             	.L28:
+ 115:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-infer-start-%d\r\n", n);
+ 405                             		.loc 1 115 5 is_stmt 1
+ 119:../src/EEMBC/profile/ee_profile.c ****     {
+ 406                             		.loc 1 119 13 is_stmt 0
+ 407 002b 71 A7 FF                		add	#-1, r10, r7
+ 408                             	.LVL65:
+ 115:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-infer-start-%d\r\n", n);
+ 409                             		.loc 1 115 5
+ 410 002e F8 02 9F 02 00 00       		mov.L	#.LC23, [r0]
+ 411 0034 05 00 00 00             		bsr	_th_printf
+ 412                             	.LVL66:
+ 116:../src/EEMBC/profile/ee_profile.c ****     th_timestamp();
+ 413                             		.loc 1 116 5 is_stmt 1
+ 414 0038 E7 0A 01                		mov.L	r10, 4[r0]
+ 415 003b F8 02 AF 02 00 00       		mov.L	#.LC24, [r0]
+ 416 0041 05 00 00 00             		bsr	_th_printf
+ 417                             	.LVL67:
+ 117:../src/EEMBC/profile/ee_profile.c ****     th_pre();
+ 418                             		.loc 1 117 5
+ 419 0045 05 00 00 00             		bsr	_th_timestamp
+ 420                             	.LVL68:
+ 118:../src/EEMBC/profile/ee_profile.c ****     while (n-- > 0)
+ 421                             		.loc 1 118 5
+ 422 0049 05 00 00 00             		bsr	_th_pre
+ 423                             	.LVL69:
+ 119:../src/EEMBC/profile/ee_profile.c ****     {
+ 424                             		.loc 1 119 5
+ 119:../src/EEMBC/profile/ee_profile.c ****     {
+ 425                             		.loc 1 119 11 is_stmt 0
+ 426 004d 61 0A                   		cmp	#0, r10
+ 427 004f 20 0D                   		beq	.L30
+ 428                             		.balign 8,3,1
+ 429                             	.L31:
+ 121:../src/EEMBC/profile/ee_profile.c ****     }
+ 430                             		.loc 1 121 9 is_stmt 1
+ 119:../src/EEMBC/profile/ee_profile.c ****     {
+ 431                             		.loc 1 119 13 is_stmt 0
+ 432 0051 60 17                   		sub	#1, r7
+ 433                             	.LVL70:
+ 121:../src/EEMBC/profile/ee_profile.c ****     }
+ 434                             		.loc 1 121 9
+ 435 0053 05 00 00 00             		bsr	_th_infer
+ 436                             	.LVL71:
+ 119:../src/EEMBC/profile/ee_profile.c ****     {
+ 437                             		.loc 1 119 11
+ 438 0057 75 07 FF                		cmp	#-1, r7
+ 439 005a 21 F7                   		bne	.L31
+ 440                             		.balign 8,3,3
+ 441                             	.L30:
+ 123:../src/EEMBC/profile/ee_profile.c ****     th_timestamp();
+ 442                             		.loc 1 123 5 is_stmt 1
+ 443 005c 05 00 00 00             		bsr	_th_post
+ 444                             	.LVL72:
+ 124:../src/EEMBC/profile/ee_profile.c ****     th_printf("m-infer-done\r\n");
+ 445                             		.loc 1 124 5
+ 446 0060 05 00 00 00             		bsr	_th_timestamp
+ 447                             	.LVL73:
+ 125:../src/EEMBC/profile/ee_profile.c ****     th_results();
+ 448                             		.loc 1 125 5
+ 449 0064 F8 02 C2 02 00 00       		mov.L	#.LC25, [r0]
+ 450 006a 05 00 00 00             		bsr	_th_printf
+ 451                             	.LVL74:
+ 452                             		.loc 1 126 5
+ 127:../src/EEMBC/profile/ee_profile.c **** }
+ 453                             		.loc 1 127 1 is_stmt 0
+ 454 006e 62 80                   		add	#8, r0
+ 455 0070 6F 6A                   		popm	r6-r10
+ 456                             	.LVL75:
+ 126:../src/EEMBC/profile/ee_profile.c **** }
+ 457                             		.loc 1 126 5
+ 458 0072 04 00 00 00             		bra	_th_results
+ 459                             	.LVL76:
+ 460                             	.LFE4:
+ 462 0076 EF 00                   		.section	.rodata.ee_profile_parse.str1.1,"aMS",@progbits,1
+ 463                             	.LC0:
+ 464 0000 70 72 6F 66 69 6C 65 00 		.string	"profile"
+ 465                             	.LC1:
+ 466 0008 55 4C 50 4D 61 72 6B 20 		.string	"ULPMark for tinyML Firmware V0.0.1"
+ 466      66 6F 72 20 74 69 6E 79 
+ 466      4D 4C 20 46 69 72 6D 77 
+ 466      61 72 65 20 56 30 2E 30 
+ 466      2E 31 00 
+ 467                             	.LC2:
+ 468 002b 6D 2D 70 72 6F 66 69 6C 		.string	"m-profile-[%s]\r\n"
+ 468      65 2D 5B 25 73 5D 0D 0A 
+ 468      00 
+ 469                             	.LC3:
+ 470 003c 61 64 30 31 00          		.string	"ad01"
+ 471                             	.LC4:
+ 472 0041 6D 2D 6D 6F 64 65 6C 2D 		.string	"m-model-[%s]\r\n"
+ 472      5B 25 73 5D 0D 0A 00 
+ 473                             	.LC5:
+ 474 0050 68 65 6C 70 00          		.string	"help"
+ 475                             	.LC6:
+ 476 0055 25 73 0D 0A 00          		.string	"%s\r\n"
+ 477                             	.LC7:
+ 478 005a 0D 0A 00                		.string	"\r\n"
+ 479                             	.LC8:
+ 480 005d 68 65 6C 70 20 20 20 20 		.string	"help         : Print this information\r\n"
+ 480      20 20 20 20 20 3A 20 50 
+ 480      72 69 6E 74 20 74 68 69 
+ 480      73 20 69 6E 66 6F 72 6D 
+ 480      61 74 69 6F 6E 0D 0A 00 
+ 481                             	.LC9:
+ 482 0085 6E 61 6D 65 20 20 20 20 		.string	"name         : Print the name of the device\r\n"
+ 482      20 20 20 20 20 3A 20 50 
+ 482      72 69 6E 74 20 74 68 65 
+ 482      20 6E 61 6D 65 20 6F 66 
+ 482      20 74 68 65 20 64 65 76 
+ 483                             	.LC10:
+ 484 00b3 74 69 6D 65 73 74 73 61 		.string	"timestsamp   : Generate a timetsamp\r\n"
+ 484      6D 70 20 20 20 3A 20 47 
+ 484      65 6E 65 72 61 74 65 20 
+ 484      61 20 74 69 6D 65 74 73 
+ 484      61 6D 70 0D 0A 00 
+ 485                             	.LC11:
+ 486 00d9 64 62 20 53 55 42 43 4D 		.string	"db SUBCMD    : Manipulate a generic byte buffer\r\n"
+ 486      44 20 20 20 20 3A 20 4D 
+ 486      61 6E 69 70 75 6C 61 74 
+ 486      65 20 61 20 67 65 6E 65 
+ 486      72 69 63 20 62 79 74 65 
+ 487                             	.LC12:
+ 488 010b 20 20 6C 6F 61 64 20 4E 		.string	"  load N     : Allocate N bytes and set load counter\r\n"
+ 488      20 20 20 20 20 3A 20 41 
+ 488      6C 6C 6F 63 61 74 65 20 
+ 488      4E 20 62 79 74 65 73 20 
+ 488      61 6E 64 20 73 65 74 20 
+ 489                             	.LC13:
+ 490 0142 20 20 64 62 20 48 48 5B 		.string	"  db HH[HH]* : Load 8-bit hex byte(s) until N bytes\r\n"
+ 490      48 48 5D 2A 20 3A 20 4C 
+ 490      6F 61 64 20 38 2D 62 69 
+ 490      74 20 68 65 78 20 62 79 
+ 490      74 65 28 73 29 20 75 6E 
+ 491                             	.LC14:
+ 492 0178 20 20 70 72 69 6E 74 20 		.string	"  print [N=16] [offset=0]\r\n"
+ 492      5B 4E 3D 31 36 5D 20 5B 
+ 492      6F 66 66 73 65 74 3D 30 
+ 492      5D 0D 0A 00 
+ 493                             	.LC15:
+ 494 0194 20 20 20 20 20 20 20 20 		.string	"             : Print N bytes at offset as hex\r\n"
+ 494      20 20 20 20 20 3A 20 50 
+ 494      72 69 6E 74 20 4E 20 62 
+ 494      79 74 65 73 20 61 74 20 
+ 494      6F 66 66 73 65 74 20 61 
+ 495                             	.LC16:
+ 496 01c4 69 6E 66 65 72 20 4E 20 		.string	"infer N [W=0]: Load input, execute N inferences after W warmup loops\r\n"
+ 496      5B 57 3D 30 5D 3A 20 4C 
+ 496      6F 61 64 20 69 6E 70 75 
+ 496      74 2C 20 65 78 65 63 75 
+ 496      74 65 20 4E 20 69 6E 66 
+ 497                             	.LC17:
+ 498 020b 72 65 73 75 6C 74 73 20 		.string	"results      : Return the result fp32 vector\r\n"
+ 498      20 20 20 20 20 3A 20 52 
+ 498      65 74 75 72 6E 20 74 68 
+ 498      65 20 72 65 73 75 6C 74 
+ 498      20 66 70 33 32 20 76 65 
+ 499                             	.LC18:
+ 500 023a 69 6E 66 65 72 00       		.string	"infer"
+ 501                             	.LC19:
+ 502 0240 20 00                   		.string	" "
+ 503                             	.LC20:
+ 504 0242 6D 2D 77 61 72 6D 75 70 		.string	"m-warmup-start-%d\r\n"
+ 504      2D 73 74 61 72 74 2D 25 
+ 504      64 0D 0A 00 
+ 505                             	.LC21:
+ 506 0256 65 2D 5B 49 6E 66 65 72 		.string	"e-[Inference iterations must be >0]\r\n"
+ 506      65 6E 63 65 20 69 74 65 
+ 506      72 61 74 69 6F 6E 73 20 
+ 506      6D 75 73 74 20 62 65 20 
+ 506      3E 30 5D 0D 0A 00 
+ 507                             	.LC22:
+ 508 027c 65 2D 5B 49 6E 66 65 72 		.string	"e-[Inference warmup must be >=0]\r\n"
+ 508      65 6E 63 65 20 77 61 72 
+ 508      6D 75 70 20 6D 75 73 74 
+ 508      20 62 65 20 3E 3D 30 5D 
+ 508      0D 0A 00 
+ 509                             	.LC23:
+ 510 029f 6D 2D 77 61 72 6D 75 70 		.string	"m-warmup-done\r\n"
+ 510      2D 64 6F 6E 65 0D 0A 00 
+ 511                             	.LC24:
+ 512 02af 6D 2D 69 6E 66 65 72 2D 		.string	"m-infer-start-%d\r\n"
+ 512      73 74 61 72 74 2D 25 64 
+ 512      0D 0A 00 
+ 513                             	.LC25:
+ 514 02c2 6D 2D 69 6E 66 65 72 2D 		.string	"m-infer-done\r\n"
+ 514      64 6F 6E 65 0D 0A 00 
+ 515                             	.LC26:
+ 516 02d1 72 65 73 75 6C 74 73 00 		.string	"results"
+ 587                             	.Letext0:
+ 588                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 589                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 590                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 591                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 592                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h"
+ 593                             		.file 7 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EEM
+ 594                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EEM
+ 595                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EEM
+ 596                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EE

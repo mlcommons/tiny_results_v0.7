@@ -1,0 +1,897 @@
+   1                             		.file	"arm_avgpool_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_avgpool_s8,"ax",@progbits
+   5                             		.global	_arm_avgpool_s8
+   7                             	_arm_avgpool_s8:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c"
+   1:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** /*
+   2:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+   4:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+   6:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+  10:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+  12:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  */
+  18:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  19:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Title:        arm_avgpool_s8.c
+  22:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Description:  Pooling function implementations
+  23:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+  24:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * $Date:        01. March 2021
+  25:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * $Revision:    V.2.0.4
+  26:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+  27:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Target Processor:  Cortex-M CPUs
+  28:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+  29:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  31:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #include "arm_nnfunctions.h"
+  32:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  34:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #if defined(ARM_MATH_DSP) && !defined(ARM_MATH_MVEI)
+  35:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  36:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** static void scale_q31_to_q7_and_clamp(const q31_t *buffer,
+  37:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                                       q7_t *target,
+  38:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                                       int32_t length,
+  39:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                                       const int32_t count,
+  40:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                                       const int act_min,
+  41:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                                       const int act_max)
+  42:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** {
+  43:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int half_count = count / 2;
+  44:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     for (int i = 0; i < length; i++)
+  45:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+  46:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         int32_t sum = buffer[i] > 0 ? (buffer[i] + half_count) : (buffer[i] - half_count);
+  47:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         sum = sum / count;
+  48:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         sum = MAX(sum, act_min);
+  49:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         sum = MIN(sum, act_max);
+  50:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  51:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         target[i] = (q7_t)sum;
+  52:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     }
+  53:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** }
+  54:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #endif
+  55:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  56:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** /**
+  57:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *  @ingroup groupNN
+  58:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  */
+  59:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  60:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** /**
+  61:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * @addtogroup Pooling
+  62:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * @{
+  63:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  */
+  64:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  65:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** /*
+  66:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * s8 average pooling function
+  67:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+  68:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  * Refer to header file for details.
+  69:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  *
+  70:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****  */
+  71:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  72:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #if defined(ARM_MATH_MVEI)
+  73:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  74:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** arm_status arm_avgpool_s8(const cmsis_nn_context *ctx,
+  75:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_pool_params *pool_params,
+  76:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_dims *input_dims,
+  77:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const q7_t *src,
+  78:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_dims *filter_dims,
+  79:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_dims *output_dims,
+  80:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           q7_t *dst)
+  81:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** {
+  82:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     (void)ctx;
+  83:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_y = input_dims->h;
+  84:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_x = input_dims->w;
+  85:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t output_y = output_dims->h;
+  86:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t output_x = output_dims->w;
+  87:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t stride_y = pool_params->stride.h;
+  88:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t stride_x = pool_params->stride.w;
+  89:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t kernel_y = filter_dims->h;
+  90:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t kernel_x = filter_dims->w;
+  91:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t pad_y = pool_params->padding.h;
+  92:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t pad_x = pool_params->padding.w;
+  93:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t act_min = pool_params->activation.min;
+  94:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t act_max = pool_params->activation.max;
+  95:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t ch_src = input_dims->c;
+  96:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+  97:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     int32_t i_x, i_y;
+  98:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     int32_t k_x, k_y;
+  99:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 100:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     for (i_y = 0; i_y < output_y; i_y++)
+ 101:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+ 102:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         for (i_x = 0; i_x < output_x; i_x++)
+ 103:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 104:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 105:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             int32_t k_y_start, k_y_end;
+ 106:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             int32_t k_x_start, k_x_end;
+ 107:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             int32_t chCnt;
+ 108:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             const int8_t *pTmp, *pTmpInner;
+ 109:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             int8_t *pDst;
+ 110:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 111:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             k_y_start = MAX(0, i_y * stride_y - pad_y);
+ 112:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             k_y_end = MIN(i_y * stride_y - pad_y + kernel_y, input_y);
+ 113:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 114:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             k_x_start = MAX(0, i_x * stride_x - pad_x);
+ 115:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             k_x_end = MIN(i_x * stride_x - pad_x + kernel_x, input_x);
+ 116:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 117:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             pTmp = src;
+ 118:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             pDst = &dst[ch_src * (i_x + i_y * output_x)];
+ 119:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 120:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             chCnt = ch_src >> 4;
+ 121:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             while (chCnt > 0)
+ 122:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 123:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int32x4_t sumV1, sumV2, sumV3, sumV4;
+ 124:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 125:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int8x16_t tempV;
+ 126:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int16x8_t tempVLO, tempVHI;
+ 127:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int32x4_t tempVLOLO, tempVLOHI, tempVHILO, tempVHIHI;
+ 128:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int32_t count = 0;
+ 129:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 130:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV1 = vdupq_n_s32(0);
+ 131:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV2 = vdupq_n_s32(0);
+ 132:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV3 = vdupq_n_s32(0);
+ 133:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV4 = vdupq_n_s32(0);
+ 134:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 135:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 for (k_y = k_y_start; k_y < k_y_end; k_y++)
+ 136:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 137:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     for (k_x = k_x_start; k_x < k_x_end; k_x++)
+ 138:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 139:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         pTmpInner = pTmp + (ch_src * (k_x + k_y * input_x));
+ 140:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         tempV = vldrbq_s8(pTmpInner);
+ 141:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 142:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         tempVLO = vmovlbq_s8(tempV);
+ 143:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         tempVHI = vmovltq_s8(tempV);
+ 144:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 145:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         tempVLOLO = vmovlbq_s16(tempVLO);
+ 146:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         tempVLOHI = vmovltq_s16(tempVLO);
+ 147:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 148:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         tempVHILO = vmovlbq_s16(tempVHI);
+ 149:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         tempVHIHI = vmovltq_s16(tempVHI);
+ 150:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 151:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         sumV1 = vaddq_s32(sumV1, tempVLOLO);
+ 152:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         sumV2 = vaddq_s32(sumV2, tempVLOHI);
+ 153:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         sumV3 = vaddq_s32(sumV3, tempVHILO);
+ 154:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         sumV4 = vaddq_s32(sumV4, tempVHIHI);
+ 155:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 156:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         count++;
+ 157:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     }
+ 158:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 }
+ 159:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 160:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 // Prevent static code issue DIVIDE_BY_ZERO.
+ 161:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 if (count == 0)
+ 162:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 163:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     return ARM_MATH_ARGUMENT_ERROR;
+ 164:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 }
+ 165:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 166:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV1[0] = sumV1[0] > 0 ? (sumV1[0] + count / 2) / count : (sumV1[0] - count / 2) /
+ 167:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV1[1] = sumV1[1] > 0 ? (sumV1[1] + count / 2) / count : (sumV1[1] - count / 2) /
+ 168:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV1[2] = sumV1[2] > 0 ? (sumV1[2] + count / 2) / count : (sumV1[2] - count / 2) /
+ 169:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV1[3] = sumV1[3] > 0 ? (sumV1[3] + count / 2) / count : (sumV1[3] - count / 2) /
+ 170:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 171:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV2[0] = sumV2[0] > 0 ? (sumV2[0] + count / 2) / count : (sumV2[0] - count / 2) /
+ 172:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV2[1] = sumV2[1] > 0 ? (sumV2[1] + count / 2) / count : (sumV2[1] - count / 2) /
+ 173:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV2[2] = sumV2[2] > 0 ? (sumV2[2] + count / 2) / count : (sumV2[2] - count / 2) /
+ 174:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV2[3] = sumV2[3] > 0 ? (sumV2[3] + count / 2) / count : (sumV2[3] - count / 2) /
+ 175:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 176:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV3[0] = sumV3[0] > 0 ? (sumV3[0] + count / 2) / count : (sumV3[0] - count / 2) /
+ 177:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV3[1] = sumV3[1] > 0 ? (sumV3[1] + count / 2) / count : (sumV3[1] - count / 2) /
+ 178:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV3[2] = sumV3[2] > 0 ? (sumV3[2] + count / 2) / count : (sumV3[2] - count / 2) /
+ 179:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV3[3] = sumV3[3] > 0 ? (sumV3[3] + count / 2) / count : (sumV3[3] - count / 2) /
+ 180:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 181:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV4[0] = sumV4[0] > 0 ? (sumV4[0] + count / 2) / count : (sumV4[0] - count / 2) /
+ 182:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV4[1] = sumV4[1] > 0 ? (sumV4[1] + count / 2) / count : (sumV4[1] - count / 2) /
+ 183:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV4[2] = sumV4[2] > 0 ? (sumV4[2] + count / 2) / count : (sumV4[2] - count / 2) /
+ 184:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV4[3] = sumV4[3] > 0 ? (sumV4[3] + count / 2) / count : (sumV4[3] - count / 2) /
+ 185:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 186:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV1 = vmaxq_s32(sumV1, vdupq_n_s32(act_min));
+ 187:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV1 = vminq_s32(sumV1, vdupq_n_s32(act_max));
+ 188:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 189:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV2 = vmaxq_s32(sumV2, vdupq_n_s32(act_min));
+ 190:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV2 = vminq_s32(sumV2, vdupq_n_s32(act_max));
+ 191:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 192:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV3 = vmaxq_s32(sumV3, vdupq_n_s32(act_min));
+ 193:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV3 = vminq_s32(sumV3, vdupq_n_s32(act_max));
+ 194:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 195:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV4 = vmaxq_s32(sumV4, vdupq_n_s32(act_min));
+ 196:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sumV4 = vminq_s32(sumV4, vdupq_n_s32(act_max));
+ 197:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 198:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 tempVLO = vmovnbq_s32(tempVLO, sumV1);
+ 199:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 tempVLO = vmovntq_s32(tempVLO, sumV2);
+ 200:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 201:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 tempVHI = vmovnbq_s32(tempVHI, sumV3);
+ 202:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 tempVHI = vmovntq_s32(tempVHI, sumV4);
+ 203:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 204:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 tempV = vmovnbq_s16(tempV, tempVLO);
+ 205:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 tempV = vmovntq_s16(tempV, tempVHI);
+ 206:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 207:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 vstrbq_s8(pDst, tempV);
+ 208:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 pDst += 16;
+ 209:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 210:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 chCnt--;
+ 211:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 pTmp += 16;
+ 212:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             }
+ 213:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 214:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             chCnt = ch_src & 0xF;
+ 215:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             while (chCnt > 0)
+ 216:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 217:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int32_t sum = 0;
+ 218:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int32_t count = 0;
+ 219:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 220:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 for (k_y = k_y_start; k_y < k_y_end; k_y++)
+ 221:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 222:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     for (k_x = k_x_start; k_x < k_x_end; k_x++)
+ 223:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 224:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         sum += pTmp[ch_src * (k_x + k_y * input_x)];
+ 225:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         count++;
+ 226:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     }
+ 227:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 }
+ 228:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = sum > 0 ? (sum + count / 2) / count : (sum - count / 2) / count;
+ 229:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 230:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MIN(sum, act_max);
+ 231:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 232:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 *pDst++ = sum;
+ 233:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 234:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 chCnt--;
+ 235:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 pTmp++;
+ 236:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             }
+ 237:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         }
+ 238:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     }
+ 239:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     return ARM_MATH_SUCCESS;
+ 240:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** }
+ 241:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 242:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #else
+ 243:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** arm_status arm_avgpool_s8(const cmsis_nn_context *ctx,
+ 244:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_pool_params *pool_params,
+ 245:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_dims *input_dims,
+ 246:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const q7_t *src,
+ 247:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_dims *filter_dims,
+ 248:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           const cmsis_nn_dims *output_dims,
+ 249:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                           q7_t *dst)
+ 250:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** {
+  10                             		.loc 1 250 1
+  11                             	.LVL0:
+  12 0000 6E 6D                   		pushm	r6-r13
+  13                             	.LCFI0:
+  14 0002 71 00 A4                		add	#-92, r0
+  15                             	.LCFI1:
+ 251:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_y = input_dims->h;
+  16                             		.loc 1 251 5
+ 250:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_y = input_dims->h;
+  17                             		.loc 1 250 1 is_stmt 0
+  18 0005 75 47 80                		mov.L	#0x80, r7
+  19 0008 4B 07                   		add	r0, r7
+  20 000a A8 7D                   		mov.L	4[r7], r5
+  21 000c EC 7A                   		mov.L	[r7], r10
+  22 000e A1 0C                   		mov.L	r4, 20[r0]
+ 252:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_x = input_dims->w;
+ 253:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t output_y = output_dims->h;
+  23                             		.loc 1 253 19
+  24 0010 E5 50 01 0A             		mov.L	4[r5], 40[r0]
+ 250:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_y = input_dims->h;
+  25                             		.loc 1 250 1
+  26 0014 E5 70 02 10             		mov.L	8[r7], 64[r0]
+ 251:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_x = input_dims->w;
+  27                             		.loc 1 251 19
+  28 0018 ED 3D 01                		mov.L	4[r3], r13
+  29                             	.LVL1:
+ 252:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_x = input_dims->w;
+  30                             		.loc 1 252 5 is_stmt 1
+ 252:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t input_x = input_dims->w;
+  31                             		.loc 1 252 19 is_stmt 0
+  32 001b ED 38 02                		mov.L	8[r3], r8
+  33                             	.LVL2:
+  34                             		.loc 1 253 5 is_stmt 1
+ 254:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t output_x = output_dims->w;
+  35                             		.loc 1 254 5
+  36                             		.loc 1 254 19 is_stmt 0
+  37 001e E5 50 02 07             		mov.L	8[r5], 28[r0]
+  38                             	.LVL3:
+ 255:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t stride_y = pool_params->stride.h;
+  39                             		.loc 1 255 5 is_stmt 1
+  40                             		.loc 1 255 19 is_stmt 0
+  41 0022 E5 20 01 0B             		mov.L	4[r2], 44[r0]
+  42                             	.LVL4:
+ 256:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t stride_x = pool_params->stride.w;
+  43                             		.loc 1 256 5 is_stmt 1
+  44                             		.loc 1 256 19 is_stmt 0
+  45 0026 E4 20 0C                		mov.L	[r2], 48[r0]
+  46                             	.LVL5:
+ 257:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t kernel_y = filter_dims->h;
+  47                             		.loc 1 257 5 is_stmt 1
+  48                             		.loc 1 257 19 is_stmt 0
+  49 0029 ED A7 01                		mov.L	4[r10], r7
+  50                             	.LVL6:
+ 258:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t kernel_x = filter_dims->w;
+  51                             		.loc 1 258 5 is_stmt 1
+  52                             		.loc 1 258 19 is_stmt 0
+  53 002c ED A5 02                		mov.L	8[r10], r5
+  54                             	.LVL7:
+ 259:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t pad_y = pool_params->padding.h;
+  55                             		.loc 1 259 5 is_stmt 1
+  56                             		.loc 1 259 19 is_stmt 0
+  57 002f E5 20 03 0D             		mov.L	12[r2], 52[r0]
+  58                             	.LVL8:
+ 260:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t pad_x = pool_params->padding.w;
+  59                             		.loc 1 260 5 is_stmt 1
+  60                             		.loc 1 260 19 is_stmt 0
+  61 0033 E5 20 02 0E             		mov.L	8[r2], 56[r0]
+  62                             	.LVL9:
+ 261:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t act_min = pool_params->activation.min;
+  63                             		.loc 1 261 5 is_stmt 1
+  64                             		.loc 1 261 19 is_stmt 0
+  65 0037 E5 20 04 02             		mov.L	16[r2], 8[r0]
+  66                             	.LVL10:
+ 262:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t act_max = pool_params->activation.max;
+  67                             		.loc 1 262 5 is_stmt 1
+  68                             		.loc 1 262 19 is_stmt 0
+  69 003b E5 20 05 03             		mov.L	20[r2], 12[r0]
+  70                             	.LVL11:
+ 263:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     const int32_t ch_src = input_dims->c;
+  71                             		.loc 1 263 5 is_stmt 1
+  72                             		.loc 1 263 19 is_stmt 0
+  73 003f ED 3C 03                		mov.L	12[r3], r12
+  74                             	.LVL12:
+ 264:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     q31_t *buffer = (q31_t *)ctx->buf;
+  75                             		.loc 1 264 5 is_stmt 1
+ 265:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 266:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #if defined(ARM_MATH_DSP)
+ 267:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 268:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     /* Run the following code for CPU's with DSP extension
+ 269:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****      */
+ 270:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     for (int i_y = 0, idx_y = -pad_y; i_y < output_y; idx_y += stride_y, i_y++)
+ 271:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+ 272:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         for (int i_x = 0, idx_x = -pad_x; i_x < output_x; idx_x += stride_x, i_x++)
+ 273:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 274:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             /* Condition for kernel start dimension:
+ 275:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                       (base_idx_<x,y> + kernel_<x,y>_start) >= 0 */
+ 276:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             const int32_t kernel_y_start = MAX(0, -idx_y);
+ 277:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             const int32_t kernel_x_start = MAX(0, -idx_x);
+ 278:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 279:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             /* Condition for kernel end dimension:
+ 280:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                    (base_idx_<x,y> + kernel_<x,y>_end) < dim_src_<width,height> */
+ 281:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             const int32_t kernel_y_end = MIN(kernel_y, input_y - idx_y);
+ 282:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             const int32_t kernel_x_end = MIN(kernel_x, input_x - idx_x);
+ 283:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 284:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             int count = 0;
+ 285:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 286:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             for (int k_y = kernel_y_start; k_y < kernel_y_end; k_y++)
+ 287:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 288:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 for (int k_x = kernel_x_start; k_x < kernel_x_end; k_x++)
+ 289:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 290:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     const q7_t *start = src + ch_src * (k_x + idx_x + (k_y + idx_y) * input_x);
+ 291:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 292:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     if (count == 0)
+ 293:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 294:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         for (int i = 0; i < ch_src; i++)
+ 295:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 296:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             buffer[i] = start[i];
+ 297:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         }
+ 298:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     }
+ 299:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     else
+ 300:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 301:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         for (int i = 0; i < ch_src; i++)
+ 302:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 303:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             buffer[i] = __QADD(start[i], buffer[i]);
+ 304:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         }
+ 305:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     }
+ 306:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     count++;
+ 307:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 }
+ 308:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             }
+ 309:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 310:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             // Prevent static code issue DIVIDE_BY_ZERO.
+ 311:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             if (count == 0)
+ 312:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 313:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 return ARM_MATH_ARGUMENT_ERROR;
+ 314:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             }
+ 315:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 316:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             scale_q31_to_q7_and_clamp(buffer, dst, ch_src, count, act_min, act_max);
+ 317:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             dst += ch_src;
+ 318:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         }
+ 319:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     }
+ 320:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #else
+ 321:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 322:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     /* Reference C code adapted from CMSIS-NN arm_avepool_q7_HWC.
+ 323:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****      */
+ 324:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     (void)buffer;
+  76                             		.loc 1 324 5
+ 325:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     int16_t i_ch_in, i_x, i_y;
+  77                             		.loc 1 325 5
+ 326:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     int16_t k_x, k_y;
+  78                             		.loc 1 326 5
+ 327:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 328:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     for (i_y = 0; i_y < output_y; i_y++)
+  79                             		.loc 1 328 5
+  80 0042 AA 81                   		mov.L	40[r0], r1
+  81                             	.LVL13:
+  82 0044 61 01                   		cmp	#0, r1
+  83 0046 2A 05 38 52 01          		ble	.L3
+  84                             		.loc 1 328 14 is_stmt 0
+  85 004b 3D 82 00                		mov.W	#0, 36[r0]
+  86                             		.loc 1 328 23
+  87 004e 66 0A                   		mov.L	#0, r10
+  88                             	.LBB2:
+ 329:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         for (i_x = 0; i_x < output_x; i_x++)
+ 331:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 332:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             for (i_ch_in = 0; i_ch_in < ch_src; i_ch_in++)
+ 333:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 334:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int sum = 0;
+ 335:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int count = 0;
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 for (k_y = i_y * stride_y - pad_y; k_y < i_y * stride_y - pad_y + kernel_y; k_y++)
+  89                             		.loc 1 336 81
+  90 0050 AB 09                   		mov.L	52[r0], r1
+  91 0052 43 17                   		sub	r1, r7
+  92                             	.LVL14:
+  93 0054 A4 0F                   		mov.L	r7, 68[r0]
+ 337:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     for (k_x = i_x * stride_x - pad_x; k_x < i_x * stride_x - pad_x + kernel_x; k_x
+  94                             		.loc 1 338 85
+  95 0056 AB 84                   		mov.L	56[r0], r4
+  96                             	.LVL15:
+  97 0058 43 45                   		sub	r4, r5
+  98                             	.LVL16:
+  99 005a A4 85                   		mov.L	r5, 72[r0]
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 100                             		.loc 1 336 17
+ 101 005c EF DF                   		mov.L	r13, r15
+ 102 005e EF CD                   		mov.L	r12, r13
+ 103                             	.LVL17:
+ 104                             		.balign 8,3,1
+ 105                             	.L2:
+ 106                             	.LBE2:
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 107                             		.loc 1 330 9
+ 108 0060 A9 8D                   		mov.L	28[r0], r5
+ 109 0062 61 05                   		cmp	#0, r5
+ 110 0064 2A 05 38 23 01          		ble	.L17
+ 111                             	.LBB3:
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 112                             		.loc 1 336 43
+ 113 0069 AA 8F                   		mov.L	44[r0], r7
+ 114 006b 9C 81                   		mov.W	36[r0], r1
+ 115 006d 4F 17                   		mul	r1, r7
+ 116 006f AB 0C                   		mov.L	52[r0], r4
+ 117 0071 43 47                   		sub	r4, r7
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 118                             		.loc 1 336 62
+ 119 0073 AA 8E                   		mov.L	44[r0], r6
+ 120 0075 4F A6                   		mul	r10, r6
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 121                             		.loc 1 336 26
+ 122 0077 92 07                   		mov.W	r7, 16[r0]
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 123                             		.loc 1 336 56
+ 124 0079 DF 77                   		mov.W	r7, r7
+ 125 007b A0 0F                   		mov.L	r7, 4[r0]
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 126                             		.loc 1 336 81
+ 127 007d 06 89 06 11             		add	68[r0], r6
+ 339:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         if (k_y >= 0 && k_x >= 0 && k_y < input_y && k_x < input_x)
+ 341:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             sum += src[i_ch_in + ch_src * (k_x + k_y * input_x)];
+ 343:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 344:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         }
+ 345:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     }
+ 346:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 }
+ 347:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 348:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 // Prevent static code issue DIVIDE_BY_ZERO.
+ 349:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 if (count == 0)
+ 350:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 351:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     return ARM_MATH_ARGUMENT_ERROR;
+ 352:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 }
+ 353:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = sum > 0 ? (sum + count / 2) / count : (sum - count / 2) / count;
+ 355:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 356:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MIN(sum, act_max);
+ 357:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 358:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 dst[i_ch_in + ch_src * (i_x + i_y * output_x)] = sum;
+ 128                             		.loc 1 358 51
+ 129 0081 A9 8F                   		mov.L	28[r0], r7
+ 130 0083 4F A7                   		mul	r10, r7
+ 131 0085 A3 8F                   		mov.L	r7, 60[r0]
+ 132                             	.LBE3:
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 133                             		.loc 1 330 18
+ 134 0087 3D 80 00                		mov.W	#0, 32[r0]
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 135                             		.loc 1 330 27
+ 136 008a 66 05                   		mov.L	#0, r5
+ 137 008c EF 57                   		mov.L	r5, r7
+ 138                             	.LVL18:
+ 139                             		.balign 8,3,1
+ 140                             	.L20:
+ 332:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 141                             		.loc 1 332 13
+ 142 008e 61 0D                   		cmp	#0, r13
+ 143 0090 2A 05 38 E4 00          		ble	.L19
+ 144                             	.LBB4:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 145                             		.loc 1 338 47
+ 146 0095 AB 02                   		mov.L	48[r0], r2
+ 147 0097 9C 04                   		mov.W	32[r0], r4
+ 148 0099 4F 42                   		mul	r4, r2
+ 149 009b AB 85                   		mov.L	56[r0], r5
+ 150 009d 43 52                   		sub	r5, r2
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 151                             		.loc 1 338 66
+ 152 009f ED 0A 0C                		mov.L	48[r0], r10
+ 153 00a2 4F 7A                   		mul	r7, r10
+ 154                             		.loc 1 358 45
+ 155 00a4 06 89 07 0F             		add	60[r0], r7
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 156                             		.loc 1 338 30
+ 157 00a8 DF 2B                   		mov.W	r2, r11
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 158                             		.loc 1 338 60
+ 159 00aa DF 22                   		mov.W	r2, r2
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 160                             		.loc 1 338 85
+ 161 00ac 06 89 0A 12             		add	72[r0], r10
+ 162                             		.loc 1 358 38
+ 163 00b0 4F D7                   		mul	r13, r7
+ 334:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int count = 0;
+ 164                             		.loc 1 334 17 is_stmt 1
+ 165                             	.LVL19:
+ 335:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 for (k_y = i_y * stride_y - pad_y; k_y < i_y * stride_y - pad_y + kernel_y; k_y++)
+ 166                             		.loc 1 335 17
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 167                             		.loc 1 336 17
+ 168 00b2 A8 09                   		mov.L	4[r0], r1
+ 169 00b4 47 16                   		cmp	r1, r6
+ 170 00b6 2A 05 38 E7 00          		ble	.L24
+ 171 00bb F8 05 01                		mov.W	#1, [r0]
+ 172                             	.LBE4:
+ 332:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 173                             		.loc 1 332 39 is_stmt 0
+ 174 00be 66 09                   		mov.L	#0, r9
+ 175                             	.LBB5:
+ 176                             		.loc 1 358 64
+ 177 00c0 06 89 07 10             		add	64[r0], r7
+ 178 00c4 A1 87                   		mov.L	r7, 24[r0]
+ 179                             	.LVL20:
+ 180 00c6 EF 00                   		.balign 8,3,5
+ 181                             	.L4:
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 182                             		.loc 1 336 26
+ 183 00c8 9A 04                   		mov.W	16[r0], r4
+ 184 00ca A8 0F                   		mov.L	4[r0], r7
+ 335:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 for (k_y = i_y * stride_y - pad_y; k_y < i_y * stride_y - pad_y + kernel_y; k_y++)
+ 185                             		.loc 1 335 21
+ 186 00cc 66 0C                   		mov.L	#0, r12
+ 334:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int count = 0;
+ 187                             		.loc 1 334 21
+ 188 00ce 66 03                   		mov.L	#0, r3
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 189                             		.loc 1 342 39
+ 190 00d0 ED 0E 05                		mov.L	20[r0], r14
+ 191 00d3 4B 9E                   		add	r9, r14
+ 192                             	.LVL21:
+ 193                             		.balign 8,3,1
+ 194                             	.L13:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 195                             		.loc 1 338 21 is_stmt 1
+ 196 00d5 47 2A                   		cmp	r2, r10
+ 197 00d7 2B 31                   		ble	.L6
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 198                             		.loc 1 342 70 is_stmt 0
+ 199 00d9 FF 31 78                		mul	r7, r8, r1
+ 200 00dc 7C F4                   		btst	#15, r4
+ 201 00de 21 72                   		bne	.L33
+ 202 00e0 47 7F                   		cmp	r7, r15
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 203                             		.loc 1 338 30
+ 204 00e2 DF B7                   		mov.W	r11, r7
+ 205 00e4 2B 5A                   		ble	.L11
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 206                             		.loc 1 342 70
+ 207 00e6 EF 25                   		mov.L	r2, r5
+ 208 00e8 A4 89                   		mov.L	r1, 76[r0]
+ 209                             	.LVL22:
+ 210                             		.balign 8,3,2
+ 211                             	.L10:
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 212                             		.loc 1 340 25 is_stmt 1
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 213                             		.loc 1 340 38 is_stmt 0
+ 214 00ea 7C F7                   		btst	#15, r7
+ 215 00ec 21 14                   		bne	.L12
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 216                             		.loc 1 342 29 is_stmt 1 discriminator 3
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 217                             		.loc 1 340 67 is_stmt 0 discriminator 3
+ 218 00ee 47 58                   		cmp	r5, r8
+ 219 00f0 2B 10                   		ble	.L12
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 220                             		.loc 1 342 64
+ 221 00f2 06 89 05 13             		add	76[r0], r5
+ 343:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         }
+ 222                             		.loc 1 343 34
+ 223 00f6 62 1C                   		add	#1, r12
+ 224                             	.LVL23:
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 225                             		.loc 1 342 57
+ 226 00f8 4F D5                   		mul	r13, r5
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 227                             		.loc 1 342 39
+ 228 00fa FE 45 E5                		mov.B	[r5,r14], r5
+ 342:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                             count++;
+ 229                             		.loc 1 342 33
+ 230 00fd 4B 53                   		add	r5, r3
+ 231                             	.LVL24:
+ 343:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         }
+ 232                             		.loc 1 343 29 is_stmt 1
+ 233 00ff 03                      		.balign 8,3,1
+ 234                             	.L12:
+ 235 0100 62 17                   		add	#1, r7
+ 236                             	.LVL25:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 237                             		.loc 1 338 60 is_stmt 0 discriminator 2
+ 238 0102 DF 75                   		mov.W	r7, r5
+ 239                             	.LVL26:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 240                             		.loc 1 338 21 discriminator 2
+ 241 0104 47 A5                   		cmp	r10, r5
+ 242 0106 29 E4                   		blt	.L10
+ 243                             	.LVL27:
+ 244                             		.balign 8,3,1
+ 245                             	.L6:
+ 246 0108 62 14                   		add	#1, r4
+ 247                             	.LVL28:
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 248                             		.loc 1 336 56 discriminator 2
+ 249 010a DF 47                   		mov.W	r4, r7
+ 250                             	.LVL29:
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 251                             		.loc 1 336 17 discriminator 2
+ 252 010c 47 67                   		cmp	r6, r7
+ 253 010e 29 C7                   		blt	.L13
+ 254                             	.LVL30:
+ 255                             		.balign 8,3,1
+ 256                             	.L34:
+ 349:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 257                             		.loc 1 349 17 is_stmt 1
+ 349:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 258                             		.loc 1 349 20 is_stmt 0
+ 259 0110 61 0C                   		cmp	#0, r12
+ 260 0112 3A 8D 00                		beq	.L24
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 261                             		.loc 1 354 17 is_stmt 1
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 262                             		.loc 1 354 59 is_stmt 0
+ 263 0115 61 03                   		cmp	#0, r3
+ 264 0117 2B 50                   		ble	.L14
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 265                             		.loc 1 354 46 discriminator 1
+ 266 0119 FD A1 C7                		shar	#1, r12, r7
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 267                             		.loc 1 354 38 discriminator 1
+ 268 011c 4B 37                   		add	r3, r7
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 269                             		.loc 1 354 59 discriminator 1
+ 270 011e FC 27 C7                		divu	r12, r7
+ 271                             		.balign 8,3,1
+ 272                             	.L15:
+ 273                             	.LVL31:
+ 355:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MIN(sum, act_max);
+ 274                             		.loc 1 355 17 is_stmt 1 discriminator 4
+ 355:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MIN(sum, act_max);
+ 275                             		.loc 1 355 21 is_stmt 0 discriminator 4
+ 276 0121 A8 84                   		mov.L	8[r0], r4
+ 277 0123 FC 13 47                		max	r4, r7
+ 278                             	.LVL32:
+ 356:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 279                             		.loc 1 356 17 is_stmt 1 discriminator 4
+ 280                             		.loc 1 358 17 discriminator 4
+ 356:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 281                             		.loc 1 356 21 is_stmt 0 discriminator 4
+ 282 0126 A8 8D                   		mov.L	12[r0], r5
+ 283 0128 FC 17 57                		min	r5, r7
+ 284                             	.LVL33:
+ 285                             		.loc 1 358 64 discriminator 4
+ 286 012b A9 81                   		mov.L	24[r0], r1
+ 287 012d FE 09 17                		mov.B	r7, [r9,r1]
+ 288                             	.LVL34:
+ 289                             	.LBE5:
+ 332:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 290                             		.loc 1 332 39 discriminator 4
+ 291 0130 DC 09                   		mov.W	[r0], r9
+ 332:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             {
+ 292                             		.loc 1 332 13 discriminator 4
+ 293 0132 47 D9                   		cmp	r13, r9
+ 294 0134 28 42                   		bge	.L19
+ 295                             	.LBB6:
+ 334:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 int count = 0;
+ 296                             		.loc 1 334 17 is_stmt 1
+ 297                             	.LVL35:
+ 335:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 for (k_y = i_y * stride_y - pad_y; k_y < i_y * stride_y - pad_y + kernel_y; k_y++)
+ 298                             		.loc 1 335 17
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 299                             		.loc 1 336 17
+ 300 0136 DC 04                   		mov.W	[r0], r4
+ 301 0138 62 14                   		add	#1, r4
+ 302 013a D3 04                   		mov.W	r4, [r0]
+ 303                             	.LVL36:
+ 304 013c 2E 8C                   		bra	.L4
+ 305                             	.LVL37:
+ 306                             	.L11:
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 307                             		.loc 1 340 25
+ 308 013e 62 17                   		add	#1, r7
+ 309                             	.LVL38:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 310                             		.loc 1 338 60 is_stmt 0
+ 311 0140 DF 75                   		mov.W	r7, r5
+ 312                             	.LVL39:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 313                             		.loc 1 338 21
+ 314 0142 47 5A                   		cmp	r5, r10
+ 315 0144 2B C4                   		ble	.L6
+ 316                             	.LVL40:
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 317                             		.loc 1 340 25 is_stmt 1
+ 318 0146 62 17                   		add	#1, r7
+ 319                             	.LVL41:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 320                             		.loc 1 338 60 is_stmt 0
+ 321 0148 DF 75                   		mov.W	r7, r5
+ 322                             	.LVL42:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 323                             		.loc 1 338 21
+ 324 014a 47 5A                   		cmp	r5, r10
+ 325 014c 2A F2                   		bgt	.L11
+ 326 014e 2E BA                   		bra	.L6
+ 327                             	.LVL43:
+ 328                             	.L33:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 329                             		.loc 1 338 30
+ 330 0150 DF B7                   		mov.W	r11, r7
+ 331                             	.LVL44:
+ 332                             		.balign 8,3,1
+ 333                             	.L8:
+ 340:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                         {
+ 334                             		.loc 1 340 25 is_stmt 1
+ 335 0152 62 17                   		add	#1, r7
+ 336                             	.LVL45:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 337                             		.loc 1 338 60 is_stmt 0
+ 338 0154 DF 75                   		mov.W	r7, r5
+ 339                             	.LVL46:
+ 338:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                     {
+ 340                             		.loc 1 338 21
+ 341 0156 47 5A                   		cmp	r5, r10
+ 342 0158 2A FA                   		bgt	.L8
+ 343 015a 62 14                   		add	#1, r4
+ 344                             	.LVL47:
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 345                             		.loc 1 336 56
+ 346 015c DF 47                   		mov.W	r4, r7
+ 347                             	.LVL48:
+ 336:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 {
+ 348                             		.loc 1 336 17
+ 349 015e 47 67                   		cmp	r6, r7
+ 350 0160 28 05 38 73 FF          		blt	.L13
+ 351 0165 2E AB                   		bra	.L34
+ 352                             	.LVL49:
+ 353                             	.L14:
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 354                             		.loc 1 354 74 discriminator 2
+ 355 0167 FD 9F C7                		shlr	#31, r12, r7
+ 356 016a 4B C7                   		add	r12, r7
+ 357 016c 6A 17                   		shar	#1, r7
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 358                             		.loc 1 354 66 discriminator 2
+ 359 016e FF 07 73                		sub	r7, r3, r7
+ 354:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 sum = MAX(sum, act_min);
+ 360                             		.loc 1 354 59 discriminator 2
+ 361 0171 FC 23 C7                		div	r12, r7
+ 362 0174 2E AD                   		bra	.L15
+ 363                             	.LVL50:
+ 364                             	.L19:
+ 365                             	.LBE6:
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 366                             		.loc 1 330 42
+ 367 0176 DD 0A 10                		mov.W	32[r0], r10
+ 368 0179 62 1A                   		add	#1, r10
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 369                             		.loc 1 330 27
+ 370 017b DF A7                   		mov.W	r10, r7
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 371                             		.loc 1 330 42
+ 372 017d D7 0A 10                		mov.W	r10, 32[r0]
+ 373                             	.LVL51:
+ 330:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         {
+ 374                             		.loc 1 330 9
+ 375 0180 A9 8D                   		mov.L	28[r0], r5
+ 376 0182 47 57                   		cmp	r5, r7
+ 377 0184 28 05 38 08 FF          		blt	.L20
+ 378                             	.LVL52:
+ 379                             		.balign 8,3,5
+ 380                             	.L17:
+ 328:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+ 381                             		.loc 1 328 38
+ 382 0189 9C 87                   		mov.W	36[r0], r7
+ 383 018b 62 17                   		add	#1, r7
+ 328:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+ 384                             		.loc 1 328 23
+ 385 018d DF 7A                   		mov.W	r7, r10
+ 328:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+ 386                             		.loc 1 328 38
+ 387 018f 94 87                   		mov.W	r7, 36[r0]
+ 388                             	.LVL53:
+ 328:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     {
+ 389                             		.loc 1 328 5
+ 390 0191 AA 84                   		mov.L	40[r0], r4
+ 391 0193 47 4A                   		cmp	r4, r10
+ 392 0195 28 05 38 C9 FE          		blt	.L2
+ 393                             	.LVL54:
+ 394                             		.balign 8,3,1
+ 395                             	.L3:
+ 359:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****             }
+ 360:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****         }
+ 361:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     }
+ 362:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 363:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #endif
+ 364:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     return ARM_MATH_SUCCESS;
+ 396                             		.loc 1 364 12
+ 397 019a 66 01                   		mov.L	#0, r1
+ 365:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** }
+ 398                             		.loc 1 365 1
+ 399 019c 3F 6D 1F                		rtsd	#124, r6-r13
+ 400                             	.LVL55:
+ 401                             	.L24:
+ 402                             	.LBB7:
+ 351:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****                 }
+ 403                             		.loc 1 351 28
+ 404 019f FB 16 FF                		mov.L	#-1, r1
+ 405                             	.LBE7:
+ 406                             		.loc 1 365 1
+ 407 01a2 3F 6D 1F                		rtsd	#124, r6-r13
+ 408                             	.LFE82:
+ 410 01a5 FC 13 00                		.section	.text.arm_avgpool_s8_get_buffer_size,"ax",@progbits
+ 411                             		.global	_arm_avgpool_s8_get_buffer_size
+ 413                             	_arm_avgpool_s8_get_buffer_size:
+ 414                             	.LFB83:
+ 366:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 367:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #endif /* ARM_MATH_MVEI */
+ 368:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 369:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** int32_t arm_avgpool_s8_get_buffer_size(const int output_x, const int ch_src)
+ 370:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** {
+ 415                             		.loc 1 370 1 is_stmt 1
+ 416                             	.LVL56:
+ 371:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     (void)output_x;
+ 417                             		.loc 1 371 5
+ 372:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** 
+ 373:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #if defined(ARM_MATH_DSP) && !defined(ARM_MATH_MVEI)
+ 374:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     return (ch_src * sizeof(int32_t));
+ 375:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #else
+ 376:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     (void)ch_src;
+ 418                             		.loc 1 376 5
+ 377:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c ****     return 0;
+ 419                             		.loc 1 377 5
+ 378:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** #endif
+ 379:../src/CMSIS/NN/Source/PoolingFunctions/arm_avgpool_s8.c **** }
+ 420                             		.loc 1 379 1 is_stmt 0
+ 421 0000 66 01                   		mov.L	#0, r1
+ 422                             	.LVL57:
+ 423 0002 02                      		rts
+ 424                             	.LFE83:
+ 484                             	.Letext0:
+ 485                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 486                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 487                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 488                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 489                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 490                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 491                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 492                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 493                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+ 494                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

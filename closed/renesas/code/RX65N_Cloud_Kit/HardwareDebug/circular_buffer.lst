@@ -1,0 +1,960 @@
+   1                             		.file	"circular_buffer.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite3ops5micro15circular_buffer4FreeEP13TfLiteContextPv,"ax",@progbits
+   5                             		.global	__ZN6tflite3ops5micro15circular_buffer4FreeEP13TfLiteContextPv
+   7                             	__ZN6tflite3ops5micro15circular_buffer4FreeEP13TfLiteContextPv:
+   8                             	.LFB1195:
+   9                             		.file 1 "../src/tensorflow/lite/micro/kernels/circular_buffer.cc"
+   1:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+   3:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+   7:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+   9:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  16:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/c/builtin_op_data.h"
+  17:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/c/common.h"
+  18:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/kernels/internal/compatibility.h"
+  19:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/kernels/internal/quantization_util.h"
+  20:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/kernels/internal/tensor_ctypes.h"
+  21:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/kernels/kernel_util.h"
+  22:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/kernels/op_macros.h"
+  23:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** #include "tensorflow/lite/micro/kernels/kernel_util.h"
+  24:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  25:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** /*
+  26:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * The circular buffer custom operator is used to implement strided streaming
+  27:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * convolutions on TFLite Micro.  Each time this operator is invoked, it checks
+  28:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * whether or not to run, based on a predetermined stride in time.  If the op
+  29:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * runs, it inserts the input into the end of the output buffer and shifts the
+  30:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * output values towards the start of the buffer.  It discards the oldest value
+  31:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * in the output buffer.
+  32:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  *
+  33:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * Input: [<input N+1]
+  34:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * Before shifting:
+  35:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * Output: [<input 1>, <input 2>, <input ...>, <input N>]
+  36:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  *
+  37:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * After shifting:
+  38:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * Output: [<input 2>, <input 3>, <input ...>, <input N+1>]
+  39:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  *
+  40:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * We make some assumptions in this custom operator:
+  41:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * - Input shape must be [1, 1, 1, depth]
+  42:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * - Output shape must be [1, num_slots, 1, depth]
+  43:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * - Input and output types must match.
+  44:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  * - Input and output quantization params must be identical.
+  45:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****  */
+  46:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** namespace tflite {
+  47:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** namespace ops {
+  48:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** namespace micro {
+  49:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** namespace circular_buffer {
+  50:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  51:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** namespace {
+  52:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  53:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // The CircularBuffer op has one input and one output tensor.
+  54:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** constexpr int kInputTensor = 0;
+  55:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** constexpr int kOutputTensor = 0;
+  56:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  57:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // TODO(b/149795762): Add this to TfLiteStatus enum.
+  58:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** constexpr int kTfLiteAbort = -9;
+  59:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  60:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // These fields control the stride period of a strided streaming model. This op
+  61:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // returns kTfLiteAbort until cycles_until_run-- is zero.  At this time,
+  62:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // cycles_until_run is reset to cycles_max.
+  63:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** struct OpData {
+  64:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   int cycles_until_run;
+  65:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   int cycles_max;
+  66:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** };
+  67:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  68:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // These constants represent constants specific to the music detect model.
+  69:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // They exist until (b/132070898) is fixed.
+  70:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** constexpr int kMaxOpDataSize = 7;
+  71:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** int op_data_counter = 0;
+  72:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** OpData op_data_array[kMaxOpDataSize];
+  73:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  74:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }  // namespace
+  75:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  76:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** void Free(TfLiteContext* context, void* buffer) { op_data_counter = 0; }
+  10                             		.loc 1 76 49
+  11                             	.LVL0:
+  12                             		.loc 1 76 51
+  13                             		.loc 1 76 67 is_stmt 0
+  14 0000 FB 52 00 00 00 00       		mov.L	#.LANCHOR0, r5
+  15 0006 F8 56 00                		mov.L	#0, [r5]
+  16                             		.loc 1 76 72
+  17 0009 02                      		rts
+  18                             	.LFE1195:
+  20                             		.section	.text._ZN6tflite3ops5micro15circular_buffer7PrepareEP13TfLiteContextP10TfLiteNode,"ax",@p
+  21                             		.global	__ZN6tflite3ops5micro15circular_buffer7PrepareEP13TfLiteContextP10TfLiteNode
+  23                             	__ZN6tflite3ops5micro15circular_buffer7PrepareEP13TfLiteContextP10TfLiteNode:
+  24                             	.LFB1196:
+  77:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  78:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** TfLiteStatus Prepare(TfLiteContext* context, TfLiteNode* node) {
+  25                             		.loc 1 78 64 is_stmt 1
+  26                             	.LVL1:
+  27 0000 6E 6C                   		pushm	r6-r12
+  28                             	.LCFI0:
+  29 0002 71 00 E4                		add	#-28, r0
+  30                             	.LCFI1:
+  79:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   const TfLiteTensor* input = GetInput(context, node, kInputTensor);
+  31                             		.loc 1 79 3
+  32                             		.loc 1 79 39 is_stmt 0
+  33 0005 66 03                   		mov.L	#0, r3
+  78:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   const TfLiteTensor* input = GetInput(context, node, kInputTensor);
+  34                             		.loc 1 78 64
+  35 0007 EF 1A                   		mov.L	r1, r10
+  36 0009 EF 2C                   		mov.L	r2, r12
+  37                             		.loc 1 79 39
+  38 000b 05 00 00 00             		bsr	__ZN6tflite8GetInputEPK13TfLiteContextPK10TfLiteNodei
+  39                             	.LVL2:
+  80:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE(context, input != nullptr);
+  40                             		.loc 1 80 3 is_stmt 1
+  41                             		.loc 1 80 3
+  42 000f 61 01                   		cmp	#0, r1
+  43 0011 20 76                   		beq	.L22
+  44 0013 EF 16                   		mov.L	r1, r6
+  81:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TfLiteTensor* output = GetOutput(context, node, kOutputTensor);
+  45                             		.loc 1 81 3
+  46                             		.loc 1 81 35 is_stmt 0
+  47 0015 66 03                   		mov.L	#0, r3
+  48 0017 EF C2                   		mov.L	r12, r2
+  49 0019 EF A1                   		mov.L	r10, r1
+  50                             	.LVL3:
+  51 001b 05 00 00 00             		bsr	__ZN6tflite9GetOutputEP13TfLiteContextPK10TfLiteNodei
+  52                             	.LVL4:
+  82:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE(context, output != nullptr);
+  53                             		.loc 1 82 3
+  54 001f 71 1B 00                		add	#0, r1, r11
+  55 0022 3A A3 00                		beq	.L23
+  83:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  84:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE(context, input != nullptr);
+  56                             		.loc 1 84 3 is_stmt 1
+  57                             		.loc 1 84 3
+  85:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE(context, output != nullptr);
+  58                             		.loc 1 85 3
+  59                             		.loc 1 85 3
+  86:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, output->dims->data[0]);
+  60                             		.loc 1 86 3
+  61                             		.loc 1 86 3
+  62 0025 ED B5 02                		mov.L	8[r11], r5
+  63 0028 A8 5F                   		mov.L	4[r5], r7
+  64 002a 61 17                   		cmp	#1, r7
+  65 002c 20 31                   		beq	.L7
+  66                             		.loc 1 86 3 discriminator 1
+  67                             		.loc 1 86 3 discriminator 1
+  68 002e ED A5 05                		mov.L	20[r10], r5
+  69 0031 A1 87                   		mov.L	r7, 24[r0]
+  70 0033 3E 05 01                		mov.L	#1, 20[r0]
+  71 0036 F9 02 04 72 00 00 00    		mov.L	#.LC4, 16[r0]
+  72 003d F9 02 03 88 00 00 00    		mov.L	#.LC5, 12[r0]
+  73 0044 3E 02 56                		mov.L	#0x56, 8[r0]
+  74                             	.L21:
+  75 0047 F9 02 01 11 00 00 00    		mov.L	#.LC1, 4[r0]
+  76 004e EF A1                   		mov.L	r10, r1
+  77 0050 F8 02 8A 00 00 00       		mov.L	#.LC6, [r0]
+  78 0056 7F 15                   		jsr	r5
+  79                             	.LVL5:
+  80                             		.loc 1 86 3 discriminator 1
+  81 0058 66 11                   		mov.L	#1, r1
+  87:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[0]);
+  88:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[1]);
+  89:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, output->dims->data[2]);
+  90:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[2]);
+  91:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, output->dims->data[3], input->dims->data[3]);
+  92:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  93:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_TYPES_EQ(context, input->type, output->type);
+  94:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  95:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // The circular buffer custom operator currently only supports int8_t.
+  96:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_TYPES_EQ(context, input->type, kTfLiteInt8);
+  97:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+  98:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // TODO(b/132070898): Use statically slotted OpData structures until a
+  99:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // scratch memory API is ready.
+ 100:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TFLITE_DCHECK_LE(op_data_counter, kMaxOpDataSize);
+ 101:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   OpData* op_data = &op_data_array[op_data_counter++];
+ 102:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // The last circular buffer layer (length 5) simply accumulates outputs, and
+ 103:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // does not run periodically.
+ 104:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // TODO(b/150001379): Move this special case logic to the tflite flatbuffer.
+ 105:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   if (output->dims->data[1] == 5) {
+ 106:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     op_data->cycles_max = 1;
+ 107:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   } else {
+ 108:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     op_data->cycles_max = 2;
+ 109:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   }
+ 110:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   op_data->cycles_until_run = op_data->cycles_max;
+ 111:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   node->user_data = op_data;
+ 112:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 113:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   return kTfLiteOk;
+ 114:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+  82                             		.loc 1 114 1 is_stmt 0 discriminator 1
+  83 005a 3F 6C 0E                		rtsd	#56, r6-r12
+  84                             	.LVL6:
+  85                             	.L7:
+  87:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[0]);
+  86                             		.loc 1 87 3 is_stmt 1
+  87:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[0]);
+  87                             		.loc 1 87 3
+  88 005d A8 E4                   		mov.L	8[r6], r4
+  89 005f ED 49 01                		mov.L	4[r4], r9
+  90 0062 61 19                   		cmp	#1, r9
+  91 0064 21 46                   		bne	.L24
+  88:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, output->dims->data[2]);
+  92                             		.loc 1 88 3
+  88:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, output->dims->data[2]);
+  93                             		.loc 1 88 3
+  94 0066 A8 C7                   		mov.L	8[r4], r7
+  95 0068 61 17                   		cmp	#1, r7
+  96 006a 20 6A                   		beq	.L9
+  88:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, output->dims->data[2]);
+  97                             		.loc 1 88 3 discriminator 1
+  88:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, output->dims->data[2]);
+  98                             		.loc 1 88 3 discriminator 1
+  99 006c ED A5 05                		mov.L	20[r10], r5
+ 100 006f A1 87                   		mov.L	r7, 24[r0]
+ 101 0071 E7 09 05                		mov.L	r9, 20[r0]
+ 102 0074 F9 02 04 B9 00 00 00    		mov.L	#.LC8, 16[r0]
+ 103 007b F9 02 03 88 00 00 00    		mov.L	#.LC5, 12[r0]
+ 104 0082 3E 02 58                		mov.L	#0x58, 8[r0]
+ 105 0085 2E C2                   		bra	.L21
+ 106                             	.LVL7:
+ 107                             	.L22:
+  80:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TfLiteTensor* output = GetOutput(context, node, kOutputTensor);
+ 108                             		.loc 1 80 3 discriminator 1
+  80:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TfLiteTensor* output = GetOutput(context, node, kOutputTensor);
+ 109                             		.loc 1 80 3 discriminator 1
+ 110 0087 ED A7 05                		mov.L	20[r10], r7
+ 111 008a F9 02 03 00 00 00 00    		mov.L	#.LC0, 12[r0]
+ 112 0091 3E 02 50                		mov.L	#0x50, 8[r0]
+ 113                             	.LVL8:
+ 114                             	.L20:
+  82:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 115                             		.loc 1 82 3 is_stmt 0 discriminator 1
+ 116 0094 F9 02 01 11 00 00 00    		mov.L	#.LC1, 4[r0]
+ 117 009b EF A1                   		mov.L	r10, r1
+ 118 009d F8 02 49 00 00 00       		mov.L	#.LC2, [r0]
+ 119 00a3 7F 17                   		jsr	r7
+ 120                             	.LVL9:
+  82:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 121                             		.loc 1 82 3 is_stmt 1 discriminator 1
+ 122 00a5 66 11                   		mov.L	#1, r1
+ 123                             		.loc 1 114 1 is_stmt 0 discriminator 1
+ 124 00a7 3F 6C 0E                		rtsd	#56, r6-r12
+ 125                             	.LVL10:
+ 126                             	.L24:
+  87:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[1]);
+ 127                             		.loc 1 87 3 is_stmt 1 discriminator 1
+  87:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[1]);
+ 128                             		.loc 1 87 3 discriminator 1
+ 129 00aa ED A5 05                		mov.L	20[r10], r5
+ 130 00ad E7 09 06                		mov.L	r9, 24[r0]
+ 131 00b0 A1 0F                   		mov.L	r7, 20[r0]
+ 132 00b2 F9 02 04 A4 00 00 00    		mov.L	#.LC7, 16[r0]
+ 133 00b9 F9 02 03 88 00 00 00    		mov.L	#.LC5, 12[r0]
+ 134 00c0 3E 02 57                		mov.L	#0x57, 8[r0]
+ 135 00c3 2E 84                   		bra	.L21
+ 136                             	.L23:
+  82:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 137                             		.loc 1 82 3 discriminator 1
+  82:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 138                             		.loc 1 82 3 discriminator 1
+ 139 00c5 ED A7 05                		mov.L	20[r10], r7
+ 140 00c8 F9 02 03 60 00 00 00    		mov.L	#.LC3, 12[r0]
+ 141 00cf 3E 02 52                		mov.L	#0x52, 8[r0]
+ 142 00d2 2E C2                   		bra	.L20
+ 143                             	.L9:
+  89:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[2]);
+ 144                             		.loc 1 89 3
+  89:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[2]);
+ 145                             		.loc 1 89 3
+ 146 00d4 ED 59 03                		mov.L	12[r5], r9
+ 147 00d7 61 19                   		cmp	#1, r9
+ 148 00d9 21 24                   		bne	.L25
+  90:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, output->dims->data[3], input->dims->data[3]);
+ 149                             		.loc 1 90 3
+  90:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, output->dims->data[3], input->dims->data[3]);
+ 150                             		.loc 1 90 3
+ 151 00db A8 CF                   		mov.L	12[r4], r7
+ 152 00dd 61 17                   		cmp	#1, r7
+ 153 00df 20 3A                   		beq	.L11
+  90:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, output->dims->data[3], input->dims->data[3]);
+ 154                             		.loc 1 90 3 discriminator 1
+  90:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, output->dims->data[3], input->dims->data[3]);
+ 155                             		.loc 1 90 3 discriminator 1
+ 156 00e1 ED A5 05                		mov.L	20[r10], r5
+ 157 00e4 A1 87                   		mov.L	r7, 24[r0]
+ 158 00e6 E7 09 05                		mov.L	r9, 20[r0]
+ 159 00e9 F9 02 04 E4 00 00 00    		mov.L	#.LC10, 16[r0]
+ 160 00f0 F9 02 03 88 00 00 00    		mov.L	#.LC5, 12[r0]
+ 161 00f7 3E 02 5A                		mov.L	#0x5a, 8[r0]
+ 162 00fa 38 4D FF                		bra	.L21
+ 163                             	.L25:
+  89:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[2]);
+ 164                             		.loc 1 89 3 discriminator 1
+  89:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TF_LITE_ENSURE_EQ(context, 1, input->dims->data[2]);
+ 165                             		.loc 1 89 3 discriminator 1
+ 166 00fd ED A5 05                		mov.L	20[r10], r5
+ 167 0100 E7 09 06                		mov.L	r9, 24[r0]
+ 168 0103 A1 0F                   		mov.L	r7, 20[r0]
+ 169 0105 F9 02 04 CE 00 00 00    		mov.L	#.LC9, 16[r0]
+ 170 010c F9 02 03 88 00 00 00    		mov.L	#.LC5, 12[r0]
+ 171 0113 3E 02 59                		mov.L	#0x59, 8[r0]
+ 172 0116 38 31 FF                		bra	.L21
+ 173                             	.L11:
+  91:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 174                             		.loc 1 91 3
+  91:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 175                             		.loc 1 91 3
+ 176 0119 A9 53                   		mov.L	16[r5], r3
+ 177 011b A9 44                   		mov.L	16[r4], r4
+ 178 011d 47 43                   		cmp	r4, r3
+ 179 011f 20 1D                   		beq	.L12
+  91:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 180                             		.loc 1 91 3 discriminator 1
+  91:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 181                             		.loc 1 91 3 discriminator 1
+ 182 0121 ED A5 05                		mov.L	20[r10], r5
+ 183 0124 A1 84                   		mov.L	r4, 24[r0]
+ 184 0126 A1 0B                   		mov.L	r3, 20[r0]
+ 185 0128 F9 02 04 F9 00 00 00    		mov.L	#.LC11, 16[r0]
+ 186 012f F9 02 03 0E 01 00 00    		mov.L	#.LC12, 12[r0]
+ 187 0136 3E 02 5B                		mov.L	#0x5b, 8[r0]
+ 188 0139 38 0E FF                		bra	.L21
+ 189                             	.L12:
+  93:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 190                             		.loc 1 93 3
+  93:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 191                             		.loc 1 93 3
+ 192 013c EC 61                   		mov.L	[r6], r1
+ 193 013e 06 84 B1                		cmp	[r11].L, r1
+ 194 0141 21 37                   		bne	.L26
+  96:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 195                             		.loc 1 96 3
+  96:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 196                             		.loc 1 96 3
+ 197 0143 61 91                   		cmp	#9, r1
+ 198 0145 21 6E                   		bne	.L27
+ 100:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   OpData* op_data = &op_data_array[op_data_counter++];
+ 199                             		.loc 1 100 3
+ 200 0147 FB 32 00 00 00 00       		mov.L	#.LANCHOR0, r3
+ 201 014d EC 34                   		mov.L	[r3], r4
+ 202 014f 61 74                   		cmp	#7, r4
+ 203 0151 2B 05 38 9A 00          		bgt	.L28
+ 101:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // The last circular buffer layer (length 5) simply accumulates outputs, and
+ 204                             		.loc 1 101 3
+ 105:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     op_data->cycles_max = 1;
+ 205                             		.loc 1 105 3 is_stmt 0
+ 206 0156 A8 D5                   		mov.L	8[r5], r5
+ 101:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // The last circular buffer layer (length 5) simply accumulates outputs, and
+ 207                             		.loc 1 101 53
+ 208 0158 FD C3 4A                		shll	#3, r4, r10
+ 209                             	.LVL11:
+ 210 015b 70 AA 00 00 00 00       		add	#.LANCHOR1, r10
+ 211                             	.LVL12:
+ 105:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     op_data->cycles_max = 1;
+ 212                             		.loc 1 105 3 is_stmt 1
+ 101:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // The last circular buffer layer (length 5) simply accumulates outputs, and
+ 213                             		.loc 1 101 51 is_stmt 0
+ 214 0161 62 14                   		add	#1, r4
+ 108:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   }
+ 215                             		.loc 1 108 25
+ 216 0163 61 55                   		cmp	#5, r5
+ 217 0165 FD 74 F7 02             		stnz	#2, r7
+ 110:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   node->user_data = op_data;
+ 218                             		.loc 1 110 29
+ 219 0169 E3 A7                   		mov.L	r7, [r10]
+ 220 016b E7 A7 01                		mov.L	r7, 4[r10]
+ 110:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   node->user_data = op_data;
+ 221                             		.loc 1 110 3 is_stmt 1
+ 111:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 222                             		.loc 1 111 3
+ 101:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // The last circular buffer layer (length 5) simply accumulates outputs, and
+ 223                             		.loc 1 101 51 is_stmt 0
+ 224 016e E3 34                   		mov.L	r4, [r3]
+ 111:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 225                             		.loc 1 111 19
+ 226 0170 E7 CA 04                		mov.L	r10, 16[r12]
+ 113:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 227                             		.loc 1 113 3 is_stmt 1
+ 113:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 228                             		.loc 1 113 10 is_stmt 0
+ 229 0173 66 01                   		mov.L	#0, r1
+ 230                             		.loc 1 114 1
+ 231 0175 3F 6C 0E                		rtsd	#56, r6-r12
+ 232                             	.LVL13:
+ 233                             	.L26:
+  93:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 234                             		.loc 1 93 3 is_stmt 1 discriminator 1
+  93:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 235                             		.loc 1 93 3 discriminator 1
+ 236 0178 ED A6 05                		mov.L	20[r10], r6
+ 237                             	.LVL14:
+ 238 017b 05 00 00 00             		bsr	_TfLiteTypeGetName
+ 239                             	.LVL15:
+ 240 017f EF 1C                   		mov.L	r1, r12
+ 241                             	.LVL16:
+ 242 0181 EC B1                   		mov.L	[r11], r1
+ 243 0183 05 00 00 00             		bsr	_TfLiteTypeGetName
+ 244                             	.LVL17:
+ 245 0187 A1 81                   		mov.L	r1, 24[r0]
+ 246 0189 E7 0C 05                		mov.L	r12, 20[r0]
+ 247 018c F9 02 04 24 01 00 00    		mov.L	#.LC13, 16[r0]
+ 248 0193 F9 02 03 31 01 00 00    		mov.L	#.LC14, 12[r0]
+ 249 019a 3E 02 5D                		mov.L	#0x5d, 8[r0]
+ 250 019d F9 02 01 11 00 00 00    		mov.L	#.LC1, 4[r0]
+ 251 01a4 EF A1                   		mov.L	r10, r1
+ 252 01a6 F8 02 3D 01 00 00       		mov.L	#.LC15, [r0]
+ 253 01ac 7F 16                   		jsr	r6
+ 254                             	.LVL18:
+  93:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 255                             		.loc 1 93 3 discriminator 1
+ 256 01ae EF 71                   		mov.L	r7, r1
+ 257                             		.loc 1 114 1 is_stmt 0 discriminator 1
+ 258 01b0 3F 6C 0E                		rtsd	#56, r6-r12
+ 259                             	.LVL19:
+ 260                             	.L27:
+  96:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 261                             		.loc 1 96 3 is_stmt 1 discriminator 1
+  96:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 262                             		.loc 1 96 3 discriminator 1
+ 263 01b3 ED A7 05                		mov.L	20[r10], r7
+ 264 01b6 05 00 00 00             		bsr	_TfLiteTypeGetName
+ 265                             	.LVL20:
+ 266 01ba EF 16                   		mov.L	r1, r6
+ 267                             	.LVL21:
+ 268 01bc 66 91                   		mov.L	#9, r1
+ 269 01be 05 00 00 00             		bsr	_TfLiteTypeGetName
+ 270                             	.LVL22:
+ 271 01c2 A1 81                   		mov.L	r1, 24[r0]
+ 272 01c4 A1 0E                   		mov.L	r6, 20[r0]
+ 273 01c6 F9 02 04 57 01 00 00    		mov.L	#.LC16, 16[r0]
+ 274 01cd F9 02 03 31 01 00 00    		mov.L	#.LC14, 12[r0]
+ 275 01d4 3E 02 60                		mov.L	#0x60, 8[r0]
+ 276 01d7 F9 02 01 11 00 00 00    		mov.L	#.LC1, 4[r0]
+ 277 01de EF A1                   		mov.L	r10, r1
+ 278 01e0 F8 02 3D 01 00 00       		mov.L	#.LC15, [r0]
+ 279 01e6 7F 17                   		jsr	r7
+ 280                             	.LVL23:
+  96:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 281                             		.loc 1 96 3 discriminator 1
+ 282 01e8 66 11                   		mov.L	#1, r1
+ 283                             		.loc 1 114 1 is_stmt 0 discriminator 1
+ 284 01ea 3F 6C 0E                		rtsd	#56, r6-r12
+ 285                             	.LVL24:
+ 286                             	.L28:
+ 100:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   OpData* op_data = &op_data_array[op_data_counter++];
+ 287                             		.loc 1 100 3 discriminator 1
+ 288 01ed 05 00 00 00             		bsr	_abort
+ 289                             	.LVL25:
+ 290                             	.LFE1196:
+ 292                             		.section	.text._ZN6tflite3ops5micro15circular_buffer4EvalEP13TfLiteContextP10TfLiteNode,"ax",@prog
+ 293                             		.global	__ZN6tflite3ops5micro15circular_buffer4EvalEP13TfLiteContextP10TfLiteNode
+ 295                             	__ZN6tflite3ops5micro15circular_buffer4EvalEP13TfLiteContextP10TfLiteNode:
+ 296                             	.LFB1198:
+ 115:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 116:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // Shifts buffer over by the output depth, and write new input to end of buffer.
+ 117:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // num_slots is the number of samples stored in the output buffer.
+ 118:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** // depth is the size of each sample.
+ 119:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** void EvalInt8(const int8_t* input, int num_slots, int depth, int8_t* output) {
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memmove(output, &output[depth], (num_slots - 1) * depth);
+ 121:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 122:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 123:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 124:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** TfLiteStatus Eval(TfLiteContext* context, TfLiteNode* node) {
+ 297                             		.loc 1 124 61 is_stmt 1
+ 298                             	.LVL26:
+ 299 0000 6E 6B                   		pushm	r6-r11
+ 300                             	.LCFI2:
+ 301 0002 60 C0                   		sub	#12, r0
+ 302                             	.LCFI3:
+ 125:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   const TfLiteEvalTensor* input =
+ 303                             		.loc 1 125 3
+ 304                             	.LVL27:
+ 305                             		.file 2 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include <cstdint>
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include "tensorflow/lite/c/common.h"
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include "tensorflow/lite/kernels/internal/compatibility.h"
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include "tensorflow/lite/kernels/internal/types.h"
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** namespace tflite {
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** namespace micro {
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns a mutable tensor for a given input index. is_variable must be checked
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // during prepare when the full TfLiteTensor is available.
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** inline TfLiteEvalTensor* GetMutableEvalInput(const TfLiteContext* context,
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                              const TfLiteNode* node,
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                              int index) {
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(context != nullptr);
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->inputs->data[index]);
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given input index in a node.
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** inline const TfLiteEvalTensor* GetEvalInput(const TfLiteContext* context,
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                             const TfLiteNode* node, int index) {
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return GetMutableEvalInput(context, node, index);
+ 306                             		.loc 2 41 3
+ 307                             	.LBB20:
+ 308                             	.LBB21:
+ 309                             	.LBB22:
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 310                             		.loc 2 33 3
+ 311 0004 61 01                   		cmp	#0, r1
+ 312 0006 3A 87 00                		beq	.L31
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->inputs->data[index]);
+ 313                             		.loc 2 34 3 is_stmt 0
+ 314 0009 71 2A 00                		add	#0, r2, r10
+ 315 000c 3A 81 00                		beq	.L31
+ 316 000f EF 17                   		mov.L	r1, r7
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 317                             		.loc 2 35 3 is_stmt 1
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 318                             		.loc 2 35 32 is_stmt 0
+ 319 0011 EC A4                   		mov.L	[r10], r4
+ 320 0013 AD 1D                   		mov.L	84[r1], r5
+ 321 0015 A8 4A                   		mov.L	4[r4], r2
+ 322                             	.LVL28:
+ 323 0017 7F 15                   		jsr	r5
+ 324                             	.LVL29:
+ 325 0019 EF 16                   		mov.L	r1, r6
+ 326                             	.LVL30:
+ 327                             	.LBE22:
+ 328                             	.LBE21:
+ 329                             	.LBE20:
+ 126:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****       tflite::micro::GetEvalInput(context, node, kInputTensor);
+ 127:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   TfLiteEvalTensor* output =
+ 330                             		.loc 1 127 3 is_stmt 1
+ 331                             	.LBB25:
+ 332                             	.LBB26:
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given output index in a node.
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** inline TfLiteEvalTensor* GetEvalOutput(const TfLiteContext* context,
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                        const TfLiteNode* node, int index) {
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(context != nullptr);
+ 333                             		.loc 2 47 3
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 334                             		.loc 2 48 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 335                             		.loc 2 49 3
+ 336                             		.loc 2 49 32 is_stmt 0
+ 337 001b ED A4 01                		mov.L	4[r10], r4
+ 338 001e AD 7D                   		mov.L	84[r7], r5
+ 339 0020 EF 71                   		mov.L	r7, r1
+ 340                             	.LVL31:
+ 341 0022 A8 4A                   		mov.L	4[r4], r2
+ 342 0024 7F 15                   		jsr	r5
+ 343                             	.LVL32:
+ 344                             	.LBE26:
+ 345                             	.LBE25:
+ 128:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****       tflite::micro::GetEvalOutput(context, node, kOutputTensor);
+ 129:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 130:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   OpData* data = reinterpret_cast<OpData*>(node->user_data);
+ 346                             		.loc 1 130 3 is_stmt 1
+ 131:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 132:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   int num_slots = output->dims->data[1];
+ 347                             		.loc 1 132 3
+ 133:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   int depth = output->dims->data[3];
+ 348                             		.loc 1 133 3
+ 134:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 135:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   if (input->type == kTfLiteInt8) {
+ 349                             		.loc 1 135 3
+ 350                             		.loc 1 135 14 is_stmt 0
+ 351 0026 A8 E5                   		mov.L	8[r6], r5
+ 352                             		.loc 1 135 3
+ 353 0028 61 95                   		cmp	#9, r5
+ 354 002a 21 3F                   		bne	.L32
+ 132:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   int depth = output->dims->data[3];
+ 355                             		.loc 1 132 27
+ 356 002c A8 1C                   		mov.L	4[r1], r4
+ 357                             	.LBB27:
+ 358                             	.LBB28:
+  50:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  51:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  52:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns data for a TfLiteEvalTensor struct.
+  53:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** template <typename T>
+  54:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** T* GetTensorData(TfLiteEvalTensor* tensor) {
+  55:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return tensor != nullptr ? reinterpret_cast<T*>(tensor->data.raw) : nullptr;
+ 359                             		.loc 2 55 28
+ 360 002e EC 15                   		mov.L	[r1], r5
+ 361                             	.LBE28:
+ 362                             	.LBE27:
+ 363                             	.LBB29:
+ 364                             	.LBB30:
+  56:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  57:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  58:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns const data for a TfLiteEvalTensor struct.
+  59:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** template <typename T>
+  60:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** const T* GetTensorData(const TfLiteEvalTensor* tensor) {
+  61:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+  62:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return reinterpret_cast<const T*>(tensor->data.raw);
+ 365                             		.loc 2 62 53
+ 366 0030 EC 6B                   		mov.L	[r6], r11
+ 367                             	.LBE30:
+ 368                             	.LBE29:
+ 130:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 369                             		.loc 1 130 11
+ 370 0032 ED AA 04                		mov.L	16[r10], r10
+ 371                             	.LVL33:
+ 372                             	.LBB31:
+ 373                             	.LBB32:
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 374                             		.loc 1 120 46
+ 375 0035 A8 C7                   		mov.L	8[r4], r7
+ 376                             	.LVL34:
+ 377                             	.LBE32:
+ 378                             	.LBE31:
+ 133:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 379                             		.loc 1 133 7
+ 380 0037 A9 46                   		mov.L	16[r4], r6
+ 381                             	.LVL35:
+ 136:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     EvalInt8(tflite::micro::GetTensorData<int8_t>(input), num_slots, depth,
+ 382                             		.loc 1 136 5 is_stmt 1
+ 383                             	.LBB34:
+ 384                             	.LBB33:
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 385                             		.loc 1 120 3
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 386                             		.loc 1 120 10 is_stmt 0
+ 387 0039 EF 51                   		mov.L	r5, r1
+ 388                             	.LVL36:
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 389                             		.loc 1 120 46
+ 390 003b 60 17                   		sub	#1, r7
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 391                             		.loc 1 120 10
+ 392 003d FF 22 65                		add	r6, r5, r2
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 393                             		.loc 1 120 51
+ 394 0040 4F 67                   		mul	r6, r7
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 395                             		.loc 1 120 10
+ 396 0042 EF 73                   		mov.L	r7, r3
+ 397 0044 05 00 00 00             		bsr	_memmove
+ 398                             	.LVL37:
+ 121:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 399                             		.loc 1 121 3 is_stmt 1
+ 121:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 400                             		.loc 1 121 9 is_stmt 0
+ 401 0048 4B 71                   		add	r7, r1
+ 402 004a EF B2                   		mov.L	r11, r2
+ 403 004c EF 63                   		mov.L	r6, r3
+ 404 004e 7F 8F                   		smovf
+ 405                             	.LVL38:
+ 406                             	.LBE33:
+ 407                             	.LBE34:
+ 137:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****              tflite::micro::GetTensorData<int8_t>(output));
+ 138:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   } else {
+ 139:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     TF_LITE_KERNEL_LOG(context, "Type %s (%d) not supported.",
+ 140:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                        TfLiteTypeGetName(input->type), input->type);
+ 141:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     return kTfLiteError;
+ 142:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   }
+ 143:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 144:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   if (--data->cycles_until_run != 0) {
+ 408                             		.loc 1 144 3 is_stmt 1
+ 409                             		.loc 1 144 7 is_stmt 0
+ 410 0050 EC A7                   		mov.L	[r10], r7
+ 411 0052 60 17                   		sub	#1, r7
+ 412                             		.loc 1 144 32
+ 413 0054 E3 A7                   		mov.L	r7, [r10]
+ 414                             		.loc 1 144 3
+ 415 0056 21 31                   		bne	.L41
+ 145:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     // Signal the interpreter to end current run if the delay before op invoke
+ 146:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     // has not been reached.
+ 147:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     // TODO(b/149795762): Add kTfLiteAbort to TfLiteStatus enum.
+ 148:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****     return static_cast<TfLiteStatus>(kTfLiteAbort);
+ 149:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   }
+ 150:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 151:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // If prepare is ever called more than one time (for example, when testing the
+ 152:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // ambient model, the interpreter is created a few times), this op data
+ 153:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // counter needs to be reset so that future instances do not overrun this op
+ 154:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   // data array.
+ 155:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   op_data_counter = 0;
+ 416                             		.loc 1 155 3 is_stmt 1
+ 156:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 157:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   data->cycles_until_run = data->cycles_max;
+ 417                             		.loc 1 157 26 is_stmt 0
+ 418 0058 E1 AA 01                		mov.L	4[r10], [r10]
+ 158:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 159:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   return kTfLiteOk;
+ 419                             		.loc 1 159 10
+ 420 005b 66 01                   		mov.L	#0, r1
+ 155:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 421                             		.loc 1 155 19
+ 422 005d FB 72 00 00 00 00       		mov.L	#.LANCHOR0, r7
+ 423 0063 F8 76 00                		mov.L	#0, [r7]
+ 157:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 424                             		.loc 1 157 3 is_stmt 1
+ 425                             		.loc 1 159 3
+ 160:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 426                             		.loc 1 160 1 is_stmt 0
+ 427 0066 3F 6B 09                		rtsd	#36, r6-r11
+ 428                             	.LVL39:
+ 429                             	.L32:
+ 139:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                        TfLiteTypeGetName(input->type), input->type);
+ 430                             		.loc 1 139 5 is_stmt 1
+ 139:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                        TfLiteTypeGetName(input->type), input->type);
+ 431                             		.loc 1 139 5
+ 432 0069 EF 51                   		mov.L	r5, r1
+ 433                             	.LVL40:
+ 434 006b ED 7A 05                		mov.L	20[r7], r10
+ 435                             	.LVL41:
+ 436 006e 05 00 00 00             		bsr	_TfLiteTypeGetName
+ 437                             	.LVL42:
+ 438 0072 E5 60 02 02             		mov.L	8[r6], 8[r0]
+ 439 0076 A0 09                   		mov.L	r1, 4[r0]
+ 440 0078 EF 71                   		mov.L	r7, r1
+ 441 007a F8 02 00 00 00 00       		mov.L	#.LC17, [r0]
+ 442 0080 7F 1A                   		jsr	r10
+ 443                             	.LVL43:
+ 141:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   }
+ 444                             		.loc 1 141 5
+ 141:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   }
+ 445                             		.loc 1 141 12 is_stmt 0
+ 446 0082 66 11                   		mov.L	#1, r1
+ 447                             		.loc 1 160 1
+ 448 0084 3F 6B 09                		rtsd	#36, r6-r11
+ 449                             	.LVL44:
+ 450                             	.L41:
+ 148:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   }
+ 451                             		.loc 1 148 50
+ 452 0087 FB 16 F7                		mov.L	#-9, r1
+ 453                             		.loc 1 160 1
+ 454 008a 3F 6B 09                		rtsd	#36, r6-r11
+ 455                             	.LVL45:
+ 456                             	.L31:
+ 457                             	.LBB35:
+ 458                             	.LBB24:
+ 459                             	.LBB23:
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 460                             		.loc 2 33 3
+ 461 008d 05 00 00 00             		bsr	_abort
+ 462                             	.LVL46:
+ 463                             	.LBE23:
+ 464                             	.LBE24:
+ 465                             	.LBE35:
+ 466                             	.LFE1198:
+ 468                             		.section	.text._ZN6tflite3ops5micro15circular_buffer8EvalInt8EPKaiiPa,"ax",@progbits
+ 469                             		.global	__ZN6tflite3ops5micro15circular_buffer8EvalInt8EPKaiiPa
+ 471                             	__ZN6tflite3ops5micro15circular_buffer8EvalInt8EPKaiiPa:
+ 472                             	.LFB1197:
+ 119:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memmove(output, &output[depth], (num_slots - 1) * depth);
+ 473                             		.loc 1 119 78 is_stmt 1
+ 474                             	.LVL47:
+ 475 0000 6E 6A                   		pushm	r6-r10
+ 476                             	.LCFI4:
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 477                             		.loc 1 120 3
+ 119:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memmove(output, &output[depth], (num_slots - 1) * depth);
+ 478                             		.loc 1 119 78 is_stmt 0
+ 479 0002 EF 3A                   		mov.L	r3, r10
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 480                             		.loc 1 120 46
+ 481 0004 60 12                   		sub	#1, r2
+ 482                             	.LVL48:
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 483                             		.loc 1 120 51
+ 484 0006 FF 37 32                		mul	r3, r2, r7
+ 119:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memmove(output, &output[depth], (num_slots - 1) * depth);
+ 485                             		.loc 1 119 78
+ 486 0009 EF 16                   		mov.L	r1, r6
+ 120:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   memcpy(&output[(num_slots - 1) * depth], input, depth);
+ 487                             		.loc 1 120 10
+ 488 000b EF 73                   		mov.L	r7, r3
+ 489                             	.LVL49:
+ 490 000d FF 22 A4                		add	r10, r4, r2
+ 491                             	.LVL50:
+ 492 0010 EF 41                   		mov.L	r4, r1
+ 493                             	.LVL51:
+ 494 0012 05 00 00 00             		bsr	_memmove
+ 495                             	.LVL52:
+ 121:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 496                             		.loc 1 121 3 is_stmt 1
+ 121:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 497                             		.loc 1 121 9 is_stmt 0
+ 498 0016 4B 71                   		add	r7, r1
+ 499 0018 EF 62                   		mov.L	r6, r2
+ 500 001a EF A3                   		mov.L	r10, r3
+ 501 001c 7F 8F                   		smovf
+ 122:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 502                             		.loc 1 122 1
+ 503 001e 3F 6A 05                		rtsd	#20, r6-r10
+ 504                             	.LFE1197:
+ 506                             		.section	.text._ZN6tflite3ops5micro24Register_CIRCULAR_BUFFEREv,"ax",@progbits
+ 507                             		.global	__ZN6tflite3ops5micro24Register_CIRCULAR_BUFFEREv
+ 509                             	__ZN6tflite3ops5micro24Register_CIRCULAR_BUFFEREv:
+ 510                             	.LFB1199:
+ 161:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 162:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }  // namespace circular_buffer
+ 163:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** 
+ 164:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** TfLiteRegistration* Register_CIRCULAR_BUFFER() {
+ 511                             		.loc 1 164 48 is_stmt 1
+ 165:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   static TfLiteRegistration r = {/*init=*/nullptr,
+ 512                             		.loc 1 165 3
+ 166:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                                  /*free=*/circular_buffer::Free,
+ 167:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                                  /*prepare=*/circular_buffer::Prepare,
+ 168:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                                  /*invoke=*/circular_buffer::Eval,
+ 169:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                                  /*profiling_string=*/nullptr,
+ 170:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                                  /*builtin_code=*/0,
+ 171:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                                  /*custom_name=*/nullptr,
+ 172:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****                                  /*version=*/0};
+ 173:../src/tensorflow/lite/micro/kernels/circular_buffer.cc ****   return &r;
+ 513                             		.loc 1 173 3
+ 174:../src/tensorflow/lite/micro/kernels/circular_buffer.cc **** }
+ 514                             		.loc 1 174 1 is_stmt 0
+ 515 0000 FB 12 00 00 00 00       		mov.L	#.LANCHOR2, r1
+ 516 0006 02                      		rts
+ 517                             	.LFE1199:
+ 519                             		.section	.bss._ZN6tflite3ops5micro15circular_buffer12_GLOBAL__N_113op_data_arrayE,"aw",@nobits
+ 520                             		.balign 4
+ 521                             		.set	.LANCHOR1,. + 0
+ 524                             	__ZN6tflite3ops5micro15circular_buffer12_GLOBAL__N_113op_data_arrayE:
+ 525 0000 00 00 00 00 00 00 00 00 		.zero	56
+ 525      00 00 00 00 00 00 00 00 
+ 525      00 00 00 00 00 00 00 00 
+ 525      00 00 00 00 00 00 00 00 
+ 525      00 00 00 00 00 00 00 00 
+ 526                             		.section	.bss._ZN6tflite3ops5micro15circular_buffer12_GLOBAL__N_115op_data_counterE,"aw",@nobits
+ 527                             		.balign 4
+ 528                             		.set	.LANCHOR0,. + 0
+ 531                             	__ZN6tflite3ops5micro15circular_buffer12_GLOBAL__N_115op_data_counterE:
+ 532 0000 00 00 00 00             		.zero	4
+ 533                             		.section	.data._ZZN6tflite3ops5micro24Register_CIRCULAR_BUFFEREvE1r,"aw"
+ 534                             		.balign 4
+ 535                             		.set	.LANCHOR2,. + 0
+ 538                             	__ZZN6tflite3ops5micro24Register_CIRCULAR_BUFFEREvE1r:
+ 539 0000 00 00 00 00             		.long	0
+ 540 0004 00 00 00 00             		.long	__ZN6tflite3ops5micro15circular_buffer4FreeEP13TfLiteContextPv
+ 541 0008 00 00 00 00             		.long	__ZN6tflite3ops5micro15circular_buffer7PrepareEP13TfLiteContextP10TfLiteNode
+ 542 000c 00 00 00 00             		.long	__ZN6tflite3ops5micro15circular_buffer4EvalEP13TfLiteContextP10TfLiteNode
+ 543 0010 00 00 00 00             		.long	0
+ 544 0014 00 00 00 00             		.long	0
+ 545 0018 00 00 00 00             		.long	0
+ 546 001c 00 00 00 00             		.long	0
+ 547                             		.section	.rodata._ZN6tflite3ops5micro15circular_buffer4EvalEP13TfLiteContextP10TfLiteNode.str1.1,"
+ 548                             	.LC17:
+ 549 0000 54 79 70 65 20 25 73 20 		.string	"Type %s (%d) not supported."
+ 549      28 25 64 29 20 6E 6F 74 
+ 549      20 73 75 70 70 6F 72 74 
+ 549      65 64 2E 00 
+ 550                             		.section	.rodata._ZN6tflite3ops5micro15circular_buffer7PrepareEP13TfLiteContextP10TfLiteNode.str1.
+ 551                             	.LC0:
+ 552 0000 69 6E 70 75 74 20 21 3D 		.string	"input != nullptr"
+ 552      20 6E 75 6C 6C 70 74 72 
+ 552      00 
+ 553                             	.LC1:
+ 554 0011 2E 2E 2F 73 72 63 2F 74 		.string	"../src/tensorflow/lite/micro/kernels/circular_buffer.cc"
+ 554      65 6E 73 6F 72 66 6C 6F 
+ 554      77 2F 6C 69 74 65 2F 6D 
+ 554      69 63 72 6F 2F 6B 65 72 
+ 554      6E 65 6C 73 2F 63 69 72 
+ 555                             	.LC2:
+ 556 0049 25 73 3A 25 64 20 25 73 		.string	"%s:%d %s was not true."
+ 556      20 77 61 73 20 6E 6F 74 
+ 556      20 74 72 75 65 2E 00 
+ 557                             	.LC3:
+ 558 0060 6F 75 74 70 75 74 20 21 		.string	"output != nullptr"
+ 558      3D 20 6E 75 6C 6C 70 74 
+ 558      72 00 
+ 559                             	.LC4:
+ 560 0072 6F 75 74 70 75 74 2D 3E 		.string	"output->dims->data[0]"
+ 560      64 69 6D 73 2D 3E 64 61 
+ 560      74 61 5B 30 5D 00 
+ 561                             	.LC5:
+ 562 0088 31 00                   		.string	"1"
+ 563                             	.LC6:
+ 564 008a 25 73 3A 25 64 20 25 73 		.string	"%s:%d %s != %s (%d != %d)"
+ 564      20 21 3D 20 25 73 20 28 
+ 564      25 64 20 21 3D 20 25 64 
+ 564      29 00 
+ 565                             	.LC7:
+ 566 00a4 69 6E 70 75 74 2D 3E 64 		.string	"input->dims->data[0]"
+ 566      69 6D 73 2D 3E 64 61 74 
+ 566      61 5B 30 5D 00 
+ 567                             	.LC8:
+ 568 00b9 69 6E 70 75 74 2D 3E 64 		.string	"input->dims->data[1]"
+ 568      69 6D 73 2D 3E 64 61 74 
+ 568      61 5B 31 5D 00 
+ 569                             	.LC9:
+ 570 00ce 6F 75 74 70 75 74 2D 3E 		.string	"output->dims->data[2]"
+ 570      64 69 6D 73 2D 3E 64 61 
+ 570      74 61 5B 32 5D 00 
+ 571                             	.LC10:
+ 572 00e4 69 6E 70 75 74 2D 3E 64 		.string	"input->dims->data[2]"
+ 572      69 6D 73 2D 3E 64 61 74 
+ 572      61 5B 32 5D 00 
+ 573                             	.LC11:
+ 574 00f9 69 6E 70 75 74 2D 3E 64 		.string	"input->dims->data[3]"
+ 574      69 6D 73 2D 3E 64 61 74 
+ 574      61 5B 33 5D 00 
+ 575                             	.LC12:
+ 576 010e 6F 75 74 70 75 74 2D 3E 		.string	"output->dims->data[3]"
+ 576      64 69 6D 73 2D 3E 64 61 
+ 576      74 61 5B 33 5D 00 
+ 577                             	.LC13:
+ 578 0124 6F 75 74 70 75 74 2D 3E 		.string	"output->type"
+ 578      74 79 70 65 00 
+ 579                             	.LC14:
+ 580 0131 69 6E 70 75 74 2D 3E 74 		.string	"input->type"
+ 580      79 70 65 00 
+ 581                             	.LC15:
+ 582 013d 25 73 3A 25 64 20 25 73 		.string	"%s:%d %s != %s (%s != %s)"
+ 582      20 21 3D 20 25 73 20 28 
+ 582      25 73 20 21 3D 20 25 73 
+ 582      29 00 
+ 583                             	.LC16:
+ 584 0157 6B 54 66 4C 69 74 65 49 		.string	"kTfLiteInt8"
+ 584      6E 74 38 00 
+ 699                             	.Letext0:
+ 700                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 701                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 702                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdint.h"
+ 703                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 704                             		.file 7 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 705                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 706                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 707                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 708                             		.file 11 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 709                             		.file 12 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 710                             		.file 13 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 711                             		.file 14 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 712                             		.file 15 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 713                             		.file 16 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 714                             		.file 17 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 715                             		.file 18 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 716                             		.file 19 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 717                             		.file 20 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 718                             		.file 21 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 719                             		.file 22 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\loc
+ 720                             		.file 23 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_ty
+ 721                             		.file 24 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\ree
+ 722                             		.file 25 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 723                             		.file 26 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 724                             		.file 27 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 725                             		.file 28 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\string.h
+ 726                             		.file 29 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 727                             		.file 30 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 728                             		.file 31 "<built-in>"

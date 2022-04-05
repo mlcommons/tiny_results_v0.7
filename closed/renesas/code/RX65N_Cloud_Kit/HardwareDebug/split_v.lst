@@ -1,0 +1,2815 @@
+   1                             		.file	"split_v.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite3ops5micro7split_v7PrepareEP13TfLiteContextP10TfLiteNode,"ax",@progbits
+   5                             		.global	__ZN6tflite3ops5micro7split_v7PrepareEP13TfLiteContextP10TfLiteNode
+   7                             	__ZN6tflite3ops5micro7split_v7PrepareEP13TfLiteContextP10TfLiteNode:
+   8                             	.LFB977:
+   9                             		.file 1 "../src/tensorflow/lite/micro/kernels/split_v.cc"
+   1:../src/tensorflow/lite/micro/kernels/split_v.cc **** /* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+   3:../src/tensorflow/lite/micro/kernels/split_v.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/micro/kernels/split_v.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/micro/kernels/split_v.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+   7:../src/tensorflow/lite/micro/kernels/split_v.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+   9:../src/tensorflow/lite/micro/kernels/split_v.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/micro/kernels/split_v.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/micro/kernels/split_v.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/micro/kernels/split_v.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/micro/kernels/split_v.cc **** limitations under the License.
+  14:../src/tensorflow/lite/micro/kernels/split_v.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  16:../src/tensorflow/lite/micro/kernels/split_v.cc **** #include "tensorflow/lite/c/builtin_op_data.h"
+  17:../src/tensorflow/lite/micro/kernels/split_v.cc **** #include "tensorflow/lite/c/common.h"
+  18:../src/tensorflow/lite/micro/kernels/split_v.cc **** #include "tensorflow/lite/kernels/internal/tensor_ctypes.h"
+  19:../src/tensorflow/lite/micro/kernels/split_v.cc **** #include "tensorflow/lite/kernels/kernel_util.h"
+  20:../src/tensorflow/lite/micro/kernels/split_v.cc **** #include "tensorflow/lite/kernels/op_macros.h"
+  21:../src/tensorflow/lite/micro/kernels/split_v.cc **** #include "tensorflow/lite/micro/kernels/kernel_util.h"
+  22:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  23:../src/tensorflow/lite/micro/kernels/split_v.cc **** namespace tflite {
+  24:../src/tensorflow/lite/micro/kernels/split_v.cc **** namespace ops {
+  25:../src/tensorflow/lite/micro/kernels/split_v.cc **** namespace micro {
+  26:../src/tensorflow/lite/micro/kernels/split_v.cc **** namespace split_v {
+  27:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  28:../src/tensorflow/lite/micro/kernels/split_v.cc **** template <typename T>
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc **** TfLiteStatus SplitImpl(TfLiteContext* context, TfLiteNode* node,
+  30:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+  31:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteIntArray* input_dims = input->dims;
+  32:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* output0 =
+  33:../src/tensorflow/lite/micro/kernels/split_v.cc ****       tflite::micro::GetEvalOutput(context, node, 0);
+  34:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  35:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const int split_dimensions = input_dims->size;
+  36:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  37:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TFLITE_DCHECK_LT(axis_value, split_dimensions);
+  38:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TFLITE_DCHECK_EQ(output0->dims->size, split_dimensions);
+  39:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  40:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int64_t split_size = 0;
+  41:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const int output_count = NumOutputs(node);
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < output_count; i++) {
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+  44:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+  45:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+  46:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TFLITE_DCHECK_EQ(split_size, input_dims->data[axis_value]);
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int64_t outer_size = 1;
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+  50:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+  51:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  52:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int64_t base_inner_size = 1;
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = axis_value + 1; i < split_dimensions; ++i) {
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+  55:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+  56:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  57:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const T* input_ptr = tflite::micro::GetTensorData<T>(input);
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int k = 0; k < outer_size; ++k) {
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+  60:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+  61:../src/tensorflow/lite/micro/kernels/split_v.cc ****           tflite::micro::GetEvalOutput(context, node, i);
+  62:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_data = tflite::micro::GetTensorData<T>(output_tensor);
+  63:../src/tensorflow/lite/micro/kernels/split_v.cc ****       const int copy_size =
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****           output_tensor->dims->data[axis_value] * base_inner_size;
+  65:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       for (int j = 0; j < copy_size; ++j) output_ptr[j] = input_ptr[j];
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+  68:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+  69:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+  70:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  71:../src/tensorflow/lite/micro/kernels/split_v.cc ****   return kTfLiteOk;
+  72:../src/tensorflow/lite/micro/kernels/split_v.cc **** }
+  73:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  74:../src/tensorflow/lite/micro/kernels/split_v.cc **** TfLiteStatus Prepare(TfLiteContext* context, TfLiteNode* node) {
+  10                             		.loc 1 74 64
+  11                             	.LVL0:
+  12 0000 7E A7                   		push.l	r7
+  13                             	.LCFI0:
+  14 0002 71 00 E4                		add	#-28, r0
+  15                             	.LCFI1:
+  16                             	.LBB82:
+  17                             	.LBB83:
+  18                             		.file 2 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** /* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #ifndef TENSORFLOW_LITE_KERNELS_KERNEL_UTIL_H_
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #define TENSORFLOW_LITE_KERNELS_KERNEL_UTIL_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #include <stdint.h>
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #include <limits>
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #include "tensorflow/lite/c/builtin_op_data.h"
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #include "tensorflow/lite/c/common.h"
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** namespace tflite {
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // A fair number of functions in this header have historically been inline.
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // It is ok to change functions to not be inline if the latency with
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // benchmark_model for MobileNet + MobileBERT is unaffected. If such a change is
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // made, move the newly non-inlined function declarations to the top of this
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // header file.
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Note: You must check if result is not null:
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor = GetInput(context, node, kMyTensorIdx);
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE(context, my_tensor != nullptr);
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // This is because the index might point to the optional tensor constant
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // (kTfLiteOptionalTensor) in which case there is no tensor to return.
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** const TfLiteTensor* GetInput(const TfLiteContext* context,
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                              const TfLiteNode* node, int index);
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Same as `GetInput` but returns boolean and uses output argument for tensor.
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor;
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE_OK(context,
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //                     GetInputSafe(context, node, kMyTensorIdx, &my_tensor));
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   // can use my_tensor directly from here onwards, it is not nullptr
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  50:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Should be used in cases where the binary size is too large.
+  51:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** TfLiteStatus GetInputSafe(const TfLiteContext* context, const TfLiteNode* node,
+  52:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                           int index, const TfLiteTensor** tensor);
+  53:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  54:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Note: You must check if result is not null:
+  55:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  56:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor = GetVariableInput(context, node, kMyTensorIdx);
+  57:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE(context, my_tensor != nullptr);
+  58:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  59:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // This is because the index might point to the optional tensor constant
+  60:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // (kTfLiteOptionalTensor) in which case there is no tensor to return.
+  61:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** TfLiteTensor* GetVariableInput(TfLiteContext* context, const TfLiteNode* node,
+  62:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                                int index);
+  63:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  64:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Note: You must check if result is not null:
+  65:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  66:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor = GetOutput(context, node, kMyTensorIdx);
+  67:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE(context, my_tensor != nullptr);
+  68:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  69:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // This is because the index might point to the optional tensor constant
+  70:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // (kTfLiteOptionalTensor) in which case there is no tensor to return.
+  71:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** TfLiteTensor* GetOutput(TfLiteContext* context, const TfLiteNode* node,
+  72:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                         int index);
+  73:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  74:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Same as `GetOutput` but returns boolean and uses output argument for tensor.
+  75:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  76:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor;
+  77:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE_OK(context,
+  78:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //                     GetOutputSafe(context, node, kMyTensorIdx, &my_tensor));
+  79:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   // can use my_tensor directly from here onwards, it is not nullptr
+  80:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  81:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Should be used in cases where the binary size is too large.
+  82:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** TfLiteStatus GetOutputSafe(const TfLiteContext* context, const TfLiteNode* node,
+  83:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                            int index, TfLiteTensor** tensor);
+  84:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  85:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Note: You must check if result is not null:
+  86:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  87:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor = GetOptionalInputTensor(context, node, kIdx);
+  88:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE(context, my_tensor != nullptr);
+  89:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  90:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // This is because the index might point to the optional tensor constant
+  91:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // (kTfLiteOptionalTensor) in which case there is no tensor to return.
+  92:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+  93:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Deprecated. GetInput has the same functionality.
+  94:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** const TfLiteTensor* GetOptionalInputTensor(const TfLiteContext* context,
+  95:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                                            const TfLiteNode* node, int index);
+  96:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+  97:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #ifndef TF_LITE_STATIC_MEMORY
+  98:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Note: You must check if result is not null:
+  99:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 100:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor = GetTemporary(context, node, kMyTensorIdx);
+ 101:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE(context, my_tensor != nullptr);
+ 102:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 103:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // This is because the index might point to the optional tensor constant
+ 104:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // (kTfLiteOptionalTensor) in which case there is no tensor to return.
+ 105:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** TfLiteTensor* GetTemporary(TfLiteContext* context, const TfLiteNode* node,
+ 106:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                            int index);
+ 107:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 108:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Same as `GetTemporary` but returns boolean and uses output argument for
+ 109:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // tensor.
+ 110:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 111:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor;
+ 112:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE_OK(context,
+ 113:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //                     GetTemporarySafe(context, node, kMyTensorIdx,
+ 114:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //                     &my_tensor));
+ 115:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   // can use my_tensor directly from here onwards, it is not nullptr
+ 116:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 117:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Should be used in cases where the binary size is too large.
+ 118:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** TfLiteStatus GetTemporarySafe(const TfLiteContext* context,
+ 119:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                               const TfLiteNode* node, int index,
+ 120:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                               TfLiteTensor** tensor);
+ 121:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 122:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Note: You must check if result is not null:
+ 123:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 124:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor = GetIntermediates(context, node, kMyTensorIdx);
+ 125:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE(context, my_tensor != nullptr);
+ 126:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 127:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // This is because the index might point to the optional tensor constant
+ 128:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // (kTfLiteOptionalTensor) in which case there is no tensor to return.
+ 129:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** const TfLiteTensor* GetIntermediates(TfLiteContext* context,
+ 130:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                                      const TfLiteNode* node, int index);
+ 131:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 132:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Same as `GetIntermediates` but returns boolean and uses output argument for
+ 133:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // tensor.
+ 134:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 135:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TfLiteTensor* my_tensor;
+ 136:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   TF_LITE_ENSURE_OK(context,
+ 137:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //                     GetIntermediatesSafe(context, node, kMyTensorIdx,
+ 138:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //                     &my_tensor));
+ 139:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //   // can use my_tensor directly from here onwards, it is not nullptr
+ 140:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** //
+ 141:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Should be used in cases where the binary size is too large.
+ 142:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** TfLiteStatus GetIntermediatesSafe(const TfLiteContext* context,
+ 143:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                                   const TfLiteNode* node, int index,
+ 144:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****                                   TfLiteTensor** tensor);
+ 145:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #endif  // TF_LITE_STATIC_MEMORY
+ 146:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 147:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline int NumDimensions(const TfLiteTensor* t) { return t->dims->size; }
+ 148:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline int SizeOfDimension(const TfLiteTensor* t, int dim) {
+ 149:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   return t->dims->data[dim];
+ 150:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** }
+ 151:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 152:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline int NumInputs(const TfLiteNode* node) { return node->inputs->size; }
+  19                             		.loc 2 152 69 is_stmt 0
+  20 0005 EC 25                   		mov.L	[r2], r5
+  21                             	.LBE83:
+  22                             	.LBE82:
+  23                             		.loc 1 74 64
+  24 0007 EF 17                   		mov.L	r1, r7
+  75:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE_EQ(context, NumInputs(node), 3);
+  25                             		.loc 1 75 3 is_stmt 1
+  26                             		.loc 1 75 3
+  27                             	.LVL1:
+  28                             	.LBB85:
+  29                             	.LBB84:
+  30                             		.loc 2 152 48
+  31                             		.loc 2 152 69 is_stmt 0
+  32 0009 EC 55                   		mov.L	[r5], r5
+  33                             	.LBE84:
+  34                             	.LBE85:
+  35                             		.loc 1 75 3
+  36 000b 61 35                   		cmp	#3, r5
+  37 000d 20 2E                   		beq	.L2
+  38                             		.loc 1 75 3 is_stmt 1 discriminator 1
+  39                             		.loc 1 75 3 discriminator 1
+  40                             	.LVL2:
+  41                             		.loc 2 152 48 discriminator 1
+  42                             		.loc 1 75 3 is_stmt 0 discriminator 1
+  43 000f A9 1F                   		mov.L	20[r1], r7
+  44 0011 3E 06 03                		mov.L	#3, 24[r0]
+  45 0014 A1 0D                   		mov.L	r5, 20[r0]
+  46 0016 F9 02 04 00 00 00 00    		mov.L	#.LC1, 16[r0]
+  47 001d F9 02 03 02 00 00 00    		mov.L	#.LC2, 12[r0]
+  48 0024 3E 02 4B                		mov.L	#0x4b, 8[r0]
+  49 0027 F9 02 01 12 00 00 00    		mov.L	#.LC3, 4[r0]
+  50 002e F8 02 42 00 00 00       		mov.L	#.LC4, [r0]
+  51 0034 7F 17                   		jsr	r7
+  52                             	.LVL3:
+  53                             		.loc 1 75 3 is_stmt 1 discriminator 1
+  54 0036 66 11                   		mov.L	#1, r1
+  76:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  77:../src/tensorflow/lite/micro/kernels/split_v.cc ****   // Dynamic output tensors are needed if axis tensor is not constant.
+  78:../src/tensorflow/lite/micro/kernels/split_v.cc ****   // But Micro doesn't support dynamic memory allocation, so we only support
+  79:../src/tensorflow/lite/micro/kernels/split_v.cc ****   // constant axis tensor for now.
+  80:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteTensor* axis = GetInput(context, node, 2);
+  81:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE_MSG(context, IsConstantTensor(axis),
+  82:../src/tensorflow/lite/micro/kernels/split_v.cc ****                      "Non constant axis tensor not supported");
+  83:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  84:../src/tensorflow/lite/micro/kernels/split_v.cc ****   return kTfLiteOk;
+  85:../src/tensorflow/lite/micro/kernels/split_v.cc **** }
+  55                             		.loc 1 85 1 is_stmt 0 discriminator 1
+  56 0038 3F 77 08                		rtsd	#32, r7-r7
+  57                             	.LVL4:
+  58                             	.L2:
+  80:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE_MSG(context, IsConstantTensor(axis),
+  59                             		.loc 1 80 3 is_stmt 1
+  80:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE_MSG(context, IsConstantTensor(axis),
+  60                             		.loc 1 80 38 is_stmt 0
+  61 003b 66 23                   		mov.L	#2, r3
+  62 003d 05 00 00 00             		bsr	__ZN6tflite8GetInputEPK13TfLiteContextPK10TfLiteNodei
+  63                             	.LVL5:
+  81:../src/tensorflow/lite/micro/kernels/split_v.cc ****                      "Non constant axis tensor not supported");
+  64                             		.loc 1 81 3 is_stmt 1
+  81:../src/tensorflow/lite/micro/kernels/split_v.cc ****                      "Non constant axis tensor not supported");
+  65                             		.loc 1 81 3
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline int NumOutputs(const TfLiteNode* node) { return node->outputs->size; }
+ 154:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 155:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #ifndef TF_LITE_STATIC_MEMORY
+ 156:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline int NumIntermediates(const TfLiteNode* node) {
+ 157:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   return node->intermediates->size;
+ 158:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** }
+ 159:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** #endif  // TF_LITE_STATIC_MEMORY
+ 160:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 161:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline int64_t NumElements(const TfLiteIntArray* dims) {
+ 162:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   int64_t count = 1;
+ 163:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   for (int i = 0; i < dims->size; ++i) {
+ 164:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****     count *= dims->data[i];
+ 165:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   }
+ 166:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   return count;
+ 167:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** }
+ 168:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 169:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline int64_t NumElements(const TfLiteTensor* t) {
+ 170:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   return NumElements(t->dims);
+ 171:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** }
+ 172:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 173:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // Determines whether tensor is constant.
+ 174:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // TODO(b/138199592): Introduce new query which checks for constant OR
+ 175:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // persistent-read-only, which would be useful for most tensor kernels that
+ 176:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // are potentially dynamic based on the input tensor value availability at the
+ 177:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** // time of prepare.
+ 178:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** inline bool IsConstantTensor(const TfLiteTensor* tensor) {
+ 179:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h ****   return tensor->allocation_type == kTfLiteMmapRo;
+  66                             		.loc 2 179 3
+  81:../src/tensorflow/lite/micro/kernels/split_v.cc ****                      "Non constant axis tensor not supported");
+  67                             		.loc 1 81 3 is_stmt 0
+  68 0041 A9 1D                   		mov.L	20[r1], r5
+  69 0043 61 15                   		cmp	#1, r5
+  70 0045 20 13                   		beq	.L4
+  71                             	.LVL6:
+  72                             	.LBB86:
+  73                             	.LBB87:
+  81:../src/tensorflow/lite/micro/kernels/split_v.cc ****                      "Non constant axis tensor not supported");
+  74                             		.loc 1 81 3 is_stmt 1
+  81:../src/tensorflow/lite/micro/kernels/split_v.cc ****                      "Non constant axis tensor not supported");
+  75                             		.loc 1 81 3
+  76 0047 A9 7D                   		mov.L	20[r7], r5
+  77 0049 F8 02 5C 00 00 00       		mov.L	#.LC5, [r0]
+  78 004f EF 71                   		mov.L	r7, r1
+  79                             	.LVL7:
+  80 0051 7F 15                   		jsr	r5
+  81                             	.LVL8:
+  81:../src/tensorflow/lite/micro/kernels/split_v.cc ****                      "Non constant axis tensor not supported");
+  82                             		.loc 1 81 3
+  83 0053 66 11                   		mov.L	#1, r1
+  84                             	.LBE87:
+  85                             	.LBE86:
+  86                             		.loc 1 85 1 is_stmt 0
+  87 0055 3F 77 08                		rtsd	#32, r7-r7
+  88                             	.LVL9:
+  89                             	.L4:
+  84:../src/tensorflow/lite/micro/kernels/split_v.cc **** }
+  90                             		.loc 1 84 10
+  91 0058 66 01                   		mov.L	#0, r1
+  92                             	.LVL10:
+  93                             		.loc 1 85 1
+  94 005a 3F 77 08                		rtsd	#32, r7-r7
+  95                             	.LFE977:
+  97                             		.section	.text._ZN6tflite3ops5micro16Register_SPLIT_VEv,"ax",@progbits
+  98                             		.global	__ZN6tflite3ops5micro16Register_SPLIT_VEv
+ 100                             	__ZN6tflite3ops5micro16Register_SPLIT_VEv:
+ 101                             	.LFB979:
+  86:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  87:../src/tensorflow/lite/micro/kernels/split_v.cc **** TfLiteStatus Eval(TfLiteContext* context, TfLiteNode* node) {
+  88:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* input = tflite::micro::GetEvalInput(context, node, 0);
+  89:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* axis = tflite::micro::GetEvalInput(context, node, 2);
+  90:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  91:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int axis_value = tflite::micro::GetTensorData<int32_t>(axis)[0];
+  92:../src/tensorflow/lite/micro/kernels/split_v.cc ****   if (axis_value < 0) {
+  93:../src/tensorflow/lite/micro/kernels/split_v.cc ****     axis_value += input->dims->size;
+  94:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+  95:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  96:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE(context, axis_value >= 0);
+  97:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE(context, axis_value < input->dims->size);
+  98:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+  99:../src/tensorflow/lite/micro/kernels/split_v.cc ****   switch (input->type) {
+ 100:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteFloat32: {
+ 101:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<float>(context, node, input, axis_value);
+ 102:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 103:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteInt8: {
+ 104:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int8_t>(context, node, input, axis_value);
+ 105:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 106:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteInt16: {
+ 107:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int16_t>(context, node, input, axis_value);
+ 108:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 109:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteInt32: {
+ 110:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int32_t>(context, node, input, axis_value);
+ 111:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 112:../src/tensorflow/lite/micro/kernels/split_v.cc ****     default:
+ 113:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TF_LITE_KERNEL_LOG(context, "Type %s currently not supported.",
+ 114:../src/tensorflow/lite/micro/kernels/split_v.cc ****                          TfLiteTypeGetName(input->type));
+ 115:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return kTfLiteError;
+ 116:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 117:../src/tensorflow/lite/micro/kernels/split_v.cc ****   return kTfLiteOk;
+ 118:../src/tensorflow/lite/micro/kernels/split_v.cc **** }
+ 119:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 120:../src/tensorflow/lite/micro/kernels/split_v.cc **** }  // namespace split_v
+ 121:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 122:../src/tensorflow/lite/micro/kernels/split_v.cc **** TfLiteRegistration Register_SPLIT_V() {
+ 102                             		.loc 1 122 39 is_stmt 1
+ 123:../src/tensorflow/lite/micro/kernels/split_v.cc ****   return {/*init=*/nullptr,
+ 103                             		.loc 1 123 3
+ 124:../src/tensorflow/lite/micro/kernels/split_v.cc ****           /*free=*/nullptr,
+ 125:../src/tensorflow/lite/micro/kernels/split_v.cc ****           /*prepare=*/split_v::Prepare,
+ 126:../src/tensorflow/lite/micro/kernels/split_v.cc ****           /*invoke=*/split_v::Eval,
+ 127:../src/tensorflow/lite/micro/kernels/split_v.cc ****           /*profiling_string=*/nullptr,
+ 128:../src/tensorflow/lite/micro/kernels/split_v.cc ****           /*builtin_code=*/0,
+ 129:../src/tensorflow/lite/micro/kernels/split_v.cc ****           /*custom_name=*/nullptr,
+ 130:../src/tensorflow/lite/micro/kernels/split_v.cc ****           /*version=*/0};
+ 104                             		.loc 1 130 24 is_stmt 0
+ 105 0000 FB 22 00 00 00 00       		mov.L	#.LANCHOR0, r2
+ 106 0006 EF F1                   		mov.L	r15, r1
+ 107 0008 75 43 20                		mov.L	#32, r3
+ 108 000b 7F 8F                   		smovf
+ 131:../src/tensorflow/lite/micro/kernels/split_v.cc **** }
+ 109                             		.loc 1 131 1
+ 110 000d EF F1                   		mov.L	r15, r1
+ 111 000f 02                      		rts
+ 112                             	.LFE979:
+ 114                             		.section	.text._ZN6tflite3ops5micro7split_v9SplitImplIfEE12TfLiteStatusP13TfLiteContextP10TfLiteNo
+ 115                             		.weak	__ZN6tflite3ops5micro7split_v9SplitImplIfEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16Tf
+ 117                             	__ZN6tflite3ops5micro7split_v9SplitImplIfEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLiteEva
+ 118                             	.LFB987:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 119                             		.loc 1 29 14 is_stmt 1
+ 120                             	.LVL11:
+ 121 0000 6E 6D                   		pushm	r6-r13
+ 122                             	.LCFI2:
+ 123 0002 71 00 F0                		add	#-16, r0
+ 124                             	.LCFI3:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 125                             		.loc 1 29 14 is_stmt 0
+ 126 0005 A0 0B                   		mov.L	r3, 4[r0]
+  31:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* output0 =
+ 127                             		.loc 1 31 25
+ 128 0007 E1 30 01                		mov.L	4[r3], [r0]
+ 129                             	.LVL12:
+ 130                             	.LBB107:
+ 131                             	.LBB108:
+ 132                             		.file 3 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+   1:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+   3:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** you may not use this file except in compliance with the License.
+   5:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** You may obtain a copy of the License at
+   6:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+   7:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+   9:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** Unless required by applicable law or agreed to in writing, software
+  10:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** See the License for the specific language governing permissions and
+  13:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** limitations under the License.
+  14:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** ==============================================================================*/
+  15:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  16:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  17:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  18:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  19:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include <cstdint>
+  20:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  21:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include "tensorflow/lite/c/common.h"
+  22:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include "tensorflow/lite/kernels/internal/compatibility.h"
+  23:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** #include "tensorflow/lite/kernels/internal/types.h"
+  24:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  25:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** namespace tflite {
+  26:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** namespace micro {
+  27:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  28:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns a mutable tensor for a given input index. is_variable must be checked
+  29:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // during prepare when the full TfLiteTensor is available.
+  30:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** inline TfLiteEvalTensor* GetMutableEvalInput(const TfLiteContext* context,
+  31:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                              const TfLiteNode* node,
+  32:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                              int index) {
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(context != nullptr);
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->inputs->data[index]);
+  36:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  37:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  38:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given input index in a node.
+  39:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** inline const TfLiteEvalTensor* GetEvalInput(const TfLiteContext* context,
+  40:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                             const TfLiteNode* node, int index) {
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return GetMutableEvalInput(context, node, index);
+  42:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  43:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  44:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given output index in a node.
+  45:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** inline TfLiteEvalTensor* GetEvalOutput(const TfLiteContext* context,
+  46:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****                                        const TfLiteNode* node, int index) {
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(context != nullptr);
+ 133                             		.loc 3 47 3 is_stmt 1
+ 134 000a 61 01                   		cmp	#0, r1
+ 135 000c 3A 92 01                		beq	.L10
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 136                             		.loc 3 48 3 is_stmt 0
+ 137 000f 71 2D 00                		add	#0, r2, r13
+ 138 0012 3A 8C 01                		beq	.L10
+ 139 0015 EF 18                   		mov.L	r1, r8
+ 140 0017 EF 46                   		mov.L	r4, r6
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 141                             		.loc 3 49 3 is_stmt 1
+ 142                             		.loc 3 49 32 is_stmt 0
+ 143 0019 ED DA 01                		mov.L	4[r13], r10
+ 144 001c AD 1F                   		mov.L	84[r1], r7
+ 145 001e ED A2 01                		mov.L	4[r10], r2
+ 146                             	.LVL13:
+ 147 0021 7F 17                   		jsr	r7
+ 148                             	.LVL14:
+ 149                             	.LBE108:
+ 150                             	.LBE107:
+  35:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 151                             		.loc 1 35 44
+ 152 0023 EC 03                   		mov.L	[r0], r3
+ 153 0025 EC 3A                   		mov.L	[r3], r10
+ 154                             	.LVL15:
+  37:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TFLITE_DCHECK_EQ(output0->dims->size, split_dimensions);
+ 155                             		.loc 1 37 3
+ 156 0027 47 6A                   		cmp	r6, r10
+ 157 0029 2A 05 38 73 01          		ble	.L10
+  38:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 158                             		.loc 1 38 3
+ 159 002e A8 1F                   		mov.L	4[r1], r7
+ 160 0030 06 84 7A                		cmp	[r7].L, r10
+ 161 0033 3B 6B 01                		bne	.L10
+ 162                             	.LVL16:
+  41:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < output_count; i++) {
+ 163                             		.loc 1 41 38
+ 164 0036 ED D3 01                		mov.L	4[r13], r3
+ 165                             	.LVL17:
+ 166                             	.LBB110:
+ 167                             	.LBB111:
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 168                             		.loc 2 153 49 is_stmt 1
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 169                             		.loc 2 153 71 is_stmt 0
+ 170 0039 EC 3B                   		mov.L	[r3], r11
+ 171                             	.LVL18:
+ 172                             	.LBE111:
+ 173                             	.LBE110:
+  40:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const int output_count = NumOutputs(node);
+ 174                             		.loc 1 40 11
+ 175 003b 66 0C                   		mov.L	#0, r12
+ 176 003d 66 07                   		mov.L	#0, r7
+ 177                             	.LBB112:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 178                             		.loc 1 42 21
+ 179 003f 61 0B                   		cmp	#0, r11
+ 180 0041 2B 41                   		ble	.L11
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 181                             		.loc 1 43 16
+ 182 0043 71 69 01                		add	#1, r6, r9
+ 183 0046 E7 0A 03                		mov.L	r10, 12[r0]
+ 184 0049 EF C4                   		mov.L	r12, r4
+ 185 004b EF 6C                   		mov.L	r6, r12
+ 186 004d EF 86                   		mov.L	r8, r6
+ 187                             	.LVL19:
+ 188 004f EF 7A                   		mov.L	r7, r10
+ 189                             	.LVL20:
+ 190 0051 EF 48                   		mov.L	r4, r8
+ 191                             	.LVL21:
+ 192 0053 0D                      		bra	.L12
+ 193                             	.LVL22:
+ 194                             	.L43:
+ 195 0054 ED D3 01                		mov.L	4[r13], r3
+ 196                             	.LVL23:
+ 197 0057 03                      		.balign 8,3,1
+ 198                             	.L12:
+ 199                             	.LBB113:
+ 200                             	.LBB114:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 201                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 202                             		.loc 3 48 3
+ 203                             		.loc 3 49 3
+ 204                             		.loc 3 49 32 is_stmt 0
+ 205 0058 62 17                   		add	#1, r7
+ 206                             	.LVL24:
+ 207 005a AD 6D                   		mov.L	84[r6], r5
+ 208 005c EF 61                   		mov.L	r6, r1
+ 209 005e FE 67 32                		mov.L	[r7,r3], r2
+ 210 0061 7F 15                   		jsr	r5
+ 211                             	.LVL25:
+ 212                             	.LBE114:
+ 213                             	.LBE113:
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 214                             		.loc 1 43 16
+ 215 0063 A8 1D                   		mov.L	4[r1], r5
+ 216 0065 FE 69 55                		mov.L	[r9,r5], r5
+ 217 0068 FD BF 53                		shar	#31, r5, r3
+ 218 006b FF 24 58                		add	r5, r8, r4
+ 219 006e FC 0B 3A                		adc	r3, r10
+ 220                             	.LVL26:
+ 221 0071 EF 48                   		mov.L	r4, r8
+ 222                             	.LVL27:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 223                             		.loc 1 42 21
+ 224 0073 47 B7                   		cmp	r11, r7
+ 225 0075 21 DF                   		bne	.L43
+ 226 0077 EF 68                   		mov.L	r6, r8
+ 227 0079 EF C6                   		mov.L	r12, r6
+ 228                             	.LVL28:
+ 229 007b EF A7                   		mov.L	r10, r7
+ 230                             	.LVL29:
+ 231 007d ED 0A 03                		mov.L	12[r0], r10
+ 232                             	.LVL30:
+ 233 0080 EF 4C                   		mov.L	r4, r12
+ 234                             	.LVL31:
+ 235                             		.balign 8,3,2
+ 236                             	.L11:
+ 237                             	.LBE112:
+  46:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int64_t outer_size = 1;
+ 238                             		.loc 1 46 3
+ 239 0082 71 69 01                		add	#1, r6, r9
+ 240 0085 EC 03                   		mov.L	[r0], r3
+ 241 0087 FE 69 35                		mov.L	[r9,r3], r5
+ 242 008a FD BF 53                		shar	#31, r5, r3
+ 243 008d 47 C5                   		cmp	r12, r5
+ 244 008f 3B 0F 01                		bne	.L10
+ 245 0092 47 73                   		cmp	r7, r3
+ 246 0094 3B 0A 01                		bne	.L10
+ 247                             	.LVL32:
+ 248 0097 EF 97                   		mov.L	r9, r7
+ 249 0099 A8 0D                   		mov.L	4[r0], r5
+ 250 009b EC 5C                   		mov.L	[r5], r12
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 251                             		.loc 1 47 11
+ 252 009d 3E 01 01                		mov.L	#1, 4[r0]
+ 253                             	.LVL33:
+ 254                             	.LBB115:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 255                             		.loc 1 48 21
+ 256 00a0 61 06                   		cmp	#0, r6
+ 257 00a2 2A 05 38 DB 00          		ble	.L13
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 258                             		.loc 1 48 12
+ 259 00a7 66 05                   		mov.L	#0, r5
+ 260                             	.LBE115:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 261                             		.loc 1 47 11
+ 262 00a9 3E 02 00                		mov.L	#0, 8[r0]
+ 263                             	.LBB116:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 264                             		.loc 1 49 16
+ 265 00ac EC 01                   		mov.L	[r0], r1
+ 266 00ae 62 41                   		add	#4, r1
+ 267 00b0 EF 53                   		mov.L	r5, r3
+ 268 00b2 A8 0C                   		mov.L	4[r0], r4
+ 269                             	.LVL34:
+ 270                             		.balign 8,3,3
+ 271                             	.L14:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 272                             		.loc 1 49 16 discriminator 2
+ 273 00b4 FE 63 1F                		mov.L	[r3,r1], r15
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 274                             		.loc 1 48 3 discriminator 2
+ 275 00b7 62 13                   		add	#1, r3
+ 276                             	.LVL35:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 277                             		.loc 1 49 16 discriminator 2
+ 278 00b9 FD BF FE                		shar	#31, r15, r14
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 279                             		.loc 1 49 5 discriminator 2
+ 280 00bc FF 32 F5                		mul	r15, r5, r2
+ 281 00bf 4F 4E                   		mul	r4, r14
+ 282 00c1 FC 1F F4                		emulu	r15, r4
+ 283                             	.LVL36:
+ 284 00c4 4B E2                   		add	r14, r2
+ 285 00c6 4B 25                   		add	r2, r5
+ 286                             	.LVL37:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 287                             		.loc 1 48 21 discriminator 2
+ 288 00c8 47 63                   		cmp	r6, r3
+ 289 00ca 21 EA                   		bne	.L14
+ 290 00cc A0 0C                   		mov.L	r4, 4[r0]
+ 291 00ce A0 85                   		mov.L	r5, 8[r0]
+ 292                             	.LVL38:
+ 293                             	.LBE116:
+ 294                             	.LBB117:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 295                             		.loc 1 53 34
+ 296 00d0 47 9A                   		cmp	r9, r10
+ 297 00d2 2A 05 38 BA 00          		ble	.L30
+ 298                             	.LVL39:
+ 299 00d7 03                      		.balign 8,3,1
+ 300                             	.L28:
+ 301                             	.LBE117:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 302                             		.loc 1 47 11 discriminator 2
+ 303 00d8 66 14                   		mov.L	#1, r4
+ 304 00da 66 05                   		mov.L	#0, r5
+ 305                             	.LBB118:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 306                             		.loc 1 54 21 discriminator 2
+ 307 00dc EC 09                   		mov.L	[r0], r9
+ 308 00de 62 49                   		add	#4, r9
+ 309                             	.LVL40:
+ 310                             		.balign 8,3,3
+ 311                             	.L16:
+ 312 00e0 FE 67 91                		mov.L	[r7,r9], r1
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 313                             		.loc 1 53 3 discriminator 2
+ 314 00e3 62 17                   		add	#1, r7
+ 315                             	.LVL41:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 316                             		.loc 1 54 21 discriminator 2
+ 317 00e5 FD BF 12                		shar	#31, r1, r2
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 318                             		.loc 1 54 5 discriminator 2
+ 319 00e8 FF 33 15                		mul	r1, r5, r3
+ 320 00eb 4F 42                   		mul	r4, r2
+ 321 00ed FC 1F 14                		emulu	r1, r4
+ 322                             	.LVL42:
+ 323 00f0 4B 23                   		add	r2, r3
+ 324 00f2 4B 35                   		add	r3, r5
+ 325                             	.LVL43:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 326                             		.loc 1 53 34 discriminator 2
+ 327 00f4 47 7A                   		cmp	r7, r10
+ 328 00f6 2A EA                   		bgt	.L16
+ 329                             	.LVL44:
+ 330                             		.balign 8,3,1
+ 331                             	.L15:
+ 332                             	.LBE118:
+ 333                             	.LBB119:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 334                             		.loc 1 58 21
+ 335 00f8 A8 87                   		mov.L	8[r0], r7
+ 336 00fa 61 07                   		cmp	#0, r7
+ 337 00fc 2A 05 38 95 00          		ble	.L44
+ 338                             	.LVL45:
+ 339                             		.balign 8,3,1
+ 340                             	.L17:
+ 341 0101 61 0B                   		cmp	#0, r11
+ 342 0103 2B 73                   		ble	.L35
+ 343                             	.LBE119:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 344                             		.loc 1 47 11
+ 345 0105 66 0A                   		mov.L	#0, r10
+ 346 0107 F8 06 00                		mov.L	#0, [r0]
+ 347                             	.LVL46:
+ 348 010a EF 47                   		mov.L	r4, r7
+ 349                             	.LBB133:
+ 350                             	.LBB120:
+ 351                             	.LBB121:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 352                             		.loc 1 64 49
+ 353 010c 62 16                   		add	#1, r6
+ 354                             	.LVL47:
+ 355 010e EF D9                   		mov.L	r13, r9
+ 356 0110 EF 8D                   		mov.L	r8, r13
+ 357                             	.LVL48:
+ 358 0112 EF C8                   		mov.L	r12, r8
+ 359                             	.LVL49:
+ 360                             		.balign 8,3,1
+ 361                             	.L24:
+ 362                             	.LBE121:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 363                             		.loc 1 59 14
+ 364 0114 66 0C                   		mov.L	#0, r12
+ 365                             	.LVL50:
+ 366                             		.balign 8,3,1
+ 367                             	.L22:
+ 368                             	.LBB129:
+ 369                             	.LBB122:
+ 370                             	.LBB123:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 371                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 372                             		.loc 3 48 3
+ 373                             		.loc 3 49 3
+ 374                             		.loc 3 49 32 is_stmt 0
+ 375 0116 ED 94 01                		mov.L	4[r9], r4
+ 376 0119 71 C3 01                		add	#1, r12, r3
+ 377 011c ED D5 15                		mov.L	84[r13], r5
+ 378 011f EF D1                   		mov.L	r13, r1
+ 379 0121 FE 63 42                		mov.L	[r3,r4], r2
+ 380 0124 7F 15                   		jsr	r5
+ 381                             	.LVL51:
+ 382                             	.LBE123:
+ 383                             	.LBE122:
+ 384                             	.LBB124:
+ 385                             	.LBB125:
+  50:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  51:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  52:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns data for a TfLiteEvalTensor struct.
+  53:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** template <typename T>
+  54:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** T* GetTensorData(TfLiteEvalTensor* tensor) {
+  55:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return tensor != nullptr ? reinterpret_cast<T*>(tensor->data.raw) : nullptr;
+ 386                             		.loc 3 55 28
+ 387 0126 61 01                   		cmp	#0, r1
+ 388 0128 20 53                   		beq	.L31
+ 389 012a EC 14                   		mov.L	[r1], r4
+ 390                             		.balign 8,3,1
+ 391                             	.L20:
+ 392                             	.LVL52:
+ 393                             	.LBE125:
+ 394                             	.LBE124:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 395                             		.loc 1 64 49
+ 396 012c A8 1D                   		mov.L	4[r1], r5
+  63:../src/tensorflow/lite/micro/kernels/split_v.cc ****           output_tensor->dims->data[axis_value] * base_inner_size;
+ 397                             		.loc 1 63 17
+ 398 012e FE 66 52                		mov.L	[r6,r5], r2
+ 399 0131 4F 72                   		mul	r7, r2
+ 400                             	.LVL53:
+  65:../src/tensorflow/lite/micro/kernels/split_v.cc ****       for (int j = 0; j < copy_size; ++j) output_ptr[j] = input_ptr[j];
+ 401                             		.loc 1 65 39
+ 402 0133 FF 35 A2                		mul	r10, r2, r5
+ 403                             	.LVL54:
+ 404                             	.LBB127:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 405                             		.loc 1 66 25
+ 406 0136 61 02                   		cmp	#0, r2
+ 407 0138 2B 1A                   		ble	.L25
+ 408 013a FD C2 51                		shll	#2, r5, r1
+ 409                             	.LVL55:
+ 410 013d FD C2 23                		shll	#2, r2, r3
+ 411 0140 EF 85                   		mov.L	r8, r5
+ 412 0142 4B 14                   		add	r1, r4
+ 413                             	.LVL56:
+ 414 0144 4B 83                   		add	r8, r3
+ 415                             	.LVL57:
+ 416 0146 EF 00                   		.balign 8,3,3
+ 417                             	.L26:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 418                             		.loc 1 66 43 discriminator 2
+ 419 0148 FD 2A 51                		mov.L	[r5+], r1
+ 420 014b FD 22 41                		mov.L	r1, [r4+]
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 421                             		.loc 1 66 25 discriminator 2
+ 422 014e 47 53                   		cmp	r5, r3
+ 423 0150 21 F8                   		bne	.L26
+ 424                             		.balign 8,3,1
+ 425                             	.L25:
+ 426                             	.LBE127:
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 427                             		.loc 1 67 17
+ 428 0152 6C 22                   		shll	#2, r2
+ 429                             	.LVL58:
+ 430                             	.LBE129:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 431                             		.loc 1 59 5
+ 432 0154 62 1C                   		add	#1, r12
+ 433                             	.LVL59:
+ 434                             	.LBB130:
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 435                             		.loc 1 67 7
+ 436 0156 4B 28                   		add	r2, r8
+ 437                             	.LVL60:
+ 438                             	.LBE130:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 439                             		.loc 1 59 23
+ 440 0158 47 CB                   		cmp	r12, r11
+ 441 015a 21 BC                   		bne	.L22
+ 442                             	.LVL61:
+ 443 015c EC 03                   		mov.L	[r0], r3
+ 444 015e 71 A2 01                		add	#1, r10, r2
+ 445                             	.LVL62:
+ 446 0161 FD 74 23 00             		adc	#0, r3
+ 447 0165 E3 03                   		mov.L	r3, [r0]
+ 448 0167 EF 2A                   		mov.L	r2, r10
+ 449                             	.LBE120:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 450                             		.loc 1 58 21
+ 451 0169 A8 85                   		mov.L	8[r0], r5
+ 452 016b 47 35                   		cmp	r3, r5
+ 453 016d 2A A7                   		bgt	.L24
+ 454 016f 1F                      		bne	.L35
+ 455 0170 A8 09                   		mov.L	4[r0], r1
+ 456 0172 47 21                   		cmp	r2, r1
+ 457 0174 24 A0                   		bgtu	.L24
+ 458                             	.LVL63:
+ 459                             		.balign 8,3,1
+ 460                             	.L35:
+ 461                             	.LBE133:
+  72:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 462                             		.loc 1 72 1
+ 463 0176 66 01                   		mov.L	#0, r1
+ 464 0178 3F 6D 0C                		rtsd	#48, r6-r13
+ 465                             	.LVL64:
+ 466                             	.L31:
+ 467                             	.LBB134:
+ 468                             	.LBB132:
+ 469                             	.LBB131:
+ 470                             	.LBB128:
+ 471                             	.LBB126:
+ 472                             		.loc 3 55 28
+ 473 017b 66 04                   		mov.L	#0, r4
+ 474 017d 2E AF                   		bra	.L20
+ 475                             	.LVL65:
+ 476                             	.L13:
+ 477                             	.LBE126:
+ 478                             	.LBE128:
+ 479                             	.LBE131:
+ 480                             	.LBE132:
+ 481                             	.LBE134:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 482                             		.loc 1 47 11
+ 483 017f 3E 02 00                		mov.L	#0, 8[r0]
+ 484                             	.LBB135:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 485                             		.loc 1 53 34
+ 486 0182 47 9A                   		cmp	r9, r10
+ 487 0184 2B 05 38 52 FF          		bgt	.L28
+ 488                             	.LBE135:
+  52:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = axis_value + 1; i < split_dimensions; ++i) {
+ 489                             		.loc 1 52 11
+ 490 0189 66 14                   		mov.L	#1, r4
+ 491 018b 38 76 FF                		bra	.L17
+ 492                             	.LVL66:
+ 493                             	.L30:
+ 494 018e 66 14                   		mov.L	#1, r4
+ 495                             	.LVL67:
+ 496 0190 38 68 FF                		bra	.L15
+ 497                             	.LVL68:
+ 498                             	.L44:
+ 499                             	.LBB136:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 500                             		.loc 1 58 21
+ 501 0193 21 E3                   		bne	.L35
+ 502 0195 A8 09                   		mov.L	4[r0], r1
+ 503 0197 61 01                   		cmp	#0, r1
+ 504 0199 3B 68 FF                		bne	.L17
+ 505 019c 2E DA                   		bra	.L35
+ 506                             	.LVL69:
+ 507                             	.L10:
+ 508                             	.LBE136:
+ 509                             	.LBB137:
+ 510                             	.LBB109:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 511                             		.loc 3 47 3
+ 512 019e 05 00 00 00             		bsr	_abort
+ 513                             	.LVL70:
+ 514                             	.LBE109:
+ 515                             	.LBE137:
+ 516                             	.LFE987:
+ 518 01a2 74 10 01 00 00 00       		.section	.text._ZN6tflite3ops5micro7split_v9SplitImplIaEE12TfLiteStatusP13TfLiteContextP10TfLiteNo
+ 519                             		.weak	__ZN6tflite3ops5micro7split_v9SplitImplIaEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16Tf
+ 521                             	__ZN6tflite3ops5micro7split_v9SplitImplIaEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLiteEva
+ 522                             	.LFB988:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 523                             		.loc 1 29 14 is_stmt 1
+ 524                             	.LVL71:
+ 525 0000 6E 6D                   		pushm	r6-r13
+ 526                             	.LCFI4:
+ 527 0002 71 00 EC                		add	#-20, r0
+ 528                             	.LCFI5:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 529                             		.loc 1 29 14 is_stmt 0
+ 530 0005 A0 0B                   		mov.L	r3, 4[r0]
+  31:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* output0 =
+ 531                             		.loc 1 31 25
+ 532 0007 E1 30 01                		mov.L	4[r3], [r0]
+ 533                             	.LVL72:
+ 534                             	.LBB157:
+ 535                             	.LBB158:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 536                             		.loc 3 47 3 is_stmt 1
+ 537 000a 61 01                   		cmp	#0, r1
+ 538 000c 3A FD 01                		beq	.L47
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 539                             		.loc 3 48 3 is_stmt 0
+ 540 000f 71 2C 00                		add	#0, r2, r12
+ 541 0012 3A F7 01                		beq	.L47
+ 542 0015 EF 17                   		mov.L	r1, r7
+ 543 0017 EF 4B                   		mov.L	r4, r11
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 544                             		.loc 3 49 3 is_stmt 1
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 545                             		.loc 3 49 32 is_stmt 0
+ 546 0019 ED C5 01                		mov.L	4[r12], r5
+ 547 001c ED 1A 15                		mov.L	84[r1], r10
+ 548 001f A8 5A                   		mov.L	4[r5], r2
+ 549                             	.LVL73:
+ 550 0021 7F 1A                   		jsr	r10
+ 551                             	.LVL74:
+ 552                             	.LBE158:
+ 553                             	.LBE157:
+  35:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 554                             		.loc 1 35 44
+ 555 0023 EC 03                   		mov.L	[r0], r3
+ 556 0025 EC 39                   		mov.L	[r3], r9
+ 557                             	.LVL75:
+  37:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TFLITE_DCHECK_EQ(output0->dims->size, split_dimensions);
+ 558                             		.loc 1 37 3
+ 559 0027 47 B9                   		cmp	r11, r9
+ 560 0029 2A 05 38 DE 01          		ble	.L47
+  38:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 561                             		.loc 1 38 3
+ 562 002e ED 1A 01                		mov.L	4[r1], r10
+ 563 0031 06 84 A9                		cmp	[r10].L, r9
+ 564 0034 3B D5 01                		bne	.L47
+ 565                             	.LVL76:
+  41:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < output_count; i++) {
+ 566                             		.loc 1 41 38
+ 567 0037 ED C2 01                		mov.L	4[r12], r2
+ 568                             	.LVL77:
+ 569                             	.LBB160:
+ 570                             	.LBB161:
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 571                             		.loc 2 153 49 is_stmt 1
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 572                             		.loc 2 153 71 is_stmt 0
+ 573 003a E4 20 03                		mov.L	[r2], 12[r0]
+ 574                             	.LVL78:
+ 575                             	.LBE161:
+ 576                             	.LBE160:
+ 577                             	.LBB162:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 578                             		.loc 1 42 21
+ 579 003d A8 8C                   		mov.L	12[r0], r4
+ 580                             	.LBE162:
+  40:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const int output_count = NumOutputs(node);
+ 581                             		.loc 1 40 11
+ 582 003f 66 0D                   		mov.L	#0, r13
+ 583 0041 66 0A                   		mov.L	#0, r10
+ 584                             	.LBB165:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 585                             		.loc 1 42 21
+ 586 0043 61 04                   		cmp	#0, r4
+ 587 0045 2B 3B                   		ble	.L48
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 588                             		.loc 1 42 12
+ 589 0047 66 05                   		mov.L	#0, r5
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 590                             		.loc 1 43 16
+ 591 0049 71 B8 01                		add	#1, r11, r8
+ 592 004c EF 56                   		mov.L	r5, r6
+ 593 004e E7 0B 04                		mov.L	r11, 16[r0]
+ 594 0051 EF 7B                   		mov.L	r7, r11
+ 595                             	.LVL79:
+ 596 0053 EF 47                   		mov.L	r4, r7
+ 597                             	.LVL80:
+ 598 0055 0C                      		bra	.L49
+ 599                             	.LVL81:
+ 600                             	.L91:
+ 601 0056 ED C2 01                		mov.L	4[r12], r2
+ 602                             	.LVL82:
+ 603                             		.balign 8,3,1
+ 604                             	.L49:
+ 605                             	.LBB163:
+ 606                             	.LBB164:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 607                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 608                             		.loc 3 48 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 609                             		.loc 3 49 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 610                             		.loc 3 49 32 is_stmt 0
+ 611 0059 62 16                   		add	#1, r6
+ 612                             	.LVL83:
+ 613 005b ED B5 15                		mov.L	84[r11], r5
+ 614 005e EF B1                   		mov.L	r11, r1
+ 615 0060 FE 66 22                		mov.L	[r6,r2], r2
+ 616 0063 7F 15                   		jsr	r5
+ 617                             	.LVL84:
+ 618                             	.LBE164:
+ 619                             	.LBE163:
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 620                             		.loc 1 43 16
+ 621 0065 A8 1D                   		mov.L	4[r1], r5
+ 622 0067 FE 68 55                		mov.L	[r8,r5], r5
+ 623 006a FD BF 53                		shar	#31, r5, r3
+ 624 006d FF 2F 5D                		add	r5, r13, r15
+ 625 0070 FC 0B 3A                		adc	r3, r10
+ 626                             	.LVL85:
+ 627 0073 EF FD                   		mov.L	r15, r13
+ 628                             	.LVL86:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 629                             		.loc 1 42 21
+ 630 0075 47 76                   		cmp	r7, r6
+ 631 0077 21 DF                   		bne	.L91
+ 632 0079 EF B7                   		mov.L	r11, r7
+ 633                             	.LVL87:
+ 634 007b ED 0B 04                		mov.L	16[r0], r11
+ 635                             	.LVL88:
+ 636 007e EF 00                   		.balign 8,3,2
+ 637                             	.L48:
+ 638                             	.LBE165:
+  46:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int64_t outer_size = 1;
+ 639                             		.loc 1 46 3
+ 640 0080 71 B1 01                		add	#1, r11, r1
+ 641 0083 EC 03                   		mov.L	[r0], r3
+ 642 0085 FE 61 35                		mov.L	[r1,r3], r5
+ 643 0088 FD BF 52                		shar	#31, r5, r2
+ 644 008b 47 D5                   		cmp	r13, r5
+ 645 008d 3B 7C 01                		bne	.L47
+ 646 0090 47 A2                   		cmp	r10, r2
+ 647 0092 3B 77 01                		bne	.L47
+ 648                             	.LVL89:
+ 649 0095 EF 1A                   		mov.L	r1, r10
+ 650 0097 A8 0D                   		mov.L	4[r0], r5
+ 651 0099 EC 58                   		mov.L	[r5], r8
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 652                             		.loc 1 47 11
+ 653 009b 3E 01 01                		mov.L	#1, 4[r0]
+ 654                             	.LVL90:
+ 655                             	.LBB166:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 656                             		.loc 1 48 21
+ 657 009e 61 0B                   		cmp	#0, r11
+ 658 00a0 2A 05 38 47 01          		ble	.L50
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 659                             		.loc 1 48 12
+ 660 00a5 66 05                   		mov.L	#0, r5
+ 661                             	.LBE166:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 662                             		.loc 1 47 11
+ 663 00a7 3E 02 00                		mov.L	#0, 8[r0]
+ 664                             	.LBB167:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 665                             		.loc 1 49 16
+ 666 00aa EF 3E                   		mov.L	r3, r14
+ 667 00ac 62 4E                   		add	#4, r14
+ 668 00ae EF 53                   		mov.L	r5, r3
+ 669 00b0 A8 0C                   		mov.L	4[r0], r4
+ 670                             	.LVL91:
+ 671                             		.balign 8,3,3
+ 672                             	.L51:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 673                             		.loc 1 49 16 discriminator 2
+ 674 00b2 FE 63 ED                		mov.L	[r3,r14], r13
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 675                             		.loc 1 48 3 discriminator 2
+ 676 00b5 62 13                   		add	#1, r3
+ 677                             	.LVL92:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 678                             		.loc 1 49 16 discriminator 2
+ 679 00b7 FD BF D6                		shar	#31, r13, r6
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 680                             		.loc 1 49 5 discriminator 2
+ 681 00ba FF 32 D5                		mul	r13, r5, r2
+ 682 00bd 4F 46                   		mul	r4, r6
+ 683 00bf FC 1F D4                		emulu	r13, r4
+ 684                             	.LVL93:
+ 685 00c2 4B 62                   		add	r6, r2
+ 686 00c4 4B 25                   		add	r2, r5
+ 687                             	.LVL94:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 688                             		.loc 1 48 21 discriminator 2
+ 689 00c6 47 B3                   		cmp	r11, r3
+ 690 00c8 21 EA                   		bne	.L51
+ 691 00ca A0 0C                   		mov.L	r4, 4[r0]
+ 692 00cc A0 85                   		mov.L	r5, 8[r0]
+ 693                             	.LVL95:
+ 694                             	.LBE167:
+ 695                             	.LBB168:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 696                             		.loc 1 53 34
+ 697 00ce 47 19                   		cmp	r1, r9
+ 698 00d0 2A 05 38 26 01          		ble	.L72
+ 699                             	.LVL96:
+ 700                             		.balign 8,3,1
+ 701                             	.L70:
+ 702                             	.LBE168:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 703                             		.loc 1 47 11 discriminator 2
+ 704 00d5 66 14                   		mov.L	#1, r4
+ 705 00d7 66 05                   		mov.L	#0, r5
+ 706                             	.LBB169:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 707                             		.loc 1 54 21 discriminator 2
+ 708 00d9 EC 06                   		mov.L	[r0], r6
+ 709 00db 62 46                   		add	#4, r6
+ 710                             	.LVL97:
+ 711 00dd FC 13 00                		.balign 8,3,3
+ 712                             	.L53:
+ 713 00e0 FE 6A 61                		mov.L	[r10,r6], r1
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 714                             		.loc 1 53 3 discriminator 2
+ 715 00e3 62 1A                   		add	#1, r10
+ 716                             	.LVL98:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 717                             		.loc 1 54 21 discriminator 2
+ 718 00e5 FD BF 12                		shar	#31, r1, r2
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 719                             		.loc 1 54 5 discriminator 2
+ 720 00e8 FF 33 15                		mul	r1, r5, r3
+ 721 00eb 4F 42                   		mul	r4, r2
+ 722 00ed FC 1F 14                		emulu	r1, r4
+ 723                             	.LVL99:
+ 724 00f0 4B 23                   		add	r2, r3
+ 725 00f2 4B 35                   		add	r3, r5
+ 726                             	.LVL100:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 727                             		.loc 1 53 34 discriminator 2
+ 728 00f4 47 A9                   		cmp	r10, r9
+ 729 00f6 2A EA                   		bgt	.L53
+ 730                             	.LVL101:
+ 731                             		.balign 8,3,1
+ 732                             	.L52:
+ 733                             	.LBE169:
+ 734                             	.LBB170:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 735                             		.loc 1 58 21
+ 736 00f8 ED 0A 02                		mov.L	8[r0], r10
+ 737 00fb 61 0A                   		cmp	#0, r10
+ 738 00fd 2A 05 38 FE 00          		ble	.L92
+ 739                             	.LVL102:
+ 740                             		.balign 8,3,1
+ 741                             	.L54:
+ 742 0102 A8 8B                   		mov.L	12[r0], r3
+ 743 0104 61 03                   		cmp	#0, r3
+ 744 0106 2A 05 38 C5 00          		ble	.L79
+ 745                             	.LBE170:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 746                             		.loc 1 47 11
+ 747 010b 66 06                   		mov.L	#0, r6
+ 748 010d F8 06 00                		mov.L	#0, [r0]
+ 749                             	.LVL103:
+ 750 0110 EF 4A                   		mov.L	r4, r10
+ 751                             	.LBB185:
+ 752                             	.LBB171:
+ 753                             	.LBB172:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 754                             		.loc 1 64 49
+ 755 0112 62 1B                   		add	#1, r11
+ 756 0114 EF 39                   		mov.L	r3, r9
+ 757                             	.LVL104:
+ 758                             		.balign 8,3,1
+ 759                             	.L61:
+ 760                             	.LBE172:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 761                             		.loc 1 59 14
+ 762 0116 66 0D                   		mov.L	#0, r13
+ 763                             	.LVL105:
+ 764                             		.balign 8,3,1
+ 765                             	.L59:
+ 766                             	.LBB181:
+ 767                             	.LBB173:
+ 768                             	.LBB174:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 769                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 770                             		.loc 3 48 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 771                             		.loc 3 49 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 772                             		.loc 3 49 32 is_stmt 0
+ 773 0118 ED C4 01                		mov.L	4[r12], r4
+ 774 011b 71 D3 01                		add	#1, r13, r3
+ 775 011e AD 7D                   		mov.L	84[r7], r5
+ 776 0120 EF 71                   		mov.L	r7, r1
+ 777 0122 FE 63 42                		mov.L	[r3,r4], r2
+ 778 0125 7F 15                   		jsr	r5
+ 779                             	.LVL106:
+ 780                             	.LBE174:
+ 781                             	.LBE173:
+ 782                             	.LBB175:
+ 783                             	.LBB176:
+ 784                             		.loc 3 55 28
+ 785 0127 61 01                   		cmp	#0, r1
+ 786 0129 3A BB 00                		beq	.L73
+ 787 012c EC 1E                   		mov.L	[r1], r14
+ 788                             		.balign 8,3,1
+ 789                             	.L57:
+ 790                             	.LVL107:
+ 791                             	.LBE176:
+ 792                             	.LBE175:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 793                             		.loc 1 64 49
+ 794 012e A8 1D                   		mov.L	4[r1], r5
+  63:../src/tensorflow/lite/micro/kernels/split_v.cc ****           output_tensor->dims->data[axis_value] * base_inner_size;
+ 795                             		.loc 1 63 17
+ 796 0130 FE 6B 54                		mov.L	[r11,r5], r4
+ 797 0133 4F A4                   		mul	r10, r4
+ 798                             	.LVL108:
+  65:../src/tensorflow/lite/micro/kernels/split_v.cc ****       for (int j = 0; j < copy_size; ++j) output_ptr[j] = input_ptr[j];
+ 799                             		.loc 1 65 39
+ 800 0135 FF 31 64                		mul	r6, r4, r1
+ 801                             	.LVL109:
+ 802                             	.LBB178:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 803                             		.loc 1 66 25
+ 804 0138 61 04                   		cmp	#0, r4
+ 805 013a 2B 6A                   		ble	.L65
+ 806 013c 71 13 04                		add	#4, r1, r3
+ 807 013f FF 25 1E                		add	r1, r14, r5
+ 808                             	.LVL110:
+ 809 0142 4B E3                   		add	r14, r3
+ 810 0144 71 8F 04                		add	#4, r8, r15
+ 811 0147 47 38                   		cmp	r3, r8
+ 812 0149 FC DB 32                		scgeu.L	r3
+ 813 014c 47 F5                   		cmp	r15, r5
+ 814 014e FC DB F2                		scgeu.L	r15
+ 815 0151 71 42 FF                		add	#-1, r4, r2
+ 816 0154 57 F3                   		or	r15, r3
+ 817 0156 61 82                   		cmp	#8, r2
+ 818 0158 FC DB 24                		scgtu.L	r2
+ 819 015b FC 33 32                		tst	r3, r2
+ 820 015e 20 74                   		beq	.L62
+ 821 0160 FF 53 85                		or	r8, r5, r3
+ 822 0163 64 33                   		and	#3, r3
+ 823 0165 21 6D                   		bne	.L62
+ 824 0167 FB 26 FC                		mov.L	#-4, r2
+ 825 016a 53 42                   		and	r4, r2
+ 826 016c EF 83                   		mov.L	r8, r3
+ 827 016e 4B 52                   		add	r5, r2
+ 828                             	.LVL111:
+ 829                             		.balign 8,3,3
+ 830                             	.L64:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 831                             		.loc 1 66 43 discriminator 2
+ 832 0170 FD 2A 3F                		mov.L	[r3+], r15
+ 833 0173 FD 22 5F                		mov.L	r15, [r5+]
+ 834 0176 47 25                   		cmp	r2, r5
+ 835 0178 21 F8                   		bne	.L64
+ 836 017a FB 56 FC                		mov.L	#-4, r5
+ 837 017d 53 45                   		and	r4, r5
+ 838 017f 47 54                   		cmp	r5, r4
+ 839 0181 20 23                   		beq	.L65
+ 840                             	.LVL112:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 841                             		.loc 1 66 43
+ 842 0183 4B 1E                   		add	r1, r14
+ 843                             	.LVL113:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 844                             		.loc 1 66 7
+ 845 0185 71 53 01                		add	#1, r5, r3
+ 846                             	.LVL114:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 847                             		.loc 1 66 43
+ 848 0188 FE 45 81                		mov.B	[r5,r8], r1
+ 849 018b FE 05 E1                		mov.B	r1, [r5,r14]
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 850                             		.loc 1 66 25
+ 851 018e 47 34                   		cmp	r3, r4
+ 852 0190 2B 14                   		ble	.L65
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 853                             		.loc 1 66 43
+ 854 0192 FE 43 82                		mov.B	[r3,r8], r2
+ 855 0195 FE 03 E2                		mov.B	r2, [r3,r14]
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 856                             		.loc 1 66 7
+ 857 0198 62 25                   		add	#2, r5
+ 858                             	.LVL115:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 859                             		.loc 1 66 25
+ 860 019a 47 54                   		cmp	r5, r4
+ 861 019c 2B 08                   		ble	.L65
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 862                             		.loc 1 66 43
+ 863 019e FE 45 83                		mov.B	[r5,r8], r3
+ 864 01a1 FE 05 E3                		mov.B	r3, [r5,r14]
+ 865                             	.LVL116:
+ 866                             		.balign 8,3,1
+ 867                             	.L65:
+ 868                             	.LBE178:
+ 869                             	.LBE181:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 870                             		.loc 1 59 5
+ 871 01a4 62 1D                   		add	#1, r13
+ 872                             	.LVL117:
+ 873                             	.LBB182:
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 874                             		.loc 1 67 7
+ 875 01a6 4B 48                   		add	r4, r8
+ 876                             	.LVL118:
+ 877                             	.LBE182:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 878                             		.loc 1 59 23
+ 879 01a8 47 D9                   		cmp	r13, r9
+ 880 01aa 3B 6E FF                		bne	.L59
+ 881                             	.LVL119:
+ 882 01ad EC 05                   		mov.L	[r0], r5
+ 883 01af 71 64 01                		add	#1, r6, r4
+ 884                             	.LVL120:
+ 885 01b2 FD 74 25 00             		adc	#0, r5
+ 886 01b6 E3 05                   		mov.L	r5, [r0]
+ 887 01b8 EF 46                   		mov.L	r4, r6
+ 888                             	.LBE171:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 889                             		.loc 1 58 21
+ 890 01ba A8 81                   		mov.L	8[r0], r1
+ 891 01bc 47 51                   		cmp	r5, r1
+ 892 01be 2B 05 38 56 FF          		bgt	.L61
+ 893 01c3 1A                      		bne	.L79
+ 894 01c4 A8 0A                   		mov.L	4[r0], r2
+ 895 01c6 47 42                   		cmp	r4, r2
+ 896 01c8 25 05 38 4C FF          		bgtu	.L61
+ 897                             	.LVL121:
+ 898                             		.balign 8,3,1
+ 899                             	.L79:
+ 900                             	.LBE185:
+  72:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 901                             		.loc 1 72 1
+ 902 01cd 66 01                   		mov.L	#0, r1
+ 903 01cf 3F 6D 0D                		rtsd	#52, r6-r13
+ 904                             	.LVL122:
+ 905                             	.L62:
+ 906 01d2 EF 83                   		mov.L	r8, r3
+ 907 01d4 FF 22 84                		add	r8, r4, r2
+ 908                             	.LVL123:
+ 909 01d7 03                      		.balign 8,3,5
+ 910                             	.L68:
+ 911                             	.LBB186:
+ 912                             	.LBB184:
+ 913                             	.LBB183:
+ 914                             	.LBB179:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 915                             		.loc 1 66 43
+ 916 01d8 FD 28 3F                		mov.B	[r3+], r15
+ 917                             	.LVL124:
+ 918 01db FD 20 5F                		mov.B	r15, [r5+]
+ 919                             	.LVL125:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 920                             		.loc 1 66 25
+ 921 01de 47 23                   		cmp	r2, r3
+ 922 01e0 21 F8                   		bne	.L68
+ 923 01e2 2E C2                   		bra	.L65
+ 924                             	.LVL126:
+ 925                             	.L73:
+ 926                             	.LBE179:
+ 927                             	.LBB180:
+ 928                             	.LBB177:
+ 929                             		.loc 3 55 28
+ 930 01e4 66 0E                   		mov.L	#0, r14
+ 931 01e6 38 48 FF                		bra	.L57
+ 932                             	.LVL127:
+ 933                             	.L50:
+ 934                             	.LBE177:
+ 935                             	.LBE180:
+ 936                             	.LBE183:
+ 937                             	.LBE184:
+ 938                             	.LBE186:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 939                             		.loc 1 47 11
+ 940 01e9 3E 02 00                		mov.L	#0, 8[r0]
+ 941                             	.LBB187:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 942                             		.loc 1 53 34
+ 943 01ec 47 19                   		cmp	r1, r9
+ 944 01ee 2B 05 38 E5 FE          		bgt	.L70
+ 945                             	.LBE187:
+  52:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = axis_value + 1; i < split_dimensions; ++i) {
+ 946                             		.loc 1 52 11
+ 947 01f3 66 14                   		mov.L	#1, r4
+ 948 01f5 38 0D FF                		bra	.L54
+ 949                             	.LVL128:
+ 950                             	.L72:
+ 951 01f8 66 14                   		mov.L	#1, r4
+ 952                             	.LVL129:
+ 953 01fa 38 FE FE                		bra	.L52
+ 954                             	.LVL130:
+ 955                             	.L92:
+ 956                             	.LBB188:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 957                             		.loc 1 58 21
+ 958 01fd 21 D0                   		bne	.L79
+ 959 01ff ED 0F 01                		mov.L	4[r0], r15
+ 960 0202 61 0F                   		cmp	#0, r15
+ 961 0204 3B FE FE                		bne	.L54
+ 962 0207 2E C6                   		bra	.L79
+ 963                             	.LVL131:
+ 964                             	.L47:
+ 965                             	.LBE188:
+ 966                             	.LBB189:
+ 967                             	.LBB159:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 968                             		.loc 3 47 3
+ 969 0209 05 00 00 00             		bsr	_abort
+ 970                             	.LVL132:
+ 971                             	.LBE159:
+ 972                             	.LBE189:
+ 973                             	.LFE988:
+ 975 020d FC 13 00                		.section	.text._ZN6tflite3ops5micro7split_v9SplitImplIsEE12TfLiteStatusP13TfLiteContextP10TfLiteNo
+ 976                             		.weak	__ZN6tflite3ops5micro7split_v9SplitImplIsEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16Tf
+ 978                             	__ZN6tflite3ops5micro7split_v9SplitImplIsEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLiteEva
+ 979                             	.LFB989:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 980                             		.loc 1 29 14 is_stmt 1
+ 981                             	.LVL133:
+ 982 0000 6E 6D                   		pushm	r6-r13
+ 983                             	.LCFI6:
+ 984 0002 71 00 EC                		add	#-20, r0
+ 985                             	.LCFI7:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 986                             		.loc 1 29 14 is_stmt 0
+ 987 0005 A0 0B                   		mov.L	r3, 4[r0]
+  31:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* output0 =
+ 988                             		.loc 1 31 25
+ 989 0007 E1 30 01                		mov.L	4[r3], [r0]
+ 990                             	.LVL134:
+ 991                             	.LBB209:
+ 992                             	.LBB210:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 993                             		.loc 3 47 3 is_stmt 1
+ 994 000a 61 01                   		cmp	#0, r1
+ 995 000c 3A E7 01                		beq	.L95
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 996                             		.loc 3 48 3 is_stmt 0
+ 997 000f 71 2C 00                		add	#0, r2, r12
+ 998 0012 3A E1 01                		beq	.L95
+ 999 0015 EF 17                   		mov.L	r1, r7
+ 1000 0017 EF 4B                   		mov.L	r4, r11
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1001                             		.loc 3 49 3 is_stmt 1
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1002                             		.loc 3 49 32 is_stmt 0
+ 1003 0019 ED C5 01                		mov.L	4[r12], r5
+ 1004 001c ED 1A 15                		mov.L	84[r1], r10
+ 1005 001f A8 5A                   		mov.L	4[r5], r2
+ 1006                             	.LVL135:
+ 1007 0021 7F 1A                   		jsr	r10
+ 1008                             	.LVL136:
+ 1009                             	.LBE210:
+ 1010                             	.LBE209:
+  35:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1011                             		.loc 1 35 44
+ 1012 0023 EC 03                   		mov.L	[r0], r3
+ 1013 0025 EC 39                   		mov.L	[r3], r9
+ 1014                             	.LVL137:
+  37:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TFLITE_DCHECK_EQ(output0->dims->size, split_dimensions);
+ 1015                             		.loc 1 37 3
+ 1016 0027 47 B9                   		cmp	r11, r9
+ 1017 0029 2A 05 38 C8 01          		ble	.L95
+  38:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1018                             		.loc 1 38 3
+ 1019 002e ED 1A 01                		mov.L	4[r1], r10
+ 1020 0031 06 84 A9                		cmp	[r10].L, r9
+ 1021 0034 3B BF 01                		bne	.L95
+ 1022                             	.LVL138:
+  41:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < output_count; i++) {
+ 1023                             		.loc 1 41 38
+ 1024 0037 ED C2 01                		mov.L	4[r12], r2
+ 1025                             	.LVL139:
+ 1026                             	.LBB212:
+ 1027                             	.LBB213:
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 1028                             		.loc 2 153 49 is_stmt 1
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 1029                             		.loc 2 153 71 is_stmt 0
+ 1030 003a E4 20 03                		mov.L	[r2], 12[r0]
+ 1031                             	.LVL140:
+ 1032                             	.LBE213:
+ 1033                             	.LBE212:
+ 1034                             	.LBB214:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 1035                             		.loc 1 42 21
+ 1036 003d A8 8C                   		mov.L	12[r0], r4
+ 1037                             	.LBE214:
+  40:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const int output_count = NumOutputs(node);
+ 1038                             		.loc 1 40 11
+ 1039 003f 66 0D                   		mov.L	#0, r13
+ 1040 0041 66 0A                   		mov.L	#0, r10
+ 1041                             	.LBB217:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 1042                             		.loc 1 42 21
+ 1043 0043 61 04                   		cmp	#0, r4
+ 1044 0045 2B 3B                   		ble	.L96
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 1045                             		.loc 1 42 12
+ 1046 0047 66 05                   		mov.L	#0, r5
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 1047                             		.loc 1 43 16
+ 1048 0049 71 B8 01                		add	#1, r11, r8
+ 1049 004c EF 56                   		mov.L	r5, r6
+ 1050 004e E7 0B 04                		mov.L	r11, 16[r0]
+ 1051 0051 EF 7B                   		mov.L	r7, r11
+ 1052                             	.LVL141:
+ 1053 0053 EF 47                   		mov.L	r4, r7
+ 1054                             	.LVL142:
+ 1055 0055 0C                      		bra	.L97
+ 1056                             	.LVL143:
+ 1057                             	.L139:
+ 1058 0056 ED C2 01                		mov.L	4[r12], r2
+ 1059                             	.LVL144:
+ 1060                             		.balign 8,3,1
+ 1061                             	.L97:
+ 1062                             	.LBB215:
+ 1063                             	.LBB216:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1064                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 1065                             		.loc 3 48 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1066                             		.loc 3 49 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1067                             		.loc 3 49 32 is_stmt 0
+ 1068 0059 62 16                   		add	#1, r6
+ 1069                             	.LVL145:
+ 1070 005b ED B5 15                		mov.L	84[r11], r5
+ 1071 005e EF B1                   		mov.L	r11, r1
+ 1072 0060 FE 66 22                		mov.L	[r6,r2], r2
+ 1073 0063 7F 15                   		jsr	r5
+ 1074                             	.LVL146:
+ 1075                             	.LBE216:
+ 1076                             	.LBE215:
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 1077                             		.loc 1 43 16
+ 1078 0065 A8 1D                   		mov.L	4[r1], r5
+ 1079 0067 FE 68 55                		mov.L	[r8,r5], r5
+ 1080 006a FD BF 53                		shar	#31, r5, r3
+ 1081 006d FF 2F 5D                		add	r5, r13, r15
+ 1082 0070 FC 0B 3A                		adc	r3, r10
+ 1083                             	.LVL147:
+ 1084 0073 EF FD                   		mov.L	r15, r13
+ 1085                             	.LVL148:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 1086                             		.loc 1 42 21
+ 1087 0075 47 76                   		cmp	r7, r6
+ 1088 0077 21 DF                   		bne	.L139
+ 1089 0079 EF B7                   		mov.L	r11, r7
+ 1090                             	.LVL149:
+ 1091 007b ED 0B 04                		mov.L	16[r0], r11
+ 1092                             	.LVL150:
+ 1093 007e EF 00                   		.balign 8,3,2
+ 1094                             	.L96:
+ 1095                             	.LBE217:
+  46:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int64_t outer_size = 1;
+ 1096                             		.loc 1 46 3
+ 1097 0080 71 B1 01                		add	#1, r11, r1
+ 1098 0083 EC 03                   		mov.L	[r0], r3
+ 1099 0085 FE 61 35                		mov.L	[r1,r3], r5
+ 1100 0088 FD BF 52                		shar	#31, r5, r2
+ 1101 008b 47 D5                   		cmp	r13, r5
+ 1102 008d 3B 66 01                		bne	.L95
+ 1103 0090 47 A2                   		cmp	r10, r2
+ 1104 0092 3B 61 01                		bne	.L95
+ 1105                             	.LVL151:
+ 1106 0095 EF 1A                   		mov.L	r1, r10
+ 1107 0097 A8 0D                   		mov.L	4[r0], r5
+ 1108 0099 EC 58                   		mov.L	[r5], r8
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1109                             		.loc 1 47 11
+ 1110 009b 3E 01 01                		mov.L	#1, 4[r0]
+ 1111                             	.LVL152:
+ 1112                             	.LBB218:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1113                             		.loc 1 48 21
+ 1114 009e 61 0B                   		cmp	#0, r11
+ 1115 00a0 2A 05 38 31 01          		ble	.L98
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1116                             		.loc 1 48 12
+ 1117 00a5 66 05                   		mov.L	#0, r5
+ 1118                             	.LBE218:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1119                             		.loc 1 47 11
+ 1120 00a7 3E 02 00                		mov.L	#0, 8[r0]
+ 1121                             	.LBB219:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1122                             		.loc 1 49 16
+ 1123 00aa EF 3E                   		mov.L	r3, r14
+ 1124 00ac 62 4E                   		add	#4, r14
+ 1125 00ae EF 53                   		mov.L	r5, r3
+ 1126 00b0 A8 0C                   		mov.L	4[r0], r4
+ 1127                             	.LVL153:
+ 1128                             		.balign 8,3,3
+ 1129                             	.L99:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1130                             		.loc 1 49 16 discriminator 2
+ 1131 00b2 FE 63 ED                		mov.L	[r3,r14], r13
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1132                             		.loc 1 48 3 discriminator 2
+ 1133 00b5 62 13                   		add	#1, r3
+ 1134                             	.LVL154:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1135                             		.loc 1 49 16 discriminator 2
+ 1136 00b7 FD BF D6                		shar	#31, r13, r6
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1137                             		.loc 1 49 5 discriminator 2
+ 1138 00ba FF 32 D5                		mul	r13, r5, r2
+ 1139 00bd 4F 46                   		mul	r4, r6
+ 1140 00bf FC 1F D4                		emulu	r13, r4
+ 1141                             	.LVL155:
+ 1142 00c2 4B 62                   		add	r6, r2
+ 1143 00c4 4B 25                   		add	r2, r5
+ 1144                             	.LVL156:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1145                             		.loc 1 48 21 discriminator 2
+ 1146 00c6 47 B3                   		cmp	r11, r3
+ 1147 00c8 21 EA                   		bne	.L99
+ 1148 00ca A0 0C                   		mov.L	r4, 4[r0]
+ 1149 00cc A0 85                   		mov.L	r5, 8[r0]
+ 1150                             	.LVL157:
+ 1151                             	.LBE219:
+ 1152                             	.LBB220:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1153                             		.loc 1 53 34
+ 1154 00ce 47 19                   		cmp	r1, r9
+ 1155 00d0 2A 05 38 10 01          		ble	.L120
+ 1156                             	.LVL158:
+ 1157                             		.balign 8,3,1
+ 1158                             	.L118:
+ 1159                             	.LBE220:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1160                             		.loc 1 47 11 discriminator 2
+ 1161 00d5 66 14                   		mov.L	#1, r4
+ 1162 00d7 66 05                   		mov.L	#0, r5
+ 1163                             	.LBB221:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1164                             		.loc 1 54 21 discriminator 2
+ 1165 00d9 EC 06                   		mov.L	[r0], r6
+ 1166 00db 62 46                   		add	#4, r6
+ 1167                             	.LVL159:
+ 1168 00dd FC 13 00                		.balign 8,3,3
+ 1169                             	.L101:
+ 1170 00e0 FE 6A 61                		mov.L	[r10,r6], r1
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1171                             		.loc 1 53 3 discriminator 2
+ 1172 00e3 62 1A                   		add	#1, r10
+ 1173                             	.LVL160:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1174                             		.loc 1 54 21 discriminator 2
+ 1175 00e5 FD BF 12                		shar	#31, r1, r2
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1176                             		.loc 1 54 5 discriminator 2
+ 1177 00e8 FF 33 15                		mul	r1, r5, r3
+ 1178 00eb 4F 42                   		mul	r4, r2
+ 1179 00ed FC 1F 14                		emulu	r1, r4
+ 1180                             	.LVL161:
+ 1181 00f0 4B 23                   		add	r2, r3
+ 1182 00f2 4B 35                   		add	r3, r5
+ 1183                             	.LVL162:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1184                             		.loc 1 53 34 discriminator 2
+ 1185 00f4 47 A9                   		cmp	r10, r9
+ 1186 00f6 2A EA                   		bgt	.L101
+ 1187                             	.LVL163:
+ 1188                             		.balign 8,3,1
+ 1189                             	.L100:
+ 1190                             	.LBE221:
+ 1191                             	.LBB222:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 1192                             		.loc 1 58 21
+ 1193 00f8 ED 0A 02                		mov.L	8[r0], r10
+ 1194 00fb 61 0A                   		cmp	#0, r10
+ 1195 00fd 2A 05 38 E8 00          		ble	.L140
+ 1196                             	.LVL164:
+ 1197                             		.balign 8,3,1
+ 1198                             	.L102:
+ 1199 0102 A8 8B                   		mov.L	12[r0], r3
+ 1200 0104 61 03                   		cmp	#0, r3
+ 1201 0106 2A 05 38 AE 00          		ble	.L127
+ 1202                             	.LBE222:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1203                             		.loc 1 47 11
+ 1204 010b 66 06                   		mov.L	#0, r6
+ 1205 010d F8 06 00                		mov.L	#0, [r0]
+ 1206                             	.LVL165:
+ 1207 0110 EF 4A                   		mov.L	r4, r10
+ 1208                             	.LBB237:
+ 1209                             	.LBB223:
+ 1210                             	.LBB224:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 1211                             		.loc 1 64 49
+ 1212 0112 62 1B                   		add	#1, r11
+ 1213 0114 EF 39                   		mov.L	r3, r9
+ 1214                             	.LVL166:
+ 1215                             		.balign 8,3,1
+ 1216                             	.L109:
+ 1217                             	.LBE224:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 1218                             		.loc 1 59 14
+ 1219 0116 66 0D                   		mov.L	#0, r13
+ 1220                             	.LVL167:
+ 1221                             		.balign 8,3,1
+ 1222                             	.L107:
+ 1223                             	.LBB233:
+ 1224                             	.LBB225:
+ 1225                             	.LBB226:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1226                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 1227                             		.loc 3 48 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1228                             		.loc 3 49 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1229                             		.loc 3 49 32 is_stmt 0
+ 1230 0118 ED C4 01                		mov.L	4[r12], r4
+ 1231 011b 71 D3 01                		add	#1, r13, r3
+ 1232 011e AD 7D                   		mov.L	84[r7], r5
+ 1233 0120 EF 71                   		mov.L	r7, r1
+ 1234 0122 FE 63 42                		mov.L	[r3,r4], r2
+ 1235 0125 7F 15                   		jsr	r5
+ 1236                             	.LVL168:
+ 1237                             	.LBE226:
+ 1238                             	.LBE225:
+ 1239                             	.LBB227:
+ 1240                             	.LBB228:
+ 1241                             		.loc 3 55 28
+ 1242 0127 61 01                   		cmp	#0, r1
+ 1243 0129 3A A5 00                		beq	.L121
+ 1244 012c EC 1E                   		mov.L	[r1], r14
+ 1245                             		.balign 8,3,1
+ 1246                             	.L105:
+ 1247                             	.LVL169:
+ 1248                             	.LBE228:
+ 1249                             	.LBE227:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 1250                             		.loc 1 64 49
+ 1251 012e A8 1D                   		mov.L	4[r1], r5
+  63:../src/tensorflow/lite/micro/kernels/split_v.cc ****           output_tensor->dims->data[axis_value] * base_inner_size;
+ 1252                             		.loc 1 63 17
+ 1253 0130 FE 6B 53                		mov.L	[r11,r5], r3
+ 1254 0133 4F A3                   		mul	r10, r3
+ 1255                             	.LVL170:
+  65:../src/tensorflow/lite/micro/kernels/split_v.cc ****       for (int j = 0; j < copy_size; ++j) output_ptr[j] = input_ptr[j];
+ 1256                             		.loc 1 65 39
+ 1257 0135 FF 34 63                		mul	r6, r3, r4
+ 1258                             	.LVL171:
+ 1259                             	.LBB230:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1260                             		.loc 1 66 25
+ 1261 0138 61 03                   		cmp	#0, r3
+ 1262 013a 2B 52                   		ble	.L113
+ 1263 013c FF 25 44                		add	r4, r4, r5
+ 1264 013f 71 8F 04                		add	#4, r8, r15
+ 1265 0142 71 52 04                		add	#4, r5, r2
+ 1266 0145 4B E5                   		add	r14, r5
+ 1267 0147 47 F5                   		cmp	r15, r5
+ 1268 0149 FC DB F2                		scgeu.L	r15
+ 1269 014c 4B E2                   		add	r14, r2
+ 1270 014e 71 31 FF                		add	#-1, r3, r1
+ 1271                             	.LVL172:
+ 1272 0151 47 28                   		cmp	r2, r8
+ 1273 0153 FC DB 22                		scgeu.L	r2
+ 1274 0156 61 B1                   		cmp	#11, r1
+ 1275 0158 FC DB 14                		scgtu.L	r1
+ 1276 015b 57 F2                   		or	r15, r2
+ 1277 015d FC 33 21                		tst	r2, r1
+ 1278 0160 20 5B                   		beq	.L110
+ 1279 0162 FF 52 85                		or	r8, r5, r2
+ 1280 0165 64 32                   		and	#3, r2
+ 1281 0167 21 54                   		bne	.L110
+ 1282 0169 FD 81 31                		shlr	#1, r3, r1
+ 1283 016c EF 82                   		mov.L	r8, r2
+ 1284 016e 6C 21                   		shll	#2, r1
+ 1285 0170 4B 51                   		add	r5, r1
+ 1286                             	.LVL173:
+ 1287                             		.balign 8,3,3
+ 1288                             	.L112:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1289                             		.loc 1 66 43 discriminator 2
+ 1290 0172 FD 2A 2F                		mov.L	[r2+], r15
+ 1291 0175 FD 22 5F                		mov.L	r15, [r5+]
+ 1292 0178 47 15                   		cmp	r1, r5
+ 1293 017a 21 F8                   		bne	.L112
+ 1294 017c EF 32                   		mov.L	r3, r2
+ 1295 017e 7A 02                   		bclr	#0, r2
+ 1296 0180 47 23                   		cmp	r2, r3
+ 1297 0182 12                      		beq	.L113
+ 1298                             	.LVL174:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1299                             		.loc 1 66 53
+ 1300 0183 FF 25 24                		add	r2, r4, r5
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1301                             		.loc 1 66 43
+ 1302 0186 FE 52 82                		mov.W	[r2,r8], r2
+ 1303                             	.LVL175:
+ 1304 0189 FE 15 E2                		mov.W	r2, [r5,r14]
+ 1305                             	.LVL176:
+ 1306                             		.balign 8,3,1
+ 1307                             	.L113:
+ 1308                             	.LBE230:
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1309                             		.loc 1 67 17
+ 1310 018c 4B 33                   		add	r3, r3
+ 1311                             	.LVL177:
+ 1312                             	.LBE233:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 1313                             		.loc 1 59 5
+ 1314 018e 62 1D                   		add	#1, r13
+ 1315                             	.LVL178:
+ 1316                             	.LBB234:
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1317                             		.loc 1 67 7
+ 1318 0190 4B 38                   		add	r3, r8
+ 1319                             	.LVL179:
+ 1320                             	.LBE234:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 1321                             		.loc 1 59 23
+ 1322 0192 47 D9                   		cmp	r13, r9
+ 1323 0194 21 84                   		bne	.L107
+ 1324                             	.LVL180:
+ 1325 0196 EC 05                   		mov.L	[r0], r5
+ 1326 0198 71 64 01                		add	#1, r6, r4
+ 1327                             	.LVL181:
+ 1328 019b FD 74 25 00             		adc	#0, r5
+ 1329 019f E3 05                   		mov.L	r5, [r0]
+ 1330 01a1 EF 46                   		mov.L	r4, r6
+ 1331                             	.LBE223:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 1332                             		.loc 1 58 21
+ 1333 01a3 A8 81                   		mov.L	8[r0], r1
+ 1334 01a5 47 51                   		cmp	r5, r1
+ 1335 01a7 2B 05 38 6D FF          		bgt	.L109
+ 1336 01ac 1A                      		bne	.L127
+ 1337 01ad A8 0A                   		mov.L	4[r0], r2
+ 1338 01af 47 42                   		cmp	r4, r2
+ 1339 01b1 25 05 38 63 FF          		bgtu	.L109
+ 1340                             	.LVL182:
+ 1341                             		.balign 8,3,1
+ 1342                             	.L127:
+ 1343                             	.LBE237:
+  72:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1344                             		.loc 1 72 1
+ 1345 01b6 66 01                   		mov.L	#0, r1
+ 1346 01b8 3F 6D 0D                		rtsd	#52, r6-r13
+ 1347                             	.LVL183:
+ 1348                             	.L110:
+ 1349 01bb FF 22 33                		add	r3, r3, r2
+ 1350 01be EF 84                   		mov.L	r8, r4
+ 1351                             	.LVL184:
+ 1352 01c0 4B 82                   		add	r8, r2
+ 1353                             	.LVL185:
+ 1354                             		.balign 8,3,5
+ 1355                             	.L116:
+ 1356                             	.LBB238:
+ 1357                             	.LBB236:
+ 1358                             	.LBB235:
+ 1359                             	.LBB231:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1360                             		.loc 1 66 43
+ 1361 01c2 FD 29 41                		mov.W	[r4+], r1
+ 1362 01c5 FD 21 51                		mov.W	r1, [r5+]
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1363                             		.loc 1 66 25
+ 1364 01c8 47 24                   		cmp	r2, r4
+ 1365 01ca 21 F8                   		bne	.L116
+ 1366 01cc 2E C0                   		bra	.L113
+ 1367                             	.LVL186:
+ 1368                             	.L121:
+ 1369                             	.LBE231:
+ 1370                             	.LBB232:
+ 1371                             	.LBB229:
+ 1372                             		.loc 3 55 28
+ 1373 01ce 66 0E                   		mov.L	#0, r14
+ 1374 01d0 38 5E FF                		bra	.L105
+ 1375                             	.LVL187:
+ 1376                             	.L98:
+ 1377                             	.LBE229:
+ 1378                             	.LBE232:
+ 1379                             	.LBE235:
+ 1380                             	.LBE236:
+ 1381                             	.LBE238:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1382                             		.loc 1 47 11
+ 1383 01d3 3E 02 00                		mov.L	#0, 8[r0]
+ 1384                             	.LBB239:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1385                             		.loc 1 53 34
+ 1386 01d6 47 19                   		cmp	r1, r9
+ 1387 01d8 2B 05 38 FB FE          		bgt	.L118
+ 1388                             	.LBE239:
+  52:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = axis_value + 1; i < split_dimensions; ++i) {
+ 1389                             		.loc 1 52 11
+ 1390 01dd 66 14                   		mov.L	#1, r4
+ 1391 01df 38 23 FF                		bra	.L102
+ 1392                             	.LVL188:
+ 1393                             	.L120:
+ 1394 01e2 66 14                   		mov.L	#1, r4
+ 1395                             	.LVL189:
+ 1396 01e4 38 14 FF                		bra	.L100
+ 1397                             	.LVL190:
+ 1398                             	.L140:
+ 1399                             	.LBB240:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 1400                             		.loc 1 58 21
+ 1401 01e7 21 CF                   		bne	.L127
+ 1402 01e9 ED 0F 01                		mov.L	4[r0], r15
+ 1403 01ec 61 0F                   		cmp	#0, r15
+ 1404 01ee 3B 14 FF                		bne	.L102
+ 1405 01f1 2E C5                   		bra	.L127
+ 1406                             	.LVL191:
+ 1407                             	.L95:
+ 1408                             	.LBE240:
+ 1409                             	.LBB241:
+ 1410                             	.LBB211:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1411                             		.loc 3 47 3
+ 1412 01f3 05 00 00 00             		bsr	_abort
+ 1413                             	.LVL192:
+ 1414                             	.LBE211:
+ 1415                             	.LBE241:
+ 1416                             	.LFE989:
+ 1418 01f7 03                      		.section	.text._ZN6tflite3ops5micro7split_v9SplitImplIlEE12TfLiteStatusP13TfLiteContextP10TfLiteNo
+ 1419                             		.weak	__ZN6tflite3ops5micro7split_v9SplitImplIlEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16Tf
+ 1421                             	__ZN6tflite3ops5micro7split_v9SplitImplIlEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLiteEva
+ 1422                             	.LFB990:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 1423                             		.loc 1 29 14 is_stmt 1
+ 1424                             	.LVL193:
+ 1425 0000 6E 6D                   		pushm	r6-r13
+ 1426                             	.LCFI8:
+ 1427 0002 71 00 F0                		add	#-16, r0
+ 1428                             	.LCFI9:
+  29:../src/tensorflow/lite/micro/kernels/split_v.cc ****                        const TfLiteEvalTensor* input, int axis_value) {
+ 1429                             		.loc 1 29 14 is_stmt 0
+ 1430 0005 A0 0B                   		mov.L	r3, 4[r0]
+  31:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* output0 =
+ 1431                             		.loc 1 31 25
+ 1432 0007 E1 30 01                		mov.L	4[r3], [r0]
+ 1433                             	.LVL194:
+ 1434                             	.LBB261:
+ 1435                             	.LBB262:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1436                             		.loc 3 47 3 is_stmt 1
+ 1437 000a 61 01                   		cmp	#0, r1
+ 1438 000c 3A 92 01                		beq	.L143
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 1439                             		.loc 3 48 3 is_stmt 0
+ 1440 000f 71 2D 00                		add	#0, r2, r13
+ 1441 0012 3A 8C 01                		beq	.L143
+ 1442 0015 EF 18                   		mov.L	r1, r8
+ 1443 0017 EF 46                   		mov.L	r4, r6
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1444                             		.loc 3 49 3 is_stmt 1
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1445                             		.loc 3 49 32 is_stmt 0
+ 1446 0019 ED DA 01                		mov.L	4[r13], r10
+ 1447 001c AD 1F                   		mov.L	84[r1], r7
+ 1448 001e ED A2 01                		mov.L	4[r10], r2
+ 1449                             	.LVL195:
+ 1450 0021 7F 17                   		jsr	r7
+ 1451                             	.LVL196:
+ 1452                             	.LBE262:
+ 1453                             	.LBE261:
+  35:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1454                             		.loc 1 35 44
+ 1455 0023 EC 03                   		mov.L	[r0], r3
+ 1456 0025 EC 3A                   		mov.L	[r3], r10
+ 1457                             	.LVL197:
+  37:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TFLITE_DCHECK_EQ(output0->dims->size, split_dimensions);
+ 1458                             		.loc 1 37 3
+ 1459 0027 47 6A                   		cmp	r6, r10
+ 1460 0029 2A 05 38 73 01          		ble	.L143
+  38:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1461                             		.loc 1 38 3
+ 1462 002e A8 1F                   		mov.L	4[r1], r7
+ 1463 0030 06 84 7A                		cmp	[r7].L, r10
+ 1464 0033 3B 6B 01                		bne	.L143
+ 1465                             	.LVL198:
+  41:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < output_count; i++) {
+ 1466                             		.loc 1 41 38
+ 1467 0036 ED D3 01                		mov.L	4[r13], r3
+ 1468                             	.LVL199:
+ 1469                             	.LBB264:
+ 1470                             	.LBB265:
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 1471                             		.loc 2 153 49 is_stmt 1
+ 153:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/kernels\kernel_util.h **** 
+ 1472                             		.loc 2 153 71 is_stmt 0
+ 1473 0039 EC 3B                   		mov.L	[r3], r11
+ 1474                             	.LVL200:
+ 1475                             	.LBE265:
+ 1476                             	.LBE264:
+  40:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const int output_count = NumOutputs(node);
+ 1477                             		.loc 1 40 11
+ 1478 003b 66 0C                   		mov.L	#0, r12
+ 1479 003d 66 07                   		mov.L	#0, r7
+ 1480                             	.LBB266:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 1481                             		.loc 1 42 21
+ 1482 003f 61 0B                   		cmp	#0, r11
+ 1483 0041 2B 41                   		ble	.L144
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 1484                             		.loc 1 43 16
+ 1485 0043 71 69 01                		add	#1, r6, r9
+ 1486 0046 E7 0A 03                		mov.L	r10, 12[r0]
+ 1487 0049 EF C4                   		mov.L	r12, r4
+ 1488 004b EF 6C                   		mov.L	r6, r12
+ 1489 004d EF 86                   		mov.L	r8, r6
+ 1490                             	.LVL201:
+ 1491 004f EF 7A                   		mov.L	r7, r10
+ 1492                             	.LVL202:
+ 1493 0051 EF 48                   		mov.L	r4, r8
+ 1494                             	.LVL203:
+ 1495 0053 0D                      		bra	.L145
+ 1496                             	.LVL204:
+ 1497                             	.L176:
+ 1498 0054 ED D3 01                		mov.L	4[r13], r3
+ 1499                             	.LVL205:
+ 1500 0057 03                      		.balign 8,3,1
+ 1501                             	.L145:
+ 1502                             	.LBB267:
+ 1503                             	.LBB268:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1504                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 1505                             		.loc 3 48 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1506                             		.loc 3 49 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1507                             		.loc 3 49 32 is_stmt 0
+ 1508 0058 62 17                   		add	#1, r7
+ 1509                             	.LVL206:
+ 1510 005a AD 6D                   		mov.L	84[r6], r5
+ 1511 005c EF 61                   		mov.L	r6, r1
+ 1512 005e FE 67 32                		mov.L	[r7,r3], r2
+ 1513 0061 7F 15                   		jsr	r5
+ 1514                             	.LVL207:
+ 1515                             	.LBE268:
+ 1516                             	.LBE267:
+  43:../src/tensorflow/lite/micro/kernels/split_v.cc ****         tflite::micro::GetEvalOutput(context, node, i)->dims->data[axis_value];
+ 1517                             		.loc 1 43 16
+ 1518 0063 A8 1D                   		mov.L	4[r1], r5
+ 1519 0065 FE 69 55                		mov.L	[r9,r5], r5
+ 1520 0068 FD BF 53                		shar	#31, r5, r3
+ 1521 006b FF 24 58                		add	r5, r8, r4
+ 1522 006e FC 0B 3A                		adc	r3, r10
+ 1523                             	.LVL208:
+ 1524 0071 EF 48                   		mov.L	r4, r8
+ 1525                             	.LVL209:
+  42:../src/tensorflow/lite/micro/kernels/split_v.cc ****     split_size +=
+ 1526                             		.loc 1 42 21
+ 1527 0073 47 B7                   		cmp	r11, r7
+ 1528 0075 21 DF                   		bne	.L176
+ 1529 0077 EF 68                   		mov.L	r6, r8
+ 1530 0079 EF C6                   		mov.L	r12, r6
+ 1531                             	.LVL210:
+ 1532 007b EF A7                   		mov.L	r10, r7
+ 1533                             	.LVL211:
+ 1534 007d ED 0A 03                		mov.L	12[r0], r10
+ 1535                             	.LVL212:
+ 1536 0080 EF 4C                   		mov.L	r4, r12
+ 1537                             	.LVL213:
+ 1538                             		.balign 8,3,2
+ 1539                             	.L144:
+ 1540                             	.LBE266:
+  46:../src/tensorflow/lite/micro/kernels/split_v.cc ****   int64_t outer_size = 1;
+ 1541                             		.loc 1 46 3
+ 1542 0082 71 69 01                		add	#1, r6, r9
+ 1543 0085 EC 03                   		mov.L	[r0], r3
+ 1544 0087 FE 69 35                		mov.L	[r9,r3], r5
+ 1545 008a FD BF 53                		shar	#31, r5, r3
+ 1546 008d 47 C5                   		cmp	r12, r5
+ 1547 008f 3B 0F 01                		bne	.L143
+ 1548 0092 47 73                   		cmp	r7, r3
+ 1549 0094 3B 0A 01                		bne	.L143
+ 1550                             	.LVL214:
+ 1551 0097 EF 97                   		mov.L	r9, r7
+ 1552 0099 A8 0D                   		mov.L	4[r0], r5
+ 1553 009b EC 5C                   		mov.L	[r5], r12
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1554                             		.loc 1 47 11
+ 1555 009d 3E 01 01                		mov.L	#1, 4[r0]
+ 1556                             	.LVL215:
+ 1557                             	.LBB269:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1558                             		.loc 1 48 21
+ 1559 00a0 61 06                   		cmp	#0, r6
+ 1560 00a2 2A 05 38 DB 00          		ble	.L146
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1561                             		.loc 1 48 12
+ 1562 00a7 66 05                   		mov.L	#0, r5
+ 1563                             	.LBE269:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1564                             		.loc 1 47 11
+ 1565 00a9 3E 02 00                		mov.L	#0, 8[r0]
+ 1566                             	.LBB270:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1567                             		.loc 1 49 16
+ 1568 00ac EC 01                   		mov.L	[r0], r1
+ 1569 00ae 62 41                   		add	#4, r1
+ 1570 00b0 EF 53                   		mov.L	r5, r3
+ 1571 00b2 A8 0C                   		mov.L	4[r0], r4
+ 1572                             	.LVL216:
+ 1573                             		.balign 8,3,3
+ 1574                             	.L147:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1575                             		.loc 1 49 16 discriminator 2
+ 1576 00b4 FE 63 1F                		mov.L	[r3,r1], r15
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1577                             		.loc 1 48 3 discriminator 2
+ 1578 00b7 62 13                   		add	#1, r3
+ 1579                             	.LVL217:
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1580                             		.loc 1 49 16 discriminator 2
+ 1581 00b9 FD BF FE                		shar	#31, r15, r14
+  49:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1582                             		.loc 1 49 5 discriminator 2
+ 1583 00bc FF 32 F5                		mul	r15, r5, r2
+ 1584 00bf 4F 4E                   		mul	r4, r14
+ 1585 00c1 FC 1F F4                		emulu	r15, r4
+ 1586                             	.LVL218:
+ 1587 00c4 4B E2                   		add	r14, r2
+ 1588 00c6 4B 25                   		add	r2, r5
+ 1589                             	.LVL219:
+  48:../src/tensorflow/lite/micro/kernels/split_v.cc ****     outer_size *= input_dims->data[i];
+ 1590                             		.loc 1 48 21 discriminator 2
+ 1591 00c8 47 63                   		cmp	r6, r3
+ 1592 00ca 21 EA                   		bne	.L147
+ 1593 00cc A0 0C                   		mov.L	r4, 4[r0]
+ 1594 00ce A0 85                   		mov.L	r5, 8[r0]
+ 1595                             	.LVL220:
+ 1596                             	.LBE270:
+ 1597                             	.LBB271:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1598                             		.loc 1 53 34
+ 1599 00d0 47 9A                   		cmp	r9, r10
+ 1600 00d2 2A 05 38 BA 00          		ble	.L163
+ 1601                             	.LVL221:
+ 1602 00d7 03                      		.balign 8,3,1
+ 1603                             	.L161:
+ 1604                             	.LBE271:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1605                             		.loc 1 47 11 discriminator 2
+ 1606 00d8 66 14                   		mov.L	#1, r4
+ 1607 00da 66 05                   		mov.L	#0, r5
+ 1608                             	.LBB272:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1609                             		.loc 1 54 21 discriminator 2
+ 1610 00dc EC 09                   		mov.L	[r0], r9
+ 1611 00de 62 49                   		add	#4, r9
+ 1612                             	.LVL222:
+ 1613                             		.balign 8,3,3
+ 1614                             	.L149:
+ 1615 00e0 FE 67 91                		mov.L	[r7,r9], r1
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1616                             		.loc 1 53 3 discriminator 2
+ 1617 00e3 62 17                   		add	#1, r7
+ 1618                             	.LVL223:
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1619                             		.loc 1 54 21 discriminator 2
+ 1620 00e5 FD BF 12                		shar	#31, r1, r2
+  54:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1621                             		.loc 1 54 5 discriminator 2
+ 1622 00e8 FF 33 15                		mul	r1, r5, r3
+ 1623 00eb 4F 42                   		mul	r4, r2
+ 1624 00ed FC 1F 14                		emulu	r1, r4
+ 1625                             	.LVL224:
+ 1626 00f0 4B 23                   		add	r2, r3
+ 1627 00f2 4B 35                   		add	r3, r5
+ 1628                             	.LVL225:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1629                             		.loc 1 53 34 discriminator 2
+ 1630 00f4 47 7A                   		cmp	r7, r10
+ 1631 00f6 2A EA                   		bgt	.L149
+ 1632                             	.LVL226:
+ 1633                             		.balign 8,3,1
+ 1634                             	.L148:
+ 1635                             	.LBE272:
+ 1636                             	.LBB273:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 1637                             		.loc 1 58 21
+ 1638 00f8 A8 87                   		mov.L	8[r0], r7
+ 1639 00fa 61 07                   		cmp	#0, r7
+ 1640 00fc 2A 05 38 95 00          		ble	.L177
+ 1641                             	.LVL227:
+ 1642                             		.balign 8,3,1
+ 1643                             	.L150:
+ 1644 0101 61 0B                   		cmp	#0, r11
+ 1645 0103 2B 73                   		ble	.L168
+ 1646                             	.LBE273:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1647                             		.loc 1 47 11
+ 1648 0105 66 0A                   		mov.L	#0, r10
+ 1649 0107 F8 06 00                		mov.L	#0, [r0]
+ 1650                             	.LVL228:
+ 1651 010a EF 47                   		mov.L	r4, r7
+ 1652                             	.LBB287:
+ 1653                             	.LBB274:
+ 1654                             	.LBB275:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 1655                             		.loc 1 64 49
+ 1656 010c 62 16                   		add	#1, r6
+ 1657                             	.LVL229:
+ 1658 010e EF D9                   		mov.L	r13, r9
+ 1659 0110 EF 8D                   		mov.L	r8, r13
+ 1660                             	.LVL230:
+ 1661 0112 EF C8                   		mov.L	r12, r8
+ 1662                             	.LVL231:
+ 1663                             		.balign 8,3,1
+ 1664                             	.L157:
+ 1665                             	.LBE275:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 1666                             		.loc 1 59 14
+ 1667 0114 66 0C                   		mov.L	#0, r12
+ 1668                             	.LVL232:
+ 1669                             		.balign 8,3,1
+ 1670                             	.L155:
+ 1671                             	.LBB283:
+ 1672                             	.LBB276:
+ 1673                             	.LBB277:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1674                             		.loc 3 47 3 is_stmt 1
+  48:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->outputs->data[index]);
+ 1675                             		.loc 3 48 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1676                             		.loc 3 49 3
+  49:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1677                             		.loc 3 49 32 is_stmt 0
+ 1678 0116 ED 94 01                		mov.L	4[r9], r4
+ 1679 0119 71 C3 01                		add	#1, r12, r3
+ 1680 011c ED D5 15                		mov.L	84[r13], r5
+ 1681 011f EF D1                   		mov.L	r13, r1
+ 1682 0121 FE 63 42                		mov.L	[r3,r4], r2
+ 1683 0124 7F 15                   		jsr	r5
+ 1684                             	.LVL233:
+ 1685                             	.LBE277:
+ 1686                             	.LBE276:
+ 1687                             	.LBB278:
+ 1688                             	.LBB279:
+ 1689                             		.loc 3 55 28
+ 1690 0126 61 01                   		cmp	#0, r1
+ 1691 0128 20 53                   		beq	.L164
+ 1692 012a EC 14                   		mov.L	[r1], r4
+ 1693                             		.balign 8,3,1
+ 1694                             	.L153:
+ 1695                             	.LVL234:
+ 1696                             	.LBE279:
+ 1697                             	.LBE278:
+  64:../src/tensorflow/lite/micro/kernels/split_v.cc ****       T* output_ptr = output_data + k * copy_size;
+ 1698                             		.loc 1 64 49
+ 1699 012c A8 1D                   		mov.L	4[r1], r5
+  63:../src/tensorflow/lite/micro/kernels/split_v.cc ****           output_tensor->dims->data[axis_value] * base_inner_size;
+ 1700                             		.loc 1 63 17
+ 1701 012e FE 66 52                		mov.L	[r6,r5], r2
+ 1702 0131 4F 72                   		mul	r7, r2
+ 1703                             	.LVL235:
+  65:../src/tensorflow/lite/micro/kernels/split_v.cc ****       for (int j = 0; j < copy_size; ++j) output_ptr[j] = input_ptr[j];
+ 1704                             		.loc 1 65 39
+ 1705 0133 FF 35 A2                		mul	r10, r2, r5
+ 1706                             	.LVL236:
+ 1707                             	.LBB281:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1708                             		.loc 1 66 25
+ 1709 0136 61 02                   		cmp	#0, r2
+ 1710 0138 2B 1A                   		ble	.L158
+ 1711 013a FD C2 51                		shll	#2, r5, r1
+ 1712                             	.LVL237:
+ 1713 013d FD C2 23                		shll	#2, r2, r3
+ 1714 0140 EF 85                   		mov.L	r8, r5
+ 1715 0142 4B 14                   		add	r1, r4
+ 1716                             	.LVL238:
+ 1717 0144 4B 83                   		add	r8, r3
+ 1718                             	.LVL239:
+ 1719 0146 EF 00                   		.balign 8,3,3
+ 1720                             	.L159:
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1721                             		.loc 1 66 43 discriminator 2
+ 1722 0148 FD 2A 51                		mov.L	[r5+], r1
+ 1723 014b FD 22 41                		mov.L	r1, [r4+]
+  66:../src/tensorflow/lite/micro/kernels/split_v.cc ****       input_ptr += copy_size;
+ 1724                             		.loc 1 66 25 discriminator 2
+ 1725 014e 47 53                   		cmp	r5, r3
+ 1726 0150 21 F8                   		bne	.L159
+ 1727                             		.balign 8,3,1
+ 1728                             	.L158:
+ 1729                             	.LBE281:
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1730                             		.loc 1 67 17
+ 1731 0152 6C 22                   		shll	#2, r2
+ 1732                             	.LVL240:
+ 1733                             	.LBE283:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 1734                             		.loc 1 59 5
+ 1735 0154 62 1C                   		add	#1, r12
+ 1736                             	.LVL241:
+ 1737                             	.LBB284:
+  67:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1738                             		.loc 1 67 7
+ 1739 0156 4B 28                   		add	r2, r8
+ 1740                             	.LVL242:
+ 1741                             	.LBE284:
+  59:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TfLiteEvalTensor* output_tensor =
+ 1742                             		.loc 1 59 23
+ 1743 0158 47 CB                   		cmp	r12, r11
+ 1744 015a 21 BC                   		bne	.L155
+ 1745                             	.LVL243:
+ 1746 015c EC 03                   		mov.L	[r0], r3
+ 1747 015e 71 A2 01                		add	#1, r10, r2
+ 1748                             	.LVL244:
+ 1749 0161 FD 74 23 00             		adc	#0, r3
+ 1750 0165 E3 03                   		mov.L	r3, [r0]
+ 1751 0167 EF 2A                   		mov.L	r2, r10
+ 1752                             	.LBE274:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 1753                             		.loc 1 58 21
+ 1754 0169 A8 85                   		mov.L	8[r0], r5
+ 1755 016b 47 35                   		cmp	r3, r5
+ 1756 016d 2A A7                   		bgt	.L157
+ 1757 016f 1F                      		bne	.L168
+ 1758 0170 A8 09                   		mov.L	4[r0], r1
+ 1759 0172 47 21                   		cmp	r2, r1
+ 1760 0174 24 A0                   		bgtu	.L157
+ 1761                             	.LVL245:
+ 1762                             		.balign 8,3,1
+ 1763                             	.L168:
+ 1764                             	.LBE287:
+  72:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1765                             		.loc 1 72 1
+ 1766 0176 66 01                   		mov.L	#0, r1
+ 1767 0178 3F 6D 0C                		rtsd	#48, r6-r13
+ 1768                             	.LVL246:
+ 1769                             	.L164:
+ 1770                             	.LBB288:
+ 1771                             	.LBB286:
+ 1772                             	.LBB285:
+ 1773                             	.LBB282:
+ 1774                             	.LBB280:
+ 1775                             		.loc 3 55 28
+ 1776 017b 66 04                   		mov.L	#0, r4
+ 1777 017d 2E AF                   		bra	.L153
+ 1778                             	.LVL247:
+ 1779                             	.L146:
+ 1780                             	.LBE280:
+ 1781                             	.LBE282:
+ 1782                             	.LBE285:
+ 1783                             	.LBE286:
+ 1784                             	.LBE288:
+  47:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = 0; i < axis_value; ++i) {
+ 1785                             		.loc 1 47 11
+ 1786 017f 3E 02 00                		mov.L	#0, 8[r0]
+ 1787                             	.LBB289:
+  53:../src/tensorflow/lite/micro/kernels/split_v.cc ****     base_inner_size *= input_dims->data[i];
+ 1788                             		.loc 1 53 34
+ 1789 0182 47 9A                   		cmp	r9, r10
+ 1790 0184 2B 05 38 52 FF          		bgt	.L161
+ 1791                             	.LBE289:
+  52:../src/tensorflow/lite/micro/kernels/split_v.cc ****   for (int i = axis_value + 1; i < split_dimensions; ++i) {
+ 1792                             		.loc 1 52 11
+ 1793 0189 66 14                   		mov.L	#1, r4
+ 1794 018b 38 76 FF                		bra	.L150
+ 1795                             	.LVL248:
+ 1796                             	.L163:
+ 1797 018e 66 14                   		mov.L	#1, r4
+ 1798                             	.LVL249:
+ 1799 0190 38 68 FF                		bra	.L148
+ 1800                             	.LVL250:
+ 1801                             	.L177:
+ 1802                             	.LBB290:
+  58:../src/tensorflow/lite/micro/kernels/split_v.cc ****     for (int i = 0; i < output_count; ++i) {
+ 1803                             		.loc 1 58 21
+ 1804 0193 21 E3                   		bne	.L168
+ 1805 0195 A8 09                   		mov.L	4[r0], r1
+ 1806 0197 61 01                   		cmp	#0, r1
+ 1807 0199 3B 68 FF                		bne	.L150
+ 1808 019c 2E DA                   		bra	.L168
+ 1809                             	.LVL251:
+ 1810                             	.L143:
+ 1811                             	.LBE290:
+ 1812                             	.LBB291:
+ 1813                             	.LBB263:
+  47:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1814                             		.loc 3 47 3
+ 1815 019e 05 00 00 00             		bsr	_abort
+ 1816                             	.LVL252:
+ 1817                             	.LBE263:
+ 1818                             	.LBE291:
+ 1819                             	.LFE990:
+ 1821 01a2 74 10 01 00 00 00       		.section	.text._ZN6tflite3ops5micro7split_v4EvalEP13TfLiteContextP10TfLiteNode,"ax",@progbits
+ 1822                             		.global	__ZN6tflite3ops5micro7split_v4EvalEP13TfLiteContextP10TfLiteNode
+ 1824                             	__ZN6tflite3ops5micro7split_v4EvalEP13TfLiteContextP10TfLiteNode:
+ 1825                             	.LFB978:
+  87:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* input = tflite::micro::GetEvalInput(context, node, 0);
+ 1826                             		.loc 1 87 61 is_stmt 1
+ 1827                             	.LVL253:
+ 1828 0000 6E 6A                   		pushm	r6-r10
+ 1829                             	.LCFI10:
+ 1830 0002 71 00 F0                		add	#-16, r0
+ 1831                             	.LCFI11:
+  88:../src/tensorflow/lite/micro/kernels/split_v.cc ****   const TfLiteEvalTensor* axis = tflite::micro::GetEvalInput(context, node, 2);
+ 1832                             		.loc 1 88 3
+ 1833                             	.LVL254:
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1834                             		.loc 3 41 3
+ 1835                             	.LBB302:
+ 1836                             	.LBB303:
+ 1837                             	.LBB304:
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1838                             		.loc 3 33 3
+ 1839 0005 61 01                   		cmp	#0, r1
+ 1840 0007 3A D4 00                		beq	.L180
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->inputs->data[index]);
+ 1841                             		.loc 3 34 3 is_stmt 0
+ 1842 000a 71 2A 00                		add	#0, r2, r10
+ 1843 000d 3A CE 00                		beq	.L180
+ 1844 0010 EF 17                   		mov.L	r1, r7
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1845                             		.loc 3 35 3 is_stmt 1
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1846                             		.loc 3 35 32 is_stmt 0
+ 1847 0012 EC A4                   		mov.L	[r10], r4
+ 1848 0014 AD 1D                   		mov.L	84[r1], r5
+ 1849 0016 A8 4A                   		mov.L	4[r4], r2
+ 1850                             	.LVL255:
+ 1851 0018 7F 15                   		jsr	r5
+ 1852                             	.LVL256:
+ 1853 001a EF 16                   		mov.L	r1, r6
+ 1854                             	.LVL257:
+ 1855                             	.LBE304:
+ 1856                             	.LBE303:
+ 1857                             	.LBE302:
+  89:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1858                             		.loc 1 89 3 is_stmt 1
+  41:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1859                             		.loc 3 41 3
+ 1860                             	.LBB307:
+ 1861                             	.LBB308:
+ 1862                             	.LBB309:
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 1863                             		.loc 3 33 3
+  34:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   return context->GetEvalTensor(context, node->inputs->data[index]);
+ 1864                             		.loc 3 34 3
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1865                             		.loc 3 35 3
+  35:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+ 1866                             		.loc 3 35 32 is_stmt 0
+ 1867 001c EC A4                   		mov.L	[r10], r4
+ 1868 001e AD 7D                   		mov.L	84[r7], r5
+ 1869 0020 EF 71                   		mov.L	r7, r1
+ 1870                             	.LVL258:
+ 1871 0022 A8 CA                   		mov.L	12[r4], r2
+ 1872 0024 7F 15                   		jsr	r5
+ 1873                             	.LVL259:
+ 1874                             	.LBE309:
+ 1875                             	.LBE308:
+ 1876                             	.LBE307:
+  91:../src/tensorflow/lite/micro/kernels/split_v.cc ****   if (axis_value < 0) {
+ 1877                             		.loc 1 91 3 is_stmt 1
+ 1878                             	.LBB310:
+ 1879                             	.LBB311:
+  56:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** }
+  57:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** 
+  58:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** // Returns const data for a TfLiteEvalTensor struct.
+  59:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** template <typename T>
+  60:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h **** const T* GetTensorData(const TfLiteEvalTensor* tensor) {
+  61:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 1880                             		.loc 3 61 3 is_stmt 0
+ 1881 0026 61 01                   		cmp	#0, r1
+ 1882 0028 3A B3 00                		beq	.L180
+ 1883                             	.LVL260:
+ 1884                             	.LBE311:
+ 1885                             	.LBE310:
+  91:../src/tensorflow/lite/micro/kernels/split_v.cc ****   if (axis_value < 0) {
+ 1886                             		.loc 1 91 65
+ 1887 002b EC 14                   		mov.L	[r1], r4
+ 1888 002d A8 6D                   		mov.L	4[r6], r5
+ 1889 002f EC 44                   		mov.L	[r4], r4
+ 1890                             	.LVL261:
+  92:../src/tensorflow/lite/micro/kernels/split_v.cc ****     axis_value += input->dims->size;
+ 1891                             		.loc 1 92 3 is_stmt 1
+ 1892 0031 EC 55                   		mov.L	[r5], r5
+ 1893 0033 61 04                   		cmp	#0, r4
+ 1894 0035 29 5D                   		blt	.L198
+ 1895 0037 03                      		.balign 8,3,1
+ 1896                             	.L181:
+  97:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1897                             		.loc 1 97 3
+  97:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1898                             		.loc 1 97 3
+ 1899 0038 47 45                   		cmp	r4, r5
+ 1900 003a 2B 22                   		ble	.L199
+  99:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteFloat32: {
+ 1901                             		.loc 1 99 3
+  99:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteFloat32: {
+ 1902                             		.loc 1 99 18 is_stmt 0
+ 1903 003c A8 E1                   		mov.L	8[r6], r1
+ 1904                             	.LVL262:
+  99:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteFloat32: {
+ 1905                             		.loc 1 99 3
+ 1906 003e 61 21                   		cmp	#2, r1
+ 1907 0040 20 65                   		beq	.L184
+ 1908 0042 25 3D                   		bleu	.L200
+ 1909 0044 61 71                   		cmp	#7, r1
+ 1910 0046 3A 86 00                		beq	.L188
+ 1911 0049 61 91                   		cmp	#9, r1
+ 1912 004b 21 69                   		bne	.L187
+ 103:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int8_t>(context, node, input, axis_value);
+ 1913                             		.loc 1 103 5 is_stmt 1
+ 103:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int8_t>(context, node, input, axis_value);
+ 1914                             		.loc 1 103 23
+ 104:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1915                             		.loc 1 104 7
+ 104:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1916                             		.loc 1 104 31 is_stmt 0
+ 1917 004d EF 63                   		mov.L	r6, r3
+ 1918 004f EF A2                   		mov.L	r10, r2
+ 1919 0051 EF 71                   		mov.L	r7, r1
+ 118:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1920                             		.loc 1 118 1
+ 1921 0053 71 00 10                		add	#16, r0
+ 1922 0056 6F 6A                   		popm	r6-r10
+ 1923                             	.LVL263:
+ 104:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1924                             		.loc 1 104 31
+ 1925 0058 04 00 00 00             		bra	__ZN6tflite3ops5micro7split_v9SplitImplIaEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLi
+ 1926                             	.LVL264:
+ 1927                             	.L199:
+  97:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1928                             		.loc 1 97 3 is_stmt 1 discriminator 1
+  97:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1929                             		.loc 1 97 3 discriminator 1
+ 1930 005c ED 7A 05                		mov.L	20[r7], r10
+ 1931 005f F9 02 03 27 00 00 00    		mov.L	#.LC8, 12[r0]
+ 1932 0066 3E 02 61                		mov.L	#0x61, 8[r0]
+ 1933                             	.L197:
+ 1934 0069 F9 02 01 12 00 00 00    		mov.L	#.LC3, 4[r0]
+ 1935 0070 EF 71                   		mov.L	r7, r1
+ 1936                             	.LVL265:
+ 1937 0072 F8 02 10 00 00 00       		mov.L	#.LC7, [r0]
+ 1938 0078 7F 1A                   		jsr	r10
+ 1939                             	.LVL266:
+  97:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1940                             		.loc 1 97 3 discriminator 1
+ 1941 007a 66 11                   		mov.L	#1, r1
+ 118:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1942                             		.loc 1 118 1 is_stmt 0 discriminator 1
+ 1943 007c 3F 6A 09                		rtsd	#36, r6-r10
+ 1944                             	.LVL267:
+ 1945                             	.L200:
+  99:../src/tensorflow/lite/micro/kernels/split_v.cc ****     case kTfLiteFloat32: {
+ 1946                             		.loc 1 99 3
+ 1947 007f 61 11                   		cmp	#1, r1
+ 1948 0081 21 33                   		bne	.L187
+ 100:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<float>(context, node, input, axis_value);
+ 1949                             		.loc 1 100 5 is_stmt 1
+ 100:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<float>(context, node, input, axis_value);
+ 1950                             		.loc 1 100 26
+ 101:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1951                             		.loc 1 101 7
+ 101:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1952                             		.loc 1 101 30 is_stmt 0
+ 1953 0083 EF 63                   		mov.L	r6, r3
+ 1954 0085 EF A2                   		mov.L	r10, r2
+ 1955 0087 EF 71                   		mov.L	r7, r1
+ 118:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1956                             		.loc 1 118 1
+ 1957 0089 71 00 10                		add	#16, r0
+ 1958 008c 6F 6A                   		popm	r6-r10
+ 1959                             	.LVL268:
+ 101:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1960                             		.loc 1 101 30
+ 1961 008e 04 00 00 00             		bra	__ZN6tflite3ops5micro7split_v9SplitImplIfEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLi
+ 1962                             	.LVL269:
+ 1963                             	.L198:
+  93:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1964                             		.loc 1 93 5 is_stmt 1
+  93:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 1965                             		.loc 1 93 16 is_stmt 0
+ 1966 0092 4B 54                   		add	r5, r4
+ 1967                             	.LVL270:
+  96:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE(context, axis_value < input->dims->size);
+ 1968                             		.loc 1 96 3 is_stmt 1
+  96:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE(context, axis_value < input->dims->size);
+ 1969                             		.loc 1 96 3
+ 1970 0094 26 A4                   		bpz	.L181
+  96:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE(context, axis_value < input->dims->size);
+ 1971                             		.loc 1 96 3 discriminator 1
+  96:../src/tensorflow/lite/micro/kernels/split_v.cc ****   TF_LITE_ENSURE(context, axis_value < input->dims->size);
+ 1972                             		.loc 1 96 3 discriminator 1
+ 1973 0096 ED 7A 05                		mov.L	20[r7], r10
+ 1974 0099 F9 02 03 00 00 00 00    		mov.L	#.LC6, 12[r0]
+ 1975 00a0 3E 02 60                		mov.L	#0x60, 8[r0]
+ 1976 00a3 2E C6                   		bra	.L197
+ 1977                             	.LVL271:
+ 1978                             	.L184:
+ 109:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int32_t>(context, node, input, axis_value);
+ 1979                             		.loc 1 109 5
+ 109:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int32_t>(context, node, input, axis_value);
+ 1980                             		.loc 1 109 24
+ 110:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1981                             		.loc 1 110 7
+ 110:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1982                             		.loc 1 110 32 is_stmt 0
+ 1983 00a5 EF 63                   		mov.L	r6, r3
+ 1984 00a7 EF A2                   		mov.L	r10, r2
+ 1985 00a9 EF 71                   		mov.L	r7, r1
+ 118:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 1986                             		.loc 1 118 1
+ 1987 00ab 71 00 10                		add	#16, r0
+ 1988 00ae 6F 6A                   		popm	r6-r10
+ 1989                             	.LVL272:
+ 110:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 1990                             		.loc 1 110 32
+ 1991 00b0 04 00 00 00             		bra	__ZN6tflite3ops5micro7split_v9SplitImplIlEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLi
+ 1992                             	.LVL273:
+ 1993                             	.L187:
+ 112:../src/tensorflow/lite/micro/kernels/split_v.cc ****       TF_LITE_KERNEL_LOG(context, "Type %s currently not supported.",
+ 1994                             		.loc 1 112 5 is_stmt 1
+ 113:../src/tensorflow/lite/micro/kernels/split_v.cc ****                          TfLiteTypeGetName(input->type));
+ 1995                             		.loc 1 113 7
+ 113:../src/tensorflow/lite/micro/kernels/split_v.cc ****                          TfLiteTypeGetName(input->type));
+ 1996                             		.loc 1 113 7
+ 1997 00b4 ED 7A 05                		mov.L	20[r7], r10
+ 1998 00b7 05 00 00 00             		bsr	_TfLiteTypeGetName
+ 1999                             	.LVL274:
+ 2000 00bb A0 09                   		mov.L	r1, 4[r0]
+ 2001 00bd EF 71                   		mov.L	r7, r1
+ 2002 00bf F8 02 46 00 00 00       		mov.L	#.LC9, [r0]
+ 2003 00c5 7F 1A                   		jsr	r10
+ 2004                             	.LVL275:
+ 115:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 2005                             		.loc 1 115 7
+ 115:../src/tensorflow/lite/micro/kernels/split_v.cc ****   }
+ 2006                             		.loc 1 115 14 is_stmt 0
+ 2007 00c7 66 11                   		mov.L	#1, r1
+ 118:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 2008                             		.loc 1 118 1
+ 2009 00c9 3F 6A 09                		rtsd	#36, r6-r10
+ 2010                             	.LVL276:
+ 2011                             	.L188:
+ 106:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int16_t>(context, node, input, axis_value);
+ 2012                             		.loc 1 106 5 is_stmt 1
+ 106:../src/tensorflow/lite/micro/kernels/split_v.cc ****       return SplitImpl<int16_t>(context, node, input, axis_value);
+ 2013                             		.loc 1 106 24
+ 107:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 2014                             		.loc 1 107 7
+ 107:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 2015                             		.loc 1 107 32 is_stmt 0
+ 2016 00cc EF 63                   		mov.L	r6, r3
+ 2017 00ce EF A2                   		mov.L	r10, r2
+ 2018 00d0 EF 71                   		mov.L	r7, r1
+ 118:../src/tensorflow/lite/micro/kernels/split_v.cc **** 
+ 2019                             		.loc 1 118 1
+ 2020 00d2 71 00 10                		add	#16, r0
+ 2021 00d5 6F 6A                   		popm	r6-r10
+ 2022                             	.LVL277:
+ 107:../src/tensorflow/lite/micro/kernels/split_v.cc ****     }
+ 2023                             		.loc 1 107 32
+ 2024 00d7 04 00 00 00             		bra	__ZN6tflite3ops5micro7split_v9SplitImplIsEE12TfLiteStatusP13TfLiteContextP10TfLiteNodePK16TfLi
+ 2025                             	.LVL278:
+ 2026                             	.L180:
+ 2027                             	.LBB312:
+ 2028                             	.LBB306:
+ 2029                             	.LBB305:
+  33:C:\Users\a5116938\Desktop\e2_studio_workspace\EEMBC_final\RX65N_Cloud_Kit\src/tensorflow/lite/micro/kernels\kernel_util.h ****   TFLITE_DCHECK(node != nullptr);
+ 2030                             		.loc 3 33 3
+ 2031 00db 05 00 00 00             		bsr	_abort
+ 2032                             	.LVL279:
+ 2033                             	.LBE305:
+ 2034                             	.LBE306:
+ 2035                             	.LBE312:
+ 2036                             	.LFE978:
+ 2038 00df 03                      		.section C,"a",@progbits
+ 2039                             		.p2align 2
+ 2040                             		.balign 4
+ 2041                             		.set	.LANCHOR0,. + 0
+ 2042                             	.LC0:
+ 2043 0000 00 00 00 00             		.long	0
+ 2044 0004 00 00 00 00             		.long	0
+ 2045 0008 00 00 00 00             		.long	__ZN6tflite3ops5micro7split_v7PrepareEP13TfLiteContextP10TfLiteNode
+ 2046 000c 00 00 00 00             		.long	__ZN6tflite3ops5micro7split_v4EvalEP13TfLiteContextP10TfLiteNode
+ 2047 0010 00 00 00 00             		.long	0
+ 2048 0014 00 00 00 00             		.long	0
+ 2049 0018 00 00 00 00             		.long	0
+ 2050 001c 00 00 00 00             		.long	0
+ 2051                             		.section	.rodata._ZN6tflite3ops5micro7split_v4EvalEP13TfLiteContextP10TfLiteNode.str1.1,"aMS",@pro
+ 2052                             	.LC6:
+ 2053 0000 61 78 69 73 5F 76 61 6C 		.string	"axis_value >= 0"
+ 2053      75 65 20 3E 3D 20 30 00 
+ 2054                             	.LC7:
+ 2055 0010 25 73 3A 25 64 20 25 73 		.string	"%s:%d %s was not true."
+ 2055      20 77 61 73 20 6E 6F 74 
+ 2055      20 74 72 75 65 2E 00 
+ 2056                             	.LC8:
+ 2057 0027 61 78 69 73 5F 76 61 6C 		.string	"axis_value < input->dims->size"
+ 2057      75 65 20 3C 20 69 6E 70 
+ 2057      75 74 2D 3E 64 69 6D 73 
+ 2057      2D 3E 73 69 7A 65 00 
+ 2058                             	.LC9:
+ 2059 0046 54 79 70 65 20 25 73 20 		.string	"Type %s currently not supported."
+ 2059      63 75 72 72 65 6E 74 6C 
+ 2059      79 20 6E 6F 74 20 73 75 
+ 2059      70 70 6F 72 74 65 64 2E 
+ 2059      00 
+ 2060                             		.section	.rodata._ZN6tflite3ops5micro7split_v7PrepareEP13TfLiteContextP10TfLiteNode.str1.1,"aMS",@
+ 2061                             	.LC1:
+ 2062 0000 33 00                   		.string	"3"
+ 2063                             	.LC2:
+ 2064 0002 4E 75 6D 49 6E 70 75 74 		.string	"NumInputs(node)"
+ 2064      73 28 6E 6F 64 65 29 00 
+ 2065                             	.LC3:
+ 2066 0012 2E 2E 2F 73 72 63 2F 74 		.string	"../src/tensorflow/lite/micro/kernels/split_v.cc"
+ 2066      65 6E 73 6F 72 66 6C 6F 
+ 2066      77 2F 6C 69 74 65 2F 6D 
+ 2066      69 63 72 6F 2F 6B 65 72 
+ 2066      6E 65 6C 73 2F 73 70 6C 
+ 2067                             	.LC4:
+ 2068 0042 25 73 3A 25 64 20 25 73 		.string	"%s:%d %s != %s (%d != %d)"
+ 2068      20 21 3D 20 25 73 20 28 
+ 2068      25 64 20 21 3D 20 25 64 
+ 2068      29 00 
+ 2069                             	.LC5:
+ 2070 005c 2E 2E 2F 73 72 63 2F 74 		.string	"../src/tensorflow/lite/micro/kernels/split_v.cc Non constant axis tensor not supported"
+ 2070      65 6E 73 6F 72 66 6C 6F 
+ 2070      77 2F 6C 69 74 65 2F 6D 
+ 2070      69 63 72 6F 2F 6B 65 72 
+ 2070      6E 65 6C 73 2F 73 70 6C 
+ 2269                             	.Letext0:
+ 2270                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 2271                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 2272                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdint.h"
+ 2273                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 2274                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 2275                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 2276                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2277                             		.file 11 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2278                             		.file 12 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2279                             		.file 13 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2280                             		.file 14 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2281                             		.file 15 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2282                             		.file 16 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2283                             		.file 17 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2284                             		.file 18 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2285                             		.file 19 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2286                             		.file 20 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2287                             		.file 21 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3
+ 2288                             		.file 22 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\loc
+ 2289                             		.file 23 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_ty
+ 2290                             		.file 24 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\ree
+ 2291                             		.file 25 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 2292                             		.file 26 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\string.h
+ 2293                             		.file 27 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 2294                             		.file 28 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
+ 2295                             		.file 29 "<built-in>"

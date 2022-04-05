@@ -1,0 +1,1657 @@
+   1                             		.file	"common.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.TfLiteIntArrayGetSizeInBytes,"ax",@progbits
+   5                             		.global	_TfLiteIntArrayGetSizeInBytes
+   7                             	_TfLiteIntArrayGetSizeInBytes:
+   8                             	.LFB0:
+   9                             		.file 1 "../src/tensorflow/lite/c/common.c"
+   1:../src/tensorflow/lite/c/common.c **** /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/c/common.c **** 
+   3:../src/tensorflow/lite/c/common.c **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/c/common.c **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/c/common.c **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/c/common.c **** 
+   7:../src/tensorflow/lite/c/common.c ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/c/common.c **** 
+   9:../src/tensorflow/lite/c/common.c **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/c/common.c **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/c/common.c **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/c/common.c **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/c/common.c **** limitations under the License.
+  14:../src/tensorflow/lite/c/common.c **** ==============================================================================*/
+  15:../src/tensorflow/lite/c/common.c **** 
+  16:../src/tensorflow/lite/c/common.c **** #include "tensorflow/lite/c/common.h"
+  17:../src/tensorflow/lite/c/common.c **** #ifndef TF_LITE_STATIC_MEMORY
+  18:../src/tensorflow/lite/c/common.c **** #include <stdlib.h>
+  19:../src/tensorflow/lite/c/common.c **** #include <string.h>
+  20:../src/tensorflow/lite/c/common.c **** #endif  // TF_LITE_STATIC_MEMORY
+  21:../src/tensorflow/lite/c/common.c **** 
+  22:../src/tensorflow/lite/c/common.c **** int TfLiteIntArrayGetSizeInBytes(int size) {
+  10                             		.loc 1 22 44
+  11                             	.LVL0:
+  23:../src/tensorflow/lite/c/common.c ****   static TfLiteIntArray dummy;
+  12                             		.loc 1 23 3
+  24:../src/tensorflow/lite/c/common.c ****   return sizeof(dummy) + sizeof(dummy.data[0]) * size;
+  13                             		.loc 1 24 3
+  14                             		.loc 1 24 24 is_stmt 0
+  15 0000 62 11                   		add	#1, r1
+  16                             	.LVL1:
+  25:../src/tensorflow/lite/c/common.c **** }
+  17                             		.loc 1 25 1
+  18 0002 6C 21                   		shll	#2, r1
+  19                             	.LVL2:
+  20 0004 02                      		rts
+  21                             	.LFE0:
+  23                             		.section	.text.TfLiteIntArrayEqual,"ax",@progbits
+  24                             		.global	_TfLiteIntArrayEqual
+  26                             	_TfLiteIntArrayEqual:
+  27                             	.LFB1:
+  26:../src/tensorflow/lite/c/common.c **** 
+  27:../src/tensorflow/lite/c/common.c **** int TfLiteIntArrayEqual(const TfLiteIntArray* a, const TfLiteIntArray* b) {
+  28                             		.loc 1 27 75 is_stmt 1
+  29                             	.LVL3:
+  28:../src/tensorflow/lite/c/common.c ****   if (a == b) return 1;
+  30                             		.loc 1 28 3
+  31                             		.loc 1 28 6 is_stmt 0
+  32 0000 47 21                   		cmp	r2, r1
+  33 0002 20 34                   		beq	.L11
+  29:../src/tensorflow/lite/c/common.c ****   if (a == NULL || b == NULL) return 0;
+  34                             		.loc 1 29 3 is_stmt 1
+  35                             		.loc 1 29 6 is_stmt 0
+  36 0004 61 01                   		cmp	#0, r1
+  37 0006 20 33                   		beq	.L13
+  38                             		.loc 1 29 17 discriminator 2
+  39 0008 61 02                   		cmp	#0, r2
+  40 000a 20 2F                   		beq	.L13
+  30:../src/tensorflow/lite/c/common.c ****   return TfLiteIntArrayEqualsArray(a, b->size, b->data);
+  41                             		.loc 1 30 3 is_stmt 1
+  42                             	.LVL4:
+  43                             	.LBB33:
+  44                             	.LBB34:
+  31:../src/tensorflow/lite/c/common.c **** }
+  32:../src/tensorflow/lite/c/common.c **** 
+  33:../src/tensorflow/lite/c/common.c **** int TfLiteIntArrayEqualsArray(const TfLiteIntArray* a, int b_size,
+  34:../src/tensorflow/lite/c/common.c ****                               const int b_data[]) {
+  35:../src/tensorflow/lite/c/common.c ****   if (a == NULL) return (b_size == 0);
+  45                             		.loc 1 35 3
+  36:../src/tensorflow/lite/c/common.c ****   if (a->size != b_size) return 0;
+  46                             		.loc 1 36 3
+  47                             		.loc 1 36 8 is_stmt 0
+  48 000c EC 1E                   		mov.L	[r1], r14
+  49                             		.loc 1 36 6
+  50 000e EC 25                   		mov.L	[r2], r5
+  51 0010 47 E5                   		cmp	r14, r5
+  52 0012 21 27                   		bne	.L13
+  53                             	.LVL5:
+  37:../src/tensorflow/lite/c/common.c ****   int i = 0;
+  38:../src/tensorflow/lite/c/common.c ****   for (; i < a->size; i++)
+  54                             		.loc 1 38 3
+  55 0014 61 0E                   		cmp	#0, r14
+  56 0016 2B 20                   		ble	.L11
+  39:../src/tensorflow/lite/c/common.c ****     if (a->data[i] != b_data[i]) return 0;
+  57                             		.loc 1 39 5 is_stmt 1
+  58                             		.loc 1 39 8 is_stmt 0
+  59 0018 A8 2D                   		mov.L	4[r2], r5
+  60 001a 06 85 15 01             		cmp	4[r1].L, r5
+  61 001e 21 1B                   		bne	.L13
+  37:../src/tensorflow/lite/c/common.c ****   int i = 0;
+  62                             		.loc 1 37 7
+  63 0020 66 05                   		mov.L	#0, r5
+  64                             		.loc 1 39 16
+  65 0022 62 41                   		add	#4, r1
+  66                             	.LVL6:
+  67                             		.loc 1 39 29
+  68 0024 62 42                   		add	#4, r2
+  69                             	.LVL7:
+  70 0026 0A                      		bra	.L5
+  71                             	.LVL8:
+  72                             	.L6:
+  73                             		.loc 1 39 8
+  74 0027 FE 65 13                		mov.L	[r5,r1], r3
+  75 002a FE 65 24                		mov.L	[r5,r2], r4
+  76 002d 47 43                   		cmp	r4, r3
+  77 002f 1A                      		bne	.L13
+  78                             	.LVL9:
+  79                             		.balign 8,3,1
+  80                             	.L5:
+  81                             		.loc 1 39 5 is_stmt 1
+  38:../src/tensorflow/lite/c/common.c ****     if (a->data[i] != b_data[i]) return 0;
+  82                             		.loc 1 38 24 is_stmt 0
+  83 0030 62 15                   		add	#1, r5
+  84                             	.LVL10:
+  38:../src/tensorflow/lite/c/common.c ****     if (a->data[i] != b_data[i]) return 0;
+  85                             		.loc 1 38 3
+  86 0032 47 5E                   		cmp	r5, r14
+  87 0034 21 F3                   		bne	.L6
+  88                             	.LVL11:
+  89                             		.balign 8,3,1
+  90                             	.L11:
+  91                             	.LBE34:
+  92                             	.LBE33:
+  28:../src/tensorflow/lite/c/common.c ****   if (a == NULL || b == NULL) return 0;
+  93                             		.loc 1 28 22
+  94 0036 66 11                   		mov.L	#1, r1
+  95 0038 02                      		rts
+  96                             	.L13:
+  29:../src/tensorflow/lite/c/common.c ****   return TfLiteIntArrayEqualsArray(a, b->size, b->data);
+  97                             		.loc 1 29 38
+  98 0039 66 01                   		mov.L	#0, r1
+  31:../src/tensorflow/lite/c/common.c **** 
+  99                             		.loc 1 31 1
+ 100 003b 02                      		rts
+ 101                             	.LFE1:
+ 103 003c 76 10 01 00             		.section	.text.TfLiteIntArrayEqualsArray,"ax",@progbits
+ 104                             		.global	_TfLiteIntArrayEqualsArray
+ 106                             	_TfLiteIntArrayEqualsArray:
+ 107                             	.LFB2:
+  34:../src/tensorflow/lite/c/common.c ****   if (a == NULL) return (b_size == 0);
+ 108                             		.loc 1 34 51 is_stmt 1
+ 109                             	.LVL12:
+  35:../src/tensorflow/lite/c/common.c ****   if (a->size != b_size) return 0;
+ 110                             		.loc 1 35 3
+  35:../src/tensorflow/lite/c/common.c ****   if (a->size != b_size) return 0;
+ 111                             		.loc 1 35 6 is_stmt 0
+ 112 0000 61 01                   		cmp	#0, r1
+ 113 0002 20 2D                   		beq	.L23
+  36:../src/tensorflow/lite/c/common.c ****   int i = 0;
+ 114                             		.loc 1 36 3 is_stmt 1
+  36:../src/tensorflow/lite/c/common.c ****   int i = 0;
+ 115                             		.loc 1 36 6 is_stmt 0
+ 116 0004 EC 15                   		mov.L	[r1], r5
+ 117 0006 47 25                   		cmp	r2, r5
+ 118 0008 21 24                   		bne	.L22
+ 119                             	.LVL13:
+  38:../src/tensorflow/lite/c/common.c ****     if (a->data[i] != b_data[i]) return 0;
+ 120                             		.loc 1 38 3
+ 121 000a 61 02                   		cmp	#0, r2
+ 122 000c 2B 1D                   		ble	.L20
+ 123                             		.loc 1 39 5 is_stmt 1
+ 124                             		.loc 1 39 8 is_stmt 0
+ 125 000e A8 1D                   		mov.L	4[r1], r5
+ 126 0010 06 84 35                		cmp	[r3].L, r5
+ 127 0013 21 19                   		bne	.L22
+  37:../src/tensorflow/lite/c/common.c ****   for (; i < a->size; i++)
+ 128                             		.loc 1 37 7
+ 129 0015 66 05                   		mov.L	#0, r5
+ 130                             		.loc 1 39 16
+ 131 0017 62 41                   		add	#4, r1
+ 132                             	.LVL14:
+ 133 0019 0A                      		bra	.L17
+ 134                             	.LVL15:
+ 135                             	.L18:
+ 136                             		.loc 1 39 8
+ 137 001a FE 65 1E                		mov.L	[r5,r1], r14
+ 138 001d FE 65 34                		mov.L	[r5,r3], r4
+ 139 0020 47 4E                   		cmp	r4, r14
+ 140 0022 1A                      		bne	.L22
+ 141                             	.LVL16:
+ 142                             		.balign 8,3,1
+ 143                             	.L17:
+ 144                             		.loc 1 39 5 is_stmt 1
+  38:../src/tensorflow/lite/c/common.c ****     if (a->data[i] != b_data[i]) return 0;
+ 145                             		.loc 1 38 24 is_stmt 0
+ 146 0023 62 15                   		add	#1, r5
+ 147                             	.LVL17:
+  38:../src/tensorflow/lite/c/common.c ****     if (a->data[i] != b_data[i]) return 0;
+ 148                             		.loc 1 38 3
+ 149 0025 47 52                   		cmp	r5, r2
+ 150 0027 21 F3                   		bne	.L18
+ 151                             	.LVL18:
+ 152                             		.balign 8,3,1
+ 153                             	.L20:
+  40:../src/tensorflow/lite/c/common.c ****   return 1;
+ 154                             		.loc 1 40 10
+ 155 0029 66 11                   		mov.L	#1, r1
+ 156 002b 02                      		rts
+ 157                             	.L22:
+  36:../src/tensorflow/lite/c/common.c ****   int i = 0;
+ 158                             		.loc 1 36 33
+ 159 002c 66 01                   		mov.L	#0, r1
+  41:../src/tensorflow/lite/c/common.c **** }
+ 160                             		.loc 1 41 1
+ 161 002e 02                      		rts
+ 162                             	.LVL19:
+ 163                             	.L23:
+  35:../src/tensorflow/lite/c/common.c ****   if (a->size != b_size) return 0;
+ 164                             		.loc 1 35 18 is_stmt 1 discriminator 1
+  35:../src/tensorflow/lite/c/common.c ****   if (a->size != b_size) return 0;
+ 165                             		.loc 1 35 33 is_stmt 0 discriminator 1
+ 166 002f 61 02                   		cmp	#0, r2
+ 167 0031 FC DB 10                		sceq.L	r1
+ 168                             	.LVL20:
+ 169 0034 02                      		rts
+ 170                             	.LFE2:
+ 172 0035 FC 13 00                		.section	.text.TfLiteIntArrayCreate,"ax",@progbits
+ 173                             		.global	_TfLiteIntArrayCreate
+ 175                             	_TfLiteIntArrayCreate:
+ 176                             	.LFB3:
+  42:../src/tensorflow/lite/c/common.c **** 
+  43:../src/tensorflow/lite/c/common.c **** #ifndef TF_LITE_STATIC_MEMORY
+  44:../src/tensorflow/lite/c/common.c **** 
+  45:../src/tensorflow/lite/c/common.c **** TfLiteIntArray* TfLiteIntArrayCreate(int size) {
+ 177                             		.loc 1 45 48 is_stmt 1
+ 178                             	.LVL21:
+ 179 0000 7E A7                   		push.l	r7
+ 180                             	.LCFI0:
+  46:../src/tensorflow/lite/c/common.c ****   TfLiteIntArray* ret =
+ 181                             		.loc 1 46 3
+  45:../src/tensorflow/lite/c/common.c ****   TfLiteIntArray* ret =
+ 182                             		.loc 1 45 48 is_stmt 0
+ 183 0002 EF 17                   		mov.L	r1, r7
+ 184                             	.LVL22:
+ 185                             	.LBB35:
+ 186                             	.LBB36:
+  23:../src/tensorflow/lite/c/common.c ****   return sizeof(dummy) + sizeof(dummy.data[0]) * size;
+ 187                             		.loc 1 23 3 is_stmt 1
+  24:../src/tensorflow/lite/c/common.c **** }
+ 188                             		.loc 1 24 3
+  24:../src/tensorflow/lite/c/common.c **** }
+ 189                             		.loc 1 24 24 is_stmt 0
+ 190 0004 62 11                   		add	#1, r1
+ 191                             	.LVL23:
+ 192                             	.LBE36:
+ 193                             	.LBE35:
+  47:../src/tensorflow/lite/c/common.c ****       (TfLiteIntArray*)malloc(TfLiteIntArrayGetSizeInBytes(size));
+ 194                             		.loc 1 47 24
+ 195 0006 6C 21                   		shll	#2, r1
+ 196 0008 05 00 00 00             		bsr	_malloc
+ 197                             	.LVL24:
+  48:../src/tensorflow/lite/c/common.c ****   ret->size = size;
+ 198                             		.loc 1 48 3 is_stmt 1
+ 199                             		.loc 1 48 13 is_stmt 0
+ 200 000c E3 17                   		mov.L	r7, [r1]
+  49:../src/tensorflow/lite/c/common.c ****   return ret;
+ 201                             		.loc 1 49 3 is_stmt 1
+  50:../src/tensorflow/lite/c/common.c **** }
+ 202                             		.loc 1 50 1 is_stmt 0
+ 203 000e 3F 77 01                		rtsd	#4, r7-r7
+ 204                             	.LFE3:
+ 206                             		.section	.text.TfLiteIntArrayCopy,"ax",@progbits
+ 207                             		.global	_TfLiteIntArrayCopy
+ 209                             	_TfLiteIntArrayCopy:
+ 210                             	.LFB4:
+  51:../src/tensorflow/lite/c/common.c **** 
+  52:../src/tensorflow/lite/c/common.c **** TfLiteIntArray* TfLiteIntArrayCopy(const TfLiteIntArray* src) {
+ 211                             		.loc 1 52 63 is_stmt 1
+ 212                             	.LVL25:
+  53:../src/tensorflow/lite/c/common.c ****   if (!src) return NULL;
+ 213                             		.loc 1 53 3
+ 214                             		.loc 1 53 6 is_stmt 0
+ 215 0000 61 01                   		cmp	#0, r1
+ 216 0002 20 25                   		beq	.L28
+  52:../src/tensorflow/lite/c/common.c ****   if (!src) return NULL;
+ 217                             		.loc 1 52 63
+ 218 0004 6E 6A                   		pushm	r6-r10
+ 219                             	.LCFI1:
+  54:../src/tensorflow/lite/c/common.c ****   TfLiteIntArray* ret = TfLiteIntArrayCreate(src->size);
+ 220                             		.loc 1 54 3 is_stmt 1
+ 221                             		.loc 1 54 25 is_stmt 0
+ 222 0006 EF 17                   		mov.L	r1, r7
+ 223 0008 FD 2A 76                		mov.L	[r7+], r6
+ 224                             	.LVL26:
+ 225                             	.LBB37:
+ 226                             	.LBB38:
+  46:../src/tensorflow/lite/c/common.c ****       (TfLiteIntArray*)malloc(TfLiteIntArrayGetSizeInBytes(size));
+ 227                             		.loc 1 46 3 is_stmt 1
+ 228                             	.LBB39:
+ 229                             	.LBB40:
+  23:../src/tensorflow/lite/c/common.c ****   return sizeof(dummy) + sizeof(dummy.data[0]) * size;
+ 230                             		.loc 1 23 3
+  24:../src/tensorflow/lite/c/common.c **** }
+ 231                             		.loc 1 24 3
+  24:../src/tensorflow/lite/c/common.c **** }
+ 232                             		.loc 1 24 24 is_stmt 0
+ 233 000b 71 6A 01                		add	#1, r6, r10
+ 234 000e 6C 2A                   		shll	#2, r10
+ 235                             	.LVL27:
+ 236                             	.LBE40:
+ 237                             	.LBE39:
+  47:../src/tensorflow/lite/c/common.c ****   ret->size = size;
+ 238                             		.loc 1 47 24
+ 239 0010 EF A1                   		mov.L	r10, r1
+ 240                             	.LVL28:
+ 241 0012 05 00 00 00             		bsr	_malloc
+ 242                             	.LVL29:
+ 243 0016 EF 15                   		mov.L	r1, r5
+ 244                             	.LVL30:
+  48:../src/tensorflow/lite/c/common.c ****   return ret;
+ 245                             		.loc 1 48 3 is_stmt 1
+ 246                             	.LBE38:
+ 247                             	.LBE37:
+  55:../src/tensorflow/lite/c/common.c ****   if (ret) {
+  56:../src/tensorflow/lite/c/common.c ****     memcpy(ret->data, src->data, src->size * sizeof(int));
+ 248                             		.loc 1 56 5 is_stmt 0
+ 249 0018 EF 72                   		mov.L	r7, r2
+ 250                             	.LBB42:
+ 251                             	.LBB41:
+  48:../src/tensorflow/lite/c/common.c ****   return ret;
+ 252                             		.loc 1 48 13
+ 253 001a FD 22 16                		mov.L	r6, [r1+]
+ 254                             	.LVL31:
+  49:../src/tensorflow/lite/c/common.c **** }
+ 255                             		.loc 1 49 3 is_stmt 1
+ 256                             	.LBE41:
+ 257                             	.LBE42:
+  55:../src/tensorflow/lite/c/common.c ****   if (ret) {
+ 258                             		.loc 1 55 3
+ 259                             		.loc 1 56 5
+ 260 001d 71 A3 FC                		add	#-4, r10, r3
+ 261 0020 7F 8F                   		smovf
+  57:../src/tensorflow/lite/c/common.c ****   }
+  58:../src/tensorflow/lite/c/common.c ****   return ret;
+ 262                             		.loc 1 58 3
+  59:../src/tensorflow/lite/c/common.c **** }
+ 263                             		.loc 1 59 1 is_stmt 0
+ 264 0022 EF 51                   		mov.L	r5, r1
+ 265 0024 3F 6A 05                		rtsd	#20, r6-r10
+ 266                             	.LVL32:
+ 267                             	.L28:
+ 268                             	.LCFI2:
+  53:../src/tensorflow/lite/c/common.c ****   TfLiteIntArray* ret = TfLiteIntArrayCreate(src->size);
+ 269                             		.loc 1 53 20
+ 270 0027 66 05                   		mov.L	#0, r5
+ 271                             		.loc 1 59 1
+ 272 0029 EF 51                   		mov.L	r5, r1
+ 273                             	.LVL33:
+ 274 002b 02                      		rts
+ 275                             	.LFE4:
+ 277                             		.section	.text.TfLiteIntArrayFree,"ax",@progbits
+ 278                             		.global	_TfLiteIntArrayFree
+ 280                             	_TfLiteIntArrayFree:
+ 281                             	.LFB5:
+  60:../src/tensorflow/lite/c/common.c **** 
+  61:../src/tensorflow/lite/c/common.c **** void TfLiteIntArrayFree(TfLiteIntArray* a) { free(a); }
+ 282                             		.loc 1 61 44 is_stmt 1
+ 283                             	.LVL34:
+ 284                             		.loc 1 61 46
+ 285 0000 04 00 00 00             		bra	_free
+ 286                             	.LVL35:
+ 287                             	.LFE5:
+ 289                             		.section	.text.TfLiteFloatArrayGetSizeInBytes,"ax",@progbits
+ 290                             		.global	_TfLiteFloatArrayGetSizeInBytes
+ 292                             	_TfLiteFloatArrayGetSizeInBytes:
+ 293                             	.LFB18:
+ 294 0000 62 11                   		add	#1, r1
+ 295 0002 6C 21                   		shll	#2, r1
+ 296 0004 02                      		rts
+ 297                             	.LFE18:
+ 299                             		.section	.text.TfLiteFloatArrayCreate,"ax",@progbits
+ 300                             		.global	_TfLiteFloatArrayCreate
+ 302                             	_TfLiteFloatArrayCreate:
+ 303                             	.LFB7:
+  62:../src/tensorflow/lite/c/common.c **** 
+  63:../src/tensorflow/lite/c/common.c **** #endif  // TF_LITE_STATIC_MEMORY
+  64:../src/tensorflow/lite/c/common.c **** 
+  65:../src/tensorflow/lite/c/common.c **** int TfLiteFloatArrayGetSizeInBytes(int size) {
+  66:../src/tensorflow/lite/c/common.c ****   static TfLiteFloatArray dummy;
+  67:../src/tensorflow/lite/c/common.c ****   return sizeof(dummy) + sizeof(dummy.data[0]) * size;
+  68:../src/tensorflow/lite/c/common.c **** }
+  69:../src/tensorflow/lite/c/common.c **** 
+  70:../src/tensorflow/lite/c/common.c **** #ifndef TF_LITE_STATIC_MEMORY
+  71:../src/tensorflow/lite/c/common.c **** 
+  72:../src/tensorflow/lite/c/common.c **** TfLiteFloatArray* TfLiteFloatArrayCreate(int size) {
+ 304                             		.loc 1 72 52
+ 305                             	.LVL36:
+ 306                             		.loc 1 72 52 is_stmt 0
+ 307 0000 7E A7                   		push.l	r7
+ 308                             	.LCFI3:
+  73:../src/tensorflow/lite/c/common.c ****   TfLiteFloatArray* ret =
+ 309                             		.loc 1 73 3 is_stmt 1
+  72:../src/tensorflow/lite/c/common.c ****   TfLiteFloatArray* ret =
+ 310                             		.loc 1 72 52 is_stmt 0
+ 311 0002 EF 17                   		mov.L	r1, r7
+ 312                             	.LVL37:
+ 313                             	.LBB43:
+ 314                             	.LBB44:
+  66:../src/tensorflow/lite/c/common.c ****   return sizeof(dummy) + sizeof(dummy.data[0]) * size;
+ 315                             		.loc 1 66 3 is_stmt 1
+  67:../src/tensorflow/lite/c/common.c **** }
+ 316                             		.loc 1 67 3
+  67:../src/tensorflow/lite/c/common.c **** }
+ 317                             		.loc 1 67 24 is_stmt 0
+ 318 0004 62 11                   		add	#1, r1
+ 319                             	.LVL38:
+ 320                             	.LBE44:
+ 321                             	.LBE43:
+  74:../src/tensorflow/lite/c/common.c ****       (TfLiteFloatArray*)malloc(TfLiteFloatArrayGetSizeInBytes(size));
+ 322                             		.loc 1 74 26
+ 323 0006 6C 21                   		shll	#2, r1
+ 324 0008 05 00 00 00             		bsr	_malloc
+ 325                             	.LVL39:
+  75:../src/tensorflow/lite/c/common.c ****   ret->size = size;
+ 326                             		.loc 1 75 3 is_stmt 1
+ 327                             		.loc 1 75 13 is_stmt 0
+ 328 000c E3 17                   		mov.L	r7, [r1]
+  76:../src/tensorflow/lite/c/common.c ****   return ret;
+ 329                             		.loc 1 76 3 is_stmt 1
+  77:../src/tensorflow/lite/c/common.c **** }
+ 330                             		.loc 1 77 1 is_stmt 0
+ 331 000e 3F 77 01                		rtsd	#4, r7-r7
+ 332                             	.LFE7:
+ 334                             		.section	.text.TfLiteFloatArrayFree,"ax",@progbits
+ 335                             		.global	_TfLiteFloatArrayFree
+ 337                             	_TfLiteFloatArrayFree:
+ 338                             	.LFB8:
+  78:../src/tensorflow/lite/c/common.c **** 
+  79:../src/tensorflow/lite/c/common.c **** void TfLiteFloatArrayFree(TfLiteFloatArray* a) { free(a); }
+ 339                             		.loc 1 79 48 is_stmt 1
+ 340                             	.LVL40:
+ 341                             		.loc 1 79 50
+ 342 0000 04 00 00 00             		bra	_free
+ 343                             	.LVL41:
+ 344                             	.LFE8:
+ 346                             		.section	.text.TfLiteTensorDataFree,"ax",@progbits
+ 347                             		.global	_TfLiteTensorDataFree
+ 349                             	_TfLiteTensorDataFree:
+ 350                             	.LFB9:
+  80:../src/tensorflow/lite/c/common.c **** 
+  81:../src/tensorflow/lite/c/common.c **** void TfLiteTensorDataFree(TfLiteTensor* t) {
+ 351                             		.loc 1 81 44
+ 352                             	.LVL42:
+ 353 0000 7E A7                   		push.l	r7
+ 354                             	.LCFI4:
+  82:../src/tensorflow/lite/c/common.c ****   if (t->allocation_type == kTfLiteDynamic ||
+ 355                             		.loc 1 82 3
+  81:../src/tensorflow/lite/c/common.c ****   if (t->allocation_type == kTfLiteDynamic ||
+ 356                             		.loc 1 81 44 is_stmt 0
+ 357 0002 EF 17                   		mov.L	r1, r7
+ 358                             		.loc 1 82 44
+ 359 0004 A9 1D                   		mov.L	20[r1], r5
+ 360 0006 60 45                   		sub	#4, r5
+ 361                             		.loc 1 82 6
+ 362 0008 61 15                   		cmp	#1, r5
+ 363 000a 25 08                   		bleu	.L41
+  83:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+  84:../src/tensorflow/lite/c/common.c ****     free(t->data.raw);
+  85:../src/tensorflow/lite/c/common.c ****   }
+  86:../src/tensorflow/lite/c/common.c ****   t->data.raw = NULL;
+ 364                             		.loc 1 86 3 is_stmt 1
+ 365                             		.loc 1 86 15 is_stmt 0
+ 366 000c 3E 71 00                		mov.L	#0, 4[r7]
+  87:../src/tensorflow/lite/c/common.c **** }
+ 367                             		.loc 1 87 1
+ 368 000f 3F 77 01                		rtsd	#4, r7-r7
+ 369                             	.L41:
+  84:../src/tensorflow/lite/c/common.c ****   }
+ 370                             		.loc 1 84 5 is_stmt 1
+ 371 0012 A8 19                   		mov.L	4[r1], r1
+ 372                             	.LVL43:
+ 373 0014 05 00 00 00             		bsr	_free
+ 374                             	.LVL44:
+  86:../src/tensorflow/lite/c/common.c **** }
+ 375                             		.loc 1 86 3
+  86:../src/tensorflow/lite/c/common.c **** }
+ 376                             		.loc 1 86 15 is_stmt 0
+ 377 0018 3E 71 00                		mov.L	#0, 4[r7]
+ 378                             		.loc 1 87 1
+ 379 001b 3F 77 01                		rtsd	#4, r7-r7
+ 380                             	.LFE9:
+ 382                             		.section	.text.TfLiteQuantizationFree,"ax",@progbits
+ 383                             		.global	_TfLiteQuantizationFree
+ 385                             	_TfLiteQuantizationFree:
+ 386                             	.LFB10:
+  88:../src/tensorflow/lite/c/common.c **** 
+  89:../src/tensorflow/lite/c/common.c **** void TfLiteQuantizationFree(TfLiteQuantization* quantization) {
+ 387                             		.loc 1 89 63 is_stmt 1
+ 388                             	.LVL45:
+ 389 0000 6E 7A                   		pushm	r7-r10
+ 390                             	.LCFI5:
+  90:../src/tensorflow/lite/c/common.c ****   if (quantization->type == kTfLiteAffineQuantization) {
+ 391                             		.loc 1 90 3
+  89:../src/tensorflow/lite/c/common.c ****   if (quantization->type == kTfLiteAffineQuantization) {
+ 392                             		.loc 1 89 63 is_stmt 0
+ 393 0002 EF 17                   		mov.L	r1, r7
+ 394                             		.loc 1 90 6
+ 395 0004 EC 15                   		mov.L	[r1], r5
+ 396 0006 61 15                   		cmp	#1, r5
+ 397 0008 12                      		beq	.L53
+  91:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+  92:../src/tensorflow/lite/c/common.c ****         (TfLiteAffineQuantization*)(quantization->params);
+  93:../src/tensorflow/lite/c/common.c ****     if (q_params->scale) {
+  94:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+  95:../src/tensorflow/lite/c/common.c ****       q_params->scale = NULL;
+  96:../src/tensorflow/lite/c/common.c ****     }
+  97:../src/tensorflow/lite/c/common.c ****     if (q_params->zero_point) {
+  98:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+  99:../src/tensorflow/lite/c/common.c ****       q_params->zero_point = NULL;
+ 100:../src/tensorflow/lite/c/common.c ****     }
+ 101:../src/tensorflow/lite/c/common.c ****     free(q_params);
+ 102:../src/tensorflow/lite/c/common.c ****   }
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->params = NULL;
+ 398                             		.loc 1 103 3 is_stmt 1
+ 399                             		.loc 1 103 24 is_stmt 0
+ 400 0009 3E 71 00                		mov.L	#0, 4[r7]
+ 104:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 401                             		.loc 1 104 3 is_stmt 1
+ 402                             		.loc 1 104 22 is_stmt 0
+ 403 000c F8 76 00                		mov.L	#0, [r7]
+ 105:../src/tensorflow/lite/c/common.c **** }
+ 404                             		.loc 1 105 1
+ 405 000f 3F 7A 04                		rtsd	#16, r7-r10
+ 406                             	.L53:
+ 407                             	.LBB50:
+  91:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 408                             		.loc 1 91 5 is_stmt 1
+  91:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 409                             		.loc 1 91 31 is_stmt 0
+ 410 0012 ED 1A 01                		mov.L	4[r1], r10
+ 411                             	.LVL46:
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 412                             		.loc 1 93 5 is_stmt 1
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 413                             		.loc 1 93 17 is_stmt 0
+ 414 0015 EC A1                   		mov.L	[r10], r1
+ 415                             	.LVL47:
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 416                             		.loc 1 93 8
+ 417 0017 61 01                   		cmp	#0, r1
+ 418 0019 10                      		beq	.L44
+  94:../src/tensorflow/lite/c/common.c ****       q_params->scale = NULL;
+ 419                             		.loc 1 94 7 is_stmt 1
+ 420                             	.LVL48:
+ 421                             	.LBB51:
+ 422                             	.LBB52:
+  79:../src/tensorflow/lite/c/common.c **** 
+ 423                             		.loc 1 79 50
+ 424 001a 05 00 00 00             		bsr	_free
+ 425                             	.LVL49:
+ 426                             	.LBE52:
+ 427                             	.LBE51:
+  95:../src/tensorflow/lite/c/common.c ****     }
+ 428                             		.loc 1 95 7
+  95:../src/tensorflow/lite/c/common.c ****     }
+ 429                             		.loc 1 95 23 is_stmt 0
+ 430 001e F8 A6 00                		mov.L	#0, [r10]
+ 431                             		.balign 8,3,1
+ 432                             	.L44:
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 433                             		.loc 1 97 5 is_stmt 1
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 434                             		.loc 1 97 17 is_stmt 0
+ 435 0021 ED A1 01                		mov.L	4[r10], r1
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 436                             		.loc 1 97 8
+ 437 0024 61 01                   		cmp	#0, r1
+ 438 0026 15                      		beq	.L45
+  98:../src/tensorflow/lite/c/common.c ****       q_params->zero_point = NULL;
+ 439                             		.loc 1 98 7 is_stmt 1
+ 440                             	.LVL50:
+ 441                             	.LBB53:
+ 442                             	.LBB54:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 443                             		.loc 1 61 46
+ 444 0027 05 00 00 00             		bsr	_free
+ 445                             	.LVL51:
+ 446                             	.LBE54:
+ 447                             	.LBE53:
+  99:../src/tensorflow/lite/c/common.c ****     }
+ 448                             		.loc 1 99 7
+ 449                             		.balign 8,3,1
+ 450                             	.L45:
+ 101:../src/tensorflow/lite/c/common.c ****   }
+ 451                             		.loc 1 101 5
+ 452 002b EF A1                   		mov.L	r10, r1
+ 453 002d 05 00 00 00             		bsr	_free
+ 454                             	.LVL52:
+ 455                             	.LBE50:
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 456                             		.loc 1 103 3
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 457                             		.loc 1 103 24 is_stmt 0
+ 458 0031 3E 71 00                		mov.L	#0, 4[r7]
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 459                             		.loc 1 104 3 is_stmt 1
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 460                             		.loc 1 104 22 is_stmt 0
+ 461 0034 F8 76 00                		mov.L	#0, [r7]
+ 462                             		.loc 1 105 1
+ 463 0037 3F 7A 04                		rtsd	#16, r7-r10
+ 464                             	.LFE10:
+ 466 003a 74 10 01 00 00 00       		.section	.text.TfLiteSparsityFree,"ax",@progbits
+ 467                             		.global	_TfLiteSparsityFree
+ 469                             	_TfLiteSparsityFree:
+ 470                             	.LFB11:
+ 106:../src/tensorflow/lite/c/common.c **** 
+ 107:../src/tensorflow/lite/c/common.c **** void TfLiteSparsityFree(TfLiteSparsity* sparsity) {
+ 471                             		.loc 1 107 51 is_stmt 1
+ 472                             	.LVL53:
+ 108:../src/tensorflow/lite/c/common.c ****   if (sparsity == NULL) {
+ 473                             		.loc 1 108 3
+ 474                             		.loc 1 108 6 is_stmt 0
+ 475 0000 61 01                   		cmp	#0, r1
+ 476 0002 20 6A                   		beq	.L54
+ 107:../src/tensorflow/lite/c/common.c ****   if (sparsity == NULL) {
+ 477                             		.loc 1 107 51
+ 478 0004 6E 6A                   		pushm	r6-r10
+ 479                             	.LCFI6:
+ 480 0006 EF 1A                   		mov.L	r1, r10
+ 109:../src/tensorflow/lite/c/common.c ****     return;
+ 110:../src/tensorflow/lite/c/common.c ****   }
+ 111:../src/tensorflow/lite/c/common.c **** 
+ 112:../src/tensorflow/lite/c/common.c ****   if (sparsity->traversal_order) {
+ 481                             		.loc 1 112 3 is_stmt 1
+ 482                             		.loc 1 112 15 is_stmt 0
+ 483 0008 EC 11                   		mov.L	[r1], r1
+ 484                             	.LVL54:
+ 485                             		.loc 1 112 6
+ 486 000a 61 01                   		cmp	#0, r1
+ 487 000c 10                      		beq	.L56
+ 113:../src/tensorflow/lite/c/common.c ****     TfLiteIntArrayFree(sparsity->traversal_order);
+ 488                             		.loc 1 113 5 is_stmt 1
+ 489                             	.LVL55:
+ 490                             	.LBB55:
+ 491                             	.LBB56:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 492                             		.loc 1 61 46
+ 493 000d 05 00 00 00             		bsr	_free
+ 494                             	.LVL56:
+ 495                             	.LBE56:
+ 496                             	.LBE55:
+ 114:../src/tensorflow/lite/c/common.c ****     sparsity->traversal_order = NULL;
+ 497                             		.loc 1 114 5
+ 498                             		.loc 1 114 31 is_stmt 0
+ 499 0011 F8 A6 00                		mov.L	#0, [r10]
+ 500                             		.balign 8,3,1
+ 501                             	.L56:
+ 115:../src/tensorflow/lite/c/common.c ****   }
+ 116:../src/tensorflow/lite/c/common.c **** 
+ 117:../src/tensorflow/lite/c/common.c ****   if (sparsity->block_map) {
+ 502                             		.loc 1 117 3 is_stmt 1
+ 503                             		.loc 1 117 15 is_stmt 0
+ 504 0014 ED A1 01                		mov.L	4[r10], r1
+ 505                             		.loc 1 117 6
+ 506 0017 61 01                   		cmp	#0, r1
+ 507 0019 11                      		beq	.L57
+ 118:../src/tensorflow/lite/c/common.c ****     TfLiteIntArrayFree(sparsity->block_map);
+ 508                             		.loc 1 118 5 is_stmt 1
+ 509                             	.LVL57:
+ 510                             	.LBB57:
+ 511                             	.LBB58:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 512                             		.loc 1 61 46
+ 513 001a 05 00 00 00             		bsr	_free
+ 514                             	.LVL58:
+ 515                             	.LBE58:
+ 516                             	.LBE57:
+ 119:../src/tensorflow/lite/c/common.c ****     sparsity->block_map = NULL;
+ 517                             		.loc 1 119 5
+ 518                             		.loc 1 119 25 is_stmt 0
+ 519 001e F9 A6 01 00             		mov.L	#0, 4[r10]
+ 520                             		.balign 8,3,1
+ 521                             	.L57:
+ 120:../src/tensorflow/lite/c/common.c ****   }
+ 121:../src/tensorflow/lite/c/common.c **** 
+ 122:../src/tensorflow/lite/c/common.c ****   if (sparsity->dim_metadata) {
+ 522                             		.loc 1 122 3 is_stmt 1
+ 523                             		.loc 1 122 15 is_stmt 0
+ 524 0022 ED A1 02                		mov.L	8[r10], r1
+ 525                             		.loc 1 122 6
+ 526 0025 61 01                   		cmp	#0, r1
+ 527 0027 20 21                   		beq	.L58
+ 528                             	.LVL59:
+ 529                             	.LBB59:
+ 123:../src/tensorflow/lite/c/common.c ****     int i = 0;
+ 124:../src/tensorflow/lite/c/common.c ****     for (; i < sparsity->dim_metadata_size; i++) {
+ 530                             		.loc 1 124 24
+ 531 0029 ED A3 03                		mov.L	12[r10], r3
+ 123:../src/tensorflow/lite/c/common.c ****     int i = 0;
+ 532                             		.loc 1 123 9
+ 533 002c 66 07                   		mov.L	#0, r7
+ 534                             		.loc 1 124 5
+ 535 002e 61 03                   		cmp	#0, r3
+ 536 0030 2B 13                   		ble	.L60
+ 537                             	.LVL60:
+ 538                             		.balign 8,3,2
+ 539                             	.L59:
+ 540                             	.LBB60:
+ 125:../src/tensorflow/lite/c/common.c ****       TfLiteDimensionMetadata metadata = sparsity->dim_metadata[i];
+ 541                             		.loc 1 125 7 is_stmt 1
+ 542                             		.loc 1 125 64 is_stmt 0
+ 543 0032 FD C4 75                		shll	#4, r7, r5
+ 544 0035 4B 15                   		add	r1, r5
+ 545                             	.LVL61:
+ 126:../src/tensorflow/lite/c/common.c ****       if (metadata.format == kTfLiteDimSparseCSR) {
+ 546                             		.loc 1 126 7 is_stmt 1
+ 547                             		.loc 1 126 10 is_stmt 0
+ 548 0037 EC 54                   		mov.L	[r5], r4
+ 549 0039 61 14                   		cmp	#1, r4
+ 550 003b 20 15                   		beq	.L78
+ 551                             	.LBE60:
+ 124:../src/tensorflow/lite/c/common.c ****       TfLiteDimensionMetadata metadata = sparsity->dim_metadata[i];
+ 552                             		.loc 1 124 46
+ 553 003d 62 17                   		add	#1, r7
+ 554                             	.LVL62:
+ 124:../src/tensorflow/lite/c/common.c ****       TfLiteDimensionMetadata metadata = sparsity->dim_metadata[i];
+ 555                             		.loc 1 124 5
+ 556 003f 47 37                   		cmp	r3, r7
+ 557 0041 29 F1                   		blt	.L59
+ 558                             	.LVL63:
+ 559                             		.balign 8,3,3
+ 560                             	.L60:
+ 127:../src/tensorflow/lite/c/common.c ****         TfLiteIntArrayFree(metadata.array_segments);
+ 128:../src/tensorflow/lite/c/common.c ****         metadata.array_segments = NULL;
+ 129:../src/tensorflow/lite/c/common.c ****         TfLiteIntArrayFree(metadata.array_indices);
+ 130:../src/tensorflow/lite/c/common.c ****         metadata.array_indices = NULL;
+ 131:../src/tensorflow/lite/c/common.c ****       }
+ 132:../src/tensorflow/lite/c/common.c ****     }
+ 133:../src/tensorflow/lite/c/common.c ****     free(sparsity->dim_metadata);
+ 561                             		.loc 1 133 5 is_stmt 1
+ 562 0043 05 00 00 00             		bsr	_free
+ 563                             	.LVL64:
+ 134:../src/tensorflow/lite/c/common.c ****     sparsity->dim_metadata = NULL;
+ 564                             		.loc 1 134 5
+ 565 0047 03                      		.balign 8,3,1
+ 566                             	.L58:
+ 567                             	.LBE59:
+ 135:../src/tensorflow/lite/c/common.c ****   }
+ 136:../src/tensorflow/lite/c/common.c **** 
+ 137:../src/tensorflow/lite/c/common.c ****   free(sparsity);
+ 568                             		.loc 1 137 3
+ 569 0048 EF A1                   		mov.L	r10, r1
+ 138:../src/tensorflow/lite/c/common.c **** }
+ 570                             		.loc 1 138 1 is_stmt 0
+ 571 004a 6F 6A                   		popm	r6-r10
+ 572                             	.LVL65:
+ 137:../src/tensorflow/lite/c/common.c **** }
+ 573                             		.loc 1 137 3
+ 574 004c 04 00 00 00             		bra	_free
+ 575                             	.LVL66:
+ 576                             	.L78:
+ 577                             	.LBB69:
+ 578                             	.LBB67:
+ 125:../src/tensorflow/lite/c/common.c ****       if (metadata.format == kTfLiteDimSparseCSR) {
+ 579                             		.loc 1 125 31
+ 580 0050 A8 DE                   		mov.L	12[r5], r6
+ 127:../src/tensorflow/lite/c/common.c ****         metadata.array_segments = NULL;
+ 581                             		.loc 1 127 9 is_stmt 1
+ 582                             	.LVL67:
+ 583                             	.LBB61:
+ 584                             	.LBB62:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 585                             		.loc 1 61 46
+ 586 0052 A8 D1                   		mov.L	8[r5], r1
+ 587                             	.LBE62:
+ 588                             	.LBE61:
+ 589                             	.LBE67:
+ 124:../src/tensorflow/lite/c/common.c ****       TfLiteDimensionMetadata metadata = sparsity->dim_metadata[i];
+ 590                             		.loc 1 124 46 is_stmt 0
+ 591 0054 62 17                   		add	#1, r7
+ 592                             	.LVL68:
+ 593                             	.LBB68:
+ 594                             	.LBB64:
+ 595                             	.LBB63:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 596                             		.loc 1 61 46
+ 597 0056 05 00 00 00             		bsr	_free
+ 598                             	.LVL69:
+ 599                             	.LBE63:
+ 600                             	.LBE64:
+ 128:../src/tensorflow/lite/c/common.c ****         TfLiteIntArrayFree(metadata.array_indices);
+ 601                             		.loc 1 128 9 is_stmt 1
+ 129:../src/tensorflow/lite/c/common.c ****         metadata.array_indices = NULL;
+ 602                             		.loc 1 129 9
+ 603                             	.LBB65:
+ 604                             	.LBB66:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 605                             		.loc 1 61 46
+ 606 005a EF 61                   		mov.L	r6, r1
+ 607 005c 05 00 00 00             		bsr	_free
+ 608                             	.LVL70:
+ 609                             	.LBE66:
+ 610                             	.LBE65:
+ 130:../src/tensorflow/lite/c/common.c ****       }
+ 611                             		.loc 1 130 9
+ 612 0060 ED A3 03                		mov.L	12[r10], r3
+ 613 0063 ED A1 02                		mov.L	8[r10], r1
+ 614                             	.LVL71:
+ 615                             	.LBE68:
+ 124:../src/tensorflow/lite/c/common.c ****       TfLiteDimensionMetadata metadata = sparsity->dim_metadata[i];
+ 616                             		.loc 1 124 5 is_stmt 0
+ 617 0066 47 37                   		cmp	r3, r7
+ 618 0068 29 CA                   		blt	.L59
+ 619 006a 2E D9                   		bra	.L60
+ 620                             	.LVL72:
+ 621                             	.L54:
+ 622                             	.LCFI7:
+ 623 006c 02                      		rts
+ 624                             	.LBE69:
+ 625                             	.LFE11:
+ 627 006d FC 13 00                		.section	.text.TfLiteTensorFree,"ax",@progbits
+ 628                             		.global	_TfLiteTensorFree
+ 630                             	_TfLiteTensorFree:
+ 631                             	.LFB12:
+ 139:../src/tensorflow/lite/c/common.c **** 
+ 140:../src/tensorflow/lite/c/common.c **** void TfLiteTensorFree(TfLiteTensor* t) {
+ 632                             		.loc 1 140 40 is_stmt 1
+ 633                             	.LVL73:
+ 634 0000 6E 7A                   		pushm	r7-r10
+ 635                             	.LCFI8:
+ 141:../src/tensorflow/lite/c/common.c ****   TfLiteTensorDataFree(t);
+ 636                             		.loc 1 141 3
+ 140:../src/tensorflow/lite/c/common.c ****   TfLiteTensorDataFree(t);
+ 637                             		.loc 1 140 40 is_stmt 0
+ 638 0002 EF 17                   		mov.L	r1, r7
+ 639                             	.LVL74:
+ 640                             	.LBB89:
+ 641                             	.LBB90:
+  82:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+ 642                             		.loc 1 82 3 is_stmt 1
+  82:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+ 643                             		.loc 1 82 44 is_stmt 0
+ 644 0004 A9 1D                   		mov.L	20[r1], r5
+ 645 0006 60 45                   		sub	#4, r5
+  82:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+ 646                             		.loc 1 82 6
+ 647 0008 61 15                   		cmp	#1, r5
+ 648 000a 25 66                   		bleu	.L99
+ 649                             	.LVL75:
+ 650                             		.balign 8,3,1
+ 651                             	.L80:
+  86:../src/tensorflow/lite/c/common.c **** }
+ 652                             		.loc 1 86 3 is_stmt 1
+ 653                             	.LBE90:
+ 654                             	.LBE89:
+ 142:../src/tensorflow/lite/c/common.c ****   if (t->dims) TfLiteIntArrayFree(t->dims);
+ 655                             		.loc 1 142 8 is_stmt 0
+ 656 000c A8 F1                   		mov.L	8[r7], r1
+ 657                             	.LBB93:
+ 658                             	.LBB91:
+  86:../src/tensorflow/lite/c/common.c **** }
+ 659                             		.loc 1 86 15
+ 660 000e 3E 71 00                		mov.L	#0, 4[r7]
+ 661                             	.LVL76:
+ 662                             	.LBE91:
+ 663                             	.LBE93:
+ 664                             		.loc 1 142 3 is_stmt 1
+ 665                             		.loc 1 142 6 is_stmt 0
+ 666 0011 61 01                   		cmp	#0, r1
+ 667 0013 15                      		beq	.L81
+ 668                             		.loc 1 142 16 is_stmt 1 discriminator 1
+ 669                             	.LVL77:
+ 670                             	.LBB94:
+ 671                             	.LBB95:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 672                             		.loc 1 61 46 discriminator 1
+ 673 0014 05 00 00 00             		bsr	_free
+ 674                             	.LVL78:
+ 675                             		.balign 8,3,1
+ 676                             	.L81:
+ 677                             	.LBE95:
+ 678                             	.LBE94:
+ 143:../src/tensorflow/lite/c/common.c ****   t->dims = NULL;
+ 679                             		.loc 1 143 3
+ 144:../src/tensorflow/lite/c/common.c **** 
+ 145:../src/tensorflow/lite/c/common.c ****   if (t->dims_signature) {
+ 680                             		.loc 1 145 8 is_stmt 0
+ 681 0018 AB F9                   		mov.L	60[r7], r1
+ 143:../src/tensorflow/lite/c/common.c ****   t->dims = NULL;
+ 682                             		.loc 1 143 11
+ 683 001a 3E 72 00                		mov.L	#0, 8[r7]
+ 684                             		.loc 1 145 3 is_stmt 1
+ 685                             		.loc 1 145 6 is_stmt 0
+ 686 001d 61 01                   		cmp	#0, r1
+ 687 001f 15                      		beq	.L82
+ 146:../src/tensorflow/lite/c/common.c ****     TfLiteIntArrayFree((TfLiteIntArray *) t->dims_signature);
+ 688                             		.loc 1 146 5 is_stmt 1
+ 689                             	.LVL79:
+ 690                             	.LBB96:
+ 691                             	.LBB97:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 692                             		.loc 1 61 46
+ 693 0020 05 00 00 00             		bsr	_free
+ 694                             	.LVL80:
+ 695                             		.balign 8,3,1
+ 696                             	.L82:
+ 697                             	.LBE97:
+ 698                             	.LBE96:
+ 147:../src/tensorflow/lite/c/common.c ****   }
+ 148:../src/tensorflow/lite/c/common.c ****   t->dims_signature = NULL;
+ 699                             		.loc 1 148 3
+ 700                             	.LBB98:
+ 701                             	.LBB99:
+  90:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 702                             		.loc 1 90 6 is_stmt 0
+ 703 0024 AB 75                   		mov.L	48[r7], r5
+ 704                             	.LBE99:
+ 705                             	.LBE98:
+ 706                             		.loc 1 148 21
+ 707 0026 3E 7F 00                		mov.L	#0, 60[r7]
+ 149:../src/tensorflow/lite/c/common.c **** 
+ 150:../src/tensorflow/lite/c/common.c ****   TfLiteQuantizationFree(&t->quantization);
+ 708                             		.loc 1 150 3 is_stmt 1
+ 709                             	.LVL81:
+ 710                             	.LBB109:
+ 711                             	.LBB105:
+  90:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 712                             		.loc 1 90 3
+  90:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 713                             		.loc 1 90 6 is_stmt 0
+ 714 0029 61 15                   		cmp	#1, r5
+ 715 002b 20 14                   		beq	.L100
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 716                             		.loc 1 103 3 is_stmt 1
+ 717                             	.LBE105:
+ 718                             	.LBE109:
+ 151:../src/tensorflow/lite/c/common.c ****   TfLiteSparsityFree(t->sparsity);
+ 719                             		.loc 1 151 3 is_stmt 0
+ 720 002d AB F1                   		mov.L	56[r7], r1
+ 721                             	.LBB110:
+ 722                             	.LBB106:
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 723                             		.loc 1 103 24
+ 724 002f 3E 7D 00                		mov.L	#0, 52[r7]
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 725                             		.loc 1 104 3 is_stmt 1
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 726                             		.loc 1 104 22 is_stmt 0
+ 727 0032 3E 7C 00                		mov.L	#0, 48[r7]
+ 728                             	.LVL82:
+ 729                             	.LBE106:
+ 730                             	.LBE110:
+ 731                             		.loc 1 151 3 is_stmt 1
+ 732 0035 05 00 00 00             		bsr	_TfLiteSparsityFree
+ 733                             	.LVL83:
+ 152:../src/tensorflow/lite/c/common.c ****   t->sparsity = NULL;
+ 734                             		.loc 1 152 3
+ 735                             		.loc 1 152 15 is_stmt 0
+ 736 0039 3E 7E 00                		mov.L	#0, 56[r7]
+ 153:../src/tensorflow/lite/c/common.c **** }
+ 737                             		.loc 1 153 1
+ 738 003c 3F 7A 04                		rtsd	#16, r7-r10
+ 739                             	.LVL84:
+ 740                             	.L100:
+ 741                             	.LBB111:
+ 742                             	.LBB107:
+ 743                             	.LBB100:
+  91:../src/tensorflow/lite/c/common.c ****         (TfLiteAffineQuantization*)(quantization->params);
+ 744                             		.loc 1 91 5 is_stmt 1
+  91:../src/tensorflow/lite/c/common.c ****         (TfLiteAffineQuantization*)(quantization->params);
+ 745                             		.loc 1 91 31 is_stmt 0
+ 746 003f ED 7A 0D                		mov.L	52[r7], r10
+ 747                             	.LVL85:
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 748                             		.loc 1 93 5 is_stmt 1
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 749                             		.loc 1 93 17 is_stmt 0
+ 750 0042 EC A1                   		mov.L	[r10], r1
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 751                             		.loc 1 93 8
+ 752 0044 61 01                   		cmp	#0, r1
+ 753 0046 10                      		beq	.L84
+  94:../src/tensorflow/lite/c/common.c ****       q_params->scale = NULL;
+ 754                             		.loc 1 94 7 is_stmt 1
+ 755                             	.LVL86:
+ 756                             	.LBB101:
+ 757                             	.LBB102:
+  79:../src/tensorflow/lite/c/common.c **** 
+ 758                             		.loc 1 79 50
+ 759 0047 05 00 00 00             		bsr	_free
+ 760                             	.LVL87:
+ 761                             	.LBE102:
+ 762                             	.LBE101:
+  95:../src/tensorflow/lite/c/common.c ****     }
+ 763                             		.loc 1 95 7
+  95:../src/tensorflow/lite/c/common.c ****     }
+ 764                             		.loc 1 95 23 is_stmt 0
+ 765 004b F8 A6 00                		mov.L	#0, [r10]
+ 766                             		.balign 8,3,1
+ 767                             	.L84:
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 768                             		.loc 1 97 5 is_stmt 1
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 769                             		.loc 1 97 17 is_stmt 0
+ 770 004e ED A1 01                		mov.L	4[r10], r1
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 771                             		.loc 1 97 8
+ 772 0051 61 01                   		cmp	#0, r1
+ 773 0053 15                      		beq	.L85
+  98:../src/tensorflow/lite/c/common.c ****       q_params->zero_point = NULL;
+ 774                             		.loc 1 98 7 is_stmt 1
+ 775                             	.LVL88:
+ 776                             	.LBB103:
+ 777                             	.LBB104:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 778                             		.loc 1 61 46
+ 779 0054 05 00 00 00             		bsr	_free
+ 780                             	.LVL89:
+ 781                             	.LBE104:
+ 782                             	.LBE103:
+  99:../src/tensorflow/lite/c/common.c ****     }
+ 783                             		.loc 1 99 7
+ 784                             		.balign 8,3,1
+ 785                             	.L85:
+ 101:../src/tensorflow/lite/c/common.c ****   }
+ 786                             		.loc 1 101 5
+ 787 0058 EF A1                   		mov.L	r10, r1
+ 788 005a 05 00 00 00             		bsr	_free
+ 789                             	.LVL90:
+ 790                             	.LBE100:
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 791                             		.loc 1 103 3
+ 792                             	.LBE107:
+ 793                             	.LBE111:
+ 151:../src/tensorflow/lite/c/common.c ****   t->sparsity = NULL;
+ 794                             		.loc 1 151 3 is_stmt 0
+ 795 005e AB F1                   		mov.L	56[r7], r1
+ 796                             	.LBB112:
+ 797                             	.LBB108:
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 798                             		.loc 1 103 24
+ 799 0060 3E 7D 00                		mov.L	#0, 52[r7]
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 800                             		.loc 1 104 3 is_stmt 1
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 801                             		.loc 1 104 22 is_stmt 0
+ 802 0063 3E 7C 00                		mov.L	#0, 48[r7]
+ 803                             	.LVL91:
+ 804                             	.LBE108:
+ 805                             	.LBE112:
+ 151:../src/tensorflow/lite/c/common.c ****   t->sparsity = NULL;
+ 806                             		.loc 1 151 3 is_stmt 1
+ 807 0066 05 00 00 00             		bsr	_TfLiteSparsityFree
+ 808                             	.LVL92:
+ 152:../src/tensorflow/lite/c/common.c **** }
+ 809                             		.loc 1 152 3
+ 152:../src/tensorflow/lite/c/common.c **** }
+ 810                             		.loc 1 152 15 is_stmt 0
+ 811 006a 3E 7E 00                		mov.L	#0, 56[r7]
+ 812                             		.loc 1 153 1
+ 813 006d 3F 7A 04                		rtsd	#16, r7-r10
+ 814                             	.LVL93:
+ 815                             	.L99:
+ 816                             	.LBB113:
+ 817                             	.LBB92:
+  84:../src/tensorflow/lite/c/common.c ****   }
+ 818                             		.loc 1 84 5 is_stmt 1
+ 819 0070 A8 19                   		mov.L	4[r1], r1
+ 820                             	.LVL94:
+ 821 0072 05 00 00 00             		bsr	_free
+ 822                             	.LVL95:
+ 823 0076 2E 96                   		bra	.L80
+ 824                             	.LBE92:
+ 825                             	.LBE113:
+ 826                             	.LFE12:
+ 828                             		.section	.text.TfLiteTensorReset,"ax",@progbits
+ 829                             		.global	_TfLiteTensorReset
+ 831                             	_TfLiteTensorReset:
+ 832                             	.LFB13:
+ 154:../src/tensorflow/lite/c/common.c **** 
+ 155:../src/tensorflow/lite/c/common.c **** void TfLiteTensorReset(TfLiteType type, const char* name, TfLiteIntArray* dims,
+ 156:../src/tensorflow/lite/c/common.c ****                        TfLiteQuantizationParams quantization, char* buffer,
+ 157:../src/tensorflow/lite/c/common.c ****                        size_t size, TfLiteAllocationType allocation_type,
+ 158:../src/tensorflow/lite/c/common.c ****                        const void* allocation, bool is_variable,
+ 159:../src/tensorflow/lite/c/common.c ****                        TfLiteTensor* tensor) {
+ 833                             		.loc 1 159 46
+ 834                             	.LVL96:
+ 835 0000 6E 6D                   		pushm	r6-r13
+ 836                             	.LCFI9:
+ 837                             	.LVL97:
+ 838 0002 71 00 D0                		add	#-48, r0
+ 839                             	.LCFI10:
+ 160:../src/tensorflow/lite/c/common.c ****   TfLiteTensorFree(tensor);
+ 840                             		.loc 1 160 3
+ 159:../src/tensorflow/lite/c/common.c ****   TfLiteTensorFree(tensor);
+ 841                             		.loc 1 159 46 is_stmt 0
+ 842 0005 75 44 54                		mov.L	#0x54, r4
+ 843 0008 4B 04                   		add	r0, r4
+ 844 000a E3 01                   		mov.L	r1, [r0]
+ 845 000c A9 CF                   		mov.L	28[r4], r7
+ 846                             	.LVL98:
+ 847                             	.LBB129:
+ 848                             	.LBB130:
+ 141:../src/tensorflow/lite/c/common.c ****   if (t->dims) TfLiteIntArrayFree(t->dims);
+ 849                             		.loc 1 141 3 is_stmt 1
+ 850                             	.LBB131:
+ 851                             	.LBB132:
+  82:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+ 852                             		.loc 1 82 3
+ 853                             	.LBE132:
+ 854                             	.LBE131:
+ 855                             	.LBE130:
+ 856                             	.LBE129:
+ 159:../src/tensorflow/lite/c/common.c ****   TfLiteTensorFree(tensor);
+ 857                             		.loc 1 159 46 is_stmt 0
+ 858 000e EF 2D                   		mov.L	r2, r13
+ 859 0010 EF 38                   		mov.L	r3, r8
+ 860 0012 EC 49                   		mov.L	[r4], r9
+ 861                             	.LVL99:
+ 862                             	.LBB167:
+ 863                             	.LBB162:
+ 864                             	.LBB138:
+ 865                             	.LBB133:
+  82:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+ 866                             		.loc 1 82 44
+ 867 0014 A9 7B                   		mov.L	20[r7], r3
+ 868                             	.LVL100:
+ 869                             	.LBE133:
+ 870                             	.LBE138:
+ 871                             	.LBE162:
+ 872                             	.LBE167:
+ 159:../src/tensorflow/lite/c/common.c ****   TfLiteTensorFree(tensor);
+ 873                             		.loc 1 159 46
+ 874 0016 ED 4C 01                		mov.L	4[r4], r12
+ 875                             	.LVL101:
+ 876 0019 ED 4B 02                		mov.L	8[r4], r11
+ 877 001c A8 CE                   		mov.L	12[r4], r6
+ 878                             	.LBB168:
+ 879                             	.LBB163:
+ 880                             	.LBB139:
+ 881                             	.LBB134:
+  82:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+ 882                             		.loc 1 82 44
+ 883 001e 60 43                   		sub	#4, r3
+ 884                             	.LBE134:
+ 885                             	.LBE139:
+ 886                             	.LBE163:
+ 887                             	.LBE168:
+ 159:../src/tensorflow/lite/c/common.c ****   TfLiteTensorFree(tensor);
+ 888                             		.loc 1 159 46
+ 889 0020 ED 4A 04                		mov.L	16[r4], r10
+ 890 0023 E5 40 05 01             		mov.L	20[r4], 4[r0]
+ 891 0027 C5 40 18 08             		mov.B	24[r4], 8[r0]
+ 892                             	.LBB169:
+ 893                             	.LBB164:
+ 894                             	.LBB140:
+ 895                             	.LBB135:
+  82:../src/tensorflow/lite/c/common.c ****       t->allocation_type == kTfLitePersistentRo) {
+ 896                             		.loc 1 82 6
+ 897 002b 61 13                   		cmp	#1, r3
+ 898 002d 24 05 38 82 00          		bleu	.L121
+ 899                             	.LVL102:
+ 900                             		.balign 8,3,1
+ 901                             	.L102:
+  86:../src/tensorflow/lite/c/common.c **** }
+ 902                             		.loc 1 86 3 is_stmt 1
+ 903                             	.LBE135:
+ 904                             	.LBE140:
+ 142:../src/tensorflow/lite/c/common.c ****   t->dims = NULL;
+ 905                             		.loc 1 142 8 is_stmt 0
+ 906 0032 A8 F1                   		mov.L	8[r7], r1
+ 907                             	.LBB141:
+ 908                             	.LBB136:
+  86:../src/tensorflow/lite/c/common.c **** }
+ 909                             		.loc 1 86 15
+ 910 0034 3E 71 00                		mov.L	#0, 4[r7]
+ 911                             	.LVL103:
+ 912                             	.LBE136:
+ 913                             	.LBE141:
+ 142:../src/tensorflow/lite/c/common.c ****   t->dims = NULL;
+ 914                             		.loc 1 142 3 is_stmt 1
+ 142:../src/tensorflow/lite/c/common.c ****   t->dims = NULL;
+ 915                             		.loc 1 142 6 is_stmt 0
+ 916 0037 61 01                   		cmp	#0, r1
+ 917 0039 15                      		beq	.L103
+ 142:../src/tensorflow/lite/c/common.c ****   t->dims = NULL;
+ 918                             		.loc 1 142 16 is_stmt 1
+ 919                             	.LVL104:
+ 920                             	.LBB142:
+ 921                             	.LBB143:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 922                             		.loc 1 61 46
+ 923 003a 05 00 00 00             		bsr	_free
+ 924                             	.LVL105:
+ 925                             		.balign 8,3,1
+ 926                             	.L103:
+ 927                             	.LBE143:
+ 928                             	.LBE142:
+ 143:../src/tensorflow/lite/c/common.c **** 
+ 929                             		.loc 1 143 3
+ 145:../src/tensorflow/lite/c/common.c ****     TfLiteIntArrayFree((TfLiteIntArray *) t->dims_signature);
+ 930                             		.loc 1 145 8 is_stmt 0
+ 931 003e AB F9                   		mov.L	60[r7], r1
+ 143:../src/tensorflow/lite/c/common.c **** 
+ 932                             		.loc 1 143 11
+ 933 0040 3E 72 00                		mov.L	#0, 8[r7]
+ 145:../src/tensorflow/lite/c/common.c ****     TfLiteIntArrayFree((TfLiteIntArray *) t->dims_signature);
+ 934                             		.loc 1 145 3 is_stmt 1
+ 145:../src/tensorflow/lite/c/common.c ****     TfLiteIntArrayFree((TfLiteIntArray *) t->dims_signature);
+ 935                             		.loc 1 145 6 is_stmt 0
+ 936 0043 61 01                   		cmp	#0, r1
+ 937 0045 15                      		beq	.L104
+ 146:../src/tensorflow/lite/c/common.c ****   }
+ 938                             		.loc 1 146 5 is_stmt 1
+ 939                             	.LVL106:
+ 940                             	.LBB144:
+ 941                             	.LBB145:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 942                             		.loc 1 61 46
+ 943 0046 05 00 00 00             		bsr	_free
+ 944                             	.LVL107:
+ 945                             		.balign 8,3,1
+ 946                             	.L104:
+ 947                             	.LBE145:
+ 948                             	.LBE144:
+ 148:../src/tensorflow/lite/c/common.c **** 
+ 949                             		.loc 1 148 3
+ 950                             	.LBB146:
+ 951                             	.LBB147:
+  90:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 952                             		.loc 1 90 6 is_stmt 0
+ 953 004a AB 74                   		mov.L	48[r7], r4
+ 954                             	.LBE147:
+ 955                             	.LBE146:
+ 148:../src/tensorflow/lite/c/common.c **** 
+ 956                             		.loc 1 148 21
+ 957 004c 3E 7F 00                		mov.L	#0, 60[r7]
+ 150:../src/tensorflow/lite/c/common.c ****   TfLiteSparsityFree(t->sparsity);
+ 958                             		.loc 1 150 3 is_stmt 1
+ 959                             	.LVL108:
+ 960                             	.LBB158:
+ 961                             	.LBB155:
+  90:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 962                             		.loc 1 90 3
+  90:../src/tensorflow/lite/c/common.c ****     TfLiteAffineQuantization* q_params =
+ 963                             		.loc 1 90 6 is_stmt 0
+ 964 004f 61 14                   		cmp	#1, r4
+ 965 0051 20 38                   		beq	.L122
+ 966                             		.balign 8,3,1
+ 967                             	.L105:
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 968                             		.loc 1 103 3 is_stmt 1
+ 969                             	.LBE155:
+ 970                             	.LBE158:
+ 151:../src/tensorflow/lite/c/common.c ****   t->sparsity = NULL;
+ 971                             		.loc 1 151 3 is_stmt 0
+ 972 0053 AB F1                   		mov.L	56[r7], r1
+ 973                             	.LBB159:
+ 974                             	.LBB156:
+ 103:../src/tensorflow/lite/c/common.c ****   quantization->type = kTfLiteNoQuantization;
+ 975                             		.loc 1 103 24
+ 976 0055 3E 7D 00                		mov.L	#0, 52[r7]
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 977                             		.loc 1 104 3 is_stmt 1
+ 104:../src/tensorflow/lite/c/common.c **** }
+ 978                             		.loc 1 104 22 is_stmt 0
+ 979 0058 3E 7C 00                		mov.L	#0, 48[r7]
+ 980                             	.LVL109:
+ 981                             	.LBE156:
+ 982                             	.LBE159:
+ 151:../src/tensorflow/lite/c/common.c ****   t->sparsity = NULL;
+ 983                             		.loc 1 151 3 is_stmt 1
+ 984 005b 05 00 00 00             		bsr	_TfLiteSparsityFree
+ 985                             	.LVL110:
+ 152:../src/tensorflow/lite/c/common.c **** }
+ 986                             		.loc 1 152 3
+ 987                             	.LBE164:
+ 988                             	.LBE169:
+ 161:../src/tensorflow/lite/c/common.c ****   tensor->type = type;
+ 989                             		.loc 1 161 16 is_stmt 0
+ 990 005f E0 07                   		mov.L	[r0], [r7]
+ 991                             	.LBB170:
+ 992                             	.LBB165:
+ 152:../src/tensorflow/lite/c/common.c **** }
+ 993                             		.loc 1 152 15
+ 994 0061 3E 7E 00                		mov.L	#0, 56[r7]
+ 995                             	.LVL111:
+ 996                             	.LBE165:
+ 997                             	.LBE170:
+ 998                             		.loc 1 161 3 is_stmt 1
+ 162:../src/tensorflow/lite/c/common.c ****   tensor->name = name;
+ 999                             		.loc 1 162 3
+ 1000                             		.loc 1 162 16 is_stmt 0
+ 1001 0064 E7 7D 08                		mov.L	r13, 32[r7]
+ 163:../src/tensorflow/lite/c/common.c ****   tensor->dims = dims;
+ 1002                             		.loc 1 163 3 is_stmt 1
+ 1003                             		.loc 1 163 16 is_stmt 0
+ 1004 0067 E7 78 02                		mov.L	r8, 8[r7]
+ 164:../src/tensorflow/lite/c/common.c ****   tensor->params = quantization;
+ 1005                             		.loc 1 164 3 is_stmt 1
+ 1006                             		.loc 1 164 18 is_stmt 0
+ 1007 006a E7 79 03                		mov.L	r9, 12[r7]
+ 1008 006d E7 7C 04                		mov.L	r12, 16[r7]
+ 165:../src/tensorflow/lite/c/common.c ****   tensor->data.raw = buffer;
+ 1009                             		.loc 1 165 3 is_stmt 1
+ 1010                             		.loc 1 165 20 is_stmt 0
+ 1011 0070 E7 7B 01                		mov.L	r11, 4[r7]
+ 166:../src/tensorflow/lite/c/common.c ****   tensor->bytes = size;
+ 1012                             		.loc 1 166 3 is_stmt 1
+ 1013                             		.loc 1 166 17 is_stmt 0
+ 1014 0073 A1 F6                   		mov.L	r6, 24[r7]
+ 167:../src/tensorflow/lite/c/common.c ****   tensor->allocation_type = allocation_type;
+ 1015                             		.loc 1 167 3 is_stmt 1
+ 1016                             		.loc 1 167 27 is_stmt 0
+ 1017 0075 E7 7A 05                		mov.L	r10, 20[r7]
+ 168:../src/tensorflow/lite/c/common.c ****   tensor->allocation = allocation;
+ 1018                             		.loc 1 168 3 is_stmt 1
+ 1019                             		.loc 1 168 22 is_stmt 0
+ 1020 0078 E5 07 01 07             		mov.L	4[r0], 28[r7]
+ 169:../src/tensorflow/lite/c/common.c ****   tensor->is_variable = is_variable;
+ 1021                             		.loc 1 169 3 is_stmt 1
+ 1022                             		.loc 1 169 23 is_stmt 0
+ 1023 007c C5 07 08 2D             		mov.B	8[r0], 45[r7]
+ 170:../src/tensorflow/lite/c/common.c **** 
+ 171:../src/tensorflow/lite/c/common.c ****   tensor->quantization.type = kTfLiteNoQuantization;
+ 1024                             		.loc 1 171 3 is_stmt 1
+ 1025                             		.loc 1 171 29 is_stmt 0
+ 1026 0080 3E 7C 00                		mov.L	#0, 48[r7]
+ 172:../src/tensorflow/lite/c/common.c ****   tensor->quantization.params = NULL;
+ 1027                             		.loc 1 172 3 is_stmt 1
+ 1028                             		.loc 1 172 31 is_stmt 0
+ 1029 0083 3E 7D 00                		mov.L	#0, 52[r7]
+ 173:../src/tensorflow/lite/c/common.c **** }
+ 1030                             		.loc 1 173 1
+ 1031 0086 3F 6D 14                		rtsd	#80, r6-r13
+ 1032                             	.LVL112:
+ 1033                             	.L122:
+ 1034                             	.LBB171:
+ 1035                             	.LBB166:
+ 1036                             	.LBB160:
+ 1037                             	.LBB157:
+ 1038                             	.LBB148:
+  91:../src/tensorflow/lite/c/common.c ****         (TfLiteAffineQuantization*)(quantization->params);
+ 1039                             		.loc 1 91 5 is_stmt 1
+  91:../src/tensorflow/lite/c/common.c ****         (TfLiteAffineQuantization*)(quantization->params);
+ 1040                             		.loc 1 91 31 is_stmt 0
+ 1041 0089 AB 7C                   		mov.L	52[r7], r4
+ 1042                             	.LVL113:
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 1043                             		.loc 1 93 5 is_stmt 1
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 1044                             		.loc 1 93 17 is_stmt 0
+ 1045 008b EC 41                   		mov.L	[r4], r1
+  93:../src/tensorflow/lite/c/common.c ****       TfLiteFloatArrayFree(q_params->scale);
+ 1046                             		.loc 1 93 8
+ 1047 008d 61 01                   		cmp	#0, r1
+ 1048 008f 20 0D                   		beq	.L106
+  94:../src/tensorflow/lite/c/common.c ****       q_params->scale = NULL;
+ 1049                             		.loc 1 94 7 is_stmt 1
+ 1050                             	.LVL114:
+ 1051                             	.LBB149:
+ 1052                             	.LBB150:
+  79:../src/tensorflow/lite/c/common.c **** 
+ 1053                             		.loc 1 79 50
+ 1054 0091 A0 8C                   		mov.L	r4, 12[r0]
+ 1055 0093 05 00 00 00             		bsr	_free
+ 1056                             	.LVL115:
+ 1057                             	.LBE150:
+ 1058                             	.LBE149:
+  95:../src/tensorflow/lite/c/common.c ****     }
+ 1059                             		.loc 1 95 7
+  95:../src/tensorflow/lite/c/common.c ****     }
+ 1060                             		.loc 1 95 23 is_stmt 0
+ 1061 0097 A8 8C                   		mov.L	12[r0], r4
+ 1062 0099 F8 46 00                		mov.L	#0, [r4]
+ 1063                             		.balign 8,3,1
+ 1064                             	.L106:
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 1065                             		.loc 1 97 5 is_stmt 1
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 1066                             		.loc 1 97 17 is_stmt 0
+ 1067 009c A8 49                   		mov.L	4[r4], r1
+  97:../src/tensorflow/lite/c/common.c ****       TfLiteIntArrayFree(q_params->zero_point);
+ 1068                             		.loc 1 97 8
+ 1069 009e 61 01                   		cmp	#0, r1
+ 1070 00a0 11                      		beq	.L107
+  98:../src/tensorflow/lite/c/common.c ****       q_params->zero_point = NULL;
+ 1071                             		.loc 1 98 7 is_stmt 1
+ 1072                             	.LVL116:
+ 1073                             	.LBB151:
+ 1074                             	.LBB152:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 1075                             		.loc 1 61 46
+ 1076 00a1 A0 8C                   		mov.L	r4, 12[r0]
+ 1077 00a3 05 00 00 00             		bsr	_free
+ 1078                             	.LVL117:
+ 1079                             	.LBE152:
+ 1080                             	.LBE151:
+  99:../src/tensorflow/lite/c/common.c ****     }
+ 1081                             		.loc 1 99 7
+ 1082                             	.LBB154:
+ 1083                             	.LBB153:
+  61:../src/tensorflow/lite/c/common.c **** 
+ 1084                             		.loc 1 61 46 is_stmt 0
+ 1085 00a7 A8 8C                   		mov.L	12[r0], r4
+ 1086                             		.balign 8,3,1
+ 1087                             	.L107:
+ 1088                             	.LBE153:
+ 1089                             	.LBE154:
+ 101:../src/tensorflow/lite/c/common.c ****   }
+ 1090                             		.loc 1 101 5 is_stmt 1
+ 1091 00a9 EF 41                   		mov.L	r4, r1
+ 1092 00ab 05 00 00 00             		bsr	_free
+ 1093                             	.LVL118:
+ 1094 00af 2E A4                   		bra	.L105
+ 1095                             	.LVL119:
+ 1096                             	.L121:
+ 1097                             	.LBE148:
+ 1098                             	.LBE157:
+ 1099                             	.LBE160:
+ 1100                             	.LBB161:
+ 1101                             	.LBB137:
+  84:../src/tensorflow/lite/c/common.c ****   }
+ 1102                             		.loc 1 84 5
+ 1103 00b1 A8 79                   		mov.L	4[r7], r1
+ 1104                             	.LVL120:
+ 1105 00b3 05 00 00 00             		bsr	_free
+ 1106                             	.LVL121:
+ 1107 00b7 38 7B FF                		bra	.L102
+ 1108                             	.LBE137:
+ 1109                             	.LBE161:
+ 1110                             	.LBE166:
+ 1111                             	.LBE171:
+ 1112                             	.LFE13:
+ 1114 00ba 74 10 01 00 00 00       		.section	.text.TfLiteTensorRealloc,"ax",@progbits
+ 1115                             		.global	_TfLiteTensorRealloc
+ 1117                             	_TfLiteTensorRealloc:
+ 1118                             	.LFB14:
+ 174:../src/tensorflow/lite/c/common.c **** 
+ 175:../src/tensorflow/lite/c/common.c **** void TfLiteTensorRealloc(size_t num_bytes, TfLiteTensor* tensor) {
+ 1119                             		.loc 1 175 66
+ 1120                             	.LVL122:
+ 1121 0000 6E 7A                   		pushm	r7-r10
+ 1122                             	.LCFI11:
+ 176:../src/tensorflow/lite/c/common.c ****   if (tensor->allocation_type != kTfLiteDynamic &&
+ 1123                             		.loc 1 176 3
+ 1124                             		.loc 1 176 49 is_stmt 0
+ 1125 0002 A9 2F                   		mov.L	20[r2], r7
+ 1126 0004 60 47                   		sub	#4, r7
+ 1127                             		.loc 1 176 6
+ 1128 0006 61 17                   		cmp	#1, r7
+ 1129 0008 24 15                   		bgtu	.L123
+ 1130 000a EF 1A                   		mov.L	r1, r10
+ 1131 000c EF 27                   		mov.L	r2, r7
+ 177:../src/tensorflow/lite/c/common.c ****       tensor->allocation_type != kTfLitePersistentRo) {
+ 178:../src/tensorflow/lite/c/common.c ****     return;
+ 179:../src/tensorflow/lite/c/common.c ****   }
+ 180:../src/tensorflow/lite/c/common.c ****   // TODO(b/145340303): Tensor data should be aligned.
+ 181:../src/tensorflow/lite/c/common.c ****   if (!tensor->data.raw) {
+ 1132                             		.loc 1 181 3 is_stmt 1
+ 1133                             		.loc 1 181 20 is_stmt 0
+ 1134 000e A8 2D                   		mov.L	4[r2], r5
+ 1135                             		.loc 1 181 6
+ 1136 0010 61 05                   		cmp	#0, r5
+ 1137 0012 20 0E                   		beq	.L128
+ 182:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)malloc(num_bytes);
+ 183:../src/tensorflow/lite/c/common.c ****   } else if (num_bytes > tensor->bytes) {
+ 1138                             		.loc 1 183 10 is_stmt 1
+ 1139                             		.loc 1 183 13 is_stmt 0
+ 1140 0014 A9 A4                   		mov.L	24[r2], r4
+ 1141 0016 47 14                   		cmp	r1, r4
+ 1142 0018 23 10                   		bltu	.L129
+ 1143                             	.LVL123:
+ 1144                             		.balign 8,3,5
+ 1145                             	.L126:
+ 184:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)realloc(tensor->data.raw, num_bytes);
+ 185:../src/tensorflow/lite/c/common.c ****   }
+ 186:../src/tensorflow/lite/c/common.c ****   tensor->bytes = num_bytes;
+ 1146                             		.loc 1 186 3 is_stmt 1
+ 1147                             		.loc 1 186 17 is_stmt 0
+ 1148 001a E7 7A 06                		mov.L	r10, 24[r7]
+ 1149                             	.LVL124:
+ 1150                             		.balign 8,3,2
+ 1151                             	.L123:
+ 187:../src/tensorflow/lite/c/common.c **** }
+ 1152                             		.loc 1 187 1
+ 1153 001d 3F 7A 04                		rtsd	#16, r7-r10
+ 1154                             	.LVL125:
+ 1155                             	.L128:
+ 182:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)malloc(num_bytes);
+ 1156                             		.loc 1 182 4 is_stmt 1
+ 182:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)malloc(num_bytes);
+ 1157                             		.loc 1 182 30 is_stmt 0
+ 1158 0020 05 00 00 00             		bsr	_malloc
+ 1159                             	.LVL126:
+ 182:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)malloc(num_bytes);
+ 1160                             		.loc 1 182 21
+ 1161 0024 A0 79                   		mov.L	r1, 4[r7]
+ 1162 0026 2E F4                   		bra	.L126
+ 1163                             	.LVL127:
+ 1164                             	.L129:
+ 184:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)realloc(tensor->data.raw, num_bytes);
+ 1165                             		.loc 1 184 4 is_stmt 1
+ 184:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)realloc(tensor->data.raw, num_bytes);
+ 1166                             		.loc 1 184 30 is_stmt 0
+ 1167 0028 EF 12                   		mov.L	r1, r2
+ 1168                             	.LVL128:
+ 1169 002a EF 51                   		mov.L	r5, r1
+ 1170                             	.LVL129:
+ 1171 002c 05 00 00 00             		bsr	_realloc
+ 1172                             	.LVL130:
+ 184:../src/tensorflow/lite/c/common.c ****   	tensor->data.raw = (char*)realloc(tensor->data.raw, num_bytes);
+ 1173                             		.loc 1 184 21
+ 1174 0030 A0 79                   		mov.L	r1, 4[r7]
+ 1175 0032 2E E8                   		bra	.L126
+ 1176                             	.LFE14:
+ 1178 0034 76 10 01 00             		.section	.text.TfLiteTypeGetName,"ax",@progbits
+ 1179                             		.global	_TfLiteTypeGetName
+ 1181                             	_TfLiteTypeGetName:
+ 1182                             	.LFB15:
+ 188:../src/tensorflow/lite/c/common.c **** #endif  // TF_LITE_STATIC_MEMORY
+ 189:../src/tensorflow/lite/c/common.c **** 
+ 190:../src/tensorflow/lite/c/common.c **** const char* TfLiteTypeGetName(TfLiteType type) {
+ 1183                             		.loc 1 190 48 is_stmt 1
+ 1184                             	.LVL131:
+ 191:../src/tensorflow/lite/c/common.c ****   switch (type) {
+ 1185                             		.loc 1 191 3
+ 1186 0000 61 C1                   		cmp	#12, r1
+ 1187 0002 24 0C                   		bgtu	.L132
+ 1188 0004 FB 52 00 00 00 00       		mov.L	#.LANCHOR0, r5
+ 1189 000a FE 61 51                		mov.L	[r1,r5], r1
+ 1190                             	.LVL132:
+ 1191 000d 02                      		rts
+ 1192                             	.LVL133:
+ 1193                             	.L132:
+ 190:../src/tensorflow/lite/c/common.c ****   switch (type) {
+ 1194                             		.loc 1 190 48 is_stmt 0
+ 1195 000e FB 12 00 00 00 00       		mov.L	#.LC0, r1
+ 1196                             	.LVL134:
+ 192:../src/tensorflow/lite/c/common.c ****     case kTfLiteNoType:
+ 193:../src/tensorflow/lite/c/common.c ****       return "NOTYPE";
+ 194:../src/tensorflow/lite/c/common.c ****     case kTfLiteFloat32:
+ 195:../src/tensorflow/lite/c/common.c ****       return "FLOAT32";
+ 196:../src/tensorflow/lite/c/common.c ****     case kTfLiteInt16:
+ 197:../src/tensorflow/lite/c/common.c ****       return "INT16";
+ 198:../src/tensorflow/lite/c/common.c ****     case kTfLiteInt32:
+ 199:../src/tensorflow/lite/c/common.c ****       return "INT32";
+ 200:../src/tensorflow/lite/c/common.c ****     case kTfLiteUInt8:
+ 201:../src/tensorflow/lite/c/common.c ****       return "UINT8";
+ 202:../src/tensorflow/lite/c/common.c ****     case kTfLiteInt8:
+ 203:../src/tensorflow/lite/c/common.c ****       return "INT8";
+ 204:../src/tensorflow/lite/c/common.c ****     case kTfLiteInt64:
+ 205:../src/tensorflow/lite/c/common.c ****       return "INT64";
+ 206:../src/tensorflow/lite/c/common.c ****     case kTfLiteBool:
+ 207:../src/tensorflow/lite/c/common.c ****       return "BOOL";
+ 208:../src/tensorflow/lite/c/common.c ****     case kTfLiteComplex64:
+ 209:../src/tensorflow/lite/c/common.c ****       return "COMPLEX64";
+ 210:../src/tensorflow/lite/c/common.c ****     case kTfLiteComplex128:
+ 211:../src/tensorflow/lite/c/common.c ****       return "COMPLEX128";
+ 212:../src/tensorflow/lite/c/common.c ****     case kTfLiteString:
+ 213:../src/tensorflow/lite/c/common.c ****       return "STRING";
+ 214:../src/tensorflow/lite/c/common.c ****     case kTfLiteFloat16:
+ 215:../src/tensorflow/lite/c/common.c ****       return "FLOAT16";
+ 216:../src/tensorflow/lite/c/common.c ****     case kTfLiteFloat64:
+ 217:../src/tensorflow/lite/c/common.c ****       return "FLOAT64";
+ 218:../src/tensorflow/lite/c/common.c ****   }
+ 219:../src/tensorflow/lite/c/common.c ****   return "Unknown type";
+ 220:../src/tensorflow/lite/c/common.c **** }
+ 1197                             		.loc 1 220 1
+ 1198 0014 02                      		rts
+ 1199                             	.LFE15:
+ 1201                             		.section	.text.TfLiteDelegateCreate,"ax",@progbits
+ 1202                             		.global	_TfLiteDelegateCreate
+ 1204                             	_TfLiteDelegateCreate:
+ 1205                             	.LFB16:
+ 221:../src/tensorflow/lite/c/common.c **** 
+ 222:../src/tensorflow/lite/c/common.c **** TfLiteDelegate TfLiteDelegateCreate() {
+ 1206                             		.loc 1 222 39 is_stmt 1
+ 223:../src/tensorflow/lite/c/common.c ****   TfLiteDelegate d = {
+ 1207                             		.loc 1 223 3
+ 224:../src/tensorflow/lite/c/common.c ****       .data_ = NULL,
+ 225:../src/tensorflow/lite/c/common.c ****       .Prepare = NULL,
+ 226:../src/tensorflow/lite/c/common.c ****       .CopyFromBufferHandle = NULL,
+ 227:../src/tensorflow/lite/c/common.c ****       .CopyToBufferHandle = NULL,
+ 228:../src/tensorflow/lite/c/common.c ****       .FreeBufferHandle = NULL,
+ 229:../src/tensorflow/lite/c/common.c ****       .flags = kTfLiteDelegateFlagsNone,
+ 230:../src/tensorflow/lite/c/common.c ****   };
+ 231:../src/tensorflow/lite/c/common.c ****   return d;
+ 1208                             		.loc 1 231 3
+ 1209                             		.loc 1 231 10 is_stmt 0
+ 1210 0000 75 43 1C                		mov.L	#28, r3
+ 1211 0003 EF F1                   		mov.L	r15, r1
+ 1212 0005 66 02                   		mov	#0, r2
+ 1213 0007 7F 88                   		sstr.b
+ 232:../src/tensorflow/lite/c/common.c **** }
+ 1214                             		.loc 1 232 1
+ 1215 0009 EF F1                   		mov.L	r15, r1
+ 1216 000b 02                      		rts
+ 1217                             	.LFE16:
+ 1219                             		.section	.rodata.CSWTCH.7,"a"
+ 1220                             		.balign 4
+ 1221                             		.set	.LANCHOR0,. + 0
+ 1224                             	_CSWTCH.7:
+ 1225 0000 00 00 00 00             		.long	.LC1
+ 1226 0004 07 00 00 00             		.long	.LC2
+ 1227 0008 0F 00 00 00             		.long	.LC3
+ 1228 000c 15 00 00 00             		.long	.LC4
+ 1229 0010 1B 00 00 00             		.long	.LC5
+ 1230 0014 21 00 00 00             		.long	.LC6
+ 1231 0018 28 00 00 00             		.long	.LC7
+ 1232 001c 2D 00 00 00             		.long	.LC8
+ 1233 0020 33 00 00 00             		.long	.LC9
+ 1234 0024 3D 00 00 00             		.long	.LC10
+ 1235 0028 42 00 00 00             		.long	.LC11
+ 1236 002c 4A 00 00 00             		.long	.LC12
+ 1237 0030 52 00 00 00             		.long	.LC13
+ 1238                             		.section	.rodata.TfLiteTypeGetName.str1.1,"aMS",@progbits,1
+ 1239                             	.LC0:
+ 1240 0000 55 6E 6B 6E 6F 77 6E 20 		.string	"Unknown type"
+ 1240      74 79 70 65 00 
+ 1241                             		.section	.rodata.str1.1,"aMS",@progbits,1
+ 1242                             	.LC1:
+ 1243 0000 4E 4F 54 59 50 45 00    		.string	"NOTYPE"
+ 1244                             	.LC2:
+ 1245 0007 46 4C 4F 41 54 33 32 00 		.string	"FLOAT32"
+ 1246                             	.LC3:
+ 1247 000f 49 4E 54 33 32 00       		.string	"INT32"
+ 1248                             	.LC4:
+ 1249 0015 55 49 4E 54 38 00       		.string	"UINT8"
+ 1250                             	.LC5:
+ 1251 001b 49 4E 54 36 34 00       		.string	"INT64"
+ 1252                             	.LC6:
+ 1253 0021 53 54 52 49 4E 47 00    		.string	"STRING"
+ 1254                             	.LC7:
+ 1255 0028 42 4F 4F 4C 00          		.string	"BOOL"
+ 1256                             	.LC8:
+ 1257 002d 49 4E 54 31 36 00       		.string	"INT16"
+ 1258                             	.LC9:
+ 1259 0033 43 4F 4D 50 4C 45 58 36 		.string	"COMPLEX64"
+ 1259      34 00 
+ 1260                             	.LC10:
+ 1261 003d 49 4E 54 38 00          		.string	"INT8"
+ 1262                             	.LC11:
+ 1263 0042 46 4C 4F 41 54 31 36 00 		.string	"FLOAT16"
+ 1264                             	.LC12:
+ 1265 004a 46 4C 4F 41 54 36 34 00 		.string	"FLOAT64"
+ 1266                             	.LC13:
+ 1267 0052 43 4F 4D 50 4C 45 58 31 		.string	"COMPLEX128"
+ 1267      32 38 00 
+ 1546                             	.Letext0:
+ 1547                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 1548                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 1549                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 1550                             		.file 5 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 1551                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 1552                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 1553                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 1554                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h"

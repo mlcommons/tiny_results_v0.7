@@ -1,0 +1,457 @@
+   1                             		.file	"hwsetup.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.hardware_setup,"ax",@progbits
+   5                             		.global	_hardware_setup
+   7                             	_hardware_setup:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c"
+   1:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+   2:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * DISCLAIMER
+   3:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * other uses are authorized. This software is owned by Renesas Electronics Corporation and is prote
+   5:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * applicable laws, including copyright laws. 
+   6:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+   7:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF 
+   8:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIM
+   9:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AF
+  10:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY RE
+  11:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * this software. 
+  14:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *
+  15:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Copyright (C) 2017 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+  17:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+  18:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * File Name    : hwsetup.c
+  19:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Device(s)    : RX
+  20:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * H/W Platform : GENERIC_RX65N
+  21:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Defines the initialization routines used each time the MCU is restarted.
+  22:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+  23:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+  24:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * History : DD.MM.YYYY Version   Description
+  25:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *         : 15.05.2017 1.00      First Release
+  26:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *         : 01.12.2017 1.01      Added EBMAPCR register setting.
+  27:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *         : 01.07.2018 1.02      Added the initialization function for Smart Configurator.
+  28:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *         : 27.07.2018 1.03      Modified the comment of bsp_adc_initial_configure.
+  29:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *         : 28.02.2019 2.00      Added support for GNUC and ICCRX.
+  30:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *                                Fixed coding style.
+  31:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *                                Added the following function.
+  32:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *                                - rom_cache_function_set
+  33:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *         : 20.11.2020 2.01      Modified the proccess of bsp_adc_initial_configure function.
+  34:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+  35:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  36:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+  37:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** Includes   <System Includes> , "Project Includes"
+  38:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+  39:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* I/O Register and board definitions */
+  40:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #include "platform.h"
+  41:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_CONFIGURATOR_SELECT == 1
+  42:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #include "r_cg_macrodriver.h"
+  43:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif
+  44:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  45:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+  46:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** Typedef definitions
+  47:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+  48:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** R_BSP_PRAGMA_UNPACK
+  49:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** typedef struct bsp_bsc {
+  50:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     union {
+  51:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****         uint32_t u_long;
+  52:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****         R_BSP_ATTRIB_STRUCT_BIT_ORDER_LEFT_13(
+  53:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t prerr:1,
+  54:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t :1,
+  55:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t rpstop:1,
+  56:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t :10,
+  57:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t pr5sel:3,
+  58:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t :1,
+  59:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t pr4sel:3,
+  60:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t :1,
+  61:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t pr3sel:3,
+  62:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t :1,
+  63:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t pr2sel:3,
+  64:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t :1,
+  65:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****             uint32_t pr1sel:3
+  66:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****         ) bit;
+  67:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     } ebmapcr;
+  68:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } st_bsp_bsc_t;
+  69:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** R_BSP_PRAGMA_PACKOPTION
+  70:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  71:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+  72:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** Private global variables and functions
+  73:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+  74:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* When using the user startup program, disable the following code. */
+  75:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_STARTUP_DISABLE == 0
+  76:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* ROM cache configuration function declaration */
+  77:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_ROM_CACHE_ENABLE == 1
+  78:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void rom_cache_function_set(void);
+  79:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif /* BSP_CFG_ROM_CACHE_ENABLE == 1 */
+  80:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
+  81:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  82:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* MCU I/O port configuration function declaration */
+  83:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void output_ports_configure(void);
+  84:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  85:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* Interrupt configuration function declaration */
+  86:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void interrupts_configure(void);
+  87:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  88:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* MCU peripheral module configuration function declaration */
+  89:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void peripheral_modules_enable(void);
+  90:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  91:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* ADC initial configuration function declaration */
+  92:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void bsp_adc_initial_configure(void);
+  93:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  94:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if defined(BSP_MCU_RX65N_2MB)
+  95:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* BUS initial configuration function declaration */
+  96:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void bsp_bsc_initial_configure(void);
+  97:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif/* BSP_MCU_RX65N_2MB */
+  98:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  99:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+ 100:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Function name: hardware_setup
+ 101:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Contains setup functions called at device restart
+ 102:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Arguments    : none
+ 103:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Return value : none
+ 104:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+ 105:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** void hardware_setup(void)
+ 106:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** {
+  10                             		.loc 1 106 1
+ 107:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* When using the user startup program, disable the following code. */
+ 108:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_STARTUP_DISABLE == 0
+ 109:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_ROM_CACHE_ENABLE == 1
+ 110:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Initialize ROM cache function */
+ 111:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     rom_cache_function_set();
+  11                             		.loc 1 111 5
+  12                             	.LBB14:
+  13                             	.LBB15:
+ 112:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif /* BSP_CFG_ROM_CACHE_ENABLE == 1 */
+ 113:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
+ 114:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 115:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     output_ports_configure();
+ 116:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     interrupts_configure();
+ 117:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     peripheral_modules_enable();
+ 118:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_non_existent_port_init();
+ 119:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_adc_initial_configure();
+ 120:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if defined(BSP_MCU_RX65N_2MB)
+ 121:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc_initial_configure();
+ 122:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif/* BSP_MCU_RX65N_2MB */
+ 123:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function hardware_setup() */
+ 124:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 125:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /* When using the user startup program, disable the following code. */
+ 126:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_STARTUP_DISABLE == 0
+ 127:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_ROM_CACHE_ENABLE == 1
+ 128:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+ 129:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Function name: rom_cache_function_set
+ 130:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Configures the rom cache function.
+ 131:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Arguments    : none
+ 132:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Return value : none
+ 133:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+ 134:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void rom_cache_function_set (void)
+ 135:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** {
+ 136:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Invalidates the contents of the ROM cache. */
+ 137:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     FLASH.ROMCIV.WORD = 0x0001;
+  14                             		.loc 1 137 5
+  15                             		.loc 1 137 23 is_stmt 0
+  16 0000 FB 5E 00 10 08          		mov.L	#0x81000, r5
+ 138:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* WAIT_LOOP */
+ 139:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     while (FLASH.ROMCIV.WORD != 0x0000)
+  17                             		.loc 1 139 24
+  18 0005 EF 54                   		mov.L	r5, r4
+ 137:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* WAIT_LOOP */
+  19                             		.loc 1 137 23
+  20 0007 3D 52 01                		mov.W	#1, 4[r5]
+  21                             		.loc 1 139 5 is_stmt 1
+  22                             		.balign 8,3,3
+  23                             	.L2:
+ 140:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     {
+ 141:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****         /* wait for bit to set */
+ 142:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     }
+  24                             		.loc 1 142 5
+ 139:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     {
+  25                             		.loc 1 139 11 is_stmt 0
+  26 000a B8 C5                   		movu.W	4[r4], r5
+  27 000c 61 05                   		cmp	#0, r5
+  28 000e 21 FC                   		bne	.L2
+ 143:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 144:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Enables the ROM cache. */
+ 145:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     FLASH.ROMCE.WORD = 0x0001;
+  29                             		.loc 1 145 5 is_stmt 1
+ 146:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* WAIT_LOOP */
+ 147:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     while (FLASH.ROMCE.WORD != 0x0001)
+  30                             		.loc 1 147 23 is_stmt 0
+  31 0010 FB 3E 00 10 08          		mov.L	#0x81000, r3
+ 145:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* WAIT_LOOP */
+  32                             		.loc 1 145 22
+  33 0015 F8 45 01                		mov.W	#1, [r4]
+  34                             		.loc 1 147 5 is_stmt 1
+  35                             		.balign 8,3,3
+  36                             	.L3:
+ 148:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     {
+ 149:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****         /* wait for bit to set */
+ 150:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     }
+  37                             		.loc 1 150 5
+ 147:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     {
+  38                             		.loc 1 147 11 is_stmt 0
+  39 0018 5C 35                   		movu.W	[r3], r5
+  40 001a 61 15                   		cmp	#1, r5
+  41 001c 21 FC                   		bne	.L3
+  42                             	.LBE15:
+  43                             	.LBE14:
+ 115:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     interrupts_configure();
+  44                             		.loc 1 115 5 is_stmt 1
+  45                             	.LBB16:
+  46                             	.LBB17:
+ 151:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function rom_cache_function_set() */
+ 152:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif /* BSP_CFG_ROM_CACHE_ENABLE == 1 */
+ 153:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif /* BSP_CFG_STARTUP_DISABLE == 0 */
+ 154:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 155:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+ 156:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Function name: output_ports_configure
+ 157:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Configures the port and pin direction settings, and sets the pin outputs to a safe
+ 158:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Arguments    : none
+ 159:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Return value : none
+ 160:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+ 161:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void output_ports_configure(void)
+ 162:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** {
+ 163:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Add code here to setup additional output ports */
+ 164:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     R_BSP_NOP();
+  47                             		.loc 1 164 5
+  48                             	 ; 164 "../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c" 1
+  49 001e 03                      		nop
+  50                             	 ; 0 "" 2
+  51                             	.LBE17:
+  52                             	.LBE16:
+ 116:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     peripheral_modules_enable();
+  53                             		.loc 1 116 5
+  54                             	.LBB18:
+  55                             	.LBB19:
+ 165:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function output_ports_configure() */
+ 166:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 167:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+ 168:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Function name: interrupts_configure
+ 169:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Configures interrupts used
+ 170:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Arguments    : none
+ 171:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Return value : none
+ 172:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+ 173:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void interrupts_configure(void)
+ 174:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** {
+ 175:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Add code here to setup additional interrupts */
+ 176:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     R_BSP_NOP();
+  56                             		.loc 1 176 5
+  57                             	 ; 176 "../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c" 1
+  58 001f 03                      		nop
+  59                             	 ; 0 "" 2
+  60                             	.LBE19:
+  61                             	.LBE18:
+ 117:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_non_existent_port_init();
+  62                             		.loc 1 117 5
+  63                             	.LBB20:
+  64                             	.LBB21:
+ 177:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function interrupts_configure() */
+ 178:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 179:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+ 180:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Function name: peripheral_modules_enable
+ 181:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Enables and configures peripheral devices on the MCU
+ 182:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Arguments    : none
+ 183:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Return value : none
+ 184:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+ 185:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void peripheral_modules_enable(void)
+ 186:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** {
+ 187:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Add code here to enable peripherals used by the application */
+ 188:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if BSP_CFG_CONFIGURATOR_SELECT == 1
+ 189:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Smart Configurator initialization function */
+ 190:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     R_Systeminit();
+  65                             		.loc 1 190 5
+  66 0020 05 00 00 00             		bsr	_R_Systeminit
+  67                             	.LVL0:
+  68                             	.LBE21:
+  69                             	.LBE20:
+ 118:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_adc_initial_configure();
+  70                             		.loc 1 118 5
+  71 0024 05 00 00 00             		bsr	_bsp_non_existent_port_init
+  72                             	.LVL1:
+ 119:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if defined(BSP_MCU_RX65N_2MB)
+  73                             		.loc 1 119 5
+  74                             	.LBB22:
+  75                             	.LBB23:
+ 191:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif
+ 192:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function peripheral_modules_enable() */
+ 193:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 194:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+ 195:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Function name: bsp_adc_initial_configure
+ 196:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Configures the ADC initial settings
+ 197:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Arguments    : none
+ 198:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Return value : none
+ 199:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Note         : This function should be called when the PSW.I bit is 0 (interrupt disabled).
+ 200:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** *                This function should be called when the ADCSR.ADST bit is 0.
+ 201:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+ 202:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void bsp_adc_initial_configure(void)
+ 203:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** {
+ 204:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     uint32_t tmp_mstp;
+  76                             		.loc 1 204 5
+ 205:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 206:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Protect off. */
+ 207:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     SYSTEM.PRCR.WORD = 0xA502;
+  77                             		.loc 1 207 5
+  78                             		.loc 1 207 22 is_stmt 0
+  79 0028 FB 4E 00 00 08          		mov.L	#0x80000, r4
+  80 002d FA 49 FF 01 02 A5       		mov.W	#-23294, 1022[r4]
+ 208:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 209:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Store the value of the MSTPCR. */
+ 210:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     tmp_mstp = MSTP(S12AD1);
+  81                             		.loc 1 210 5 is_stmt 1
+  82                             		.loc 1 210 16 is_stmt 0
+  83 0033 A9 45                   		mov.L	16[r4], r5
+ 211:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 212:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Release from the module-stop state */
+ 213:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     MSTP(S12AD1) = 0;
+  84                             		.loc 1 213 18
+  85 0035 A9 43                   		mov.L	16[r4], r3
+ 210:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  86                             		.loc 1 210 16
+  87 0037 69 05                   		shlr	#16, r5
+  88                             		.loc 1 213 18
+  89 0039 7B 03                   		bclr	#16, r3
+ 210:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+  90                             		.loc 1 210 16
+  91 003b 64 15                   		and #1, r5
+  92                             	.LVL2:
+  93                             		.loc 1 213 5 is_stmt 1
+  94                             		.loc 1 213 18 is_stmt 0
+  95 003d A1 43                   		mov.L	r3, 16[r4]
+ 214:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 215:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     if(0 != MSTP(S12AD1))
+  96                             		.loc 1 215 5 is_stmt 1
+  97                             		.loc 1 215 13 is_stmt 0
+  98 003f A9 44                   		mov.L	16[r4], r4
+  99                             		.loc 1 215 7
+ 100 0041 7D 04                   		btst	#16, r4
+ 101 0043 15                      		beq	.L4
+ 216:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     {
+ 217:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****         R_BSP_NOP();
+ 102                             		.loc 1 217 9 is_stmt 1
+ 103                             	 ; 217 "../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c" 1
+ 104 0044 03                      		nop
+ 105                             	 ; 0 "" 2
+ 106 0045 FC 13 00                		.balign 8,3,4
+ 107                             	.L4:
+ 218:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     }
+ 219:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 220:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Writing to the A/D conversion time setting register is enabled. */
+ 221:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     S12AD1.ADSAMPR.BYTE = 0x03;
+ 108                             		.loc 1 221 5
+ 109                             		.loc 1 221 25 is_stmt 0
+ 110 0048 FB 3E 00 91 08          		mov.L	#0x89100, r3
+ 222:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 223:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Sets conversion time for middle-speed for S12AD unit 1. */
+ 224:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     S12AD1.ADSAM.WORD = 0x0020;
+ 225:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 226:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Writing to the A/D conversion time setting register is disabled. */
+ 227:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     S12AD1.ADSAMPR.BYTE = 0x02;
+ 228:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 229:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Restore the value of the MSTPCR. */
+ 230:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     MSTP(S12AD1) = tmp_mstp;
+ 111                             		.loc 1 230 18
+ 112 004d FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 113                             	.LBE23:
+ 114                             	.LBE22:
+ 115                             	.LBB25:
+ 116                             	.LBB26:
+ 231:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 232:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Protect on. */
+ 233:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     SYSTEM.PRCR.WORD = 0xA500;
+ 234:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function bsp_adc_initial_configure() */
+ 235:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 236:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #if defined(BSP_MCU_RX65N_2MB)
+ 237:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** /**************************************************************************************************
+ 238:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Function name: bsp_bsc_initial_configure
+ 239:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Description  : Configures the BUS initial settings
+ 240:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Arguments    : none
+ 241:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Return value : none
+ 242:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** * Note         : The EBMAPCR register is only available for products with at least 1.5 Mbytes of co
+ 243:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** ***************************************************************************************************
+ 244:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** static void bsp_bsc_initial_configure(void)
+ 245:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** {
+ 246:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     st_bsp_bsc_t bsp_bsc;
+ 247:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 248:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Setting priority when bus right request contention occurs. */
+ 249:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc.ebmapcr.u_long     = BSC.EBMAPCR.LONG;
+ 117                             		.loc 1 249 45
+ 118 0052 FB 2E 00 58 0C          		mov.L	#0xc5800, r2
+ 119                             	.LBE26:
+ 120                             	.LBE25:
+ 121                             	.LBB28:
+ 122                             	.LBB24:
+ 221:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 123                             		.loc 1 221 25
+ 124 0057 F9 34 63 03             		mov.B	#3, 99[r3]
+ 224:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 125                             		.loc 1 224 5 is_stmt 1
+ 224:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 126                             		.loc 1 224 23 is_stmt 0
+ 127 005b F9 35 37 20             		mov.W	#32, 110[r3]
+ 227:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 128                             		.loc 1 227 5 is_stmt 1
+ 227:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 129                             		.loc 1 227 25 is_stmt 0
+ 130 005f F9 34 63 02             		mov.B	#2, 99[r3]
+ 230:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 131                             		.loc 1 230 5 is_stmt 1
+ 230:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 132                             		.loc 1 230 18 is_stmt 0
+ 133 0063 A9 43                   		mov.L	16[r4], r3
+ 134 0065 7C 05                   		btst	#0, r5
+ 135 0067 FD F0 13                		bmne	#16, r3
+ 136 006a A1 43                   		mov.L	r3, 16[r4]
+ 233:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function bsp_adc_initial_configure() */
+ 137                             		.loc 1 233 5 is_stmt 1
+ 233:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** } /* End of function bsp_adc_initial_configure() */
+ 138                             		.loc 1 233 22 is_stmt 0
+ 139 006c FA 49 FF 01 00 A5       		mov.W	#-23296, 1022[r4]
+ 140                             	.LBE24:
+ 141                             	.LBE28:
+ 121:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** #endif/* BSP_MCU_RX65N_2MB */
+ 142                             		.loc 1 121 5 is_stmt 1
+ 143                             	.LBB29:
+ 144                             	.LBB27:
+ 246:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 145                             		.loc 1 246 5
+ 146                             		.loc 1 249 5
+ 147                             		.loc 1 249 45 is_stmt 0
+ 148 0072 EC 25                   		mov.L	[r2], r5
+ 149                             	.LVL3:
+ 250:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc.ebmapcr.bit.pr1sel = BSP_CFG_EBMAPCR_1ST_PRIORITY;
+ 150                             		.loc 1 250 5 is_stmt 1
+ 251:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc.ebmapcr.bit.pr2sel = BSP_CFG_EBMAPCR_2ND_PRIORITY;
+ 151                             		.loc 1 251 5
+ 252:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc.ebmapcr.bit.pr3sel = BSP_CFG_EBMAPCR_3RD_PRIORITY;
+ 152                             		.loc 1 252 5
+ 253:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc.ebmapcr.bit.pr4sel = BSP_CFG_EBMAPCR_4TH_PRIORITY;
+ 153                             		.loc 1 253 5
+ 254:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc.ebmapcr.bit.pr5sel = BSP_CFG_EBMAPCR_5TH_PRIORITY;
+ 154                             		.loc 1 254 5
+ 250:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     bsp_bsc.ebmapcr.bit.pr2sel = BSP_CFG_EBMAPCR_2ND_PRIORITY;
+ 155                             		.loc 1 250 32 is_stmt 0
+ 156 0074 77 25 88 88 F8          		and #-489336, r5
+ 157 0079 77 35 30 21 04          		or	#0x42130, r5
+ 255:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 256:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     /* Set to EBMAPCR register */
+ 257:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c ****     BSC.EBMAPCR.LONG = bsp_bsc.ebmapcr.u_long;
+ 158                             		.loc 1 257 5 is_stmt 1
+ 159                             		.loc 1 257 22 is_stmt 0
+ 160 007e E3 25                   		mov.L	r5, [r2]
+ 161                             	.LBE27:
+ 162                             	.LBE29:
+ 123:../src/smc_gen/r_bsp/board/generic_rx65n/hwsetup.c **** 
+ 163                             		.loc 1 123 1
+ 164 0080 02                      		rts
+ 165                             	.LFE3:
+ 193                             	.Letext0:
+ 194                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 195                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 196                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 197                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 198                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 199                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 200                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 201                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 202                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 203                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 204                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm

@@ -1,0 +1,222 @@
+   1                             		.file	"arm_nn_mat_mult_s8.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_nn_mat_mult_s8,"ax",@progbits
+   5                             		.global	_arm_nn_mat_mult_s8
+   7                             	_arm_nn_mat_mult_s8:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c"
+   1:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** /*
+   2:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+   4:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+   6:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+  10:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+  12:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  */
+  18:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  19:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Title:        arm_nn_mat_mult_s8.c
+  22:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Description:  General Matrix-multiplication function
+  23:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+  24:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * $Revision:    V.2.0.5
+  26:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+  27:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * -------------------------------------------------------------------- */
+  29:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  30:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** #include "arm_nnsupportfunctions.h"
+  31:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  32:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** /*
+  33:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * s8 General matrix multiplication function with per-channel requantization for upto 4 column batc
+  34:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+  35:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  * Refer header file for details.
+  36:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  *
+  37:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****  */
+  38:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  39:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** q7_t *arm_nn_mat_mult_s8(const q7_t *input_row,
+  40:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const q7_t *input_col,
+  41:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const uint16_t output_ch,
+  42:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const uint16_t col_batches,
+  43:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int32_t *output_shift,
+  44:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int32_t *output_mult,
+  45:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int32_t out_offset,
+  46:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int32_t col_offset,
+  47:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int32_t row_offset,
+  48:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int16_t activation_min,
+  49:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int16_t activation_max,
+  50:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const uint16_t row_len,
+  51:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          const int32_t *const bias,
+  52:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                          q7_t *out)
+  53:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** {
+  10                             		.loc 1 53 1
+  11                             	.LVL0:
+  12 0000 71 00 DC                		add	#-36, r0
+  13                             	.LCFI0:
+  54:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** #if defined(ARM_MATH_MVEI)
+  55:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)row_offset;
+  56:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     if (col_batches == 4)
+  57:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     {
+  58:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****         for (int i_out_ch = 0; i_out_ch < output_ch; i_out_ch++)
+  59:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****         {
+  60:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             int32_t row_len_tmp = row_len;
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             const int8_t *ip_r0 = input_row + (i_out_ch * row_len);
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             const int8_t *ip_c0 = input_col;
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             const int8_t *ip_c1 = input_col + row_len;
+  64:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             const int8_t *ip_c2 = input_col + (2 * row_len);
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             const int8_t *ip_c3 = input_col + (3 * row_len);
+  66:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  67:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             int32_t acc_0 = 0;
+  68:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             int32_t acc_1 = 0;
+  69:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             int32_t acc_2 = 0;
+  70:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             int32_t acc_3 = 0;
+  71:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             const int32_t row_loop_cnt = (row_len + 7) / 8;
+  72:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  73:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             for (int i_row_loop = 0; i_row_loop < row_loop_cnt; i_row_loop++)
+  74:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             {
+  75:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 mve_pred16_t p = vctp16q((uint32_t)row_len_tmp);
+  76:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 const int16x8_t offset = vdupq_m_n_s16(vuninitializedq_s16(), col_offset, p);
+  77:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 row_len_tmp -= 8;
+  78:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  79:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 int16x8_t r0 = vldrbq_z_s16(ip_r0, p);
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 ip_r0 += 8;
+  81:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  82:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 int16x8_t c0 = vldrbq_z_s16(ip_c0, p);
+  83:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 ip_c0 += 8;
+  84:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 c0 = vaddq_m_s16(vuninitializedq_s16(), c0, offset, p);
+  85:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  86:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 int16x8_t c1 = vldrbq_z_s16(ip_c1, p);
+  87:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 ip_c1 += 8;
+  88:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 c1 = vaddq_m_s16(vuninitializedq_s16(), c1, offset, p);
+  89:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  90:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 int16x8_t c2 = vldrbq_z_s16(ip_c2, p);
+  91:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 ip_c2 += 8;
+  92:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 c2 = vaddq_m_s16(vuninitializedq_s16(), c2, offset, p);
+  93:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 int16x8_t c3 = vldrbq_z_s16(ip_c3, p);
+  95:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 ip_c3 += 8;
+  96:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 c3 = vaddq_m_s16(vuninitializedq_s16(), c3, offset, p);
+  97:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+  98:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_0 = vmladavaq_p_s16(acc_0, r0, c0, p);
+  99:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_1 = vmladavaq_p_s16(acc_1, r0, c1, p);
+ 100:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_2 = vmladavaq_p_s16(acc_2, r0, c2, p);
+ 101:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_3 = vmladavaq_p_s16(acc_3, r0, c3, p);
+ 102:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             }
+ 103:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 104:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             int32x4_t res = {acc_0, acc_1, acc_2, acc_3};
+ 105:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             if (bias)
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             {
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 res = vaddq_n_s32(res, bias[i_out_ch]);
+ 108:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             }
+ 109:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             res = arm_requantize_mve(res, output_mult[i_out_ch], output_shift[i_out_ch]);
+ 110:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             res = vaddq_n_s32(res, out_offset);
+ 111:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             res = vmaxq_s32(res, vdupq_n_s32(activation_min));
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             res = vminq_s32(res, vdupq_n_s32(activation_max));
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 115:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             const uint32x4_t scatter_offset = {0, output_ch, output_ch * 2, output_ch * 3};
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             vstrbq_scatter_offset_s32(&out[i_out_ch], scatter_offset, res);
+ 117:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****         }
+ 118:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****         out += 4 * output_ch;
+ 119:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     }
+ 120:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     else
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     {
+ 122:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****         for (int i_col_batch = (col_batches & ~0x3); i_col_batch < (col_batches & 0x3); i_col_batch
+ 123:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****         {
+ 124:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             for (int i_out_ch = 0; i_out_ch < output_ch; i_out_ch++)
+ 125:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             {
+ 126:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 int32_t row_len_tmp = row_len;
+ 127:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 128:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 const int8_t *ip_r0 = input_row + (i_out_ch * row_len);
+ 129:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 const int8_t *ip_c0 = input_col + (i_col_batch * row_len);
+ 130:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 int32_t acc_0 = 0;
+ 131:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 const int32_t row_loop_cnt = (row_len + 7) / 8;
+ 132:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 133:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 for (int i_row_loop = 0; i_row_loop < row_loop_cnt; i_row_loop++)
+ 134:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 {
+ 135:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     const mve_pred16_t p = vctp16q((uint32_t)row_len_tmp);
+ 136:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     const int16x8_t offset = vdupq_m_n_s16(vuninitializedq_s16(), col_offset, p);
+ 137:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     row_len_tmp -= 8;
+ 138:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 139:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     int16x8_t r0 = vldrbq_z_s16(ip_r0, p);
+ 140:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     ip_r0 += 8;
+ 141:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     int16x8_t c0 = vldrbq_z_s16(ip_c0, p);
+ 142:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     ip_c0 += 8;
+ 143:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 144:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     c0 = vaddq_m_s16(vuninitializedq_s16(), c0, offset, p);
+ 145:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     acc_0 = vmladavaq_p_s16(acc_0, r0, c0, p);
+ 146:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 }
+ 147:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 148:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 if (bias)
+ 149:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 {
+ 150:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                     acc_0 += bias[i_out_ch];
+ 151:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 }
+ 152:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_0 = arm_nn_requantize(acc_0, output_mult[i_out_ch], output_shift[i_out_ch]);
+ 153:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_0 += out_offset;
+ 154:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_0 = MAX(acc_0, activation_min);
+ 155:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 acc_0 = MIN(acc_0, activation_max);
+ 156:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****                 out[i_out_ch] = (q7_t)acc_0;
+ 157:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             }
+ 158:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****             out += output_ch;
+ 159:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****         }
+ 160:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     }
+ 161:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     return out;
+ 162:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** 
+ 163:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** #else
+ 164:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)input_row;
+  14                             		.loc 1 164 5
+ 165:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)input_col;
+  15                             		.loc 1 165 5
+ 166:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)output_ch;
+  16                             		.loc 1 166 5
+ 167:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)col_batches;
+  17                             		.loc 1 167 5
+ 168:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)output_shift;
+  18                             		.loc 1 168 5
+ 169:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)output_mult;
+  19                             		.loc 1 169 5
+ 170:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)out_offset;
+  20                             		.loc 1 170 5
+ 171:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)col_offset;
+  21                             		.loc 1 171 5
+ 172:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)row_offset;
+  22                             		.loc 1 172 5
+ 173:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)activation_min;
+  23                             		.loc 1 173 5
+ 174:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)activation_max;
+  24                             		.loc 1 174 5
+ 175:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)row_len;
+  25                             		.loc 1 175 5
+ 176:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)bias;
+  26                             		.loc 1 176 5
+ 177:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     (void)out;
+  27                             		.loc 1 177 5
+ 178:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c ****     return NULL;
+  28                             		.loc 1 178 5
+ 179:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** #endif
+ 180:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_s8.c **** }
+  29                             		.loc 1 180 1 is_stmt 0
+  30 0003 66 01                   		mov.L	#0, r1
+  31                             	.LVL1:
+  32 0005 67 09                   		rtsd	#36
+  33                             	.LFE82:
+  65                             	.Letext0:
+  66                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  67                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  68                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  69                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  70                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  71                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  72                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  73                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  74                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

@@ -1,0 +1,240 @@
+   1                             		.file	"arm_nn_mat_mult_kernel_s8_s16_reordered.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_nn_mat_mult_kernel_s8_s16_reordered,"ax",@progbits
+   5                             		.global	_arm_nn_mat_mult_kernel_s8_s16_reordered
+   7                             	_arm_nn_mat_mult_kernel_s8_s16_reordered:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c"
+   1:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** /*
+   2:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+   4:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+   6:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+  10:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+  12:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  */
+  18:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  19:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Title:        arm_nn_mat_mult_kernel_s8_s16_reordered.c
+  22:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Description:  Matrix-multiplication function for convolution with reordered columns
+  23:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+  24:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * $Revision:    V.1.0.3
+  26:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+  27:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * -------------------------------------------------------------------- */
+  29:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  30:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** #include "arm_nnfunctions.h"
+  31:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** #include "arm_nnsupportfunctions.h"
+  32:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  33:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** /*
+  34:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Matrix-multiplication with re-ordered input and bias inputs for convolution with per-channel
+  35:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *        requantization. The re-ordering is a consequence of sign extension is done by the SXTB16 
+  36:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+  37:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  * Refer header file for details. This function differs from arm_nn_mat_mult_kernel_s8_s16(), in th
+  38:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *        read_and_pad_reordered() instead of arm_nn_mat_mult_kernel_s8_s16(). Investigating the cy
+  39:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *        unifying these two functions is a potential future improvement.
+  40:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  *
+  41:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****  */
+  42:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  43:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** q7_t *arm_nn_mat_mult_kernel_s8_s16_reordered(const q7_t *input_a,
+  44:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const q15_t *input_b,
+  45:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const uint16_t output_ch,
+  46:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const int32_t *out_shift,
+  47:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const int32_t *out_mult,
+  48:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const int32_t out_offset,
+  49:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const int16_t activation_min,
+  50:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const int16_t activation_max,
+  51:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const uint16_t num_col_a,
+  52:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               const int32_t *const output_bias,
+  53:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****                                               q7_t *out_0)
+  54:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** {
+  10                             		.loc 1 54 1
+  11                             	.LVL0:
+  12 0000 71 00 E8                		add	#-24, r0
+  13                             	.LCFI0:
+  55:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** #if defined(ARM_MATH_DSP)
+  56:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     /* set up the second output pointers */
+  57:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     q7_t *out_1 = out_0 + output_ch;
+  58:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     const int32_t *bias = output_bias;
+  59:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  60:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     uint16_t row_count = output_ch / 2;
+  61:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     const q7_t *ip_a0 = input_a;
+  62:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     /* this loop over rows in A */
+  63:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     while (row_count)
+  64:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     {
+  65:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         /* setup pointers for B */
+  66:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         const q15_t *ip_b0 = input_b;
+  67:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         const q15_t *ip_b1 = ip_b0 + num_col_a;
+  68:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  69:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         /* align the second pointer for A */
+  70:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         const q7_t *ip_a1 = ip_a0 + num_col_a;
+  71:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  72:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         /* Init accumulator with bias for channel N and N + 1 */
+  73:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         q31_t ch_0_out_0 = *bias;
+  74:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         q31_t ch_0_out_1 = *bias++;
+  75:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         q31_t ch_1_out_0 = *bias;
+  76:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         q31_t ch_1_out_1 = *bias++;
+  77:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  78:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         uint16_t col_count = num_col_a / 4;
+  79:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         /* accumulate over the vector */
+  80:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         while (col_count)
+  81:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         {
+  82:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             q31_t a01, a02, a11, a12;
+  83:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             q31_t b0 = arm_nn_read_q15x2_ia(&ip_b0);
+  84:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             q31_t b1 = arm_nn_read_q15x2_ia(&ip_b1);
+  85:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  86:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ip_a0 = read_and_pad_reordered(ip_a0, &a01, &a02);
+  87:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ip_a1 = read_and_pad_reordered(ip_a1, &a11, &a12);
+  88:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  89:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_0 = __SMLAD(a01, b0, ch_0_out_0);
+  90:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_1 = __SMLAD(a01, b1, ch_0_out_1);
+  91:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_1_out_0 = __SMLAD(a11, b0, ch_1_out_0);
+  92:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_1_out_1 = __SMLAD(a11, b1, ch_1_out_1);
+  93:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  94:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             b0 = arm_nn_read_q15x2_ia(&ip_b0);
+  95:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             b1 = arm_nn_read_q15x2_ia(&ip_b1);
+  96:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+  97:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_0 = __SMLAD(a02, b0, ch_0_out_0);
+  98:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_1 = __SMLAD(a02, b1, ch_0_out_1);
+  99:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_1_out_0 = __SMLAD(a12, b0, ch_1_out_0);
+ 100:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_1_out_1 = __SMLAD(a12, b1, ch_1_out_1);
+ 101:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 102:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             col_count--;
+ 103:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         } /* while over col_count */
+ 104:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 105:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 = arm_nn_requantize(ch_0_out_0, *out_mult, *out_shift);
+ 106:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 += out_offset;
+ 107:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 = MAX(ch_0_out_0, activation_min);
+ 108:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 = MIN(ch_0_out_0, activation_max);
+ 109:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         *out_0++ = (q7_t)ch_0_out_0;
+ 110:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 111:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 = arm_nn_requantize(ch_0_out_1, *out_mult, *out_shift);
+ 112:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 += out_offset;
+ 113:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 = MAX(ch_0_out_1, activation_min);
+ 114:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 = MIN(ch_0_out_1, activation_max);
+ 115:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         *out_1++ = (q7_t)ch_0_out_1;
+ 116:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         out_mult++;
+ 117:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         out_shift++;
+ 118:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 119:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_0 = arm_nn_requantize(ch_1_out_0, *out_mult, *out_shift);
+ 120:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_0 += out_offset;
+ 121:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_0 = MAX(ch_1_out_0, activation_min);
+ 122:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_0 = MIN(ch_1_out_0, activation_max);
+ 123:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         *out_0++ = (q7_t)ch_1_out_0;
+ 124:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 125:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_1 = arm_nn_requantize(ch_1_out_1, *out_mult, *out_shift);
+ 126:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_1 += out_offset;
+ 127:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_1 = MAX(ch_1_out_1, activation_min);
+ 128:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_1_out_1 = MIN(ch_1_out_1, activation_max);
+ 129:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         *out_1++ = (q7_t)ch_1_out_1;
+ 130:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         out_mult++;
+ 131:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         out_shift++;
+ 132:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 133:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         /* skip row */
+ 134:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ip_a0 += num_col_a;
+ 135:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         row_count--;
+ 136:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     }
+ 137:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 138:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     if (output_ch & 1)
+ 139:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     {
+ 140:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         /* setup pointers for B */
+ 141:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         const q15_t *ip_b0 = input_b;
+ 142:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         const q15_t *ip_b1 = ip_b0 + num_col_a;
+ 143:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 144:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         /* Init accumulator with bias for channel N + 1 */
+ 145:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         q31_t ch_0_out_0 = *bias;
+ 146:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         q31_t ch_0_out_1 = ch_0_out_0;
+ 147:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 148:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         int32_t col_count = num_col_a / 4;
+ 149:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         while (col_count)
+ 150:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         {
+ 151:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             q31_t a01, a02;
+ 152:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             q31_t b0 = arm_nn_read_q15x2_ia(&ip_b0);
+ 153:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             q31_t b1 = arm_nn_read_q15x2_ia(&ip_b1);
+ 154:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 155:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ip_a0 = read_and_pad_reordered(ip_a0, &a01, &a02);
+ 156:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 157:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_0 = __SMLAD(a01, b0, ch_0_out_0);
+ 158:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_1 = __SMLAD(a01, b1, ch_0_out_1);
+ 159:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 160:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             b0 = arm_nn_read_q15x2_ia(&ip_b0);
+ 161:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             b1 = arm_nn_read_q15x2_ia(&ip_b1);
+ 162:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 163:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_0 = __SMLAD(a02, b0, ch_0_out_0);
+ 164:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             ch_0_out_1 = __SMLAD(a02, b1, ch_0_out_1);
+ 165:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 166:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****             col_count--;
+ 167:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         } /* while over col_count */
+ 168:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 169:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 = arm_nn_requantize(ch_0_out_0, *out_mult, *out_shift);
+ 170:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 += out_offset;
+ 171:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 = MAX(ch_0_out_0, activation_min);
+ 172:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_0 = MIN(ch_0_out_0, activation_max);
+ 173:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         *out_0++ = (q7_t)ch_0_out_0;
+ 174:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 175:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 = arm_nn_requantize(ch_0_out_1, *out_mult, *out_shift);
+ 176:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 += out_offset;
+ 177:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 = MAX(ch_0_out_1, activation_min);
+ 178:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         ch_0_out_1 = MIN(ch_0_out_1, activation_max);
+ 179:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****         *out_1++ = (q7_t)ch_0_out_1;
+ 180:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     }
+ 181:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 182:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     out_0 += output_ch;
+ 183:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** 
+ 184:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     /* return the new output pointer with offset */
+ 185:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     return out_0;
+ 186:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** #else
+ 187:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)input_a;
+  14                             		.loc 1 187 5
+ 188:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)input_b;
+  15                             		.loc 1 188 5
+ 189:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)output_ch;
+  16                             		.loc 1 189 5
+ 190:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)out_shift;
+  17                             		.loc 1 190 5
+ 191:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)out_mult;
+  18                             		.loc 1 191 5
+ 192:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)out_offset;
+  19                             		.loc 1 192 5
+ 193:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)activation_min;
+  20                             		.loc 1 193 5
+ 194:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)activation_max;
+  21                             		.loc 1 194 5
+ 195:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)num_col_a;
+  22                             		.loc 1 195 5
+ 196:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)output_bias;
+  23                             		.loc 1 196 5
+ 197:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     (void)out_0;
+  24                             		.loc 1 197 5
+ 198:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     /* To be completed */
+ 199:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c ****     return NULL;
+  25                             		.loc 1 199 5
+ 200:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** #endif
+ 201:../src/CMSIS/NN/Source/ConvolutionFunctions/arm_nn_mat_mult_kernel_s8_s16_reordered.c **** }
+  26                             		.loc 1 201 1 is_stmt 0
+  27 0003 66 01                   		mov.L	#0, r1
+  28                             	.LVL1:
+  29 0005 67 06                   		rtsd	#24
+  30                             	.LFE82:
+  62                             	.Letext0:
+  63                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  64                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  65                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  66                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  67                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  68                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  69                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  70                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  71                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

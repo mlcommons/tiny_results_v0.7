@@ -1,0 +1,1711 @@
+   1                             		.file	"arm_nntables.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.global	_tanhHTable_q15
+   5                             		.global	_tanhLTable_q15
+   6                             		.global	_tanhTable_q15
+   7                             		.global	_tanhTable_q7
+   8                             		.global	_sigmoidHTable_q15
+   9                             		.global	_sigmoidLTable_q15
+  10                             		.global	_sigmoidTable_q15
+  11                             		.global	_sigmoidTable_q7
+  12                             		.section	.rodata.sigmoidHTable_q15,"a"
+  13                             		.balign 4
+  16                             	_sigmoidHTable_q15:
+  17 0000 BE 70                   		.short	0x70be
+  18 0002 90 71                   		.short	0x7190
+  19 0004 58 72                   		.short	0x7258
+  20 0006 16 73                   		.short	0x7316
+  21 0008 CC 73                   		.short	0x73cc
+  22 000a 78 74                   		.short	0x7478
+  23 000c 1B 75                   		.short	0x751b
+  24 000e B7 75                   		.short	0x75b7
+  25 0010 4A 76                   		.short	0x764a
+  26 0012 D6 76                   		.short	0x76d6
+  27 0014 5B 77                   		.short	0x775b
+  28 0016 D8 77                   		.short	0x77d8
+  29 0018 4F 78                   		.short	0x784f
+  30 001a C0 78                   		.short	0x78c0
+  31 001c 2A 79                   		.short	0x792a
+  32 001e 8F 79                   		.short	0x798f
+  33 0020 EE 79                   		.short	0x79ee
+  34 0022 48 7A                   		.short	0x7a48
+  35 0024 9D 7A                   		.short	0x7a9d
+  36 0026 ED 7A                   		.short	0x7aed
+  37 0028 39 7B                   		.short	0x7b39
+  38 002a 80 7B                   		.short	0x7b80
+  39 002c C4 7B                   		.short	0x7bc4
+  40 002e 03 7C                   		.short	0x7c03
+  41 0030 3F 7C                   		.short	0x7c3f
+  42 0032 78 7C                   		.short	0x7c78
+  43 0034 AD 7C                   		.short	0x7cad
+  44 0036 E0 7C                   		.short	0x7ce0
+  45 0038 0F 7D                   		.short	0x7d0f
+  46 003a 3C 7D                   		.short	0x7d3c
+  47 003c 66 7D                   		.short	0x7d66
+  48 003e 8D 7D                   		.short	0x7d8d
+  49 0040 B3 7D                   		.short	0x7db3
+  50 0042 D6 7D                   		.short	0x7dd6
+  51 0044 F7 7D                   		.short	0x7df7
+  52 0046 16 7E                   		.short	0x7e16
+  53 0048 33 7E                   		.short	0x7e33
+  54 004a 4F 7E                   		.short	0x7e4f
+  55 004c 69 7E                   		.short	0x7e69
+  56 004e 81 7E                   		.short	0x7e81
+  57 0050 98 7E                   		.short	0x7e98
+  58 0052 AE 7E                   		.short	0x7eae
+  59 0054 C2 7E                   		.short	0x7ec2
+  60 0056 D5 7E                   		.short	0x7ed5
+  61 0058 E7 7E                   		.short	0x7ee7
+  62 005a F8 7E                   		.short	0x7ef8
+  63 005c 08 7F                   		.short	0x7f08
+  64 005e 17 7F                   		.short	0x7f17
+  65 0060 25 7F                   		.short	0x7f25
+  66 0062 32 7F                   		.short	0x7f32
+  67 0064 3E 7F                   		.short	0x7f3e
+  68 0066 4A 7F                   		.short	0x7f4a
+  69 0068 55 7F                   		.short	0x7f55
+  70 006a 5F 7F                   		.short	0x7f5f
+  71 006c 69 7F                   		.short	0x7f69
+  72 006e 72 7F                   		.short	0x7f72
+  73 0070 7B 7F                   		.short	0x7f7b
+  74 0072 83 7F                   		.short	0x7f83
+  75 0074 8A 7F                   		.short	0x7f8a
+  76 0076 91 7F                   		.short	0x7f91
+  77 0078 98 7F                   		.short	0x7f98
+  78 007a 9E 7F                   		.short	0x7f9e
+  79 007c A4 7F                   		.short	0x7fa4
+  80 007e AA 7F                   		.short	0x7faa
+  81 0080 AF 7F                   		.short	0x7faf
+  82 0082 B4 7F                   		.short	0x7fb4
+  83 0084 B8 7F                   		.short	0x7fb8
+  84 0086 BD 7F                   		.short	0x7fbd
+  85 0088 C1 7F                   		.short	0x7fc1
+  86 008a C5 7F                   		.short	0x7fc5
+  87 008c C8 7F                   		.short	0x7fc8
+  88 008e CC 7F                   		.short	0x7fcc
+  89 0090 CF 7F                   		.short	0x7fcf
+  90 0092 D2 7F                   		.short	0x7fd2
+  91 0094 D5 7F                   		.short	0x7fd5
+  92 0096 D7 7F                   		.short	0x7fd7
+  93 0098 DA 7F                   		.short	0x7fda
+  94 009a DC 7F                   		.short	0x7fdc
+  95 009c DE 7F                   		.short	0x7fde
+  96 009e E0 7F                   		.short	0x7fe0
+  97 00a0 E2 7F                   		.short	0x7fe2
+  98 00a2 E4 7F                   		.short	0x7fe4
+  99 00a4 E6 7F                   		.short	0x7fe6
+ 100 00a6 E7 7F                   		.short	0x7fe7
+ 101 00a8 E9 7F                   		.short	0x7fe9
+ 102 00aa EA 7F                   		.short	0x7fea
+ 103 00ac EB 7F                   		.short	0x7feb
+ 104 00ae ED 7F                   		.short	0x7fed
+ 105 00b0 EE 7F                   		.short	0x7fee
+ 106 00b2 EF 7F                   		.short	0x7fef
+ 107 00b4 F0 7F                   		.short	0x7ff0
+ 108 00b6 F1 7F                   		.short	0x7ff1
+ 109 00b8 F2 7F                   		.short	0x7ff2
+ 110 00ba F3 7F                   		.short	0x7ff3
+ 111 00bc F4 7F                   		.short	0x7ff4
+ 112 00be F4 7F                   		.short	0x7ff4
+ 113 00c0 0B 00                   		.short	11
+ 114 00c2 0C 00                   		.short	12
+ 115 00c4 0C 00                   		.short	12
+ 116 00c6 0D 00                   		.short	13
+ 117 00c8 0E 00                   		.short	14
+ 118 00ca 0F 00                   		.short	15
+ 119 00cc 10 00                   		.short	16
+ 120 00ce 11 00                   		.short	17
+ 121 00d0 12 00                   		.short	18
+ 122 00d2 13 00                   		.short	19
+ 123 00d4 15 00                   		.short	21
+ 124 00d6 16 00                   		.short	22
+ 125 00d8 17 00                   		.short	23
+ 126 00da 19 00                   		.short	25
+ 127 00dc 1A 00                   		.short	26
+ 128 00de 1C 00                   		.short	28
+ 129 00e0 1E 00                   		.short	30
+ 130 00e2 20 00                   		.short	32
+ 131 00e4 22 00                   		.short	34
+ 132 00e6 24 00                   		.short	36
+ 133 00e8 26 00                   		.short	38
+ 134 00ea 29 00                   		.short	41
+ 135 00ec 2B 00                   		.short	43
+ 136 00ee 2E 00                   		.short	46
+ 137 00f0 31 00                   		.short	49
+ 138 00f2 34 00                   		.short	52
+ 139 00f4 38 00                   		.short	56
+ 140 00f6 3B 00                   		.short	59
+ 141 00f8 3F 00                   		.short	63
+ 142 00fa 43 00                   		.short	0x43
+ 143 00fc 48 00                   		.short	0x48
+ 144 00fe 4C 00                   		.short	0x4c
+ 145 0100 51 00                   		.short	0x51
+ 146 0102 56 00                   		.short	0x56
+ 147 0104 5C 00                   		.short	0x5c
+ 148 0106 62 00                   		.short	0x62
+ 149 0108 68 00                   		.short	0x68
+ 150 010a 6F 00                   		.short	0x6f
+ 151 010c 76 00                   		.short	0x76
+ 152 010e 7D 00                   		.short	0x7d
+ 153 0110 85 00                   		.short	0x85
+ 154 0112 8E 00                   		.short	0x8e
+ 155 0114 97 00                   		.short	0x97
+ 156 0116 A1 00                   		.short	0xa1
+ 157 0118 AB 00                   		.short	0xab
+ 158 011a B6 00                   		.short	0xb6
+ 159 011c C2 00                   		.short	0xc2
+ 160 011e CE 00                   		.short	0xce
+ 161 0120 DB 00                   		.short	0xdb
+ 162 0122 E9 00                   		.short	0xe9
+ 163 0124 F8 00                   		.short	0xf8
+ 164 0126 08 01                   		.short	0x108
+ 165 0128 19 01                   		.short	0x119
+ 166 012a 2B 01                   		.short	0x12b
+ 167 012c 3E 01                   		.short	0x13e
+ 168 012e 52 01                   		.short	0x152
+ 169 0130 68 01                   		.short	0x168
+ 170 0132 7F 01                   		.short	0x17f
+ 171 0134 97 01                   		.short	0x197
+ 172 0136 B1 01                   		.short	0x1b1
+ 173 0138 CD 01                   		.short	0x1cd
+ 174 013a EA 01                   		.short	0x1ea
+ 175 013c 09 02                   		.short	0x209
+ 176 013e 2A 02                   		.short	0x22a
+ 177 0140 4D 02                   		.short	0x24d
+ 178 0142 73 02                   		.short	0x273
+ 179 0144 9A 02                   		.short	0x29a
+ 180 0146 C4 02                   		.short	0x2c4
+ 181 0148 F1 02                   		.short	0x2f1
+ 182 014a 20 03                   		.short	0x320
+ 183 014c 53 03                   		.short	0x353
+ 184 014e 88 03                   		.short	0x388
+ 185 0150 C1 03                   		.short	0x3c1
+ 186 0152 FD 03                   		.short	0x3fd
+ 187 0154 3C 04                   		.short	0x43c
+ 188 0156 80 04                   		.short	0x480
+ 189 0158 C7 04                   		.short	0x4c7
+ 190 015a 13 05                   		.short	0x513
+ 191 015c 63 05                   		.short	0x563
+ 192 015e B8 05                   		.short	0x5b8
+ 193 0160 12 06                   		.short	0x612
+ 194 0162 71 06                   		.short	0x671
+ 195 0164 D6 06                   		.short	0x6d6
+ 196 0166 40 07                   		.short	0x740
+ 197 0168 B1 07                   		.short	0x7b1
+ 198 016a 28 08                   		.short	0x828
+ 199 016c A5 08                   		.short	0x8a5
+ 200 016e 2A 09                   		.short	0x92a
+ 201 0170 B6 09                   		.short	0x9b6
+ 202 0172 49 0A                   		.short	0xa49
+ 203 0174 E5 0A                   		.short	0xae5
+ 204 0176 88 0B                   		.short	0xb88
+ 205 0178 34 0C                   		.short	0xc34
+ 206 017a EA 0C                   		.short	0xcea
+ 207 017c A8 0D                   		.short	0xda8
+ 208 017e 70 0E                   		.short	0xe70
+ 209                             		.section	.rodata.sigmoidLTable_q15,"a"
+ 210                             		.balign 4
+ 213                             	_sigmoidLTable_q15:
+ 214 0000 00 40                   		.short	0x4000
+ 215 0002 00 41                   		.short	0x4100
+ 216 0004 00 42                   		.short	0x4200
+ 217 0006 FF 42                   		.short	0x42ff
+ 218 0008 FF 43                   		.short	0x43ff
+ 219 000a FD 44                   		.short	0x44fd
+ 220 000c FC 45                   		.short	0x45fc
+ 221 000e F9 46                   		.short	0x46f9
+ 222 0010 F5 47                   		.short	0x47f5
+ 223 0012 F1 48                   		.short	0x48f1
+ 224 0014 EB 49                   		.short	0x49eb
+ 225 0016 E5 4A                   		.short	0x4ae5
+ 226 0018 DC 4B                   		.short	0x4bdc
+ 227 001a D3 4C                   		.short	0x4cd3
+ 228 001c C8 4D                   		.short	0x4dc8
+ 229 001e BB 4E                   		.short	0x4ebb
+ 230 0020 AD 4F                   		.short	0x4fad
+ 231 0022 9C 50                   		.short	0x509c
+ 232 0024 8A 51                   		.short	0x518a
+ 233 0026 76 52                   		.short	0x5276
+ 234 0028 60 53                   		.short	0x5360
+ 235 002a 47 54                   		.short	0x5447
+ 236 002c 2C 55                   		.short	0x552c
+ 237 002e 0F 56                   		.short	0x560f
+ 238 0030 EF 56                   		.short	0x56ef
+ 239 0032 CD 57                   		.short	0x57cd
+ 240 0034 A8 58                   		.short	0x58a8
+ 241 0036 81 59                   		.short	0x5981
+ 242 0038 57 5A                   		.short	0x5a57
+ 243 003a 2A 5B                   		.short	0x5b2a
+ 244 003c FB 5B                   		.short	0x5bfb
+ 245 003e C9 5C                   		.short	0x5cc9
+ 246 0040 93 5D                   		.short	0x5d93
+ 247 0042 5B 5E                   		.short	0x5e5b
+ 248 0044 20 5F                   		.short	0x5f20
+ 249 0046 E2 5F                   		.short	0x5fe2
+ 250 0048 A1 60                   		.short	0x60a1
+ 251 004a 5D 61                   		.short	0x615d
+ 252 004c 16 62                   		.short	0x6216
+ 253 004e CC 62                   		.short	0x62cc
+ 254 0050 7F 63                   		.short	0x637f
+ 255 0052 2E 64                   		.short	0x642e
+ 256 0054 DB 64                   		.short	0x64db
+ 257 0056 84 65                   		.short	0x6584
+ 258 0058 2B 66                   		.short	0x662b
+ 259 005a CE 66                   		.short	0x66ce
+ 260 005c 6F 67                   		.short	0x676f
+ 261 005e 0C 68                   		.short	0x680c
+ 262 0060 A6 68                   		.short	0x68a6
+ 263 0062 3D 69                   		.short	0x693d
+ 264 0064 D2 69                   		.short	0x69d2
+ 265 0066 63 6A                   		.short	0x6a63
+ 266 0068 F1 6A                   		.short	0x6af1
+ 267 006a 7C 6B                   		.short	0x6b7c
+ 268 006c 05 6C                   		.short	0x6c05
+ 269 006e 8A 6C                   		.short	0x6c8a
+ 270 0070 0D 6D                   		.short	0x6d0d
+ 271 0072 8D 6D                   		.short	0x6d8d
+ 272 0074 09 6E                   		.short	0x6e09
+ 273 0076 84 6E                   		.short	0x6e84
+ 274 0078 FB 6E                   		.short	0x6efb
+ 275 007a 70 6F                   		.short	0x6f70
+ 276 007c E2 6F                   		.short	0x6fe2
+ 277 007e 51 70                   		.short	0x7051
+ 278 0080 42 0F                   		.short	0xf42
+ 279 0082 AF 0F                   		.short	0xfaf
+ 280 0084 1E 10                   		.short	0x101e
+ 281 0086 90 10                   		.short	0x1090
+ 282 0088 05 11                   		.short	0x1105
+ 283 008a 7C 11                   		.short	0x117c
+ 284 008c F7 11                   		.short	0x11f7
+ 285 008e 73 12                   		.short	0x1273
+ 286 0090 F3 12                   		.short	0x12f3
+ 287 0092 76 13                   		.short	0x1376
+ 288 0094 FB 13                   		.short	0x13fb
+ 289 0096 84 14                   		.short	0x1484
+ 290 0098 0F 15                   		.short	0x150f
+ 291 009a 9D 15                   		.short	0x159d
+ 292 009c 2E 16                   		.short	0x162e
+ 293 009e C3 16                   		.short	0x16c3
+ 294 00a0 5A 17                   		.short	0x175a
+ 295 00a2 F4 17                   		.short	0x17f4
+ 296 00a4 91 18                   		.short	0x1891
+ 297 00a6 32 19                   		.short	0x1932
+ 298 00a8 D5 19                   		.short	0x19d5
+ 299 00aa 7C 1A                   		.short	0x1a7c
+ 300 00ac 25 1B                   		.short	0x1b25
+ 301 00ae D2 1B                   		.short	0x1bd2
+ 302 00b0 81 1C                   		.short	0x1c81
+ 303 00b2 34 1D                   		.short	0x1d34
+ 304 00b4 EA 1D                   		.short	0x1dea
+ 305 00b6 A3 1E                   		.short	0x1ea3
+ 306 00b8 5F 1F                   		.short	0x1f5f
+ 307 00ba 1E 20                   		.short	0x201e
+ 308 00bc E0 20                   		.short	0x20e0
+ 309 00be A5 21                   		.short	0x21a5
+ 310 00c0 6D 22                   		.short	0x226d
+ 311 00c2 37 23                   		.short	0x2337
+ 312 00c4 05 24                   		.short	0x2405
+ 313 00c6 D6 24                   		.short	0x24d6
+ 314 00c8 A9 25                   		.short	0x25a9
+ 315 00ca 7F 26                   		.short	0x267f
+ 316 00cc 58 27                   		.short	0x2758
+ 317 00ce 33 28                   		.short	0x2833
+ 318 00d0 11 29                   		.short	0x2911
+ 319 00d2 F1 29                   		.short	0x29f1
+ 320 00d4 D4 2A                   		.short	0x2ad4
+ 321 00d6 B9 2B                   		.short	0x2bb9
+ 322 00d8 A0 2C                   		.short	0x2ca0
+ 323 00da 8A 2D                   		.short	0x2d8a
+ 324 00dc 76 2E                   		.short	0x2e76
+ 325 00de 64 2F                   		.short	0x2f64
+ 326 00e0 53 30                   		.short	0x3053
+ 327 00e2 45 31                   		.short	0x3145
+ 328 00e4 38 32                   		.short	0x3238
+ 329 00e6 2D 33                   		.short	0x332d
+ 330 00e8 24 34                   		.short	0x3424
+ 331 00ea 1B 35                   		.short	0x351b
+ 332 00ec 15 36                   		.short	0x3615
+ 333 00ee 0F 37                   		.short	0x370f
+ 334 00f0 0B 38                   		.short	0x380b
+ 335 00f2 07 39                   		.short	0x3907
+ 336 00f4 04 3A                   		.short	0x3a04
+ 337 00f6 03 3B                   		.short	0x3b03
+ 338 00f8 01 3C                   		.short	0x3c01
+ 339 00fa 01 3D                   		.short	0x3d01
+ 340 00fc 00 3E                   		.short	0x3e00
+ 341 00fe 00 3F                   		.short	0x3f00
+ 342                             		.section	.rodata.sigmoidTable_q15,"a"
+ 343                             		.balign 4
+ 346                             	_sigmoidTable_q15:
+ 347 0000 00 40                   		.short	0x4000
+ 348 0002 00 42                   		.short	0x4200
+ 349 0004 FF 43                   		.short	0x43ff
+ 350 0006 FC 45                   		.short	0x45fc
+ 351 0008 F5 47                   		.short	0x47f5
+ 352 000a EB 49                   		.short	0x49eb
+ 353 000c DC 4B                   		.short	0x4bdc
+ 354 000e C8 4D                   		.short	0x4dc8
+ 355 0010 AD 4F                   		.short	0x4fad
+ 356 0012 8A 51                   		.short	0x518a
+ 357 0014 60 53                   		.short	0x5360
+ 358 0016 2C 55                   		.short	0x552c
+ 359 0018 EF 56                   		.short	0x56ef
+ 360 001a A8 58                   		.short	0x58a8
+ 361 001c 57 5A                   		.short	0x5a57
+ 362 001e FB 5B                   		.short	0x5bfb
+ 363 0020 93 5D                   		.short	0x5d93
+ 364 0022 20 5F                   		.short	0x5f20
+ 365 0024 A1 60                   		.short	0x60a1
+ 366 0026 16 62                   		.short	0x6216
+ 367 0028 7F 63                   		.short	0x637f
+ 368 002a DB 64                   		.short	0x64db
+ 369 002c 2B 66                   		.short	0x662b
+ 370 002e 6F 67                   		.short	0x676f
+ 371 0030 A6 68                   		.short	0x68a6
+ 372 0032 D2 69                   		.short	0x69d2
+ 373 0034 F1 6A                   		.short	0x6af1
+ 374 0036 05 6C                   		.short	0x6c05
+ 375 0038 0D 6D                   		.short	0x6d0d
+ 376 003a 09 6E                   		.short	0x6e09
+ 377 003c FB 6E                   		.short	0x6efb
+ 378 003e E2 6F                   		.short	0x6fe2
+ 379 0040 BE 70                   		.short	0x70be
+ 380 0042 90 71                   		.short	0x7190
+ 381 0044 58 72                   		.short	0x7258
+ 382 0046 16 73                   		.short	0x7316
+ 383 0048 CC 73                   		.short	0x73cc
+ 384 004a 78 74                   		.short	0x7478
+ 385 004c 1B 75                   		.short	0x751b
+ 386 004e B7 75                   		.short	0x75b7
+ 387 0050 4A 76                   		.short	0x764a
+ 388 0052 D6 76                   		.short	0x76d6
+ 389 0054 5B 77                   		.short	0x775b
+ 390 0056 D8 77                   		.short	0x77d8
+ 391 0058 4F 78                   		.short	0x784f
+ 392 005a C0 78                   		.short	0x78c0
+ 393 005c 2A 79                   		.short	0x792a
+ 394 005e 8F 79                   		.short	0x798f
+ 395 0060 EE 79                   		.short	0x79ee
+ 396 0062 48 7A                   		.short	0x7a48
+ 397 0064 9D 7A                   		.short	0x7a9d
+ 398 0066 ED 7A                   		.short	0x7aed
+ 399 0068 39 7B                   		.short	0x7b39
+ 400 006a 80 7B                   		.short	0x7b80
+ 401 006c C4 7B                   		.short	0x7bc4
+ 402 006e 03 7C                   		.short	0x7c03
+ 403 0070 3F 7C                   		.short	0x7c3f
+ 404 0072 78 7C                   		.short	0x7c78
+ 405 0074 AD 7C                   		.short	0x7cad
+ 406 0076 E0 7C                   		.short	0x7ce0
+ 407 0078 0F 7D                   		.short	0x7d0f
+ 408 007a 3C 7D                   		.short	0x7d3c
+ 409 007c 66 7D                   		.short	0x7d66
+ 410 007e 8D 7D                   		.short	0x7d8d
+ 411 0080 B3 7D                   		.short	0x7db3
+ 412 0082 D6 7D                   		.short	0x7dd6
+ 413 0084 F7 7D                   		.short	0x7df7
+ 414 0086 16 7E                   		.short	0x7e16
+ 415 0088 33 7E                   		.short	0x7e33
+ 416 008a 4F 7E                   		.short	0x7e4f
+ 417 008c 69 7E                   		.short	0x7e69
+ 418 008e 81 7E                   		.short	0x7e81
+ 419 0090 98 7E                   		.short	0x7e98
+ 420 0092 AE 7E                   		.short	0x7eae
+ 421 0094 C2 7E                   		.short	0x7ec2
+ 422 0096 D5 7E                   		.short	0x7ed5
+ 423 0098 E7 7E                   		.short	0x7ee7
+ 424 009a F8 7E                   		.short	0x7ef8
+ 425 009c 08 7F                   		.short	0x7f08
+ 426 009e 17 7F                   		.short	0x7f17
+ 427 00a0 25 7F                   		.short	0x7f25
+ 428 00a2 32 7F                   		.short	0x7f32
+ 429 00a4 3E 7F                   		.short	0x7f3e
+ 430 00a6 4A 7F                   		.short	0x7f4a
+ 431 00a8 55 7F                   		.short	0x7f55
+ 432 00aa 5F 7F                   		.short	0x7f5f
+ 433 00ac 69 7F                   		.short	0x7f69
+ 434 00ae 72 7F                   		.short	0x7f72
+ 435 00b0 7B 7F                   		.short	0x7f7b
+ 436 00b2 83 7F                   		.short	0x7f83
+ 437 00b4 8A 7F                   		.short	0x7f8a
+ 438 00b6 91 7F                   		.short	0x7f91
+ 439 00b8 98 7F                   		.short	0x7f98
+ 440 00ba 9E 7F                   		.short	0x7f9e
+ 441 00bc A4 7F                   		.short	0x7fa4
+ 442 00be AA 7F                   		.short	0x7faa
+ 443 00c0 AF 7F                   		.short	0x7faf
+ 444 00c2 B4 7F                   		.short	0x7fb4
+ 445 00c4 B8 7F                   		.short	0x7fb8
+ 446 00c6 BD 7F                   		.short	0x7fbd
+ 447 00c8 C1 7F                   		.short	0x7fc1
+ 448 00ca C5 7F                   		.short	0x7fc5
+ 449 00cc C8 7F                   		.short	0x7fc8
+ 450 00ce CC 7F                   		.short	0x7fcc
+ 451 00d0 CF 7F                   		.short	0x7fcf
+ 452 00d2 D2 7F                   		.short	0x7fd2
+ 453 00d4 D5 7F                   		.short	0x7fd5
+ 454 00d6 D7 7F                   		.short	0x7fd7
+ 455 00d8 DA 7F                   		.short	0x7fda
+ 456 00da DC 7F                   		.short	0x7fdc
+ 457 00dc DE 7F                   		.short	0x7fde
+ 458 00de E0 7F                   		.short	0x7fe0
+ 459 00e0 E2 7F                   		.short	0x7fe2
+ 460 00e2 E4 7F                   		.short	0x7fe4
+ 461 00e4 E6 7F                   		.short	0x7fe6
+ 462 00e6 E7 7F                   		.short	0x7fe7
+ 463 00e8 E9 7F                   		.short	0x7fe9
+ 464 00ea EA 7F                   		.short	0x7fea
+ 465 00ec EB 7F                   		.short	0x7feb
+ 466 00ee ED 7F                   		.short	0x7fed
+ 467 00f0 EE 7F                   		.short	0x7fee
+ 468 00f2 EF 7F                   		.short	0x7fef
+ 469 00f4 F0 7F                   		.short	0x7ff0
+ 470 00f6 F1 7F                   		.short	0x7ff1
+ 471 00f8 F2 7F                   		.short	0x7ff2
+ 472 00fa F3 7F                   		.short	0x7ff3
+ 473 00fc F4 7F                   		.short	0x7ff4
+ 474 00fe F4 7F                   		.short	0x7ff4
+ 475 0100 0B 00                   		.short	11
+ 476 0102 0C 00                   		.short	12
+ 477 0104 0C 00                   		.short	12
+ 478 0106 0D 00                   		.short	13
+ 479 0108 0E 00                   		.short	14
+ 480 010a 0F 00                   		.short	15
+ 481 010c 10 00                   		.short	16
+ 482 010e 11 00                   		.short	17
+ 483 0110 12 00                   		.short	18
+ 484 0112 13 00                   		.short	19
+ 485 0114 15 00                   		.short	21
+ 486 0116 16 00                   		.short	22
+ 487 0118 17 00                   		.short	23
+ 488 011a 19 00                   		.short	25
+ 489 011c 1A 00                   		.short	26
+ 490 011e 1C 00                   		.short	28
+ 491 0120 1E 00                   		.short	30
+ 492 0122 20 00                   		.short	32
+ 493 0124 22 00                   		.short	34
+ 494 0126 24 00                   		.short	36
+ 495 0128 26 00                   		.short	38
+ 496 012a 29 00                   		.short	41
+ 497 012c 2B 00                   		.short	43
+ 498 012e 2E 00                   		.short	46
+ 499 0130 31 00                   		.short	49
+ 500 0132 34 00                   		.short	52
+ 501 0134 38 00                   		.short	56
+ 502 0136 3B 00                   		.short	59
+ 503 0138 3F 00                   		.short	63
+ 504 013a 43 00                   		.short	0x43
+ 505 013c 48 00                   		.short	0x48
+ 506 013e 4C 00                   		.short	0x4c
+ 507 0140 51 00                   		.short	0x51
+ 508 0142 56 00                   		.short	0x56
+ 509 0144 5C 00                   		.short	0x5c
+ 510 0146 62 00                   		.short	0x62
+ 511 0148 68 00                   		.short	0x68
+ 512 014a 6F 00                   		.short	0x6f
+ 513 014c 76 00                   		.short	0x76
+ 514 014e 7D 00                   		.short	0x7d
+ 515 0150 85 00                   		.short	0x85
+ 516 0152 8E 00                   		.short	0x8e
+ 517 0154 97 00                   		.short	0x97
+ 518 0156 A1 00                   		.short	0xa1
+ 519 0158 AB 00                   		.short	0xab
+ 520 015a B6 00                   		.short	0xb6
+ 521 015c C2 00                   		.short	0xc2
+ 522 015e CE 00                   		.short	0xce
+ 523 0160 DB 00                   		.short	0xdb
+ 524 0162 E9 00                   		.short	0xe9
+ 525 0164 F8 00                   		.short	0xf8
+ 526 0166 08 01                   		.short	0x108
+ 527 0168 19 01                   		.short	0x119
+ 528 016a 2B 01                   		.short	0x12b
+ 529 016c 3E 01                   		.short	0x13e
+ 530 016e 52 01                   		.short	0x152
+ 531 0170 68 01                   		.short	0x168
+ 532 0172 7F 01                   		.short	0x17f
+ 533 0174 97 01                   		.short	0x197
+ 534 0176 B1 01                   		.short	0x1b1
+ 535 0178 CD 01                   		.short	0x1cd
+ 536 017a EA 01                   		.short	0x1ea
+ 537 017c 09 02                   		.short	0x209
+ 538 017e 2A 02                   		.short	0x22a
+ 539 0180 4D 02                   		.short	0x24d
+ 540 0182 73 02                   		.short	0x273
+ 541 0184 9A 02                   		.short	0x29a
+ 542 0186 C4 02                   		.short	0x2c4
+ 543 0188 F1 02                   		.short	0x2f1
+ 544 018a 20 03                   		.short	0x320
+ 545 018c 53 03                   		.short	0x353
+ 546 018e 88 03                   		.short	0x388
+ 547 0190 C1 03                   		.short	0x3c1
+ 548 0192 FD 03                   		.short	0x3fd
+ 549 0194 3C 04                   		.short	0x43c
+ 550 0196 80 04                   		.short	0x480
+ 551 0198 C7 04                   		.short	0x4c7
+ 552 019a 13 05                   		.short	0x513
+ 553 019c 63 05                   		.short	0x563
+ 554 019e B8 05                   		.short	0x5b8
+ 555 01a0 12 06                   		.short	0x612
+ 556 01a2 71 06                   		.short	0x671
+ 557 01a4 D6 06                   		.short	0x6d6
+ 558 01a6 40 07                   		.short	0x740
+ 559 01a8 B1 07                   		.short	0x7b1
+ 560 01aa 28 08                   		.short	0x828
+ 561 01ac A5 08                   		.short	0x8a5
+ 562 01ae 2A 09                   		.short	0x92a
+ 563 01b0 B6 09                   		.short	0x9b6
+ 564 01b2 49 0A                   		.short	0xa49
+ 565 01b4 E5 0A                   		.short	0xae5
+ 566 01b6 88 0B                   		.short	0xb88
+ 567 01b8 34 0C                   		.short	0xc34
+ 568 01ba EA 0C                   		.short	0xcea
+ 569 01bc A8 0D                   		.short	0xda8
+ 570 01be 70 0E                   		.short	0xe70
+ 571 01c0 42 0F                   		.short	0xf42
+ 572 01c2 1E 10                   		.short	0x101e
+ 573 01c4 05 11                   		.short	0x1105
+ 574 01c6 F7 11                   		.short	0x11f7
+ 575 01c8 F3 12                   		.short	0x12f3
+ 576 01ca FB 13                   		.short	0x13fb
+ 577 01cc 0F 15                   		.short	0x150f
+ 578 01ce 2E 16                   		.short	0x162e
+ 579 01d0 5A 17                   		.short	0x175a
+ 580 01d2 91 18                   		.short	0x1891
+ 581 01d4 D5 19                   		.short	0x19d5
+ 582 01d6 25 1B                   		.short	0x1b25
+ 583 01d8 81 1C                   		.short	0x1c81
+ 584 01da EA 1D                   		.short	0x1dea
+ 585 01dc 5F 1F                   		.short	0x1f5f
+ 586 01de E0 20                   		.short	0x20e0
+ 587 01e0 6D 22                   		.short	0x226d
+ 588 01e2 05 24                   		.short	0x2405
+ 589 01e4 A9 25                   		.short	0x25a9
+ 590 01e6 58 27                   		.short	0x2758
+ 591 01e8 11 29                   		.short	0x2911
+ 592 01ea D4 2A                   		.short	0x2ad4
+ 593 01ec A0 2C                   		.short	0x2ca0
+ 594 01ee 76 2E                   		.short	0x2e76
+ 595 01f0 53 30                   		.short	0x3053
+ 596 01f2 38 32                   		.short	0x3238
+ 597 01f4 24 34                   		.short	0x3424
+ 598 01f6 15 36                   		.short	0x3615
+ 599 01f8 0B 38                   		.short	0x380b
+ 600 01fa 04 3A                   		.short	0x3a04
+ 601 01fc 01 3C                   		.short	0x3c01
+ 602 01fe 00 3E                   		.short	0x3e00
+ 603                             		.section	.rodata.sigmoidTable_q7,"a"
+ 604                             		.balign 4
+ 607                             	_sigmoidTable_q7:
+ 608 0000 40                      		.byte	0x40
+ 609 0001 42                      		.byte	0x42
+ 610 0002 44                      		.byte	0x44
+ 611 0003 46                      		.byte	0x46
+ 612 0004 48                      		.byte	0x48
+ 613 0005 4A                      		.byte	0x4a
+ 614 0006 4C                      		.byte	0x4c
+ 615 0007 4E                      		.byte	0x4e
+ 616 0008 50                      		.byte	0x50
+ 617 0009 52                      		.byte	0x52
+ 618 000a 53                      		.byte	0x53
+ 619 000b 55                      		.byte	0x55
+ 620 000c 57                      		.byte	0x57
+ 621 000d 59                      		.byte	0x59
+ 622 000e 5A                      		.byte	0x5a
+ 623 000f 5C                      		.byte	0x5c
+ 624 0010 5E                      		.byte	0x5e
+ 625 0011 5F                      		.byte	0x5f
+ 626 0012 61                      		.byte	0x61
+ 627 0013 62                      		.byte	0x62
+ 628 0014 63                      		.byte	0x63
+ 629 0015 65                      		.byte	0x65
+ 630 0016 66                      		.byte	0x66
+ 631 0017 67                      		.byte	0x67
+ 632 0018 69                      		.byte	0x69
+ 633 0019 6A                      		.byte	0x6a
+ 634 001a 6B                      		.byte	0x6b
+ 635 001b 6C                      		.byte	0x6c
+ 636 001c 6D                      		.byte	0x6d
+ 637 001d 6E                      		.byte	0x6e
+ 638 001e 6F                      		.byte	0x6f
+ 639 001f 70                      		.byte	0x70
+ 640 0020 71                      		.byte	0x71
+ 641 0021 72                      		.byte	0x72
+ 642 0022 72                      		.byte	0x72
+ 643 0023 73                      		.byte	0x73
+ 644 0024 74                      		.byte	0x74
+ 645 0025 74                      		.byte	0x74
+ 646 0026 75                      		.byte	0x75
+ 647 0027 76                      		.byte	0x76
+ 648 0028 76                      		.byte	0x76
+ 649 0029 77                      		.byte	0x77
+ 650 002a 77                      		.byte	0x77
+ 651 002b 78                      		.byte	0x78
+ 652 002c 78                      		.byte	0x78
+ 653 002d 79                      		.byte	0x79
+ 654 002e 79                      		.byte	0x79
+ 655 002f 7A                      		.byte	0x7a
+ 656 0030 7A                      		.byte	0x7a
+ 657 0031 7A                      		.byte	0x7a
+ 658 0032 7B                      		.byte	0x7b
+ 659 0033 7B                      		.byte	0x7b
+ 660 0034 7B                      		.byte	0x7b
+ 661 0035 7C                      		.byte	0x7c
+ 662 0036 7C                      		.byte	0x7c
+ 663 0037 7C                      		.byte	0x7c
+ 664 0038 7C                      		.byte	0x7c
+ 665 0039 7C                      		.byte	0x7c
+ 666 003a 7D                      		.byte	0x7d
+ 667 003b 7D                      		.byte	0x7d
+ 668 003c 7D                      		.byte	0x7d
+ 669 003d 7D                      		.byte	0x7d
+ 670 003e 7D                      		.byte	0x7d
+ 671 003f 7E                      		.byte	0x7e
+ 672 0040 7E                      		.byte	0x7e
+ 673 0041 7E                      		.byte	0x7e
+ 674 0042 7E                      		.byte	0x7e
+ 675 0043 7E                      		.byte	0x7e
+ 676 0044 7E                      		.byte	0x7e
+ 677 0045 7E                      		.byte	0x7e
+ 678 0046 7E                      		.byte	0x7e
+ 679 0047 7F                      		.byte	0x7f
+ 680 0048 7F                      		.byte	0x7f
+ 681 0049 7F                      		.byte	0x7f
+ 682 004a 7F                      		.byte	0x7f
+ 683 004b 7F                      		.byte	0x7f
+ 684 004c 7F                      		.byte	0x7f
+ 685 004d 7F                      		.byte	0x7f
+ 686 004e 7F                      		.byte	0x7f
+ 687 004f 7F                      		.byte	0x7f
+ 688 0050 7F                      		.byte	0x7f
+ 689 0051 7F                      		.byte	0x7f
+ 690 0052 7F                      		.byte	0x7f
+ 691 0053 7F                      		.byte	0x7f
+ 692 0054 7F                      		.byte	0x7f
+ 693 0055 7F                      		.byte	0x7f
+ 694 0056 7F                      		.byte	0x7f
+ 695 0057 7F                      		.byte	0x7f
+ 696 0058 7F                      		.byte	0x7f
+ 697 0059 7F                      		.byte	0x7f
+ 698 005a 7F                      		.byte	0x7f
+ 699 005b 7F                      		.byte	0x7f
+ 700 005c 7F                      		.byte	0x7f
+ 701 005d 7F                      		.byte	0x7f
+ 702 005e 7F                      		.byte	0x7f
+ 703 005f 7F                      		.byte	0x7f
+ 704 0060 7F                      		.byte	0x7f
+ 705 0061 7F                      		.byte	0x7f
+ 706 0062 7F                      		.byte	0x7f
+ 707 0063 7F                      		.byte	0x7f
+ 708 0064 7F                      		.byte	0x7f
+ 709 0065 7F                      		.byte	0x7f
+ 710 0066 7F                      		.byte	0x7f
+ 711 0067 7F                      		.byte	0x7f
+ 712 0068 7F                      		.byte	0x7f
+ 713 0069 7F                      		.byte	0x7f
+ 714 006a 7F                      		.byte	0x7f
+ 715 006b 7F                      		.byte	0x7f
+ 716 006c 7F                      		.byte	0x7f
+ 717 006d 7F                      		.byte	0x7f
+ 718 006e 7F                      		.byte	0x7f
+ 719 006f 7F                      		.byte	0x7f
+ 720 0070 7F                      		.byte	0x7f
+ 721 0071 7F                      		.byte	0x7f
+ 722 0072 7F                      		.byte	0x7f
+ 723 0073 7F                      		.byte	0x7f
+ 724 0074 7F                      		.byte	0x7f
+ 725 0075 7F                      		.byte	0x7f
+ 726 0076 7F                      		.byte	0x7f
+ 727 0077 7F                      		.byte	0x7f
+ 728 0078 7F                      		.byte	0x7f
+ 729 0079 7F                      		.byte	0x7f
+ 730 007a 7F                      		.byte	0x7f
+ 731 007b 7F                      		.byte	0x7f
+ 732 007c 7F                      		.byte	0x7f
+ 733 007d 7F                      		.byte	0x7f
+ 734 007e 7F                      		.byte	0x7f
+ 735 007f 7F                      		.byte	0x7f
+ 736 0080 00                      		.byte	0
+ 737 0081 00                      		.byte	0
+ 738 0082 00                      		.byte	0
+ 739 0083 00                      		.byte	0
+ 740 0084 00                      		.byte	0
+ 741 0085 00                      		.byte	0
+ 742 0086 00                      		.byte	0
+ 743 0087 00                      		.byte	0
+ 744 0088 00                      		.byte	0
+ 745 0089 00                      		.byte	0
+ 746 008a 00                      		.byte	0
+ 747 008b 00                      		.byte	0
+ 748 008c 00                      		.byte	0
+ 749 008d 00                      		.byte	0
+ 750 008e 00                      		.byte	0
+ 751 008f 00                      		.byte	0
+ 752 0090 00                      		.byte	0
+ 753 0091 00                      		.byte	0
+ 754 0092 00                      		.byte	0
+ 755 0093 00                      		.byte	0
+ 756 0094 00                      		.byte	0
+ 757 0095 00                      		.byte	0
+ 758 0096 00                      		.byte	0
+ 759 0097 00                      		.byte	0
+ 760 0098 00                      		.byte	0
+ 761 0099 00                      		.byte	0
+ 762 009a 00                      		.byte	0
+ 763 009b 00                      		.byte	0
+ 764 009c 00                      		.byte	0
+ 765 009d 00                      		.byte	0
+ 766 009e 00                      		.byte	0
+ 767 009f 00                      		.byte	0
+ 768 00a0 00                      		.byte	0
+ 769 00a1 00                      		.byte	0
+ 770 00a2 00                      		.byte	0
+ 771 00a3 00                      		.byte	0
+ 772 00a4 00                      		.byte	0
+ 773 00a5 00                      		.byte	0
+ 774 00a6 00                      		.byte	0
+ 775 00a7 00                      		.byte	0
+ 776 00a8 01                      		.byte	1
+ 777 00a9 01                      		.byte	1
+ 778 00aa 01                      		.byte	1
+ 779 00ab 01                      		.byte	1
+ 780 00ac 01                      		.byte	1
+ 781 00ad 01                      		.byte	1
+ 782 00ae 01                      		.byte	1
+ 783 00af 01                      		.byte	1
+ 784 00b0 01                      		.byte	1
+ 785 00b1 01                      		.byte	1
+ 786 00b2 01                      		.byte	1
+ 787 00b3 01                      		.byte	1
+ 788 00b4 01                      		.byte	1
+ 789 00b5 01                      		.byte	1
+ 790 00b6 01                      		.byte	1
+ 791 00b7 01                      		.byte	1
+ 792 00b8 01                      		.byte	1
+ 793 00b9 01                      		.byte	1
+ 794 00ba 02                      		.byte	2
+ 795 00bb 02                      		.byte	2
+ 796 00bc 02                      		.byte	2
+ 797 00bd 02                      		.byte	2
+ 798 00be 02                      		.byte	2
+ 799 00bf 02                      		.byte	2
+ 800 00c0 02                      		.byte	2
+ 801 00c1 02                      		.byte	2
+ 802 00c2 03                      		.byte	3
+ 803 00c3 03                      		.byte	3
+ 804 00c4 03                      		.byte	3
+ 805 00c5 03                      		.byte	3
+ 806 00c6 03                      		.byte	3
+ 807 00c7 04                      		.byte	4
+ 808 00c8 04                      		.byte	4
+ 809 00c9 04                      		.byte	4
+ 810 00ca 04                      		.byte	4
+ 811 00cb 04                      		.byte	4
+ 812 00cc 05                      		.byte	5
+ 813 00cd 05                      		.byte	5
+ 814 00ce 05                      		.byte	5
+ 815 00cf 06                      		.byte	6
+ 816 00d0 06                      		.byte	6
+ 817 00d1 06                      		.byte	6
+ 818 00d2 07                      		.byte	7
+ 819 00d3 07                      		.byte	7
+ 820 00d4 08                      		.byte	8
+ 821 00d5 08                      		.byte	8
+ 822 00d6 09                      		.byte	9
+ 823 00d7 09                      		.byte	9
+ 824 00d8 0A                      		.byte	10
+ 825 00d9 0A                      		.byte	10
+ 826 00da 0B                      		.byte	11
+ 827 00db 0C                      		.byte	12
+ 828 00dc 0C                      		.byte	12
+ 829 00dd 0D                      		.byte	13
+ 830 00de 0E                      		.byte	14
+ 831 00df 0E                      		.byte	14
+ 832 00e0 0F                      		.byte	15
+ 833 00e1 10                      		.byte	16
+ 834 00e2 11                      		.byte	17
+ 835 00e3 12                      		.byte	18
+ 836 00e4 13                      		.byte	19
+ 837 00e5 14                      		.byte	20
+ 838 00e6 15                      		.byte	21
+ 839 00e7 16                      		.byte	22
+ 840 00e8 17                      		.byte	23
+ 841 00e9 19                      		.byte	25
+ 842 00ea 1A                      		.byte	26
+ 843 00eb 1B                      		.byte	27
+ 844 00ec 1D                      		.byte	29
+ 845 00ed 1E                      		.byte	30
+ 846 00ee 1F                      		.byte	31
+ 847 00ef 21                      		.byte	33
+ 848 00f0 22                      		.byte	34
+ 849 00f1 24                      		.byte	36
+ 850 00f2 26                      		.byte	38
+ 851 00f3 27                      		.byte	39
+ 852 00f4 29                      		.byte	41
+ 853 00f5 2B                      		.byte	43
+ 854 00f6 2D                      		.byte	45
+ 855 00f7 2E                      		.byte	46
+ 856 00f8 30                      		.byte	48
+ 857 00f9 32                      		.byte	50
+ 858 00fa 34                      		.byte	52
+ 859 00fb 36                      		.byte	54
+ 860 00fc 38                      		.byte	56
+ 861 00fd 3A                      		.byte	58
+ 862 00fe 3C                      		.byte	60
+ 863 00ff 3E                      		.byte	62
+ 864                             		.section	.rodata.tanhHTable_q15,"a"
+ 865                             		.balign 4
+ 868                             	_tanhHTable_q15:
+ 869 0000 65 7B                   		.short	0x7b65
+ 870 0002 EE 7B                   		.short	0x7bee
+ 871 0004 66 7C                   		.short	0x7c66
+ 872 0006 D1 7C                   		.short	0x7cd1
+ 873 0008 30 7D                   		.short	0x7d30
+ 874 000a 84 7D                   		.short	0x7d84
+ 875 000c CE 7D                   		.short	0x7dce
+ 876 000e 0F 7E                   		.short	0x7e0f
+ 877 0010 49 7E                   		.short	0x7e49
+ 878 0012 7D 7E                   		.short	0x7e7d
+ 879 0014 AA 7E                   		.short	0x7eaa
+ 880 0016 D2 7E                   		.short	0x7ed2
+ 881 0018 F5 7E                   		.short	0x7ef5
+ 882 001a 14 7F                   		.short	0x7f14
+ 883 001c 30 7F                   		.short	0x7f30
+ 884 001e 48 7F                   		.short	0x7f48
+ 885 0020 5E 7F                   		.short	0x7f5e
+ 886 0022 71 7F                   		.short	0x7f71
+ 887 0024 82 7F                   		.short	0x7f82
+ 888 0026 91 7F                   		.short	0x7f91
+ 889 0028 9E 7F                   		.short	0x7f9e
+ 890 002a A9 7F                   		.short	0x7fa9
+ 891 002c B3 7F                   		.short	0x7fb3
+ 892 002e BC 7F                   		.short	0x7fbc
+ 893 0030 C4 7F                   		.short	0x7fc4
+ 894 0032 CB 7F                   		.short	0x7fcb
+ 895 0034 D1 7F                   		.short	0x7fd1
+ 896 0036 D7 7F                   		.short	0x7fd7
+ 897 0038 DC 7F                   		.short	0x7fdc
+ 898 003a E0 7F                   		.short	0x7fe0
+ 899 003c E4 7F                   		.short	0x7fe4
+ 900 003e E7 7F                   		.short	0x7fe7
+ 901 0040 EA 7F                   		.short	0x7fea
+ 902 0042 ED 7F                   		.short	0x7fed
+ 903 0044 EF 7F                   		.short	0x7fef
+ 904 0046 F1 7F                   		.short	0x7ff1
+ 905 0048 F3 7F                   		.short	0x7ff3
+ 906 004a F4 7F                   		.short	0x7ff4
+ 907 004c F6 7F                   		.short	0x7ff6
+ 908 004e F7 7F                   		.short	0x7ff7
+ 909 0050 F8 7F                   		.short	0x7ff8
+ 910 0052 F9 7F                   		.short	0x7ff9
+ 911 0054 FA 7F                   		.short	0x7ffa
+ 912 0056 FA 7F                   		.short	0x7ffa
+ 913 0058 FB 7F                   		.short	0x7ffb
+ 914 005a FC 7F                   		.short	0x7ffc
+ 915 005c FC 7F                   		.short	0x7ffc
+ 916 005e FD 7F                   		.short	0x7ffd
+ 917 0060 FD 7F                   		.short	0x7ffd
+ 918 0062 FD 7F                   		.short	0x7ffd
+ 919 0064 FE 7F                   		.short	0x7ffe
+ 920 0066 FE 7F                   		.short	0x7ffe
+ 921 0068 FE 7F                   		.short	0x7ffe
+ 922 006a FE 7F                   		.short	0x7ffe
+ 923 006c FF 7F                   		.short	0x7fff
+ 924 006e FF 7F                   		.short	0x7fff
+ 925 0070 FF 7F                   		.short	0x7fff
+ 926 0072 FF 7F                   		.short	0x7fff
+ 927 0074 FF 7F                   		.short	0x7fff
+ 928 0076 FF 7F                   		.short	0x7fff
+ 929 0078 FF 7F                   		.short	0x7fff
+ 930 007a FF 7F                   		.short	0x7fff
+ 931 007c FF 7F                   		.short	0x7fff
+ 932 007e FF 7F                   		.short	0x7fff
+ 933 0080 FF 7F                   		.short	0x7fff
+ 934 0082 FF 7F                   		.short	0x7fff
+ 935 0084 FF 7F                   		.short	0x7fff
+ 936 0086 FF 7F                   		.short	0x7fff
+ 937 0088 FF 7F                   		.short	0x7fff
+ 938 008a FF 7F                   		.short	0x7fff
+ 939 008c FF 7F                   		.short	0x7fff
+ 940 008e FF 7F                   		.short	0x7fff
+ 941 0090 FF 7F                   		.short	0x7fff
+ 942 0092 FF 7F                   		.short	0x7fff
+ 943 0094 FF 7F                   		.short	0x7fff
+ 944 0096 FF 7F                   		.short	0x7fff
+ 945 0098 FF 7F                   		.short	0x7fff
+ 946 009a FF 7F                   		.short	0x7fff
+ 947 009c FF 7F                   		.short	0x7fff
+ 948 009e FF 7F                   		.short	0x7fff
+ 949 00a0 FF 7F                   		.short	0x7fff
+ 950 00a2 FF 7F                   		.short	0x7fff
+ 951 00a4 FF 7F                   		.short	0x7fff
+ 952 00a6 FF 7F                   		.short	0x7fff
+ 953 00a8 FF 7F                   		.short	0x7fff
+ 954 00aa FF 7F                   		.short	0x7fff
+ 955 00ac FF 7F                   		.short	0x7fff
+ 956 00ae FF 7F                   		.short	0x7fff
+ 957 00b0 FF 7F                   		.short	0x7fff
+ 958 00b2 FF 7F                   		.short	0x7fff
+ 959 00b4 FF 7F                   		.short	0x7fff
+ 960 00b6 FF 7F                   		.short	0x7fff
+ 961 00b8 FF 7F                   		.short	0x7fff
+ 962 00ba FF 7F                   		.short	0x7fff
+ 963 00bc FF 7F                   		.short	0x7fff
+ 964 00be FF 7F                   		.short	0x7fff
+ 965 00c0 00 80                   		.short	-32768
+ 966 00c2 00 80                   		.short	-32768
+ 967 00c4 00 80                   		.short	-32768
+ 968 00c6 00 80                   		.short	-32768
+ 969 00c8 00 80                   		.short	-32768
+ 970 00ca 00 80                   		.short	-32768
+ 971 00cc 00 80                   		.short	-32768
+ 972 00ce 00 80                   		.short	-32768
+ 973 00d0 00 80                   		.short	-32768
+ 974 00d2 00 80                   		.short	-32768
+ 975 00d4 00 80                   		.short	-32768
+ 976 00d6 00 80                   		.short	-32768
+ 977 00d8 00 80                   		.short	-32768
+ 978 00da 00 80                   		.short	-32768
+ 979 00dc 00 80                   		.short	-32768
+ 980 00de 00 80                   		.short	-32768
+ 981 00e0 00 80                   		.short	-32768
+ 982 00e2 00 80                   		.short	-32768
+ 983 00e4 00 80                   		.short	-32768
+ 984 00e6 00 80                   		.short	-32768
+ 985 00e8 00 80                   		.short	-32768
+ 986 00ea 00 80                   		.short	-32768
+ 987 00ec 00 80                   		.short	-32768
+ 988 00ee 00 80                   		.short	-32768
+ 989 00f0 00 80                   		.short	-32768
+ 990 00f2 00 80                   		.short	-32768
+ 991 00f4 00 80                   		.short	-32768
+ 992 00f6 00 80                   		.short	-32768
+ 993 00f8 00 80                   		.short	-32768
+ 994 00fa 00 80                   		.short	-32768
+ 995 00fc 00 80                   		.short	-32768
+ 996 00fe 00 80                   		.short	-32768
+ 997 0100 00 80                   		.short	-32768
+ 998 0102 00 80                   		.short	-32768
+ 999 0104 01 80                   		.short	-32767
+ 1000 0106 01 80                   		.short	-32767
+ 1001 0108 01 80                   		.short	-32767
+ 1002 010a 01 80                   		.short	-32767
+ 1003 010c 01 80                   		.short	-32767
+ 1004 010e 01 80                   		.short	-32767
+ 1005 0110 01 80                   		.short	-32767
+ 1006 0112 01 80                   		.short	-32767
+ 1007 0114 01 80                   		.short	-32767
+ 1008 0116 02 80                   		.short	-32766
+ 1009 0118 02 80                   		.short	-32766
+ 1010 011a 02 80                   		.short	-32766
+ 1011 011c 02 80                   		.short	-32766
+ 1012 011e 03 80                   		.short	-32765
+ 1013 0120 03 80                   		.short	-32765
+ 1014 0122 03 80                   		.short	-32765
+ 1015 0124 04 80                   		.short	-32764
+ 1016 0126 04 80                   		.short	-32764
+ 1017 0128 05 80                   		.short	-32763
+ 1018 012a 06 80                   		.short	-32762
+ 1019 012c 06 80                   		.short	-32762
+ 1020 012e 07 80                   		.short	-32761
+ 1021 0130 08 80                   		.short	-32760
+ 1022 0132 09 80                   		.short	-32759
+ 1023 0134 0A 80                   		.short	-32758
+ 1024 0136 0C 80                   		.short	-32756
+ 1025 0138 0D 80                   		.short	-32755
+ 1026 013a 0F 80                   		.short	-32753
+ 1027 013c 11 80                   		.short	-32751
+ 1028 013e 13 80                   		.short	-32749
+ 1029 0140 16 80                   		.short	-32746
+ 1030 0142 19 80                   		.short	-32743
+ 1031 0144 1C 80                   		.short	-32740
+ 1032 0146 20 80                   		.short	-32736
+ 1033 0148 24 80                   		.short	-32732
+ 1034 014a 29 80                   		.short	-32727
+ 1035 014c 2F 80                   		.short	-32721
+ 1036 014e 35 80                   		.short	-32715
+ 1037 0150 3C 80                   		.short	-32708
+ 1038 0152 44 80                   		.short	-32700
+ 1039 0154 4D 80                   		.short	-32691
+ 1040 0156 57 80                   		.short	-32681
+ 1041 0158 62 80                   		.short	-32670
+ 1042 015a 6F 80                   		.short	-32657
+ 1043 015c 7E 80                   		.short	-32642
+ 1044 015e 8F 80                   		.short	-32625
+ 1045 0160 A2 80                   		.short	-32606
+ 1046 0162 B8 80                   		.short	-32584
+ 1047 0164 D0 80                   		.short	-32560
+ 1048 0166 EC 80                   		.short	-32532
+ 1049 0168 0B 81                   		.short	-32501
+ 1050 016a 2E 81                   		.short	-32466
+ 1051 016c 56 81                   		.short	-32426
+ 1052 016e 83 81                   		.short	-32381
+ 1053 0170 B7 81                   		.short	-32329
+ 1054 0172 F1 81                   		.short	-32271
+ 1055 0174 32 82                   		.short	-32206
+ 1056 0176 7C 82                   		.short	-32132
+ 1057 0178 D0 82                   		.short	-32048
+ 1058 017a 2F 83                   		.short	-31953
+ 1059 017c 9A 83                   		.short	-31846
+ 1060 017e 12 84                   		.short	-31726
+ 1061                             		.section	.rodata.tanhLTable_q15,"a"
+ 1062                             		.balign 4
+ 1065                             	_tanhLTable_q15:
+ 1066 0000 00 00                   		.short	0
+ 1067 0002 00 04                   		.short	0x400
+ 1068 0004 FD 07                   		.short	0x7fd
+ 1069 0006 F7 0B                   		.short	0xbf7
+ 1070 0008 EB 0F                   		.short	0xfeb
+ 1071 000a D7 13                   		.short	0x13d7
+ 1072 000c B9 17                   		.short	0x17b9
+ 1073 000e 90 1B                   		.short	0x1b90
+ 1074 0010 59 1F                   		.short	0x1f59
+ 1075 0012 14 23                   		.short	0x2314
+ 1076 0014 BF 26                   		.short	0x26bf
+ 1077 0016 58 2A                   		.short	0x2a58
+ 1078 0018 DF 2D                   		.short	0x2ddf
+ 1079 001a 51 31                   		.short	0x3151
+ 1080 001c AE 34                   		.short	0x34ae
+ 1081 001e F6 37                   		.short	0x37f6
+ 1082 0020 27 3B                   		.short	0x3b27
+ 1083 0022 40 3E                   		.short	0x3e40
+ 1084 0024 42 41                   		.short	0x4142
+ 1085 0026 2C 44                   		.short	0x442c
+ 1086 0028 FD 46                   		.short	0x46fd
+ 1087 002a B6 49                   		.short	0x49b6
+ 1088 002c 56 4C                   		.short	0x4c56
+ 1089 002e DD 4E                   		.short	0x4edd
+ 1090 0030 4D 51                   		.short	0x514d
+ 1091 0032 A3 53                   		.short	0x53a3
+ 1092 0034 E2 55                   		.short	0x55e2
+ 1093 0036 0A 58                   		.short	0x580a
+ 1094 0038 1A 5A                   		.short	0x5a1a
+ 1095 003a 13 5C                   		.short	0x5c13
+ 1096 003c F6 5D                   		.short	0x5df6
+ 1097 003e C4 5F                   		.short	0x5fc4
+ 1098 0040 7C 61                   		.short	0x617c
+ 1099 0042 20 63                   		.short	0x6320
+ 1100 0044 B0 64                   		.short	0x64b0
+ 1101 0046 2D 66                   		.short	0x662d
+ 1102 0048 97 67                   		.short	0x6797
+ 1103 004a F0 68                   		.short	0x68f0
+ 1104 004c 37 6A                   		.short	0x6a37
+ 1105 004e 6E 6B                   		.short	0x6b6e
+ 1106 0050 95 6C                   		.short	0x6c95
+ 1107 0052 AC 6D                   		.short	0x6dac
+ 1108 0054 B5 6E                   		.short	0x6eb5
+ 1109 0056 B0 6F                   		.short	0x6fb0
+ 1110 0058 9E 70                   		.short	0x709e
+ 1111 005a 7F 71                   		.short	0x717f
+ 1112 005c 54 72                   		.short	0x7254
+ 1113 005e 1E 73                   		.short	0x731e
+ 1114 0060 DC 73                   		.short	0x73dc
+ 1115 0062 90 74                   		.short	0x7490
+ 1116 0064 3A 75                   		.short	0x753a
+ 1117 0066 DA 75                   		.short	0x75da
+ 1118 0068 72 76                   		.short	0x7672
+ 1119 006a 01 77                   		.short	0x7701
+ 1120 006c 88 77                   		.short	0x7788
+ 1121 006e 07 78                   		.short	0x7807
+ 1122 0070 7F 78                   		.short	0x787f
+ 1123 0072 F0 78                   		.short	0x78f0
+ 1124 0074 5B 79                   		.short	0x795b
+ 1125 0076 BF 79                   		.short	0x79bf
+ 1126 0078 1E 7A                   		.short	0x7a1e
+ 1127 007a 77 7A                   		.short	0x7a77
+ 1128 007c CB 7A                   		.short	0x7acb
+ 1129 007e 1B 7B                   		.short	0x7b1b
+ 1130 0080 9B 84                   		.short	-31589
+ 1131 0082 E5 84                   		.short	-31515
+ 1132 0084 35 85                   		.short	-31435
+ 1133 0086 89 85                   		.short	-31351
+ 1134 0088 E2 85                   		.short	-31262
+ 1135 008a 41 86                   		.short	-31167
+ 1136 008c A5 86                   		.short	-31067
+ 1137 008e 10 87                   		.short	-30960
+ 1138 0090 81 87                   		.short	-30847
+ 1139 0092 F9 87                   		.short	-30727
+ 1140 0094 78 88                   		.short	-30600
+ 1141 0096 FF 88                   		.short	-30465
+ 1142 0098 8E 89                   		.short	-30322
+ 1143 009a 26 8A                   		.short	-30170
+ 1144 009c C6 8A                   		.short	-30010
+ 1145 009e 70 8B                   		.short	-29840
+ 1146 00a0 24 8C                   		.short	-29660
+ 1147 00a2 E2 8C                   		.short	-29470
+ 1148 00a4 AC 8D                   		.short	-29268
+ 1149 00a6 81 8E                   		.short	-29055
+ 1150 00a8 62 8F                   		.short	-28830
+ 1151 00aa 50 90                   		.short	-28592
+ 1152 00ac 4B 91                   		.short	-28341
+ 1153 00ae 54 92                   		.short	-28076
+ 1154 00b0 6B 93                   		.short	-27797
+ 1155 00b2 92 94                   		.short	-27502
+ 1156 00b4 C9 95                   		.short	-27191
+ 1157 00b6 10 97                   		.short	-26864
+ 1158 00b8 69 98                   		.short	-26519
+ 1159 00ba D3 99                   		.short	-26157
+ 1160 00bc 50 9B                   		.short	-25776
+ 1161 00be E0 9C                   		.short	-25376
+ 1162 00c0 84 9E                   		.short	-24956
+ 1163 00c2 3C A0                   		.short	-24516
+ 1164 00c4 0A A2                   		.short	-24054
+ 1165 00c6 ED A3                   		.short	-23571
+ 1166 00c8 E6 A5                   		.short	-23066
+ 1167 00ca F6 A7                   		.short	-22538
+ 1168 00cc 1E AA                   		.short	-21986
+ 1169 00ce 5D AC                   		.short	-21411
+ 1170 00d0 B3 AE                   		.short	-20813
+ 1171 00d2 23 B1                   		.short	-20189
+ 1172 00d4 AA B3                   		.short	-19542
+ 1173 00d6 4A B6                   		.short	-18870
+ 1174 00d8 03 B9                   		.short	-18173
+ 1175 00da D4 BB                   		.short	-17452
+ 1176 00dc BE BE                   		.short	-16706
+ 1177 00de C0 C1                   		.short	-15936
+ 1178 00e0 D9 C4                   		.short	-15143
+ 1179 00e2 0A C8                   		.short	-14326
+ 1180 00e4 52 CB                   		.short	-13486
+ 1181 00e6 AF CE                   		.short	-12625
+ 1182 00e8 21 D2                   		.short	-11743
+ 1183 00ea A8 D5                   		.short	-10840
+ 1184 00ec 41 D9                   		.short	-9919
+ 1185 00ee EC DC                   		.short	-8980
+ 1186 00f0 A7 E0                   		.short	-8025
+ 1187 00f2 70 E4                   		.short	-7056
+ 1188 00f4 47 E8                   		.short	-6073
+ 1189 00f6 29 EC                   		.short	-5079
+ 1190 00f8 15 F0                   		.short	-4075
+ 1191 00fa 09 F4                   		.short	-3063
+ 1192 00fc 03 F8                   		.short	-2045
+ 1193 00fe 00 FC                   		.short	-1024
+ 1194                             		.section	.rodata.tanhTable_q15,"a"
+ 1195                             		.balign 4
+ 1198                             	_tanhTable_q15:
+ 1199 0000 00 00                   		.short	0
+ 1200 0002 FD 07                   		.short	0x7fd
+ 1201 0004 EB 0F                   		.short	0xfeb
+ 1202 0006 B9 17                   		.short	0x17b9
+ 1203 0008 59 1F                   		.short	0x1f59
+ 1204 000a BF 26                   		.short	0x26bf
+ 1205 000c DF 2D                   		.short	0x2ddf
+ 1206 000e AE 34                   		.short	0x34ae
+ 1207 0010 27 3B                   		.short	0x3b27
+ 1208 0012 42 41                   		.short	0x4142
+ 1209 0014 FD 46                   		.short	0x46fd
+ 1210 0016 56 4C                   		.short	0x4c56
+ 1211 0018 4D 51                   		.short	0x514d
+ 1212 001a E2 55                   		.short	0x55e2
+ 1213 001c 1A 5A                   		.short	0x5a1a
+ 1214 001e F6 5D                   		.short	0x5df6
+ 1215 0020 7C 61                   		.short	0x617c
+ 1216 0022 B0 64                   		.short	0x64b0
+ 1217 0024 97 67                   		.short	0x6797
+ 1218 0026 37 6A                   		.short	0x6a37
+ 1219 0028 95 6C                   		.short	0x6c95
+ 1220 002a B5 6E                   		.short	0x6eb5
+ 1221 002c 9E 70                   		.short	0x709e
+ 1222 002e 54 72                   		.short	0x7254
+ 1223 0030 DC 73                   		.short	0x73dc
+ 1224 0032 3A 75                   		.short	0x753a
+ 1225 0034 72 76                   		.short	0x7672
+ 1226 0036 88 77                   		.short	0x7788
+ 1227 0038 7F 78                   		.short	0x787f
+ 1228 003a 5B 79                   		.short	0x795b
+ 1229 003c 1E 7A                   		.short	0x7a1e
+ 1230 003e CB 7A                   		.short	0x7acb
+ 1231 0040 65 7B                   		.short	0x7b65
+ 1232 0042 EE 7B                   		.short	0x7bee
+ 1233 0044 66 7C                   		.short	0x7c66
+ 1234 0046 D1 7C                   		.short	0x7cd1
+ 1235 0048 30 7D                   		.short	0x7d30
+ 1236 004a 84 7D                   		.short	0x7d84
+ 1237 004c CE 7D                   		.short	0x7dce
+ 1238 004e 0F 7E                   		.short	0x7e0f
+ 1239 0050 49 7E                   		.short	0x7e49
+ 1240 0052 7D 7E                   		.short	0x7e7d
+ 1241 0054 AA 7E                   		.short	0x7eaa
+ 1242 0056 D2 7E                   		.short	0x7ed2
+ 1243 0058 F5 7E                   		.short	0x7ef5
+ 1244 005a 14 7F                   		.short	0x7f14
+ 1245 005c 30 7F                   		.short	0x7f30
+ 1246 005e 48 7F                   		.short	0x7f48
+ 1247 0060 5E 7F                   		.short	0x7f5e
+ 1248 0062 71 7F                   		.short	0x7f71
+ 1249 0064 82 7F                   		.short	0x7f82
+ 1250 0066 91 7F                   		.short	0x7f91
+ 1251 0068 9E 7F                   		.short	0x7f9e
+ 1252 006a A9 7F                   		.short	0x7fa9
+ 1253 006c B3 7F                   		.short	0x7fb3
+ 1254 006e BC 7F                   		.short	0x7fbc
+ 1255 0070 C4 7F                   		.short	0x7fc4
+ 1256 0072 CB 7F                   		.short	0x7fcb
+ 1257 0074 D1 7F                   		.short	0x7fd1
+ 1258 0076 D7 7F                   		.short	0x7fd7
+ 1259 0078 DC 7F                   		.short	0x7fdc
+ 1260 007a E0 7F                   		.short	0x7fe0
+ 1261 007c E4 7F                   		.short	0x7fe4
+ 1262 007e E7 7F                   		.short	0x7fe7
+ 1263 0080 EA 7F                   		.short	0x7fea
+ 1264 0082 ED 7F                   		.short	0x7fed
+ 1265 0084 EF 7F                   		.short	0x7fef
+ 1266 0086 F1 7F                   		.short	0x7ff1
+ 1267 0088 F3 7F                   		.short	0x7ff3
+ 1268 008a F4 7F                   		.short	0x7ff4
+ 1269 008c F6 7F                   		.short	0x7ff6
+ 1270 008e F7 7F                   		.short	0x7ff7
+ 1271 0090 F8 7F                   		.short	0x7ff8
+ 1272 0092 F9 7F                   		.short	0x7ff9
+ 1273 0094 FA 7F                   		.short	0x7ffa
+ 1274 0096 FA 7F                   		.short	0x7ffa
+ 1275 0098 FB 7F                   		.short	0x7ffb
+ 1276 009a FC 7F                   		.short	0x7ffc
+ 1277 009c FC 7F                   		.short	0x7ffc
+ 1278 009e FD 7F                   		.short	0x7ffd
+ 1279 00a0 FD 7F                   		.short	0x7ffd
+ 1280 00a2 FD 7F                   		.short	0x7ffd
+ 1281 00a4 FE 7F                   		.short	0x7ffe
+ 1282 00a6 FE 7F                   		.short	0x7ffe
+ 1283 00a8 FE 7F                   		.short	0x7ffe
+ 1284 00aa FE 7F                   		.short	0x7ffe
+ 1285 00ac FF 7F                   		.short	0x7fff
+ 1286 00ae FF 7F                   		.short	0x7fff
+ 1287 00b0 FF 7F                   		.short	0x7fff
+ 1288 00b2 FF 7F                   		.short	0x7fff
+ 1289 00b4 FF 7F                   		.short	0x7fff
+ 1290 00b6 FF 7F                   		.short	0x7fff
+ 1291 00b8 FF 7F                   		.short	0x7fff
+ 1292 00ba FF 7F                   		.short	0x7fff
+ 1293 00bc FF 7F                   		.short	0x7fff
+ 1294 00be FF 7F                   		.short	0x7fff
+ 1295 00c0 FF 7F                   		.short	0x7fff
+ 1296 00c2 FF 7F                   		.short	0x7fff
+ 1297 00c4 FF 7F                   		.short	0x7fff
+ 1298 00c6 FF 7F                   		.short	0x7fff
+ 1299 00c8 FF 7F                   		.short	0x7fff
+ 1300 00ca FF 7F                   		.short	0x7fff
+ 1301 00cc FF 7F                   		.short	0x7fff
+ 1302 00ce FF 7F                   		.short	0x7fff
+ 1303 00d0 FF 7F                   		.short	0x7fff
+ 1304 00d2 FF 7F                   		.short	0x7fff
+ 1305 00d4 FF 7F                   		.short	0x7fff
+ 1306 00d6 FF 7F                   		.short	0x7fff
+ 1307 00d8 FF 7F                   		.short	0x7fff
+ 1308 00da FF 7F                   		.short	0x7fff
+ 1309 00dc FF 7F                   		.short	0x7fff
+ 1310 00de FF 7F                   		.short	0x7fff
+ 1311 00e0 FF 7F                   		.short	0x7fff
+ 1312 00e2 FF 7F                   		.short	0x7fff
+ 1313 00e4 FF 7F                   		.short	0x7fff
+ 1314 00e6 FF 7F                   		.short	0x7fff
+ 1315 00e8 FF 7F                   		.short	0x7fff
+ 1316 00ea FF 7F                   		.short	0x7fff
+ 1317 00ec FF 7F                   		.short	0x7fff
+ 1318 00ee FF 7F                   		.short	0x7fff
+ 1319 00f0 FF 7F                   		.short	0x7fff
+ 1320 00f2 FF 7F                   		.short	0x7fff
+ 1321 00f4 FF 7F                   		.short	0x7fff
+ 1322 00f6 FF 7F                   		.short	0x7fff
+ 1323 00f8 FF 7F                   		.short	0x7fff
+ 1324 00fa FF 7F                   		.short	0x7fff
+ 1325 00fc FF 7F                   		.short	0x7fff
+ 1326 00fe FF 7F                   		.short	0x7fff
+ 1327 0100 00 80                   		.short	-32768
+ 1328 0102 00 80                   		.short	-32768
+ 1329 0104 00 80                   		.short	-32768
+ 1330 0106 00 80                   		.short	-32768
+ 1331 0108 00 80                   		.short	-32768
+ 1332 010a 00 80                   		.short	-32768
+ 1333 010c 00 80                   		.short	-32768
+ 1334 010e 00 80                   		.short	-32768
+ 1335 0110 00 80                   		.short	-32768
+ 1336 0112 00 80                   		.short	-32768
+ 1337 0114 00 80                   		.short	-32768
+ 1338 0116 00 80                   		.short	-32768
+ 1339 0118 00 80                   		.short	-32768
+ 1340 011a 00 80                   		.short	-32768
+ 1341 011c 00 80                   		.short	-32768
+ 1342 011e 00 80                   		.short	-32768
+ 1343 0120 00 80                   		.short	-32768
+ 1344 0122 00 80                   		.short	-32768
+ 1345 0124 00 80                   		.short	-32768
+ 1346 0126 00 80                   		.short	-32768
+ 1347 0128 00 80                   		.short	-32768
+ 1348 012a 00 80                   		.short	-32768
+ 1349 012c 00 80                   		.short	-32768
+ 1350 012e 00 80                   		.short	-32768
+ 1351 0130 00 80                   		.short	-32768
+ 1352 0132 00 80                   		.short	-32768
+ 1353 0134 00 80                   		.short	-32768
+ 1354 0136 00 80                   		.short	-32768
+ 1355 0138 00 80                   		.short	-32768
+ 1356 013a 00 80                   		.short	-32768
+ 1357 013c 00 80                   		.short	-32768
+ 1358 013e 00 80                   		.short	-32768
+ 1359 0140 00 80                   		.short	-32768
+ 1360 0142 00 80                   		.short	-32768
+ 1361 0144 01 80                   		.short	-32767
+ 1362 0146 01 80                   		.short	-32767
+ 1363 0148 01 80                   		.short	-32767
+ 1364 014a 01 80                   		.short	-32767
+ 1365 014c 01 80                   		.short	-32767
+ 1366 014e 01 80                   		.short	-32767
+ 1367 0150 01 80                   		.short	-32767
+ 1368 0152 01 80                   		.short	-32767
+ 1369 0154 01 80                   		.short	-32767
+ 1370 0156 02 80                   		.short	-32766
+ 1371 0158 02 80                   		.short	-32766
+ 1372 015a 02 80                   		.short	-32766
+ 1373 015c 02 80                   		.short	-32766
+ 1374 015e 03 80                   		.short	-32765
+ 1375 0160 03 80                   		.short	-32765
+ 1376 0162 03 80                   		.short	-32765
+ 1377 0164 04 80                   		.short	-32764
+ 1378 0166 04 80                   		.short	-32764
+ 1379 0168 05 80                   		.short	-32763
+ 1380 016a 06 80                   		.short	-32762
+ 1381 016c 06 80                   		.short	-32762
+ 1382 016e 07 80                   		.short	-32761
+ 1383 0170 08 80                   		.short	-32760
+ 1384 0172 09 80                   		.short	-32759
+ 1385 0174 0A 80                   		.short	-32758
+ 1386 0176 0C 80                   		.short	-32756
+ 1387 0178 0D 80                   		.short	-32755
+ 1388 017a 0F 80                   		.short	-32753
+ 1389 017c 11 80                   		.short	-32751
+ 1390 017e 13 80                   		.short	-32749
+ 1391 0180 16 80                   		.short	-32746
+ 1392 0182 19 80                   		.short	-32743
+ 1393 0184 1C 80                   		.short	-32740
+ 1394 0186 20 80                   		.short	-32736
+ 1395 0188 24 80                   		.short	-32732
+ 1396 018a 29 80                   		.short	-32727
+ 1397 018c 2F 80                   		.short	-32721
+ 1398 018e 35 80                   		.short	-32715
+ 1399 0190 3C 80                   		.short	-32708
+ 1400 0192 44 80                   		.short	-32700
+ 1401 0194 4D 80                   		.short	-32691
+ 1402 0196 57 80                   		.short	-32681
+ 1403 0198 62 80                   		.short	-32670
+ 1404 019a 6F 80                   		.short	-32657
+ 1405 019c 7E 80                   		.short	-32642
+ 1406 019e 8F 80                   		.short	-32625
+ 1407 01a0 A2 80                   		.short	-32606
+ 1408 01a2 B8 80                   		.short	-32584
+ 1409 01a4 D0 80                   		.short	-32560
+ 1410 01a6 EC 80                   		.short	-32532
+ 1411 01a8 0B 81                   		.short	-32501
+ 1412 01aa 2E 81                   		.short	-32466
+ 1413 01ac 56 81                   		.short	-32426
+ 1414 01ae 83 81                   		.short	-32381
+ 1415 01b0 B7 81                   		.short	-32329
+ 1416 01b2 F1 81                   		.short	-32271
+ 1417 01b4 32 82                   		.short	-32206
+ 1418 01b6 7C 82                   		.short	-32132
+ 1419 01b8 D0 82                   		.short	-32048
+ 1420 01ba 2F 83                   		.short	-31953
+ 1421 01bc 9A 83                   		.short	-31846
+ 1422 01be 12 84                   		.short	-31726
+ 1423 01c0 9B 84                   		.short	-31589
+ 1424 01c2 35 85                   		.short	-31435
+ 1425 01c4 E2 85                   		.short	-31262
+ 1426 01c6 A5 86                   		.short	-31067
+ 1427 01c8 81 87                   		.short	-30847
+ 1428 01ca 78 88                   		.short	-30600
+ 1429 01cc 8E 89                   		.short	-30322
+ 1430 01ce C6 8A                   		.short	-30010
+ 1431 01d0 24 8C                   		.short	-29660
+ 1432 01d2 AC 8D                   		.short	-29268
+ 1433 01d4 62 8F                   		.short	-28830
+ 1434 01d6 4B 91                   		.short	-28341
+ 1435 01d8 6B 93                   		.short	-27797
+ 1436 01da C9 95                   		.short	-27191
+ 1437 01dc 69 98                   		.short	-26519
+ 1438 01de 50 9B                   		.short	-25776
+ 1439 01e0 84 9E                   		.short	-24956
+ 1440 01e2 0A A2                   		.short	-24054
+ 1441 01e4 E6 A5                   		.short	-23066
+ 1442 01e6 1E AA                   		.short	-21986
+ 1443 01e8 B3 AE                   		.short	-20813
+ 1444 01ea AA B3                   		.short	-19542
+ 1445 01ec 03 B9                   		.short	-18173
+ 1446 01ee BE BE                   		.short	-16706
+ 1447 01f0 D9 C4                   		.short	-15143
+ 1448 01f2 52 CB                   		.short	-13486
+ 1449 01f4 21 D2                   		.short	-11743
+ 1450 01f6 41 D9                   		.short	-9919
+ 1451 01f8 A7 E0                   		.short	-8025
+ 1452 01fa 47 E8                   		.short	-6073
+ 1453 01fc 15 F0                   		.short	-4075
+ 1454 01fe 03 F8                   		.short	-2045
+ 1455                             		.section	.rodata.tanhTable_q7,"a"
+ 1456                             		.balign 4
+ 1459                             	_tanhTable_q7:
+ 1460 0000 00                      		.byte	0
+ 1461 0001 08                      		.byte	8
+ 1462 0002 10                      		.byte	16
+ 1463 0003 18                      		.byte	24
+ 1464 0004 1F                      		.byte	31
+ 1465 0005 27                      		.byte	39
+ 1466 0006 2E                      		.byte	46
+ 1467 0007 35                      		.byte	53
+ 1468 0008 3B                      		.byte	59
+ 1469 0009 41                      		.byte	0x41
+ 1470 000a 47                      		.byte	0x47
+ 1471 000b 4C                      		.byte	0x4c
+ 1472 000c 51                      		.byte	0x51
+ 1473 000d 56                      		.byte	0x56
+ 1474 000e 5A                      		.byte	0x5a
+ 1475 000f 5E                      		.byte	0x5e
+ 1476 0010 61                      		.byte	0x61
+ 1477 0011 65                      		.byte	0x65
+ 1478 0012 68                      		.byte	0x68
+ 1479 0013 6A                      		.byte	0x6a
+ 1480 0014 6D                      		.byte	0x6d
+ 1481 0015 6F                      		.byte	0x6f
+ 1482 0016 71                      		.byte	0x71
+ 1483 0017 72                      		.byte	0x72
+ 1484 0018 74                      		.byte	0x74
+ 1485 0019 75                      		.byte	0x75
+ 1486 001a 76                      		.byte	0x76
+ 1487 001b 78                      		.byte	0x78
+ 1488 001c 78                      		.byte	0x78
+ 1489 001d 79                      		.byte	0x79
+ 1490 001e 7A                      		.byte	0x7a
+ 1491 001f 7B                      		.byte	0x7b
+ 1492 0020 7B                      		.byte	0x7b
+ 1493 0021 7C                      		.byte	0x7c
+ 1494 0022 7C                      		.byte	0x7c
+ 1495 0023 7D                      		.byte	0x7d
+ 1496 0024 7D                      		.byte	0x7d
+ 1497 0025 7E                      		.byte	0x7e
+ 1498 0026 7E                      		.byte	0x7e
+ 1499 0027 7E                      		.byte	0x7e
+ 1500 0028 7E                      		.byte	0x7e
+ 1501 0029 7E                      		.byte	0x7e
+ 1502 002a 7F                      		.byte	0x7f
+ 1503 002b 7F                      		.byte	0x7f
+ 1504 002c 7F                      		.byte	0x7f
+ 1505 002d 7F                      		.byte	0x7f
+ 1506 002e 7F                      		.byte	0x7f
+ 1507 002f 7F                      		.byte	0x7f
+ 1508 0030 7F                      		.byte	0x7f
+ 1509 0031 7F                      		.byte	0x7f
+ 1510 0032 7F                      		.byte	0x7f
+ 1511 0033 7F                      		.byte	0x7f
+ 1512 0034 7F                      		.byte	0x7f
+ 1513 0035 7F                      		.byte	0x7f
+ 1514 0036 7F                      		.byte	0x7f
+ 1515 0037 7F                      		.byte	0x7f
+ 1516 0038 7F                      		.byte	0x7f
+ 1517 0039 7F                      		.byte	0x7f
+ 1518 003a 7F                      		.byte	0x7f
+ 1519 003b 7F                      		.byte	0x7f
+ 1520 003c 7F                      		.byte	0x7f
+ 1521 003d 7F                      		.byte	0x7f
+ 1522 003e 7F                      		.byte	0x7f
+ 1523 003f 7F                      		.byte	0x7f
+ 1524 0040 7F                      		.byte	0x7f
+ 1525 0041 7F                      		.byte	0x7f
+ 1526 0042 7F                      		.byte	0x7f
+ 1527 0043 7F                      		.byte	0x7f
+ 1528 0044 7F                      		.byte	0x7f
+ 1529 0045 7F                      		.byte	0x7f
+ 1530 0046 7F                      		.byte	0x7f
+ 1531 0047 7F                      		.byte	0x7f
+ 1532 0048 7F                      		.byte	0x7f
+ 1533 0049 7F                      		.byte	0x7f
+ 1534 004a 7F                      		.byte	0x7f
+ 1535 004b 7F                      		.byte	0x7f
+ 1536 004c 7F                      		.byte	0x7f
+ 1537 004d 7F                      		.byte	0x7f
+ 1538 004e 7F                      		.byte	0x7f
+ 1539 004f 7F                      		.byte	0x7f
+ 1540 0050 7F                      		.byte	0x7f
+ 1541 0051 7F                      		.byte	0x7f
+ 1542 0052 7F                      		.byte	0x7f
+ 1543 0053 7F                      		.byte	0x7f
+ 1544 0054 7F                      		.byte	0x7f
+ 1545 0055 7F                      		.byte	0x7f
+ 1546 0056 7F                      		.byte	0x7f
+ 1547 0057 7F                      		.byte	0x7f
+ 1548 0058 7F                      		.byte	0x7f
+ 1549 0059 7F                      		.byte	0x7f
+ 1550 005a 7F                      		.byte	0x7f
+ 1551 005b 7F                      		.byte	0x7f
+ 1552 005c 7F                      		.byte	0x7f
+ 1553 005d 7F                      		.byte	0x7f
+ 1554 005e 7F                      		.byte	0x7f
+ 1555 005f 7F                      		.byte	0x7f
+ 1556 0060 7F                      		.byte	0x7f
+ 1557 0061 7F                      		.byte	0x7f
+ 1558 0062 7F                      		.byte	0x7f
+ 1559 0063 7F                      		.byte	0x7f
+ 1560 0064 7F                      		.byte	0x7f
+ 1561 0065 7F                      		.byte	0x7f
+ 1562 0066 7F                      		.byte	0x7f
+ 1563 0067 7F                      		.byte	0x7f
+ 1564 0068 7F                      		.byte	0x7f
+ 1565 0069 7F                      		.byte	0x7f
+ 1566 006a 7F                      		.byte	0x7f
+ 1567 006b 7F                      		.byte	0x7f
+ 1568 006c 7F                      		.byte	0x7f
+ 1569 006d 7F                      		.byte	0x7f
+ 1570 006e 7F                      		.byte	0x7f
+ 1571 006f 7F                      		.byte	0x7f
+ 1572 0070 7F                      		.byte	0x7f
+ 1573 0071 7F                      		.byte	0x7f
+ 1574 0072 7F                      		.byte	0x7f
+ 1575 0073 7F                      		.byte	0x7f
+ 1576 0074 7F                      		.byte	0x7f
+ 1577 0075 7F                      		.byte	0x7f
+ 1578 0076 7F                      		.byte	0x7f
+ 1579 0077 7F                      		.byte	0x7f
+ 1580 0078 7F                      		.byte	0x7f
+ 1581 0079 7F                      		.byte	0x7f
+ 1582 007a 7F                      		.byte	0x7f
+ 1583 007b 7F                      		.byte	0x7f
+ 1584 007c 7F                      		.byte	0x7f
+ 1585 007d 7F                      		.byte	0x7f
+ 1586 007e 7F                      		.byte	0x7f
+ 1587 007f 7F                      		.byte	0x7f
+ 1588 0080 80                      		.byte	-128
+ 1589 0081 80                      		.byte	-128
+ 1590 0082 80                      		.byte	-128
+ 1591 0083 80                      		.byte	-128
+ 1592 0084 80                      		.byte	-128
+ 1593 0085 80                      		.byte	-128
+ 1594 0086 80                      		.byte	-128
+ 1595 0087 80                      		.byte	-128
+ 1596 0088 80                      		.byte	-128
+ 1597 0089 80                      		.byte	-128
+ 1598 008a 80                      		.byte	-128
+ 1599 008b 80                      		.byte	-128
+ 1600 008c 80                      		.byte	-128
+ 1601 008d 80                      		.byte	-128
+ 1602 008e 80                      		.byte	-128
+ 1603 008f 80                      		.byte	-128
+ 1604 0090 80                      		.byte	-128
+ 1605 0091 80                      		.byte	-128
+ 1606 0092 80                      		.byte	-128
+ 1607 0093 80                      		.byte	-128
+ 1608 0094 80                      		.byte	-128
+ 1609 0095 80                      		.byte	-128
+ 1610 0096 80                      		.byte	-128
+ 1611 0097 80                      		.byte	-128
+ 1612 0098 80                      		.byte	-128
+ 1613 0099 80                      		.byte	-128
+ 1614 009a 80                      		.byte	-128
+ 1615 009b 80                      		.byte	-128
+ 1616 009c 80                      		.byte	-128
+ 1617 009d 80                      		.byte	-128
+ 1618 009e 80                      		.byte	-128
+ 1619 009f 80                      		.byte	-128
+ 1620 00a0 80                      		.byte	-128
+ 1621 00a1 80                      		.byte	-128
+ 1622 00a2 80                      		.byte	-128
+ 1623 00a3 80                      		.byte	-128
+ 1624 00a4 80                      		.byte	-128
+ 1625 00a5 80                      		.byte	-128
+ 1626 00a6 80                      		.byte	-128
+ 1627 00a7 80                      		.byte	-128
+ 1628 00a8 80                      		.byte	-128
+ 1629 00a9 80                      		.byte	-128
+ 1630 00aa 80                      		.byte	-128
+ 1631 00ab 80                      		.byte	-128
+ 1632 00ac 80                      		.byte	-128
+ 1633 00ad 80                      		.byte	-128
+ 1634 00ae 80                      		.byte	-128
+ 1635 00af 80                      		.byte	-128
+ 1636 00b0 80                      		.byte	-128
+ 1637 00b1 80                      		.byte	-128
+ 1638 00b2 80                      		.byte	-128
+ 1639 00b3 80                      		.byte	-128
+ 1640 00b4 80                      		.byte	-128
+ 1641 00b5 80                      		.byte	-128
+ 1642 00b6 80                      		.byte	-128
+ 1643 00b7 80                      		.byte	-128
+ 1644 00b8 80                      		.byte	-128
+ 1645 00b9 80                      		.byte	-128
+ 1646 00ba 80                      		.byte	-128
+ 1647 00bb 80                      		.byte	-128
+ 1648 00bc 80                      		.byte	-128
+ 1649 00bd 80                      		.byte	-128
+ 1650 00be 80                      		.byte	-128
+ 1651 00bf 80                      		.byte	-128
+ 1652 00c0 80                      		.byte	-128
+ 1653 00c1 80                      		.byte	-128
+ 1654 00c2 80                      		.byte	-128
+ 1655 00c3 80                      		.byte	-128
+ 1656 00c4 80                      		.byte	-128
+ 1657 00c5 80                      		.byte	-128
+ 1658 00c6 80                      		.byte	-128
+ 1659 00c7 80                      		.byte	-128
+ 1660 00c8 80                      		.byte	-128
+ 1661 00c9 80                      		.byte	-128
+ 1662 00ca 80                      		.byte	-128
+ 1663 00cb 80                      		.byte	-128
+ 1664 00cc 80                      		.byte	-128
+ 1665 00cd 80                      		.byte	-128
+ 1666 00ce 80                      		.byte	-128
+ 1667 00cf 81                      		.byte	-127
+ 1668 00d0 81                      		.byte	-127
+ 1669 00d1 81                      		.byte	-127
+ 1670 00d2 81                      		.byte	-127
+ 1671 00d3 81                      		.byte	-127
+ 1672 00d4 81                      		.byte	-127
+ 1673 00d5 81                      		.byte	-127
+ 1674 00d6 81                      		.byte	-127
+ 1675 00d7 82                      		.byte	-126
+ 1676 00d8 82                      		.byte	-126
+ 1677 00d9 82                      		.byte	-126
+ 1678 00da 82                      		.byte	-126
+ 1679 00db 82                      		.byte	-126
+ 1680 00dc 83                      		.byte	-125
+ 1681 00dd 83                      		.byte	-125
+ 1682 00de 84                      		.byte	-124
+ 1683 00df 84                      		.byte	-124
+ 1684 00e0 85                      		.byte	-123
+ 1685 00e1 85                      		.byte	-123
+ 1686 00e2 86                      		.byte	-122
+ 1687 00e3 87                      		.byte	-121
+ 1688 00e4 88                      		.byte	-120
+ 1689 00e5 88                      		.byte	-120
+ 1690 00e6 8A                      		.byte	-118
+ 1691 00e7 8B                      		.byte	-117
+ 1692 00e8 8C                      		.byte	-116
+ 1693 00e9 8E                      		.byte	-114
+ 1694 00ea 8F                      		.byte	-113
+ 1695 00eb 91                      		.byte	-111
+ 1696 00ec 93                      		.byte	-109
+ 1697 00ed 96                      		.byte	-106
+ 1698 00ee 98                      		.byte	-104
+ 1699 00ef 9B                      		.byte	-101
+ 1700 00f0 9F                      		.byte	-97
+ 1701 00f1 A2                      		.byte	-94
+ 1702 00f2 A6                      		.byte	-90
+ 1703 00f3 AA                      		.byte	-86
+ 1704 00f4 AF                      		.byte	-81
+ 1705 00f5 B4                      		.byte	-76
+ 1706 00f6 B9                      		.byte	-71
+ 1707 00f7 BF                      		.byte	-65
+ 1708 00f8 C5                      		.byte	-59
+ 1709 00f9 CB                      		.byte	-53
+ 1710 00fa D2                      		.byte	-46
+ 1711 00fb D9                      		.byte	-39
+ 1712 00fc E1                      		.byte	-31
+ 1713 00fd E8                      		.byte	-24
+ 1714 00fe F0                      		.byte	-16
+ 1715 00ff F8                      		.byte	-8
+ 1716                             		.section P,"ax"
+ 1717                             	.Letext0:
+ 1718                             		.file 1 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 1719                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 1720                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 1721                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 1722                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 1723                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 1724                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+ 1725                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 1726                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+ 1727                             		.file 10 "../src/CMSIS/NN/Source/NNSupportFunctions/arm_nntables.c"

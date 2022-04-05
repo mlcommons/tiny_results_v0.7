@@ -1,0 +1,437 @@
+   1                             		.file	"resetprg.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.PowerON_Reset_PC_Prg,"ax",@progbits
+   5                             		.global	_PowerON_Reset_PC_Prg
+   7                             	_PowerON_Reset_PC_Prg:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/r_bsp/mcu/all/resetprg.c"
+   1:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+   2:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * DISCLAIMER
+   3:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * other uses are authorized. This software is owned by Renesas Electronics Corporation and is prote
+   5:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * applicable laws, including copyright laws.
+   6:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING
+   7:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * THIS SOFTWARE, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF 
+   8:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIM
+   9:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * EXTENT PERMITTED NOT PROHIBITED BY LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AF
+  10:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY RE
+  11:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * SOFTWARE, EVEN IF RENESAS OR ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * this software. 
+  14:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *
+  15:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * Copyright (C) 2014 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+  17:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+  18:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * File Name    : resetprg.c
+  19:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * Description  : Defines post-reset routines that are used to configure the MCU prior to the main p
+  20:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                This is where the program counter starts on power-up or reset.
+  21:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+  22:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+  23:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * History : DD.MM.YYYY Version   Description
+  24:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *         : 28.02.2019 3.00      Merged processing of all devices.
+  25:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                Added support for GNUC and ICCRX.
+  26:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                Fixed coding style.
+  27:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                Renamed following macro definitions.
+  28:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                - BSP_PRV_PSW_INIT
+  29:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                - BSP_PRV_FPSW_INIT
+  30:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                - BSP_PRV_FPU_ROUND
+  31:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                - BSP_PRV_FPU_DENOM
+  32:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                Added following macro definitions.
+  33:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                                - BSP_PRV_DPSW_INIT
+  34:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *         : 26.07.2019 3.01      Added vbatt_voltage_stability_wait function.
+  35:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *         : 08.10.2019 3.10      Changed for added support of Renesas RTOS (RI600V4 or RI600PX).
+  36:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+  37:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  38:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+  39:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** Includes   <System Includes> , "Project Includes"
+  40:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+  41:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(__CCRX__)
+  42:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Defines MCU configuration functions used in this file */
+  43:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #include    <_h_c_lib.h>
+  44:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* defined(__CCRX__) */
+  45:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  46:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Define the target platform */
+  47:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #include    "platform.h"
+  48:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  49:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* When using the user startup program, disable the following code. */
+  50:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_STARTUP_DISABLE == 0
+  51:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  52:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RTOS_USED == 4  /* Renesas RI600V4 & RI600PX */
+  53:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  54:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RENESAS_RTOS_USED == RENESAS_RI600PX
+  55:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #pragma section P PS
+  56:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #pragma section B BS
+  57:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #pragma section C CS
+  58:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #pragma section D DS
+  59:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else
+  60:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #include    "ri_cmt.h"    /*  Generated by cfg600 */
+  61:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* BSP_CFG_RENESAS_RTOS_USED */
+  62:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  63:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else /* BSP_CFG_RTOS_USED!=4 */
+  64:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  65:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Declaration of stack size. */
+  66:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_USER_STACK_ENABLE == 1
+  67:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** R_BSP_PRAGMA_STACKSIZE_SU(BSP_CFG_USTACK_BYTES)
+  68:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+  69:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** R_BSP_PRAGMA_STACKSIZE_SI(BSP_CFG_ISTACK_BYTES)
+  70:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  71:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif/* BSP_CFG_RTOS_USED */
+  72:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  73:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+  74:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** Macro definitions
+  75:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+  76:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RTOS_USED == 4 /* Renesas RI600V4 & RI600PX */
+  77:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #define BSP_PRV_PSW_INIT  (0x00000000)	/* Supervisor mode & Disable Interrupt */
+  78:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else /* BSP_CFG_RTOS_USED!=4 */
+  79:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* If the user chooses only 1 stack then the 'U' bit will not be set and the CPU will always use th
+  80:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_USER_STACK_ENABLE == 1
+  81:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #define BSP_PRV_PSW_INIT  (0x00030000)
+  82:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else
+  83:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #define BSP_PRV_PSW_INIT  (0x00010000)
+  84:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+  85:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif/* BSP_CFG_RTOS_USED */
+  86:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  87:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(__CCRX__) || defined(__GNUC__)
+  88:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  89:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef BSP_MCU_FLOATING_POINT
+  90:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize FPSW for floating-point operations */
+  91:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #define BSP_PRV_FPSW_INIT (0x00000000)  /* Currently nothing set by default. */
+  92:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef BSP_MCU_DOUBLE_PRECISION_FLOATING_POINT
+  93:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize DPSW for double-precision floating-point operations */
+  94:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #define BSP_PRV_DPSW_INIT (0x00000000)  /* Currently nothing set by default. */
+  95:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+  96:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+  97:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef __ROZ
+  98:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #define BSP_PRV_FPU_ROUND (0x00000001)  /* Let FPSW RMbits=01 (round to zero) */
+  99:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else
+ 100:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #define BSP_PRV_FPU_ROUND (0x00000000)  /* Let FPSW RMbits=00 (round to nearest) */
+ 101:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 102:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef __DOFF
+ 103:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #define BSP_PRV_FPU_DENOM (0x00000100)  /* Let FPSW DNbit=1 (denormal as zero) */
+ 104:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else
+ 105:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #define BSP_PRV_FPU_DENOM (0x00000000)  /* Let FPSW DNbit=0 (denormal as is) */
+ 106:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 107:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 108:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 109:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* defined(__CCRX__), defined(__GNUC__) */
+ 110:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 111:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+ 112:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** Pre-processor Directives
+ 113:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+ 114:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Set this as the entry point from a power-on reset */
+ 115:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(__CCRX__)
+ 116:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #pragma entry PowerON_Reset_PC
+ 117:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* defined(__CCRX__) */
+ 118:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 119:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+ 120:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** External function Prototypes
+ 121:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+ 122:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Initialize C runtime environment */
+ 123:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** extern void _INITSCT(void);
+ 124:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 125:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(CPPAPP)
+ 126:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Initialize C++ global class object */
+ 127:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** extern void _CALL_INIT(void);
+ 128:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 129:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 130:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_USER_WARM_START_CALLBACK_PRE_INITC_ENABLED != 0
+ 131:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* If user is requesting warm start callback functions then these are the prototypes. */
+ 132:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** void BSP_CFG_USER_WARM_START_PRE_C_FUNCTION(void);
+ 133:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 134:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 135:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_USER_WARM_START_CALLBACK_POST_INITC_ENABLED != 0
+ 136:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* If user is requesting warm start callback functions then these are the prototypes. */
+ 137:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** void BSP_CFG_USER_WARM_START_POST_C_FUNCTION(void);
+ 138:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 139:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 140:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RTOS_USED == 1  /* FreeRTOS */
+ 141:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* A function is used to create a main task, rtos's objects required to be available in advance. */
+ 142:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** extern void Processing_Before_Start_Kernel(void);
+ 143:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #elif BSP_CFG_RTOS_USED == 4 /* Renesas RI600V4 & RI600PX */
+ 144:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* kernel initialization routine */
+ 145:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** extern void vsta_knl(void);
+ 146:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif/* BSP_CFG_RTOS_USED */
+ 147:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 148:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+ 149:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** Private global variables and functions
+ 150:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+ 151:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Power-on reset function declaration */
+ 152:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** R_BSP_POR_FUNCTION(R_BSP_STARTUP_FUNCTION);
+ 153:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 154:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /* Main program function declaration */
+ 155:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RTOS_USED == 0    /* Non-OS */
+ 156:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** extern void R_BSP_MAIN_FUNCTION(void);
+ 157:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 158:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 159:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** /**************************************************************************************************
+ 160:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * Function name: PowerON_Reset_PC
+ 161:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * Description  : This function is the MCU's entry point from a power-on reset.
+ 162:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                The following steps are taken in the startup code:
+ 163:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                1. The User Stack Pointer (USP) and Interrupt Stack Pointer (ISP) are both set imm
+ 164:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   to this function. The USP and ISP stack sizes are set in the file bsp_config.h.
+ 165:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                2. The interrupt vector base register is set to point to the beginning of the relo
+ 166:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   vector table.
+ 167:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                3. The MCU is setup for floating point operations by setting the initial value of 
+ 168:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   Status Word (FPSW).
+ 169:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                4. The MCU operating frequency is set by configuring the Clock Generation Circuit 
+ 170:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   operating_frequency_set.
+ 171:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                5. Calls are made to functions to setup the C runtime environment which involves i
+ 172:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   initialed data, zeroing all uninitialized variables, and configuring STDIO if u
+ 173:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   (calls to _INITSCT and init_iolib).
+ 174:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                6. Board-specific hardware setup, including configuring I/O pins on the MCU, in ha
+ 175:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                7. Global interrupts are enabled by setting the I bit in the Program Status Word (
+ 176:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   is switched from the ISP to the USP.  The initial Interrupt Priority Level is s
+ 177:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   any interrupts with a priority greater than zero to be serviced.
+ 178:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                8. The processor is optionally switched to user mode.  To run in user mode, set th
+ 179:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                   BSP_CFG_RUN_IN_USER_MODE above to a 1.
+ 180:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                9. The bus error interrupt is enabled to catch any accesses to invalid or reserved
+ 181:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *
+ 182:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** *                Once this initialization is complete, the user's main() function is called.  It sh
+ 183:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * Arguments    : none
+ 184:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** * Return value : none
+ 185:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** ***************************************************************************************************
+ 186:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** R_BSP_POR_FUNCTION(R_BSP_STARTUP_FUNCTION)
+ 187:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** {
+  10                             		.loc 1 187 1
+ 188:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Stack pointers are setup prior to calling this function - see comments above */
+ 189:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 190:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* You can use auto variables in this function but such variables other than register variables
+ 191:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****      * will be unavailable after you change the stack from the I stack to the U stack (if change). 
+ 192:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 193:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* The bss sections have not been cleared and the data sections have not been initialized 
+ 194:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****      * and constructors of C++ objects have not been executed until the _INITSCT() is executed. */
+ 195:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(__GNUC__)
+ 196:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_USER_STACK_ENABLE == 1
+ 197:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     INTERNAL_NOT_USED(ustack_area);
+  11                             		.loc 1 197 5
+ 198:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 199:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     INTERNAL_NOT_USED(istack_area);
+  12                             		.loc 1 199 5
+ 200:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 201:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 202:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(__CCRX__) || defined(__GNUC__)
+ 203:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 204:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize the Interrupt Table Register */
+ 205:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_SET_INTB(R_BSP_SECTOP_INTVECTTBL);
+  13                             		.loc 1 205 5
+  14 0000 FD 73 0C 00 00 00 00    		mvtc	#_rvectors_start, intb
+ 206:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 207:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef BSP_MCU_EXCEPTION_TABLE
+ 208:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize the Exception Table Register */
+ 209:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_SET_EXTB(R_BSP_SECTOP_EXCEPTVECTTBL);
+  15                             		.loc 1 209 5
+  16 0007 FD 73 0D 00 00 00 00    		mvtc	#_exvectors_start, extb
+ 210:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 211:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 212:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef BSP_MCU_FLOATING_POINT
+ 213:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef __FPU
+ 214:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize the Floating-Point Status Word Register. */
+ 215:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_SET_FPSW(BSP_PRV_FPSW_INIT | BSP_PRV_FPU_ROUND | BSP_PRV_FPU_DENOM);
+  17                             		.loc 1 215 5
+  18 000e FD 77 03 00             		mvtc	#0, fpsw
+ 216:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 217:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 218:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 219:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef BSP_MCU_DOUBLE_PRECISION_FLOATING_POINT
+ 220:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef __DPFPU
+ 221:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize the Double-Precision Floating-Point Status Word Register. */
+ 222:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_SET_DPSW(BSP_PRV_DPSW_INIT | BSP_PRV_FPU_ROUND | BSP_PRV_FPU_DENOM);
+ 223:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 224:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 225:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 226:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initializes the trigonometric function unit. */
+ 227:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef BSP_MCU_TRIGONOMETRIC
+ 228:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #ifdef __TFU
+ 229:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_INIT_TFU();
+ 230:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 231:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 232:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 233:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* defined(__CCRX__), defined(__GNUC__) */
+ 234:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 235:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Wait for power voltage stabilization of VBATT function. */
+ 236:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if (defined(BSP_CFG_VBATT_ENABLE) && (BSP_CFG_VBATT_ENABLE == 0))
+ 237:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     vbatt_voltage_stability_wait();
+ 238:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 239:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 240:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Switch to high-speed operation */ 
+ 241:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     mcu_clock_setup();
+  19                             		.loc 1 241 5
+  20 0012 05 00 00 00             		bsr	_mcu_clock_setup
+  21                             	.LVL0:
+ 242:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 243:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* If the warm start Pre C runtime callback is enabled, then call it. */
+ 244:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_USER_WARM_START_CALLBACK_PRE_INITC_ENABLED == 1
+ 245:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     BSP_CFG_USER_WARM_START_PRE_C_FUNCTION();
+ 246:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 247:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 248:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize C runtime environment */
+ 249:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     _INITSCT();
+  22                             		.loc 1 249 5
+  23 0016 05 00 00 00             		bsr	__INITSCT
+  24                             	.LVL1:
+ 250:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 251:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(CPPAPP)
+ 252:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize C++ global class object */
+ 253:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     _CALL_INIT();
+  25                             		.loc 1 253 5
+  26 001a 05 00 00 00             		bsr	__CALL_INIT
+  27                             	.LVL2:
+ 254:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 255:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 256:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize RAM */
+ 257:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     bsp_ram_initialize();
+  28                             		.loc 1 257 5
+  29 001e 05 00 00 00             		bsr	_bsp_ram_initialize
+  30                             	.LVL3:
+ 258:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 259:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* If the warm start Post C runtime callback is enabled, then call it. */
+ 260:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_USER_WARM_START_CALLBACK_POST_INITC_ENABLED == 1
+ 261:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     BSP_CFG_USER_WARM_START_POST_C_FUNCTION();
+ 262:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 263:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 264:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_IO_LIB_ENABLE == 1
+ 265:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Comment this out if not using I/O lib */
+ 266:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(__CCRX__)
+ 267:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     init_iolib();
+ 268:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* defined(__CCRX__) */
+ 269:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 270:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 271:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize MCU interrupt callbacks. */
+ 272:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     bsp_interrupt_open();
+  31                             		.loc 1 272 5
+  32 0022 05 00 00 00             		bsr	_bsp_interrupt_open
+  33                             	.LVL4:
+ 273:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 274:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize register protection functionality. */
+ 275:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     bsp_register_protect_open();
+  34                             		.loc 1 275 5
+  35 0026 05 00 00 00             		bsr	_bsp_register_protect_open
+  36                             	.LVL5:
+ 276:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 277:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Configure the MCU and board hardware */
+ 278:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     hardware_setup();
+  37                             		.loc 1 278 5
+  38 002a 05 00 00 00             		bsr	_hardware_setup
+  39                             	.LVL6:
+ 279:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 280:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Enable interrupt and select the I stack or the U stack */
+ 281:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_SET_PSW(BSP_PRV_PSW_INIT);
+  40                             		.loc 1 281 5
+  41 002e FD 7F 00 00 00 03       		mvtc	#0x30000, psw
+ 282:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 283:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RTOS_USED == 4  /* Renesas RI600V4 & RI600PX */
+ 284:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Does not change the MCU's user mode to user in Renesas RTOS. */
+ 285:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else /* BSP_CFG_RTOS_USED != 4 */
+ 286:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RUN_IN_USER_MODE == 1
+ 287:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Change the MCU's user mode from supervisor to user */
+ 288:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #if BSP_CFG_USER_STACK_ENABLE == 1
+ 289:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         R_BSP_CHG_PMUSR();
+ 290:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #else
+ 291:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         #error "Settings of BSP_CFG_RUN_IN_USER_MODE and BSP_CFG_USER_STACK_ENABLE are inconsistent
+ 292:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #endif
+ 293:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* BSP_CFG_RUN_IN_USER_MODE */
+ 294:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* BSP_CFG_RTOS_USED */
+ 295:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 296:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Enable the bus error interrupt to catch accesses to illegal/reserved areas of memory */
+ 297:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_InterruptControl(BSP_INT_SRC_BUS_ERROR, BSP_INT_CMD_INTERRUPT_ENABLE, FIT_NO_PTR);
+  42                             		.loc 1 297 5
+  43 0034 FB 32 00 00 00 10       		mov.L	#0x10000000, r3
+  44 003a 66 12                   		mov.L	#1, r2
+  45 003c 66 B1                   		mov.L	#11, r1
+  46 003e 05 00 00 00             		bsr	_R_BSP_InterruptControl
+  47                             	.LVL7:
+ 298:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 299:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RTOS_USED == 0    /* Non-OS */
+ 300:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Call the main program function (should not return) */
+ 301:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_MAIN_FUNCTION();
+  48                             		.loc 1 301 5
+  49 0042 05 00 00 00             		bsr	_main
+  50                             	.LVL8:
+  51                             	.L2:
+ 302:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #elif BSP_CFG_RTOS_USED == 1    /* FreeRTOS */
+ 303:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Lock the channel that system timer of RTOS is using. */
+ 304:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #if (((BSP_CFG_RTOS_SYSTEM_TIMER) >=0) && ((BSP_CFG_RTOS_SYSTEM_TIMER) <= 3))
+ 305:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         if (R_BSP_HardwareLock((mcu_lock_t)(BSP_LOCK_CMT0 + BSP_CFG_RTOS_SYSTEM_TIMER)) == false)
+ 306:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         {
+ 307:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****             /* WAIT_LOOP */
+ 308:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****             while(1);
+ 309:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         }
+ 310:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #else
+ 311:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         #error "Setting BSP_CFG_RTOS_SYSTEM_TIMER is invalid."
+ 312:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     #endif
+ 313:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 314:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Prepare the necessary tasks, FreeRTOS's resources... required to be executed at the beginnin
+ 315:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****      * after vTaskStarScheduler() is called. Other tasks can also be created after starting schedul
+ 316:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     Processing_Before_Start_Kernel();
+ 317:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 318:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Call the kernel startup (should not return) */
+ 319:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     vTaskStartScheduler();
+ 320:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #elif BSP_CFG_RTOS_USED == 2    /* SEGGER embOS */
+ 321:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #elif BSP_CFG_RTOS_USED == 3    /* Micrium MicroC/OS */
+ 322:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #elif BSP_CFG_RTOS_USED == 4    /* Renesas RI600V4 & RI600PX */
+ 323:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_RENESAS_RTOS_USED == RENESAS_RI600V4
+ 324:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Lock a timer resource by r_bsp, if using time function on RTOS. */
+ 325:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     if(R_BSP_HardwareLock((mcu_lock_t)(BSP_LOCK_CMT0 + _RI_CLOCK_TIMER)) == false)
+ 326:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     {
+ 327:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         /* WAIT_LOOP */
+ 328:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         while(1);
+ 329:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     }
+ 330:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Initialize CMT for RI600V4 */
+ 331:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     _RI_init_cmt();
+ 332:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #else
+ 333:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* When RI600PX, the above are in _RI_init_cmt_knl called from the kernel. */
+ 334:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 335:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Make sure to disable interrupt. */
+ 336:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     R_BSP_CLRPSW_I();/* clrpsw_i() */
+ 337:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     vsta_knl();
+ 338:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif/* BSP_CFG_RTOS_USED */
+ 339:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 340:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if BSP_CFG_IO_LIB_ENABLE == 1
+ 341:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Comment this out if not using I/O lib - cleans up open files */
+ 342:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #if defined(__CCRX__)
+ 343:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     close_all();
+ 344:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif /* defined(__CCRX__) */
+ 345:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** #endif
+ 346:../src/smc_gen/r_bsp/mcu/all/resetprg.c **** 
+ 347:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* Infinite loop is intended here. */
+ 348:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     /* WAIT_LOOP */
+ 349:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     while(1)
+  52                             		.loc 1 349 5 discriminator 1
+ 350:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****     {
+ 351:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         /* Infinite loop. Put a breakpoint here if you want to catch an exit of main(). */
+ 352:../src/smc_gen/r_bsp/mcu/all/resetprg.c ****         R_BSP_NOP();
+  53                             		.loc 1 352 9 discriminator 1
+  54                             	 ; 352 "../src/smc_gen/r_bsp/mcu/all/resetprg.c" 1
+  55 0046 03                      		nop
+  56                             	 ; 0 "" 2
+  57 0047 2E FF                   		bra	.L2
+  58                             	.LFE3:
+  60                             		.section	.r_bsp_istack,"aw"
+  63                             	_istack_area:
+  64 0000 00 00 00 00 00 00 00 00 		.zero	5632
+  64      00 00 00 00 00 00 00 00 
+  64      00 00 00 00 00 00 00 00 
+  64      00 00 00 00 00 00 00 00 
+  64      00 00 00 00 00 00 00 00 
+  65                             		.section	.r_bsp_ustack,"aw"
+  68                             	_ustack_area:
+  69 0000 00 00 00 00 00 00 00 00 		.zero	5632
+  69      00 00 00 00 00 00 00 00 
+  69      00 00 00 00 00 00 00 00 
+  69      00 00 00 00 00 00 00 00 
+  69      00 00 00 00 00 00 00 00 
+  96                             	.Letext0:
+  97                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  98                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  99                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 100                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 101                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 102                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 103                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 104                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 105                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 106                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 107                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 108                             		.file 13 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 109                             		.file 14 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm

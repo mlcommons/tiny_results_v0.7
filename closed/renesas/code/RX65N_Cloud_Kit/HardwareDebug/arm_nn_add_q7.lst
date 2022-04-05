@@ -1,0 +1,147 @@
+   1                             		.file	"arm_nn_add_q7.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_nn_add_q7,"ax",@progbits
+   5                             		.global	_arm_nn_add_q7
+   7                             	_arm_nn_add_q7:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c"
+   1:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** /*
+   2:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * Copyright (C) 2010-2018 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  *
+   4:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  *
+   6:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  *
+  10:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  *
+  12:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  */
+  18:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  19:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * Title:        arm_nn_add_q7.c
+  22:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * Description:  Non saturating addition of elements of a q7 vector.
+  23:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  *
+  24:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * $Date:        09. October 2020
+  25:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * $Revision:    V.1.0.1
+  26:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  *
+  27:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * Target Processor:  Cortex-M cores
+  28:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  *
+  29:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * -------------------------------------------------------------------- */
+  30:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  31:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** #include "arm_nn_tables.h"
+  32:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  34:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** /**
+  35:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * @ingroup groupSupport
+  36:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  */
+  37:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  38:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** /**
+  39:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * @addtogroup NNBasicMath
+  40:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  * @{
+  41:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****  */
+  42:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  43:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** void arm_nn_add_q7(const q7_t *input, q31_t *output, uint32_t block_size)
+  44:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** {
+  10                             		.loc 1 44 1
+  11                             	.LVL0:
+  45:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     uint32_t block_count;
+  12                             		.loc 1 45 5
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     q31_t result = 0;
+  13                             		.loc 1 46 5
+  47:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** #if defined(ARM_MATH_DSP)
+  48:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     /* Loop unrolling: Compute 4 outputs at a time */
+  49:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     block_count = block_size >> 2U;
+  50:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  51:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     while (block_count > 0U)
+  52:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     {
+  53:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         const int32_t mult_q15x2 = (1UL << 16) | 1UL;
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         q31_t in_q7x4 = arm_nn_read_q7x4_ia(&input);
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         q31_t temp_q15x2 = __SXTAB16(__SXTB16(in_q7x4), __ROR((uint32_t)in_q7x4, 8));
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         result = __SMLAD(temp_q15x2, mult_q15x2, result);
+  58:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  59:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         /* Decrement loop counter */
+  60:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         block_count--;
+  61:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     }
+  62:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     /* Loop unrolling: Compute remaining outputs */
+  64:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     block_count = block_size & 0x3;
+  65:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** #else
+  66:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     block_count = block_size;
+  14                             		.loc 1 66 5
+  67:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** #endif
+  68:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     while (block_count > 0U)
+  15                             		.loc 1 68 5
+  16                             		.loc 1 68 11 is_stmt 0
+  17 0000 61 03                   		cmp	#0, r3
+  18 0002 20 16                   		beq	.L4
+  19 0004 4B 13                   		add	r1, r3
+  20                             	.LVL1:
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** #if defined(ARM_MATH_DSP)
+  21                             		.loc 1 46 11
+  22 0006 66 05                   		mov.L	#0, r5
+  23                             	.LVL2:
+  24                             		.balign 8,3,1
+  25                             	.L3:
+  69:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     {
+  70:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         /* Add and store result in destination buffer. */
+  71:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         result += *input++;
+  26                             		.loc 1 71 9 is_stmt 1
+  27                             		.loc 1 71 25 is_stmt 0
+  28 0008 62 11                   		add	#1, r1
+  29                             	.LVL3:
+  30                             		.loc 1 71 19
+  31 000a 71 14 FF                		add	#-1, r1, r4
+  32 000d CC 44                   		mov.B	[r4], r4
+  33                             		.loc 1 71 16
+  34 000f 4B 45                   		add	r4, r5
+  35                             	.LVL4:
+  72:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  73:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         /* Decrement loop counter */
+  74:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****         block_count--;
+  36                             		.loc 1 74 9 is_stmt 1
+  68:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     {
+  37                             		.loc 1 68 11 is_stmt 0
+  38 0011 47 13                   		cmp	r1, r3
+  39 0013 21 F5                   		bne	.L3
+  75:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     }
+  76:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** 
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c ****     *output = result;
+  40                             		.loc 1 77 5 is_stmt 1
+  41                             		.loc 1 77 13 is_stmt 0
+  42 0015 E3 25                   		mov.L	r5, [r2]
+  78:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** }
+  43                             		.loc 1 78 1
+  44 0017 02                      		rts
+  45                             	.LVL5:
+  46                             	.L4:
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** #if defined(ARM_MATH_DSP)
+  47                             		.loc 1 46 11
+  48 0018 66 05                   		mov.L	#0, r5
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** }
+  49                             		.loc 1 77 5 is_stmt 1
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_nn_add_q7.c **** }
+  50                             		.loc 1 77 13 is_stmt 0
+  51 001a E3 25                   		mov.L	r5, [r2]
+  52                             		.loc 1 78 1
+  53 001c 02                      		rts
+  54                             	.LFE82:
+  82                             	.Letext0:
+  83                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  84                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  85                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  86                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  87                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  88                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  89                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  90                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  91                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM
+  92                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

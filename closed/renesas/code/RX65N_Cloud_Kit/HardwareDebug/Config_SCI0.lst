@@ -1,0 +1,548 @@
+   1                             		.file	"Config_SCI0.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.R_Config_SCI0_Create,"ax",@progbits
+   5                             		.global	_R_Config_SCI0_Create
+   7                             	_R_Config_SCI0_Create:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/smc_gen/Config_SCI0/Config_SCI0.c"
+   1:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+   2:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * DISCLAIMER
+   3:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * This software is supplied by Renesas Electronics Corporation and is only intended for use with Re
+   4:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * No other uses are authorized. This software is owned by Renesas Electronics Corporation and is pr
+   5:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * applicable laws, including copyright laws. 
+   6:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * THIS SOFTWARE IS PROVIDED "AS IS" AND RENESAS MAKES NO WARRANTIES REGARDING THIS SOFTWARE, WHETHE
+   7:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * OR STATUTORY, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA
+   8:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * NON-INFRINGEMENT.  ALL SUCH WARRANTIES ARE EXPRESSLY DISCLAIMED.TO THE MAXIMUM EXTENT PERMITTED N
+   9:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * LAW, NEITHER RENESAS ELECTRONICS CORPORATION NOR ANY OF ITS AFFILIATED COMPANIES SHALL BE LIABLE 
+  10:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES FOR ANY REASON RELATED TO THIS SOFTWARE, E
+  11:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * ITS AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+  12:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Renesas reserves the right, without notice, to make changes to this software and to discontinue t
+  13:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * of this software. 
+  14:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *
+  15:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Copyright (C) 2019 Renesas Electronics Corporation. All rights reserved.
+  16:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+  17:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  18:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+  19:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * File Name    : Config_SCI0.c
+  20:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Version      : 1.9.2
+  21:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Device(s)    : R5F565NEDxFP
+  22:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Description  : This file implements device driver for Config_SCI0.
+  23:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Creation Date: 2021-06-15
+  24:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+  25:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  26:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+  27:../src/smc_gen/Config_SCI0/Config_SCI0.c **** Pragma directive
+  28:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+  29:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /* Start user code for pragma. Do not edit comment generated here */
+  30:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /* End user code. Do not edit comment generated here */
+  31:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  32:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+  33:../src/smc_gen/Config_SCI0/Config_SCI0.c **** Includes
+  34:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+  35:../src/smc_gen/Config_SCI0/Config_SCI0.c **** #include "r_cg_macrodriver.h"
+  36:../src/smc_gen/Config_SCI0/Config_SCI0.c **** #include "Config_SCI0.h"
+  37:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /* Start user code for include. Do not edit comment generated here */
+  38:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /* End user code. Do not edit comment generated here */
+  39:../src/smc_gen/Config_SCI0/Config_SCI0.c **** #include "r_cg_userdefine.h"
+  40:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  41:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+  42:../src/smc_gen/Config_SCI0/Config_SCI0.c **** Global variables and functions
+  43:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+  44:../src/smc_gen/Config_SCI0/Config_SCI0.c **** volatile uint8_t * gp_sci0_tx_address;                /* SCI0 transmit buffer address */
+  45:../src/smc_gen/Config_SCI0/Config_SCI0.c **** volatile uint16_t  g_sci0_tx_count;                   /* SCI0 transmit data number */
+  46:../src/smc_gen/Config_SCI0/Config_SCI0.c **** volatile uint8_t * gp_sci0_rx_address;                /* SCI0 receive buffer address */
+  47:../src/smc_gen/Config_SCI0/Config_SCI0.c **** volatile uint16_t  g_sci0_rx_count;                   /* SCI0 receive data number */
+  48:../src/smc_gen/Config_SCI0/Config_SCI0.c **** volatile uint16_t  g_sci0_rx_length;                  /* SCI0 receive data length */
+  49:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /* Start user code for global. Do not edit comment generated here */
+  50:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /* End user code. Do not edit comment generated here */
+  51:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  52:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+  53:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Function Name: R_Config_SCI0_Create
+  54:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Description  : This function initializes the SCI0 channel
+  55:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Arguments    : None
+  56:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Return Value : None
+  57:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+  58:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  59:../src/smc_gen/Config_SCI0/Config_SCI0.c **** void R_Config_SCI0_Create(void)
+  60:../src/smc_gen/Config_SCI0/Config_SCI0.c **** {
+  10                             		.loc 1 60 1
+  61:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Cancel SCI stop state */
+  62:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     MSTP(SCI0) = 0U;
+  11                             		.loc 1 62 5
+  12                             		.loc 1 62 16 is_stmt 0
+  13 0000 FB 3E 00 00 08          		mov.L	#0x80000, r3
+  63:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  64:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Set interrupt priority */
+  65:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IPR(SCI0, RXI0) = _02_SCI_PRIORITY_LEVEL2;
+  14                             		.loc 1 65 21
+  15 0005 FB 2E 00 70 08          		mov.L	#0x87000, r2
+  62:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  16                             		.loc 1 62 16
+  17 000a ED 3E 05                		mov.L	20[r3], r14
+  66:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IPR(SCI0, TXI0) = _02_SCI_PRIORITY_LEVEL2;
+  67:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  68:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Clear the control register */
+  69:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BYTE = 0x00U;
+  18                             		.loc 1 69 19
+  19 000d FB 5E 00 A0 08          		mov.L	#0x8a000, r5
+  70:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  71:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Set clock enable */
+  72:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BYTE = _00_SCI_INTERNAL_SCK_UNUSED;
+  73:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  74:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Clear the SIMR1.IICM, SPMR.CKPH, and CKPOL bit, and set SPMR */
+  75:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SIMR1.BIT.IICM = 0U;
+  76:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SPMR.BYTE = _00_SCI_RTS | _00_SCI_CLOCK_NOT_INVERTED | _00_SCI_CLOCK_NOT_DELAYED;
+  77:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  78:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Set control registers */
+  79:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SMR.BYTE = _00_SCI_CLOCK_PCLK | _00_SCI_MULTI_PROCESSOR_DISABLE | _00_SCI_STOP_1 | _00_SCI
+  80:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                     _00_SCI_DATA_LENGTH_8 | _00_SCI_ASYNCHRONOUS_OR_I2C_MODE;
+  81:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCMR.BYTE = _00_SCI_SERIAL_MODE | _00_SCI_DATA_INVERT_NONE | _00_SCI_DATA_LSB_FIRST | 
+  82:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                      _10_SCI_DATA_LENGTH_8_OR_7 | _62_SCI_SCMR_DEFAULT;
+  83:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SEMR.BYTE = _00_SCI_BIT_MODULATION_DISABLE | _10_SCI_8_BASE_CLOCK | _00_SCI_NOISE_FILTER_D
+  84:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                      _40_SCI_BAUDRATE_DOUBLE | _00_SCI_LOW_LEVEL_START_BIT;
+  85:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  86:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Set bit rate */
+  87:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.BRR = 0x40U;
+  88:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  89:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Set RXD0 pin */
+  90:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     MPC.P33PFS.BYTE = 0x0BU;
+  20                             		.loc 1 90 21
+  21 0012 FB 1E 00 C1 08          		mov.L	#0x8c100, r1
+  91:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PMR.BYTE |= 0x08U;
+  22                             		.loc 1 91 20
+  23 0017 FB 4E 03 C0 08          		mov.L	#0x8c003, r4
+  62:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  24                             		.loc 1 62 16
+  25 001c 7B FE                   		bclr	#31, r14
+  26 001e E7 3E 05                		mov.L	r14, 20[r3]
+  65:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IPR(SCI0, TXI0) = _02_SCI_PRIORITY_LEVEL2;
+  27                             		.loc 1 65 5 is_stmt 1
+  65:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IPR(SCI0, TXI0) = _02_SCI_PRIORITY_LEVEL2;
+  28                             		.loc 1 65 21 is_stmt 0
+  29 0021 CE 23 3A 03             		mov.B	826[r2], r3
+  30 0025 75 23 F0                		and #-16, r3
+  31 0028 78 13                   		bset	#1, r3
+  32 002a CB 23 3A 03             		mov.B	r3, 826[r2]
+  66:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  33                             		.loc 1 66 5 is_stmt 1
+  66:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  34                             		.loc 1 66 21 is_stmt 0
+  35 002e CE 23 3B 03             		mov.B	827[r2], r3
+  36 0032 75 23 F0                		and #-16, r3
+  37 0035 78 13                   		bset	#1, r3
+  38 0037 CB 23 3B 03             		mov.B	r3, 827[r2]
+  69:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  39                             		.loc 1 69 5 is_stmt 1
+  69:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  40                             		.loc 1 69 19 is_stmt 0
+  41 003b 3C 52 00                		mov.B	#0, 2[r5]
+  72:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  42                             		.loc 1 72 5 is_stmt 1
+  72:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  43                             		.loc 1 72 19 is_stmt 0
+  44 003e 3C 52 00                		mov.B	#0, 2[r5]
+  75:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SPMR.BYTE = _00_SCI_RTS | _00_SCI_CLOCK_NOT_INVERTED | _00_SCI_CLOCK_NOT_DELAYED;
+  45                             		.loc 1 75 5 is_stmt 1
+  75:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SPMR.BYTE = _00_SCI_RTS | _00_SCI_CLOCK_NOT_INVERTED | _00_SCI_CLOCK_NOT_DELAYED;
+  46                             		.loc 1 75 25 is_stmt 0
+  47 0041 F1 58 09                		bclr	#0, 9[r5].B
+  76:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  48                             		.loc 1 76 5 is_stmt 1
+  76:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  49                             		.loc 1 76 20 is_stmt 0
+  50 0044 3C 5D 00                		mov.B	#0, 13[r5]
+  79:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                     _00_SCI_DATA_LENGTH_8 | _00_SCI_ASYNCHRONOUS_OR_I2C_MODE;
+  51                             		.loc 1 79 5 is_stmt 1
+  79:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                     _00_SCI_DATA_LENGTH_8 | _00_SCI_ASYNCHRONOUS_OR_I2C_MODE;
+  52                             		.loc 1 79 19 is_stmt 0
+  53 0047 F8 54 00                		mov.B	#0, [r5]
+  81:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                      _10_SCI_DATA_LENGTH_8_OR_7 | _62_SCI_SCMR_DEFAULT;
+  54                             		.loc 1 81 5 is_stmt 1
+  81:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                      _10_SCI_DATA_LENGTH_8_OR_7 | _62_SCI_SCMR_DEFAULT;
+  55                             		.loc 1 81 20 is_stmt 0
+  56 004a 3C 56 72                		mov.B	#0x72, 6[r5]
+  83:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                      _40_SCI_BAUDRATE_DOUBLE | _00_SCI_LOW_LEVEL_START_BIT;
+  57                             		.loc 1 83 5 is_stmt 1
+  83:../src/smc_gen/Config_SCI0/Config_SCI0.c ****                      _40_SCI_BAUDRATE_DOUBLE | _00_SCI_LOW_LEVEL_START_BIT;
+  58                             		.loc 1 83 20 is_stmt 0
+  59 004d 3C 57 50                		mov.B	#0x50, 7[r5]
+  87:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  60                             		.loc 1 87 5 is_stmt 1
+  87:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  61                             		.loc 1 87 14 is_stmt 0
+  62 0050 3C 51 40                		mov.B	#0x40, 1[r5]
+  90:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PMR.BYTE |= 0x08U;
+  63                             		.loc 1 90 5 is_stmt 1
+  90:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PMR.BYTE |= 0x08U;
+  64                             		.loc 1 90 21 is_stmt 0
+  65 0053 F9 14 5B 0B             		mov.B	#11, 91[r1]
+  66                             		.loc 1 91 5 is_stmt 1
+  92:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  93:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Set TXD0 pin */
+  94:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     MPC.P32PFS.BYTE = 0x0BU;
+  67                             		.loc 1 94 5
+  91:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  68                             		.loc 1 91 20 is_stmt 0
+  69 0057 F1 43 60                		bset	#3, 96[r4].B
+  70                             		.loc 1 94 21
+  71 005a F9 14 5A 0B             		mov.B	#11, 90[r1]
+  95:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PODR.BYTE |= 0x04U;
+  72                             		.loc 1 95 5 is_stmt 1
+  96:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PDR.BYTE |= 0x04U;
+  73                             		.loc 1 96 5
+  97:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+  98:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     R_Config_SCI0_Create_UserInit();
+  74                             		.loc 1 98 5
+  95:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PDR.BYTE |= 0x04U;
+  75                             		.loc 1 95 21 is_stmt 0
+  76 005e F1 42 20                		bset	#2, 32[r4].B
+  96:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PDR.BYTE |= 0x04U;
+  77                             		.loc 1 96 20
+  78 0061 F0 42                   		bset	#2, [r4].B
+  79                             		.loc 1 98 5
+  80 0063 04 00 00 00             		bra	_R_Config_SCI0_Create_UserInit
+  81                             	.LVL0:
+  82                             	.LFE3:
+  84                             		.section	.text.R_Config_SCI0_Start,"ax",@progbits
+  85                             		.global	_R_Config_SCI0_Start
+  87                             	_R_Config_SCI0_Start:
+  88                             	.LFB4:
+  99:../src/smc_gen/Config_SCI0/Config_SCI0.c **** }
+ 100:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 101:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+ 102:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Function Name: R_Config_SCI0_Start
+ 103:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Description  : This function starts the SCI0 channel
+ 104:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Arguments    : None
+ 105:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Return Value : None
+ 106:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+ 107:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 108:../src/smc_gen/Config_SCI0/Config_SCI0.c **** void R_Config_SCI0_Start(void)
+ 109:../src/smc_gen/Config_SCI0/Config_SCI0.c **** {
+  89                             		.loc 1 109 1 is_stmt 1
+ 110:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Clear interrupt flag */
+ 111:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IR(SCI0, TXI0) = 0U;
+  90                             		.loc 1 111 5
+  91                             		.loc 1 111 20 is_stmt 0
+  92 0000 FB 5E 00 70 08          		mov.L	#0x87000, r5
+  93 0005 F1 58 3B                		bclr	#0, 59[r5].B
+ 112:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IR(SCI0, RXI0) = 0U;
+  94                             		.loc 1 112 5 is_stmt 1
+  95                             		.loc 1 112 20 is_stmt 0
+  96 0008 F1 58 3A                		bclr	#0, 58[r5].B
+ 113:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 114:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Enable SCI interrupt */
+ 115:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IEN(SCI0, TXI0) = 1U;
+  97                             		.loc 1 115 5 is_stmt 1
+  98                             		.loc 1 115 21 is_stmt 0
+  99 000b F2 53 07 02             		bset	#3, 519[r5].B
+ 116:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     ICU.GENBL0.BIT.EN0 = 1U;
+ 100                             		.loc 1 116 5 is_stmt 1
+ 101                             		.loc 1 116 24 is_stmt 0
+ 102 000f EE 54 9C 01             		mov.L	1648[r5], r4
+ 103 0013 78 04                   		bset	#0, r4
+ 104 0015 EB 54 9C 01             		mov.L	r4, 1648[r5]
+ 117:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IEN(SCI0, RXI0) = 1U;
+ 105                             		.loc 1 117 5 is_stmt 1
+ 106                             		.loc 1 117 21 is_stmt 0
+ 107 0019 F2 52 07 02             		bset	#2, 519[r5].B
+ 118:../src/smc_gen/Config_SCI0/Config_SCI0.c **** }
+ 108                             		.loc 1 118 1
+ 109 001d 02                      		rts
+ 110                             	.LFE4:
+ 112                             		.section	.text.R_Config_SCI0_Stop,"ax",@progbits
+ 113                             		.global	_R_Config_SCI0_Stop
+ 115                             	_R_Config_SCI0_Stop:
+ 116                             	.LFB5:
+ 119:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 120:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+ 121:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Function Name: R_Config_SCI0_Stop
+ 122:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Description  : This function stop the SCI0 channel
+ 123:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Arguments    : None
+ 124:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Return Value : None
+ 125:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+ 126:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 127:../src/smc_gen/Config_SCI0/Config_SCI0.c **** void R_Config_SCI0_Stop(void)
+ 128:../src/smc_gen/Config_SCI0/Config_SCI0.c **** {
+ 117                             		.loc 1 128 1 is_stmt 1
+ 129:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Set TXD0 pin */
+ 130:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     PORT3.PMR.BYTE &= 0xFBU;
+ 118                             		.loc 1 130 5
+ 131:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 132:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Disable serial transmit */
+ 133:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BIT.TE = 0U;
+ 119                             		.loc 1 133 5
+ 130:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 120                             		.loc 1 130 20 is_stmt 0
+ 121 0000 FB 5E 03 C0 08          		mov.L	#0x8c003, r5
+ 122                             		.loc 1 133 21
+ 123 0005 FB 4E 00 A0 08          		mov.L	#0x8a000, r4
+ 130:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 124                             		.loc 1 130 20
+ 125 000a F1 5A 60                		bclr	#2, 96[r5].B
+ 126                             		.loc 1 133 21
+ 127 000d F1 4D 02                		bclr	#5, 2[r4].B
+ 134:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 135:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Disable serial receive */
+ 136:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BIT.RE = 0U;
+ 128                             		.loc 1 136 5 is_stmt 1
+ 129                             		.loc 1 136 21 is_stmt 0
+ 130 0010 F1 4C 02                		bclr	#4, 2[r4].B
+ 137:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 138:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     /* Disable SCI interrupt */
+ 139:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BIT.TIE = 0U;
+ 131                             		.loc 1 139 5 is_stmt 1
+ 132                             		.loc 1 139 22 is_stmt 0
+ 133 0013 88 C3                   		mov.B	2[r4], r3
+ 140:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BIT.RIE = 0U;
+ 141:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IEN(SCI0, TXI0) = 0U;
+ 134                             		.loc 1 141 21
+ 135 0015 FB 5E 00 70 08          		mov.L	#0x87000, r5
+ 139:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BIT.RIE = 0U;
+ 136                             		.loc 1 139 22
+ 137 001a 7A 73                   		bclr	#7, r3
+ 138 001c 80 C3                   		mov.B	r3, 2[r4]
+ 140:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BIT.RIE = 0U;
+ 139                             		.loc 1 140 5 is_stmt 1
+ 140:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     SCI0.SCR.BIT.RIE = 0U;
+ 140                             		.loc 1 140 22 is_stmt 0
+ 141 001e F1 4E 02                		bclr	#6, 2[r4].B
+ 142                             		.loc 1 141 5 is_stmt 1
+ 143                             		.loc 1 141 21 is_stmt 0
+ 144 0021 F2 5B 07 02             		bclr	#3, 519[r5].B
+ 142:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     ICU.GENBL0.BIT.EN0 = 0U;
+ 145                             		.loc 1 142 5 is_stmt 1
+ 146                             		.loc 1 142 24 is_stmt 0
+ 147 0025 EE 54 9C 01             		mov.L	1648[r5], r4
+ 148 0029 7A 04                   		bclr	#0, r4
+ 149 002b EB 54 9C 01             		mov.L	r4, 1648[r5]
+ 143:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IR(SCI0, TXI0) = 0U;
+ 150                             		.loc 1 143 5 is_stmt 1
+ 151                             		.loc 1 143 20 is_stmt 0
+ 152 002f F1 58 3B                		bclr	#0, 59[r5].B
+ 144:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     IEN(SCI0, RXI0) = 0U;
+ 153                             		.loc 1 144 5 is_stmt 1
+ 154                             		.loc 1 144 21 is_stmt 0
+ 155 0032 F2 5A 07 02             		bclr	#2, 519[r5].B
+ 145:../src/smc_gen/Config_SCI0/Config_SCI0.c **** }
+ 156                             		.loc 1 145 1
+ 157 0036 02                      		rts
+ 158                             	.LFE5:
+ 160                             		.section	.text.R_Config_SCI0_Serial_Receive,"ax",@progbits
+ 161                             		.global	_R_Config_SCI0_Serial_Receive
+ 163                             	_R_Config_SCI0_Serial_Receive:
+ 164                             	.LFB6:
+ 146:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 147:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+ 148:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Function Name: R_Config_SCI0_Serial_Receive
+ 149:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Description  : This function receive SCI0data
+ 150:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Arguments    : rx_buf -
+ 151:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                    receive buffer pointer (Not used when receive data handled by DMAC/DTC)
+ 152:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                rx_num -
+ 153:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                    buffer size (Not used when receive data handled by DMAC/DTC)
+ 154:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Return Value : status -
+ 155:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                    MD_OK or MD_ARGERROR
+ 156:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+ 157:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 158:../src/smc_gen/Config_SCI0/Config_SCI0.c **** MD_STATUS R_Config_SCI0_Serial_Receive(uint8_t * const rx_buf, uint16_t rx_num)
+ 159:../src/smc_gen/Config_SCI0/Config_SCI0.c **** {
+ 165                             		.loc 1 159 1 is_stmt 1
+ 166                             	.LVL1:
+ 160:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     MD_STATUS status = MD_OK;
+ 167                             		.loc 1 160 5
+ 161:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 162:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     if (1U > rx_num)
+ 168                             		.loc 1 162 5
+ 169                             		.loc 1 162 8 is_stmt 0
+ 170 0000 5F 25                   		movu.W	r2, r5
+ 171 0002 61 05                   		cmp	#0, r5
+ 172 0004 20 2B                   		beq	.L7
+ 163:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     {
+ 164:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         status = MD_ARGERROR;
+ 165:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     }
+ 166:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     else
+ 167:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     {
+ 168:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         g_sci0_rx_count = 0U;
+ 173                             		.loc 1 168 9 is_stmt 1
+ 174                             		.loc 1 168 25 is_stmt 0
+ 175 0006 FB 52 00 00 00 00       		mov.L	#.LANCHOR0, r5
+ 176 000c F8 55 00                		mov.W	#0, [r5]
+ 169:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         g_sci0_rx_length = rx_num;
+ 177                             		.loc 1 169 9 is_stmt 1
+ 178                             		.loc 1 169 26 is_stmt 0
+ 179 000f FB 52 00 00 00 00       		mov.L	#.LANCHOR1, r5
+ 180 0015 D3 52                   		mov.W	r2, [r5]
+ 170:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         gp_sci0_rx_address = rx_buf;
+ 181                             		.loc 1 170 9 is_stmt 1
+ 182                             		.loc 1 170 28 is_stmt 0
+ 183 0017 FB 52 00 00 00 00       		mov.L	#.LANCHOR2, r5
+ 184 001d E3 51                   		mov.L	r1, [r5]
+ 171:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         SCI0.SCR.BIT.RIE = 1U;
+ 185                             		.loc 1 171 9 is_stmt 1
+ 186                             		.loc 1 171 26 is_stmt 0
+ 187 001f FB 5E 00 A0 08          		mov.L	#0x8a000, r5
+ 160:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 188                             		.loc 1 160 15
+ 189 0024 66 01                   		mov	#0, r1
+ 190                             	.LVL2:
+ 191                             		.loc 1 171 26
+ 192 0026 F1 56 02                		bset	#6, 2[r5].B
+ 172:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         SCI0.SCR.BIT.RE = 1U;
+ 193                             		.loc 1 172 9 is_stmt 1
+ 194                             		.loc 1 172 25 is_stmt 0
+ 195 0029 F1 54 02                		bset	#4, 2[r5].B
+ 196                             	.LVL3:
+ 173:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     }
+ 174:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 175:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     return (status);
+ 197                             		.loc 1 175 5 is_stmt 1
+ 176:../src/smc_gen/Config_SCI0/Config_SCI0.c **** }
+ 198                             		.loc 1 176 1 is_stmt 0
+ 199 002c 5F 11                   		movu.W	r1, r1
+ 200                             	.LVL4:
+ 201 002e 02                      		rts
+ 202                             	.LVL5:
+ 203                             	.L7:
+ 164:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     }
+ 204                             		.loc 1 164 16
+ 205 002f 75 41 81                		mov	#0x81, r1
+ 206                             	.LVL6:
+ 175:../src/smc_gen/Config_SCI0/Config_SCI0.c **** }
+ 207                             		.loc 1 175 5 is_stmt 1
+ 208                             		.loc 1 176 1 is_stmt 0
+ 209 0032 5F 11                   		movu.W	r1, r1
+ 210                             	.LVL7:
+ 211 0034 02                      		rts
+ 212                             	.LFE6:
+ 214                             		.section	.text.R_Config_SCI0_Serial_Send,"ax",@progbits
+ 215                             		.global	_R_Config_SCI0_Serial_Send
+ 217                             	_R_Config_SCI0_Serial_Send:
+ 218                             	.LFB7:
+ 177:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 178:../src/smc_gen/Config_SCI0/Config_SCI0.c **** /**************************************************************************************************
+ 179:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Function Name: R_Config_SCI0_Serial_Send
+ 180:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Description  : This function transmits SCI0data
+ 181:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Arguments    : tx_buf -
+ 182:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                    transfer buffer pointer (Not used when transmit data handled by DMAC/DTC)
+ 183:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                tx_num -
+ 184:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                    buffer size (Not used when transmit data handled by DMAC/DTC)
+ 185:../src/smc_gen/Config_SCI0/Config_SCI0.c **** * Return Value : status -
+ 186:../src/smc_gen/Config_SCI0/Config_SCI0.c **** *                    MD_OK or MD_ARGERROR
+ 187:../src/smc_gen/Config_SCI0/Config_SCI0.c **** ***************************************************************************************************
+ 188:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 189:../src/smc_gen/Config_SCI0/Config_SCI0.c **** MD_STATUS R_Config_SCI0_Serial_Send(uint8_t * const tx_buf, uint16_t tx_num)
+ 190:../src/smc_gen/Config_SCI0/Config_SCI0.c **** {
+ 219                             		.loc 1 190 1 is_stmt 1
+ 220                             	.LVL8:
+ 191:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     MD_STATUS status = MD_OK;
+ 221                             		.loc 1 191 5
+ 192:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 193:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     if (1U > tx_num)
+ 222                             		.loc 1 193 5
+ 223                             		.loc 1 193 8 is_stmt 0
+ 224 0000 5F 25                   		movu.W	r2, r5
+ 225 0002 61 05                   		cmp	#0, r5
+ 226 0004 20 2B                   		beq	.L10
+ 194:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     {
+ 195:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         status = MD_ARGERROR;
+ 196:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     }
+ 197:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     else
+ 198:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     {
+ 199:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         gp_sci0_tx_address = tx_buf;
+ 227                             		.loc 1 199 9 is_stmt 1
+ 228                             		.loc 1 199 28 is_stmt 0
+ 229 0006 FB 52 00 00 00 00       		mov.L	#.LANCHOR3, r5
+ 230 000c E3 51                   		mov.L	r1, [r5]
+ 200:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         g_sci0_tx_count = tx_num;
+ 231                             		.loc 1 200 9 is_stmt 1
+ 232                             		.loc 1 200 25 is_stmt 0
+ 233 000e FB 52 00 00 00 00       		mov.L	#.LANCHOR4, r5
+ 234 0014 D3 52                   		mov.W	r2, [r5]
+ 201:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 202:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         /* Set TXD0 pin */
+ 203:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         PORT3.PMR.BYTE |= 0x04U;
+ 235                             		.loc 1 203 9 is_stmt 1
+ 204:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         SCI0.SCR.BYTE |= 0xA0U;
+ 236                             		.loc 1 204 9
+ 203:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         SCI0.SCR.BYTE |= 0xA0U;
+ 237                             		.loc 1 203 24 is_stmt 0
+ 238 0016 FB 5E 03 C0 08          		mov.L	#0x8c003, r5
+ 239                             		.loc 1 204 23
+ 240 001b FB 4E 00 A0 08          		mov.L	#0x8a000, r4
+ 203:../src/smc_gen/Config_SCI0/Config_SCI0.c ****         SCI0.SCR.BYTE |= 0xA0U;
+ 241                             		.loc 1 203 24
+ 242 0020 F1 52 60                		bset	#2, 96[r5].B
+ 243                             		.loc 1 204 23
+ 244 0023 88 C5                   		mov.B	2[r4], r5
+ 191:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 245                             		.loc 1 191 15
+ 246 0025 66 01                   		mov	#0, r1
+ 247                             	.LVL9:
+ 248                             		.loc 1 204 23
+ 249 0027 75 35 A0                		or	#-96, r5
+ 250 002a 80 C5                   		mov.B	r5, 2[r4]
+ 251                             	.LVL10:
+ 205:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     }
+ 206:../src/smc_gen/Config_SCI0/Config_SCI0.c **** 
+ 207:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     return (status);
+ 252                             		.loc 1 207 5 is_stmt 1
+ 208:../src/smc_gen/Config_SCI0/Config_SCI0.c **** }
+ 253                             		.loc 1 208 1 is_stmt 0
+ 254 002c 5F 11                   		movu.W	r1, r1
+ 255                             	.LVL11:
+ 256 002e 02                      		rts
+ 257                             	.LVL12:
+ 258                             	.L10:
+ 195:../src/smc_gen/Config_SCI0/Config_SCI0.c ****     }
+ 259                             		.loc 1 195 16
+ 260 002f 75 41 81                		mov	#0x81, r1
+ 261                             	.LVL13:
+ 207:../src/smc_gen/Config_SCI0/Config_SCI0.c **** }
+ 262                             		.loc 1 207 5 is_stmt 1
+ 263                             		.loc 1 208 1 is_stmt 0
+ 264 0032 5F 11                   		movu.W	r1, r1
+ 265                             	.LVL14:
+ 266 0034 02                      		rts
+ 267                             	.LFE7:
+ 269                             		.global	_g_sci0_rx_length
+ 270                             		.global	_g_sci0_rx_count
+ 271                             		.global	_gp_sci0_rx_address
+ 272                             		.global	_g_sci0_tx_count
+ 273                             		.global	_gp_sci0_tx_address
+ 274                             		.section	.bss.g_sci0_rx_count,"aw",@nobits
+ 275                             		.balign 2
+ 276                             		.set	.LANCHOR0,. + 0
+ 279                             	_g_sci0_rx_count:
+ 280 0000 00 00                   		.zero	2
+ 281                             		.section	.bss.g_sci0_rx_length,"aw",@nobits
+ 282                             		.balign 2
+ 283                             		.set	.LANCHOR1,. + 0
+ 286                             	_g_sci0_rx_length:
+ 287 0000 00 00                   		.zero	2
+ 288                             		.section	.bss.g_sci0_tx_count,"aw",@nobits
+ 289                             		.balign 2
+ 290                             		.set	.LANCHOR4,. + 0
+ 293                             	_g_sci0_tx_count:
+ 294 0000 00 00                   		.zero	2
+ 295                             		.section	.bss.gp_sci0_rx_address,"aw",@nobits
+ 296                             		.balign 4
+ 297                             		.set	.LANCHOR2,. + 0
+ 300                             	_gp_sci0_rx_address:
+ 301 0000 00 00 00 00             		.zero	4
+ 302                             		.section	.bss.gp_sci0_tx_address,"aw",@nobits
+ 303                             		.balign 4
+ 304                             		.set	.LANCHOR3,. + 0
+ 307                             	_gp_sci0_tx_address:
+ 308 0000 00 00 00 00             		.zero	4
+ 367                             	.Letext0:
+ 368                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 369                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 370                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 371                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 372                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 373                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 374                             		.file 8 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 375                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\smc
+ 376                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 377                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 378                             		.file 12 "../src/smc_gen/Config_SCI0/Config_SCI0.h"

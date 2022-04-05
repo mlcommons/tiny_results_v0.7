@@ -1,0 +1,106 @@
+   1                             		.file	"error_reporter.cc"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text._ZN6tflite13ErrorReporter6ReportEPKcz,"ax",@progbits
+   5                             		.global	__ZN6tflite13ErrorReporter6ReportEPKcz
+   7                             	__ZN6tflite13ErrorReporter6ReportEPKcz:
+   8                             	.LFB4:
+   9                             		.file 1 "../src/tensorflow/lite/core/api/error_reporter.cc"
+   1:../src/tensorflow/lite/core/api/error_reporter.cc **** /* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+   2:../src/tensorflow/lite/core/api/error_reporter.cc **** 
+   3:../src/tensorflow/lite/core/api/error_reporter.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:../src/tensorflow/lite/core/api/error_reporter.cc **** you may not use this file except in compliance with the License.
+   5:../src/tensorflow/lite/core/api/error_reporter.cc **** You may obtain a copy of the License at
+   6:../src/tensorflow/lite/core/api/error_reporter.cc **** 
+   7:../src/tensorflow/lite/core/api/error_reporter.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:../src/tensorflow/lite/core/api/error_reporter.cc **** 
+   9:../src/tensorflow/lite/core/api/error_reporter.cc **** Unless required by applicable law or agreed to in writing, software
+  10:../src/tensorflow/lite/core/api/error_reporter.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:../src/tensorflow/lite/core/api/error_reporter.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:../src/tensorflow/lite/core/api/error_reporter.cc **** See the License for the specific language governing permissions and
+  13:../src/tensorflow/lite/core/api/error_reporter.cc **** limitations under the License.
+  14:../src/tensorflow/lite/core/api/error_reporter.cc **** ==============================================================================*/
+  15:../src/tensorflow/lite/core/api/error_reporter.cc **** #include "tensorflow/lite/core/api/error_reporter.h"
+  16:../src/tensorflow/lite/core/api/error_reporter.cc **** #include <cstdarg>
+  17:../src/tensorflow/lite/core/api/error_reporter.cc **** 
+  18:../src/tensorflow/lite/core/api/error_reporter.cc **** namespace tflite {
+  19:../src/tensorflow/lite/core/api/error_reporter.cc **** 
+  20:../src/tensorflow/lite/core/api/error_reporter.cc **** int ErrorReporter::Report(const char* format, ...) {
+  10                             		.loc 1 20 52
+  11                             	.LVL0:
+  12 0000 60 40                   		sub	#4, r0
+  13                             	.LCFI0:
+  21:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_list args;
+  14                             		.loc 1 21 3
+  22:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_start(args, format);
+  15                             		.loc 1 22 3
+  20:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_list args;
+  16                             		.loc 1 20 52 is_stmt 0
+  17 0002 66 83                   		mov.L	#8, r3
+  18 0004 4B 03                   		add	r0, r3
+  23:../src/tensorflow/lite/core/api/error_reporter.cc ****   int code = Report(format, args);
+  19                             		.loc 1 23 33
+  20 0006 EC 15                   		mov.L	[r1], r5
+  20:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_list args;
+  21                             		.loc 1 20 52
+  22 0008 FD 2A 32                		mov.L	[r3+], r2
+  23                             	.LVL1:
+  24                             		.loc 1 23 3 is_stmt 1
+  25                             		.loc 1 23 20 is_stmt 0
+  26 000b A8 D5                   		mov.L	8[r5], r5
+  27 000d 7F 15                   		jsr	r5
+  28                             	.LVL2:
+  24:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_end(args);
+  29                             		.loc 1 24 3 is_stmt 1
+  25:../src/tensorflow/lite/core/api/error_reporter.cc ****   return code;
+  30                             		.loc 1 25 3
+  26:../src/tensorflow/lite/core/api/error_reporter.cc **** }
+  31                             		.loc 1 26 1 is_stmt 0
+  32 000f 67 01                   		rtsd	#4
+  33                             	.LFE4:
+  35                             		.section	.text._ZN6tflite13ErrorReporter11ReportErrorEPvPKcz,"ax",@progbits
+  36                             		.global	__ZN6tflite13ErrorReporter11ReportErrorEPvPKcz
+  38                             	__ZN6tflite13ErrorReporter11ReportErrorEPvPKcz:
+  39                             	.LFB5:
+  27:../src/tensorflow/lite/core/api/error_reporter.cc **** 
+  28:../src/tensorflow/lite/core/api/error_reporter.cc **** // TODO(aselle): Make the name of ReportError on context the same, so
+  29:../src/tensorflow/lite/core/api/error_reporter.cc **** // we can use the ensure functions w/o a context and w/ a reporter.
+  30:../src/tensorflow/lite/core/api/error_reporter.cc **** int ErrorReporter::ReportError(void*, const char* format, ...) {
+  40                             		.loc 1 30 64 is_stmt 1
+  41                             	.LVL3:
+  42 0000 60 40                   		sub	#4, r0
+  43                             	.LCFI1:
+  31:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_list args;
+  44                             		.loc 1 31 3
+  32:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_start(args, format);
+  45                             		.loc 1 32 3
+  30:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_list args;
+  46                             		.loc 1 30 64 is_stmt 0
+  47 0002 66 83                   		mov.L	#8, r3
+  48 0004 4B 03                   		add	r0, r3
+  33:../src/tensorflow/lite/core/api/error_reporter.cc ****   int code = Report(format, args);
+  49                             		.loc 1 33 33
+  50 0006 EC 15                   		mov.L	[r1], r5
+  30:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_list args;
+  51                             		.loc 1 30 64
+  52 0008 FD 2A 32                		mov.L	[r3+], r2
+  53                             	.LVL4:
+  54                             		.loc 1 33 3 is_stmt 1
+  55                             		.loc 1 33 20 is_stmt 0
+  56 000b A8 D5                   		mov.L	8[r5], r5
+  57 000d 7F 15                   		jsr	r5
+  58                             	.LVL5:
+  34:../src/tensorflow/lite/core/api/error_reporter.cc ****   va_end(args);
+  59                             		.loc 1 34 3 is_stmt 1
+  35:../src/tensorflow/lite/core/api/error_reporter.cc ****   return code;
+  60                             		.loc 1 35 3
+  36:../src/tensorflow/lite/core/api/error_reporter.cc **** }
+  61                             		.loc 1 36 1 is_stmt 0
+  62 000f 67 01                   		rtsd	#4
+  63                             	.LFE5:
+ 107                             	.Letext0:
+ 108                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.
+ 109                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 110                             		.file 4 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/tens
+ 111                             		.file 5 "<built-in>"
+ 112                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\c++\\8.3.

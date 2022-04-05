@@ -1,0 +1,123 @@
+   1                             		.file	"arm_q7_to_q15_reordered_with_offset.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.arm_q7_to_q15_reordered_with_offset,"ax",@progbits
+   5                             		.global	_arm_q7_to_q15_reordered_with_offset
+   7                             	_arm_q7_to_q15_reordered_with_offset:
+   8                             	.LFB82:
+   9                             		.file 1 "../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c"
+   1:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** /*
+   2:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * Copyright (C) 2010-2020 Arm Limited or its affiliates. All rights reserved.
+   3:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+   4:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * SPDX-License-Identifier: Apache-2.0
+   5:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+   6:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+   7:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * not use this file except in compliance with the License.
+   8:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * You may obtain a copy of the License at
+   9:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+  10:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * www.apache.org/licenses/LICENSE-2.0
+  11:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+  12:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * Unless required by applicable law or agreed to in writing, software
+  13:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  14:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  15:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * See the License for the specific language governing permissions and
+  16:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * limitations under the License.
+  17:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  */
+  18:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  19:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** /* ----------------------------------------------------------------------
+  20:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * Project:      CMSIS NN Library
+  21:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * Title:        arm_q7_to_q15_reordered_with_offset.c
+  22:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * Description:  Converts the elements of the Q7 vector to a reordered Q15 vector with an added off
+  23:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *               is a signature of sign extension intrinsic(DSP extension).
+  24:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+  25:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * $Date:        May 29, 2020
+  26:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * $Revision:    V.2.0.3
+  27:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+  28:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * Target Processor:  Cortex-M cores
+  29:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+  30:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * -------------------------------------------------------------------- */
+  31:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  32:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** #include "arm_nnsupportfunctions.h"
+  33:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  34:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** /**
+  35:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * @ingroup groupSupport
+  36:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  */
+  37:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  38:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** /**
+  39:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * @addtogroup nndata_convert
+  40:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * @{
+  41:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  */
+  42:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  43:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** /**
+  44:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * @brief Converts the elements of the Q7 vector to a reordered Q15 vector with an added offset.
+  45:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+  46:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  * @note  Refer header file for details.
+  47:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  *
+  48:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****  */
+  49:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  50:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** void arm_q7_to_q15_reordered_with_offset(const q7_t *src, q15_t *dst, uint32_t block_size, q15_t of
+  51:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** {
+  10                             		.loc 1 51 1
+  11                             	.LVL0:
+  52:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  53:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** #if defined(ARM_MATH_DSP)
+  54:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     uint32_t block_cnt;
+  55:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     /* Run the below code for cores that support SIMD instructions  */
+  56:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     q31_t in_q7x4;
+  57:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     q31_t out_q15x2_1;
+  58:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     q31_t out_q15x2_2;
+  59:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  60:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     /*loop unrolling */
+  61:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     block_cnt = block_size >> 2u;
+  62:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  63:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     /* First part of the processing with loop unrolling. Compute 4 outputs at a time. */
+  64:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     const q31_t offset_q15x2 = (q31_t)__PKHBT(offset, offset, 16);
+  65:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     while (block_cnt > 0u)
+  66:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     {
+  67:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         /* convert from q7 to q15 and then store the results in the destination buffer */
+  68:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         in_q7x4 = arm_nn_read_q7x4_ia(&src);
+  69:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  70:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         /* Extract and sign extend each of the four q7 values to q15 */
+  71:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         out_q15x2_1 = __SXTAB16(offset_q15x2, __ROR((uint32_t)in_q7x4, 8));
+  72:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         out_q15x2_2 = __SXTAB16(offset_q15x2, in_q7x4);
+  73:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  74:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         arm_nn_write_q15x2_ia(&dst, out_q15x2_2);
+  75:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         arm_nn_write_q15x2_ia(&dst, out_q15x2_1);
+  76:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  77:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         block_cnt--;
+  78:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     }
+  79:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     /* Handle left over samples */
+  80:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     block_cnt = block_size % 0x4u;
+  81:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  82:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     while (block_cnt > 0u)
+  83:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     {
+  84:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         *dst++ = (q15_t)*src++ + offset;
+  85:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** 
+  86:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         /* Decrement the loop counter */
+  87:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****         block_cnt--;
+  88:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     }
+  89:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** #else
+  90:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     (void)src;
+  12                             		.loc 1 90 5
+  91:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     (void)dst;
+  13                             		.loc 1 91 5
+  92:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     (void)block_size;
+  14                             		.loc 1 92 5
+  93:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     (void)offset;
+  15                             		.loc 1 93 5
+  94:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c ****     /* Not available */
+  95:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** #endif
+  96:../src/CMSIS/NN/Source/NNSupportFunctions/arm_q7_to_q15_reordered_with_offset.c **** }
+  16                             		.loc 1 96 1 is_stmt 0
+  17 0000 02                      		rts
+  18                             	.LFE82:
+  46                             	.Letext0:
+  47                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+  48                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+  49                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+  50                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+  51                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+  52                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+  53                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\math.h"
+  54                             		.file 9 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CMS
+  55                             		.file 10 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\CM

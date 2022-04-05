@@ -1,0 +1,460 @@
+   1                             		.file	"th_lib.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.th_final_initialize,"ax",@progbits
+   5                             		.global	_th_final_initialize
+   7                             	_th_final_initialize:
+   8                             	.LFB3:
+   9                             		.file 1 "../src/EEMBC/monitor/th_api/th_lib.c"
+   1:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+   2:../src/EEMBC/monitor/th_api/th_lib.c ****  * Copyright (C) EEMBC(R). All Rights Reserved
+   3:../src/EEMBC/monitor/th_api/th_lib.c ****  *
+   4:../src/EEMBC/monitor/th_api/th_lib.c ****  * All EEMBC Benchmark Software are products of EEMBC and are provided under the
+   5:../src/EEMBC/monitor/th_api/th_lib.c ****  * terms of the EEMBC Benchmark License Agreements. The EEMBC Benchmark Software
+   6:../src/EEMBC/monitor/th_api/th_lib.c ****  * are proprietary intellectual properties of EEMBC and its Members and is
+   7:../src/EEMBC/monitor/th_api/th_lib.c ****  * protected under all applicable laws, including all applicable copyright laws.
+   8:../src/EEMBC/monitor/th_api/th_lib.c ****  *
+   9:../src/EEMBC/monitor/th_api/th_lib.c ****  * If you received this EEMBC Benchmark Software without having a currently
+  10:../src/EEMBC/monitor/th_api/th_lib.c ****  * effective EEMBC Benchmark License Agreement, you must discontinue use.
+  11:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+  12:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  13:../src/EEMBC/monitor/th_api/th_lib.c **** #include "monitor/th_api/th_lib.h"
+  14:../src/EEMBC/monitor/th_api/th_lib.c **** #include "tensorflow/lite/micro/examples/main_functions.h"
+  15:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  16:../src/EEMBC/monitor/th_api/th_lib.c **** #include "r_smc_entry.h"
+  17:../src/EEMBC/monitor/th_api/th_lib.c **** #include "Config_PORT.h"
+  18:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  19:../src/EEMBC/monitor/th_api/th_lib.c **** extern int g_transfer_complete ;
+  20:../src/EEMBC/monitor/th_api/th_lib.c **** extern uint64_t g_capture_overflows;
+  21:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  22:../src/EEMBC/monitor/th_api/th_lib.c **** #if EE_CFG_SELFHOSTED != 1
+  23:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  24:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+  25:../src/EEMBC/monitor/th_api/th_lib.c ****  * PORTME: If there's anything else that needs to be done on init, do it here,
+  26:../src/EEMBC/monitor/th_api/th_lib.c ****  * othewise OK to leave it alone.
+  27:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+  28:../src/EEMBC/monitor/th_api/th_lib.c **** void
+  29:../src/EEMBC/monitor/th_api/th_lib.c **** th_final_initialize(void)
+  30:../src/EEMBC/monitor/th_api/th_lib.c **** {
+  10                             		.loc 1 30 1
+  31:../src/EEMBC/monitor/th_api/th_lib.c **** 	Setup();
+  11                             		.loc 1 31 2
+  12 0000 04 00 00 00             		bra	_Setup
+  13                             	.LVL0:
+  14                             	.LFE3:
+  16                             		.section	.text.th_serialport_initialize,"ax",@progbits
+  17                             		.global	_th_serialport_initialize
+  19                             	_th_serialport_initialize:
+  20                             	.LFB6:
+  32:../src/EEMBC/monitor/th_api/th_lib.c **** }
+  33:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  34:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+  35:../src/EEMBC/monitor/th_api/th_lib.c ****  * PORTME: If using energy mode, set up an open-drain GPIO (if it hasn't been
+  36:../src/EEMBC/monitor/th_api/th_lib.c ****  * done already by the IDE boilerplate). If using performance mode, prepare a
+  37:../src/EEMBC/monitor/th_api/th_lib.c ****  * timer if necessary.
+  38:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+  39:../src/EEMBC/monitor/th_api/th_lib.c **** void
+  40:../src/EEMBC/monitor/th_api/th_lib.c **** th_timestamp_initialize(void)
+  41:../src/EEMBC/monitor/th_api/th_lib.c **** {
+  42:../src/EEMBC/monitor/th_api/th_lib.c ****     /* Initializes the module. */
+  43:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_MTU1_Create();
+  44:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_MTU2_Create();
+  45:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  46:../src/EEMBC/monitor/th_api/th_lib.c ****     /* Start the timer. */
+  47:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_MTU1_Start();
+  48:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_MTU2_Start();
+  49:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  50:../src/EEMBC/monitor/th_api/th_lib.c **** 	/* USER CODE 1 END */
+  51:../src/EEMBC/monitor/th_api/th_lib.c ****     /* This message must NOT be changed. */
+  52:../src/EEMBC/monitor/th_api/th_lib.c ****     th_printf(EE_MSG_TIMESTAMP_MODE);
+  53:../src/EEMBC/monitor/th_api/th_lib.c ****     /* Always call the timestamp on initialize so that the open-drain output
+  54:../src/EEMBC/monitor/th_api/th_lib.c ****        is set to "1" (so that we catch a falling edge) */
+  55:../src/EEMBC/monitor/th_api/th_lib.c ****     th_timestamp();
+  56:../src/EEMBC/monitor/th_api/th_lib.c **** }
+  57:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  58:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+  59:../src/EEMBC/monitor/th_api/th_lib.c ****  * PORTME: In "energy mode",generate a falling edge. Since GPIO pin is
+  60:../src/EEMBC/monitor/th_api/th_lib.c ****  * OPEN-DRAIN it is OK to float and let the pullup resistor drive. In
+  61:../src/EEMBC/monitor/th_api/th_lib.c ****  * "performance mode", a timer is needed. Depending on the benchmark, the
+  62:../src/EEMBC/monitor/th_api/th_lib.c ****  * resolution may be as large as 1ms (1000us). In this case, it is OK for the
+  63:../src/EEMBC/monitor/th_api/th_lib.c ****  * DUT to supply a 1ms timer, just multiply by 1000. Either way, the user must
+  64:../src/EEMBC/monitor/th_api/th_lib.c ****  * set the microSeconds value in "performance mode".
+  65:../src/EEMBC/monitor/th_api/th_lib.c ****  *
+  66:../src/EEMBC/monitor/th_api/th_lib.c ****  * NOTE: The hold time for the GPIO is 1us
+  67:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+  68:../src/EEMBC/monitor/th_api/th_lib.c **** void
+  69:../src/EEMBC/monitor/th_api/th_lib.c **** th_timestamp(void)
+  70:../src/EEMBC/monitor/th_api/th_lib.c **** {
+  71:../src/EEMBC/monitor/th_api/th_lib.c **** //#warning "th_timestamp() not implemented"
+  72:../src/EEMBC/monitor/th_api/th_lib.c **** #if EE_CFG_ENERGY_MODE == 1
+  73:../src/EEMBC/monitor/th_api/th_lib.c **** /* USER CODE 1 BEGIN */
+  74:../src/EEMBC/monitor/th_api/th_lib.c **** /* Step 1. Pull pin low */
+  75:../src/EEMBC/monitor/th_api/th_lib.c ****     PORTD.PODR.BYTE = _00_Pm6_OUTPUT_0;
+  76:../src/EEMBC/monitor/th_api/th_lib.c **** /* Step 2. Hold low for at least 1us */
+  77:../src/EEMBC/monitor/th_api/th_lib.c **** //	R_BSP_SoftwareDelay( 1, BSP_DELAY_MICROSECS);
+  78:../src/EEMBC/monitor/th_api/th_lib.c ****     for( int i=0; i<30; i++)
+  79:../src/EEMBC/monitor/th_api/th_lib.c ****     {
+  80:../src/EEMBC/monitor/th_api/th_lib.c ****     	__asm("nop");
+  81:../src/EEMBC/monitor/th_api/th_lib.c ****     }
+  82:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  83:../src/EEMBC/monitor/th_api/th_lib.c ****     /* Step 3. Release driver */
+  84:../src/EEMBC/monitor/th_api/th_lib.c **** 	PORTD.PODR.BYTE = _40_Pm6_OUTPUT_1;
+  85:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  86:../src/EEMBC/monitor/th_api/th_lib.c **** /* USER CODE 1 END */
+  87:../src/EEMBC/monitor/th_api/th_lib.c **** #else
+  88:../src/EEMBC/monitor/th_api/th_lib.c ****     unsigned long microSeconds = 0ul;
+  89:../src/EEMBC/monitor/th_api/th_lib.c ****     /* USER CODE 2 BEGIN */
+  90:../src/EEMBC/monitor/th_api/th_lib.c ****     uint64_t MicroSeconds;
+  91:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  92:../src/EEMBC/monitor/th_api/th_lib.c ****     MicroSeconds = (g_capture_overflows << 32);
+  93:../src/EEMBC/monitor/th_api/th_lib.c ****     MicroSeconds += (uint32_t)(MTU1.TCNT<<16) + (uint32_t)MTU2.TCNT;
+  94:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  95:../src/EEMBC/monitor/th_api/th_lib.c **** //    microSeconds = ((uint64_t)microsec * 1000 * 1000) / (120000000 / 8); // (=PCLKB/8=((PCLKB/2)/
+  96:../src/EEMBC/monitor/th_api/th_lib.c ****     microSeconds = (unsigned long)((MicroSeconds*2)/15);
+  97:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  98:../src/EEMBC/monitor/th_api/th_lib.c ****     /* USER CODE 2 END */
+  99:../src/EEMBC/monitor/th_api/th_lib.c ****     /* This message must NOT be changed. */
+ 100:../src/EEMBC/monitor/th_api/th_lib.c ****     th_printf(EE_MSG_TIMESTAMP, microSeconds);
+ 101:../src/EEMBC/monitor/th_api/th_lib.c **** #endif
+ 102:../src/EEMBC/monitor/th_api/th_lib.c **** }
+ 103:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 104:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+ 105:../src/EEMBC/monitor/th_api/th_lib.c ****  * PORTME: Set up a serialport at 9600 baud to use for communication to the
+ 106:../src/EEMBC/monitor/th_api/th_lib.c ****  * host system if it hasn't already been done, otherwise it is OK to leave this
+ 107:../src/EEMBC/monitor/th_api/th_lib.c ****  * blank.
+ 108:../src/EEMBC/monitor/th_api/th_lib.c ****  *
+ 109:../src/EEMBC/monitor/th_api/th_lib.c ****  * Repeat: for connections through the IO Manager, baud rate is 9600!
+ 110:../src/EEMBC/monitor/th_api/th_lib.c ****  * For connections directly to the Host UI, baud must be 115200.
+ 111:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+ 112:../src/EEMBC/monitor/th_api/th_lib.c **** void
+ 113:../src/EEMBC/monitor/th_api/th_lib.c **** th_serialport_initialize(void)
+ 114:../src/EEMBC/monitor/th_api/th_lib.c **** {
+  21                             		.loc 1 114 1
+ 115:../src/EEMBC/monitor/th_api/th_lib.c **** #if EE_CFG_ENERGY_MODE == 1
+ 116:../src/EEMBC/monitor/th_api/th_lib.c **** /* In energy mode, we talk to the DUT through the IO Manager at 9600 baud */
+ 117:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_SCI0_Create_9600bps();
+ 118:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_SCI0_Start();
+ 119:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_SCI0_Create_UserInit();
+ 120:../src/EEMBC/monitor/th_api/th_lib.c **** #else
+ 121:../src/EEMBC/monitor/th_api/th_lib.c **** /* In performance mode, we talk directly to the DUT at 115200 baud */
+ 122:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_SCI0_Start();
+  22                             		.loc 1 122 2
+  23 0000 05 00 00 00             		bsr	_R_Config_SCI0_Start
+  24                             	.LVL1:
+ 123:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_SCI0_Create_UserInit();
+  25                             		.loc 1 123 2
+  26 0004 04 00 00 00             		bra	_R_Config_SCI0_Create_UserInit
+  27                             	.LVL2:
+  28                             	.LFE6:
+  30                             		.section	.text.th_printf,"ax",@progbits
+  31                             		.global	_th_printf
+  33                             	_th_printf:
+  34                             	.LFB7:
+ 124:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 125:../src/EEMBC/monitor/th_api/th_lib.c **** #endif
+ 126:../src/EEMBC/monitor/th_api/th_lib.c **** }
+ 127:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 128:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+ 129:../src/EEMBC/monitor/th_api/th_lib.c ****  * PORTME: Modify this function to call the proper printf and send to the
+ 130:../src/EEMBC/monitor/th_api/th_lib.c ****  * serial port.
+ 131:../src/EEMBC/monitor/th_api/th_lib.c ****  *
+ 132:../src/EEMBC/monitor/th_api/th_lib.c ****  * It may only be necessary to comment out this function and define
+ 133:../src/EEMBC/monitor/th_api/th_lib.c ****  * th_printf as printf and just rerout fputc();
+ 134:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+ 135:../src/EEMBC/monitor/th_api/th_lib.c **** void
+ 136:../src/EEMBC/monitor/th_api/th_lib.c **** th_printf(const char *p_fmt, ...)
+ 137:../src/EEMBC/monitor/th_api/th_lib.c **** {
+  35                             		.loc 1 137 1
+  36                             	.LVL3:
+  37 0000 7E A7                   		push.l	r7
+  38                             	.LCFI0:
+  39 0002 60 40                   		sub	#4, r0
+  40                             	.LCFI1:
+ 138:../src/EEMBC/monitor/th_api/th_lib.c ****     va_list args;
+  41                             		.loc 1 138 5
+ 139:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 140:../src/EEMBC/monitor/th_api/th_lib.c ****     while( g_transfer_complete  != 0)		// Wait for message send if need
+  42                             		.loc 1 140 5
+  43                             		.loc 1 140 33 is_stmt 0
+  44 0004 FB 42 00 00 00 00       		mov.L	#_g_transfer_complete, r4
+ 137:../src/EEMBC/monitor/th_api/th_lib.c ****     va_list args;
+  45                             		.loc 1 137 1
+  46 000a 66 C7                   		mov.L	#12, r7
+  47 000c 4B 07                   		add	r0, r7
+  48                             		.loc 1 140 10
+  49 000e EC 45                   		mov.L	[r4], r5
+ 137:../src/EEMBC/monitor/th_api/th_lib.c ****     va_list args;
+  50                             		.loc 1 137 1
+  51 0010 EC 71                   		mov.L	[r7], r1
+  52                             		.loc 1 140 10
+  53 0012 61 05                   		cmp	#0, r5
+  54 0014 10                      		beq	.L5
+  55                             	.L6:
+ 141:../src/EEMBC/monitor/th_api/th_lib.c ****     {
+ 142:../src/EEMBC/monitor/th_api/th_lib.c ****     	__asm("nop");
+  56                             		.loc 1 142 6 is_stmt 1
+  57                             	 ; 142 "../src/EEMBC/monitor/th_api/th_lib.c" 1
+  58 0015 03                      		nop
+  59                             	 ; 0 "" 2
+ 140:../src/EEMBC/monitor/th_api/th_lib.c ****     {
+  60                             		.loc 1 140 10 is_stmt 0
+  61 0016 EC 45                   		mov.L	[r4], r5
+  62 0018 61 05                   		cmp	#0, r5
+  63 001a 21 FB                   		bne	.L6
+  64                             		.balign 8,3,2
+  65                             	.L5:
+ 143:../src/EEMBC/monitor/th_api/th_lib.c ****     }
+ 144:../src/EEMBC/monitor/th_api/th_lib.c ****     va_start(args, p_fmt);
+  66                             		.loc 1 144 5 is_stmt 1
+  67                             	.LVL4:
+ 145:../src/EEMBC/monitor/th_api/th_lib.c ****     g_transfer_complete  = 1;				// Message sending flag.
+  68                             		.loc 1 145 5
+ 146:../src/EEMBC/monitor/th_api/th_lib.c ****     (void)th_vprintf(p_fmt, args); /* ignore return */
+  69                             		.loc 1 146 11 is_stmt 0
+  70 001c 71 72 04                		add	#4, r7, r2
+  71                             	.LVL5:
+ 145:../src/EEMBC/monitor/th_api/th_lib.c ****     g_transfer_complete  = 1;				// Message sending flag.
+  72                             		.loc 1 145 26
+  73 001f F8 46 01                		mov.L	#1, [r4]
+  74                             		.loc 1 146 5 is_stmt 1
+  75                             		.loc 1 146 11 is_stmt 0
+  76 0022 05 00 00 00             		bsr	_th_vprintf
+  77                             	.LVL6:
+ 147:../src/EEMBC/monitor/th_api/th_lib.c ****     va_end(args);
+  78                             		.loc 1 147 5 is_stmt 1
+ 148:../src/EEMBC/monitor/th_api/th_lib.c **** }
+  79                             		.loc 1 148 1 is_stmt 0
+  80 0026 3F 77 02                		rtsd	#8, r7-r7
+  81                             	.LFE7:
+  83                             		.global	___udivdi3
+  84 0029 FD 70 40 00 00 00 80    		.section	.text.th_timestamp,"ax",@progbits
+  85                             		.global	_th_timestamp
+  87                             	_th_timestamp:
+  88                             	.LFB5:
+  70:../src/EEMBC/monitor/th_api/th_lib.c **** //#warning "th_timestamp() not implemented"
+  89                             		.loc 1 70 1 is_stmt 1
+  90 0000 7E A7                   		push.l	r7
+  91                             	.LCFI2:
+  92 0002 60 80                   		sub	#8, r0
+  93                             	.LCFI3:
+  88:../src/EEMBC/monitor/th_api/th_lib.c ****     /* USER CODE 2 BEGIN */
+  94                             		.loc 1 88 5
+  95                             	.LVL7:
+  90:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  96                             		.loc 1 90 5
+  92:../src/EEMBC/monitor/th_api/th_lib.c ****     MicroSeconds += (uint32_t)(MTU1.TCNT<<16) + (uint32_t)MTU2.TCNT;
+  97                             		.loc 1 92 5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+  98                             		.loc 1 93 36 is_stmt 0
+  99 0004 FB 5E 90 12 0C          		mov.L	#0xc1290, r5
+ 100 0009 DD 55 7B                		mov.W	246[r5], r5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 101                             		.loc 1 93 63
+ 102 000c FB 4E 92 12 0C          		mov.L	#0xc1292, r4
+ 103 0011 DD 41 BA                		mov.W	372[r4], r1
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 104                             		.loc 1 96 52
+ 105 0014 66 F3                   		mov.L	#15, r3
+  92:../src/EEMBC/monitor/th_api/th_lib.c ****     MicroSeconds += (uint32_t)(MTU1.TCNT<<16) + (uint32_t)MTU2.TCNT;
+ 106                             		.loc 1 92 18
+ 107 0016 FB 42 00 00 00 00       		mov.L	#_g_capture_overflows, r4
+ 108 001c EC 42                   		mov.L	[r4], r2
+ 109                             	.LVL8:
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 110                             		.loc 1 93 5 is_stmt 1
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 111                             		.loc 1 96 5
+ 100:../src/EEMBC/monitor/th_api/th_lib.c **** #endif
+ 112                             		.loc 1 100 5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 113                             		.loc 1 93 41 is_stmt 0
+ 114 001e 6D 05                   		shll	#16, r5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 115                             		.loc 1 93 49
+ 116 0020 5F 11                   		movu.W	r1, r1
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 117                             		.loc 1 96 52
+ 118 0022 66 04                   		mov.L	#0, r4
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 119                             		.loc 1 93 18
+ 120 0024 4B 15                   		add	r1, r5
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 121                             		.loc 1 96 49
+ 122 0026 FF 21 55                		add	r5, r5, r1
+ 123 0029 FC 0B 22                		adc	r2, r2
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 124                             		.loc 1 96 52
+ 125 002c 05 00 00 00             		bsr	___udivdi3
+ 126                             	.LVL9:
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 127                             		.loc 1 96 18
+ 128 0030 A0 09                   		mov.L	r1, 4[r0]
+ 100:../src/EEMBC/monitor/th_api/th_lib.c **** #endif
+ 129                             		.loc 1 100 5
+ 130 0032 F8 02 00 00 00 00       		mov.L	#.LC0, [r0]
+ 131 0038 05 00 00 00             		bsr	_th_printf
+ 132                             	.LVL10:
+ 102:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 133                             		.loc 1 102 1
+ 134 003c 3F 77 03                		rtsd	#12, r7-r7
+ 135                             	.LFE5:
+ 137                             		.section	.text.th_timestamp_initialize,"ax",@progbits
+ 138                             		.global	_th_timestamp_initialize
+ 140                             	_th_timestamp_initialize:
+ 141                             	.LFB4:
+  41:../src/EEMBC/monitor/th_api/th_lib.c ****     /* Initializes the module. */
+ 142                             		.loc 1 41 1 is_stmt 1
+ 143 0000 7E A7                   		push.l	r7
+ 144                             	.LCFI4:
+ 145 0002 60 80                   		sub	#8, r0
+ 146                             	.LCFI5:
+  43:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_MTU2_Create();
+ 147                             		.loc 1 43 2
+ 148 0004 05 00 00 00             		bsr	_R_Config_MTU1_Create
+ 149                             	.LVL11:
+  44:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 150                             		.loc 1 44 2
+ 151 0008 05 00 00 00             		bsr	_R_Config_MTU2_Create
+ 152                             	.LVL12:
+  47:../src/EEMBC/monitor/th_api/th_lib.c **** 	R_Config_MTU2_Start();
+ 153                             		.loc 1 47 2
+ 154 000c 05 00 00 00             		bsr	_R_Config_MTU1_Start
+ 155                             	.LVL13:
+  48:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 156                             		.loc 1 48 2
+ 157 0010 05 00 00 00             		bsr	_R_Config_MTU2_Start
+ 158                             	.LVL14:
+  52:../src/EEMBC/monitor/th_api/th_lib.c ****     /* Always call the timestamp on initialize so that the open-drain output
+ 159                             		.loc 1 52 5
+ 160 0014 F8 02 00 00 00 00       		mov.L	#.LC1, [r0]
+ 161 001a 05 00 00 00             		bsr	_th_printf
+ 162                             	.LVL15:
+  55:../src/EEMBC/monitor/th_api/th_lib.c **** }
+ 163                             		.loc 1 55 5
+ 164                             	.LBB4:
+ 165                             	.LBB5:
+  88:../src/EEMBC/monitor/th_api/th_lib.c ****     /* USER CODE 2 BEGIN */
+ 166                             		.loc 1 88 5
+  90:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 167                             		.loc 1 90 5
+  92:../src/EEMBC/monitor/th_api/th_lib.c ****     MicroSeconds += (uint32_t)(MTU1.TCNT<<16) + (uint32_t)MTU2.TCNT;
+ 168                             		.loc 1 92 5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 169                             		.loc 1 93 36 is_stmt 0
+ 170 001e FB 5E 90 12 0C          		mov.L	#0xc1290, r5
+ 171 0023 DD 55 7B                		mov.W	246[r5], r5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 172                             		.loc 1 93 63
+ 173 0026 FB 4E 92 12 0C          		mov.L	#0xc1292, r4
+ 174 002b DD 41 BA                		mov.W	372[r4], r1
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 175                             		.loc 1 96 52
+ 176 002e 66 F3                   		mov.L	#15, r3
+  92:../src/EEMBC/monitor/th_api/th_lib.c ****     MicroSeconds += (uint32_t)(MTU1.TCNT<<16) + (uint32_t)MTU2.TCNT;
+ 177                             		.loc 1 92 18
+ 178 0030 FB 42 00 00 00 00       		mov.L	#_g_capture_overflows, r4
+ 179 0036 EC 42                   		mov.L	[r4], r2
+ 180                             	.LVL16:
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 181                             		.loc 1 93 5 is_stmt 1
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 182                             		.loc 1 96 5
+ 100:../src/EEMBC/monitor/th_api/th_lib.c **** #endif
+ 183                             		.loc 1 100 5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 184                             		.loc 1 93 41 is_stmt 0
+ 185 0038 6D 05                   		shll	#16, r5
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 186                             		.loc 1 93 49
+ 187 003a 5F 11                   		movu.W	r1, r1
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 188                             		.loc 1 96 52
+ 189 003c 66 04                   		mov.L	#0, r4
+  93:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 190                             		.loc 1 93 18
+ 191 003e 4B 15                   		add	r1, r5
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 192                             		.loc 1 96 49
+ 193 0040 FF 21 55                		add	r5, r5, r1
+ 194 0043 FC 0B 22                		adc	r2, r2
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 195                             		.loc 1 96 52
+ 196 0046 05 00 00 00             		bsr	___udivdi3
+ 197                             	.LVL17:
+  96:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 198                             		.loc 1 96 18
+ 199 004a A0 09                   		mov.L	r1, 4[r0]
+ 100:../src/EEMBC/monitor/th_api/th_lib.c **** #endif
+ 200                             		.loc 1 100 5
+ 201 004c F8 02 00 00 00 00       		mov.L	#.LC0, [r0]
+ 202 0052 05 00 00 00             		bsr	_th_printf
+ 203                             	.LVL18:
+ 204                             	.LBE5:
+ 205                             	.LBE4:
+  56:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 206                             		.loc 1 56 1
+ 207 0056 3F 77 03                		rtsd	#12, r7-r7
+ 208                             	.LFE4:
+ 210                             		.section	.text.th_command_ready,"ax",@progbits
+ 211                             		.global	_th_command_ready
+ 213                             	_th_command_ready:
+ 214                             	.LFB8:
+ 149:../src/EEMBC/monitor/th_api/th_lib.c **** 
+ 150:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+ 151:../src/EEMBC/monitor/th_api/th_lib.c ****  * PORTME: This function is called with a pointer to the command built from the
+ 152:../src/EEMBC/monitor/th_api/th_lib.c ****  * ee_serial_callback() function during the ISR. It is up to the developer
+ 153:../src/EEMBC/monitor/th_api/th_lib.c ****  * to call ee_serial_command_parser_callback() at the next available non-ISR
+ 154:../src/EEMBC/monitor/th_api/th_lib.c ****  * clock with this command string.
+ 155:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+ 156:../src/EEMBC/monitor/th_api/th_lib.c **** void
+ 157:../src/EEMBC/monitor/th_api/th_lib.c **** th_command_ready(char volatile *p_command)
+ 158:../src/EEMBC/monitor/th_api/th_lib.c **** {
+ 215                             		.loc 1 158 1 is_stmt 1
+ 216                             	.LVL19:
+ 159:../src/EEMBC/monitor/th_api/th_lib.c **** //    p_command = p_command;
+ 160:../src/EEMBC/monitor/th_api/th_lib.c **** /**
+ 161:../src/EEMBC/monitor/th_api/th_lib.c ****  * Example of how this might be implemented if there's no need to store
+ 162:../src/EEMBC/monitor/th_api/th_lib.c ****  * the command string locally:
+ 163:../src/EEMBC/monitor/th_api/th_lib.c ****  *
+ 164:../src/EEMBC/monitor/th_api/th_lib.c ****  * ee_serial_command_parser_callback(command);
+ 165:../src/EEMBC/monitor/th_api/th_lib.c ****  *
+ 166:../src/EEMBC/monitor/th_api/th_lib.c ****  * Or, depending on the baremetal/RTOS, it might be necessary to create a
+ 167:../src/EEMBC/monitor/th_api/th_lib.c ****  * static char array in this file, store the command, and then call
+ 168:../src/EEMBC/monitor/th_api/th_lib.c ****  * ee_serial_command_parser_callback() when the system is ready to do
+ 169:../src/EEMBC/monitor/th_api/th_lib.c ****  * work.
+ 170:../src/EEMBC/monitor/th_api/th_lib.c ****  */
+ 171:../src/EEMBC/monitor/th_api/th_lib.c **** //#warning "th_command_ready() not implemented"
+ 172:../src/EEMBC/monitor/th_api/th_lib.c **** 	ee_serial_command_parser_callback(p_command);
+ 217                             		.loc 1 172 2
+ 218 0000 04 00 00 00             		bra	_ee_serial_command_parser_callback
+ 219                             	.LVL20:
+ 220                             	.LFE8:
+ 222                             		.section	.rodata.th_timestamp.str1.1,"aMS",@progbits,1
+ 223                             	.LC0:
+ 224 0000 6D 2D 6C 61 70 2D 75 73 		.string	"m-lap-us-%lu\r\n"
+ 224      2D 25 6C 75 0D 0A 00 
+ 225                             		.section	.rodata.th_timestamp_initialize.str1.1,"aMS",@progbits,1
+ 226                             	.LC1:
+ 227 0000 6D 2D 74 69 6D 65 73 74 		.string	"m-timestamp-mode-performance\r\n"
+ 227      61 6D 70 2D 6D 6F 64 65 
+ 227      2D 70 65 72 66 6F 72 6D 
+ 227      61 6E 63 65 0D 0A 00 
+ 324                             	.Letext0:
+ 325                             		.file 2 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\machine\\
+ 326                             		.file 3 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 327                             		.file 4 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdio.h"
+ 328                             		.file 5 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\lock
+ 329                             		.file 6 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_typ
+ 330                             		.file 7 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\lib\\gcc\\rx-elf\\8.3.0.20
+ 331                             		.file 8 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\reen
+ 332                             		.file 9 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\sys\\_std
+ 333                             		.file 10 "c:\\gcc for renesas rx 8.3.0.202004-gnurx-elf\\rx-elf\\rx-elf\\rx-elf\\include\\stdlib.h
+ 334                             		.file 11 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 335                             		.file 12 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 336                             		.file 13 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 337                             		.file 14 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EE
+ 338                             		.file 15 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\EE
+ 339                             		.file 16 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 340                             		.file 17 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 341                             		.file 18 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src\\sm
+ 342                             		.file 19 "C:\\Users\\a5116938\\Desktop\\e2_studio_workspace\\EEMBC_final\\RX65N_Cloud_Kit\\src/ten
