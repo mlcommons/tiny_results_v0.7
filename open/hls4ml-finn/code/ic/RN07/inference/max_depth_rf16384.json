@@ -1,0 +1,57 @@
+[
+    {
+        "name": "in_local_V_data_0_V_fifo_U",
+        "max": 1023,
+        "depth": 10000
+    },
+    {
+        "name": "out_local_V_data_0_V_fifo_U",
+        "max": 1,
+        "depth": 10000
+    },
+    {
+        "name": "layer4_out_V_data_0_V_U",
+        "max": 1,
+        "depth": 10000
+    },
+    {
+        "name": "layer20_out_V_data_0_V_U",
+        "max": 1066,
+        "depth": 10000
+    },
+    {
+        "name": "layer7_out_V_data_0_V_U",
+        "max": 1,
+        "depth": 10000
+    },
+    {
+        "name": "layer21_out_V_data_0_V_U",
+        "max": 71,
+        "depth": 10000
+    },
+    {
+        "name": "layer10_out_V_data_0_V_U",
+        "max": 1,
+        "depth": 10000
+    },
+    {
+        "name": "layer22_out_V_data_0_V_U",
+        "max": 34,
+        "depth": 10000
+    },
+    {
+        "name": "layer13_out_V_data_0_V_U",
+        "max": 1,
+        "depth": 10000
+    },
+    {
+        "name": "layer23_out_V_data_0_V_U",
+        "max": 23,
+        "depth": 10000
+    },
+    {
+        "name": "layer16_out_V_data_0_V_U",
+        "max": 1,
+        "depth": 10000
+    }
+]

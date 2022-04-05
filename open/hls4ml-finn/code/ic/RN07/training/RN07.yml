@@ -1,0 +1,48 @@
+save_dir: trained_model
+
+model:
+  name: resnet_v1_eembc_quantized
+  filters:
+  - 32
+  - 4
+  - 32
+  - 32
+  l1: 0
+  l2: 1e-4
+  kernels:
+  - 1
+  - 4
+  - 4
+  - 4
+  - 4
+  - 4
+  strides:
+  - '111'
+  - '414'
+  skip: 0
+  avg_pooling: 0
+  final_activation: 1
+
+pruning:
+  sparsity: 1.0
+
+fit:
+  compile:
+    initial_lr: 0.001
+    lr_decay: 0.99
+    optimizer: Adam
+    loss: categorical_crossentropy
+  epochs: 1000
+  patience: 1000
+  batch_size: 32
+  verbose: 1
+
+quantization:
+  logit_total_bits: 8
+  logit_int_bits: 2
+  logit_quantizer: quantized_bits
+  activation_total_bits: 8
+  activation_int_bits: 2
+  activation_quantizer: quantized_relu
+  alpha: 1
+  use_stochastic_rounding: 0

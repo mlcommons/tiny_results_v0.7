@@ -1,0 +1,54 @@
+train:
+  dev_directory: ./dev_data
+  feature:
+      frames: 5
+      hop_length: 512
+      n_fft: 1024
+      n_mels: 128
+      power: 2.0
+      downsample: True
+  fit:
+      batch_size: 512
+      compile:
+        loss: mean_squared_error
+        optimizer: adam
+      epochs: 100
+      shuffle: true
+      validation_split: 0.1
+      verbose: 1
+  max_fpr: 0.1
+  model:
+      input_dim: 64
+      batch_norm: true
+      latent_dim: 8
+      hidden_dim: 72
+      l1reg: 0
+      name: qdense_batchnorm_model
+      encode_depth: 2
+      encode_in: 72
+      decode_depth: 2
+      decode_out: 72
+      quantization:
+          bits: 12
+          int_bits: 6
+          last_bits: 12
+          last_int_bits: 0
+          relu_bits: 6
+          relu_int_bits: 6
+  pruning:
+      constant: false
+      decay: false
+      final_step: None
+      initial_step: 0
+      power: None
+      sparsity: None
+      initial_sparsity: None
+      final_sparsity: None
+  model_directory: ./model/ad08
+  result_directory: ./result/ad08
+  result_file: result.csv
+convert:
+  tb_data_dir: ../inference/processed_data/64input_test_bench_data.npy
+  x_npy_dir: ../inference/processed_data/64input_test_data.npy
+  y_npy_dir: ../inference/processed_data/64input_test_data_ground_truths.npy
+  

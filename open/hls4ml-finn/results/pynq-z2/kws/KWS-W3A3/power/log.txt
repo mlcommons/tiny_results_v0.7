@@ -1,0 +1,227 @@
+30737.016 session: m-session-start-id[20220301181341]
+30737.016 parser: m-bmark-run-name[ML Energy 1.0.1]-code[ulp-ml]
+30737.024 sequencer: m-sequencer-start
+30737.024 sequencer: m-sequencing-i[1]-command[version]-ack[/parser: m-ready/]-ms[50000]-acc[0]-total_ms[789200]
+30737.024 parser: Command "version"
+30737.024 parser: m-version[3.0.10]
+30737.024 parser: m-ready-finished[version]
+30737.025 sequencer: m-sequencing-i[2]-command[bm cfg ulp-ml]-ack[/parser: m-ready/]-ms[50000]-acc[50000]-total_ms[789200]
+30737.025 parser: Command "bm cfg ulp-ml"
+30737.526 parser: m-bm-cfg-name[ulp-ml]-key[iterWarmup]-val[1]
+30737.526 parser: m-bm-cfg-name[ulp-ml]-key[iterInfer]-val[800000]
+30737.526 parser: m-bm-cfg-name[ulp-ml]-key[runMode]-val[bmark]
+30737.526 parser: m-bm-cfg-name[ulp-ml]-key[model]-val[kws01]
+30737.526 parser: m-bm-cfg-name[ulp-ml]-key[sourceDir]-val[C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets]
+30737.526 parser: m-bm-cfg-name[ulp-ml]-key[singleInputFn]-val[tst_000000_Stop_7.bin]
+30737.526 parser: m-ready-finished[bm]
+30737.526 sequencer: m-sequencing-i[3]-command[emon power on]-ack[/dut.: m-ready/]-ms[50000]-acc[100000]-total_ms[789200]
+30737.526 parser: Command "emon power on"
+30737.527 emon: m-power[on]
+30737.527 emon: m-ready
+30737.527 parser: m-ready-finished[emon]
+30738.259 io: [dut]: m-timestamp-mode-energy
+30738.268 io: [dut]: m-init-done
+30738.268 io: [dut]: m-ready
+30738.268 sequencer: m-sequencing-i[4]-command[io dut profile]-ack[/dut.: m-ready/]-ms[50000]-acc[150000]-total_ms[789200]
+30738.268 parser: Command "io dut profile"
+30738.268 parser: m-ready-finished[io]
+30738.280 io: m-dut-passthrough(profile)
+30738.284 io: m-ready
+30738.362 io: [dut]: m-profile-[ULPMark for tinyML Firmware V0.0.1]
+30738.362 io: [dut]: m-model-[kws01]
+30738.366 io: [dut]: m-ready
+30738.366 sequencer: m-sequencing-i[5]-command[io tm 0]-ack[/io: m-ready/]-ms[50000]-acc[200000]-total_ms[789200]
+30738.366 parser: Command "io tm 0"
+30738.366 parser: m-ready-finished[io]
+30738.370 io: m-timestmp-mode-FALLING
+30738.374 io: m-[Timer disabled after mode change]
+30738.374 io: m-ready
+30738.374 sequencer: m-sequencing-i[6]-command[io enable-timer]-ack[/io: m-ready/]-ms[50000]-acc[250000]-total_ms[789200]
+30738.374 parser: Command "io enable-timer"
+30738.375 parser: m-ready-finished[io]
+30738.378 io: m-timer-enabled
+30738.382 io: m-ready
+30738.382 sequencer: m-sequencing-i[7]-command[emon timer on]-ack[/emon: m-ready/]-ms[50000]-acc[300000]-total_ms[789200]
+30738.383 parser: Command "emon timer on"
+30738.383 emon: m-timer[on]
+30738.383 emon: m-ready
+30738.383 parser: m-ready-finished[emon]
+30738.383 sequencer: m-sequencing-i[8]-command[emon trace on trace1]-ack[/emon: m-ready/]-ms[50000]-acc[350000]-total_ms[789200]
+30738.383 parser: Command "emon trace on trace1"
+30738.384 emon: m-dropthresh[0.1]
+30738.386 emon: m-trace[on]
+30738.386 emon: m-ready
+30738.386 parser: m-ready-finished[emon]
+30738.386 sequencer: m-sequencing-i[9]-command[io dut timestamp]-ack[/dut.: m-ready/]-ms[50000]-acc[400000]-total_ms[789200]
+30738.386 parser: Command "io dut timestamp"
+30738.386 parser: m-ready-finished[io]
+30738.399 io: m-dut-passthrough(timestamp)
+30738.403 io: m-ready
+30738.412 emon: m-lap-us-4000
+30738.415 io: [dut]: m-ready
+30738.415 sequencer: m-sequencing-i[10]-command[echo head 1000]-ack[/echo-message\[head\]/]-ms[50000]-acc[450000]-total_ms[789200]
+30738.415 parser: Command "echo head 1000"
+30738.415 parser: Echoing message in 1000 ms...
+30738.416 parser: m-ready-finished[echo]
+30739.416 parser: m-echo-message[head]
+30739.416 sequencer: m-sequencing-i[11]-command[bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000000_Stop_7.bin"]-ack[/parser: m-ready/]-ms[7840]-acc[500000]-total_ms[789200]
+30739.417 parser: Command "bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000000_Stop_7.bin""
+30739.417 parser: File size is 490, loading...
+30739.418 parser: Starting at byte offset 0
+30739.418 parser: Sending 490 bytes
+30739.418 parser: m-mute-target[dut]
+30741.069 parser: m-unmute-target[dut]
+30741.069 parser: m-unmute-target[io]
+30741.069 parser: m-unmute-target[parser]
+30741.069 parser: m-bloadp-done
+30741.069 parser: Binary load took 1.651 sec, or 2.374 kb/sec
+30741.069 parser: m-ready-finished[bloadp]
+30741.069 sequencer: m-sequencing-i[12]-command[io dut infer 800000 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[507840]-total_ms[789200]
+30741.070 parser: Command "io dut infer 800000 1"
+30741.070 parser: m-ready-finished[io]
+30741.085 io: m-dut-passthrough(infer 800000 1)
+30741.089 emon: m-lap-us-2693000
+30741.094 io: m-ready
+30741.122 io: [dut]: m-warmup-start-1
+30741.139 io: [dut]: m-warmup-done
+30741.155 io: [dut]: m-infer-start-800000
+30755.072 emon: m-lap-us-16665000
+30755.089 io: [dut]: m-infer-done
+30755.187 io: [dut]: m-results-[0.000,0.000,0.000,0.000,0.000,0.000,0.000,1.000,0.000,0.000,0.000,0.000]
+30755.188 io: [dut]: m-ready
+30755.188 sequencer: m-sequencing-i[13]-command[bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000001_Left_2.bin"]-ack[/parser: m-ready/]-ms[7840]-acc[507839]-total_ms[789200]
+30755.188 parser: Command "bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000001_Left_2.bin""
+30755.188 parser: File size is 490, loading...
+30755.189 parser: Starting at byte offset 0
+30755.189 parser: Sending 490 bytes
+30755.189 parser: m-mute-target[dut]
+30756.842 parser: m-unmute-target[dut]
+30756.842 parser: m-unmute-target[io]
+30756.842 parser: m-unmute-target[parser]
+30756.842 parser: m-bloadp-done
+30756.842 parser: Binary load took 1.653 sec, or 2.371 kb/sec
+30756.842 parser: m-ready-finished[bloadp]
+30756.842 sequencer: m-sequencing-i[14]-command[io dut infer 800000 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[515679]-total_ms[789200]
+30756.842 parser: Command "io dut infer 800000 1"
+30756.842 parser: m-ready-finished[io]
+30756.858 io: m-dut-passthrough(infer 800000 1)
+30756.863 emon: m-lap-us-18465999
+30756.866 io: m-ready
+30756.895 io: [dut]: m-warmup-start-1
+30756.912 io: [dut]: m-warmup-done
+30756.928 io: [dut]: m-infer-start-800000
+30770.845 emon: m-lap-us-32437999
+30770.862 io: [dut]: m-infer-done
+30770.960 io: [dut]: m-results-[0.000,0.000,1.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000]
+30770.960 io: [dut]: m-ready
+30770.962 sequencer: m-sequencing-i[15]-command[bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000002_Right_6.bin"]-ack[/parser: m-ready/]-ms[7840]-acc[515678]-total_ms[789200]
+30770.962 parser: Command "bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000002_Right_6.bin""
+30770.962 parser: File size is 490, loading...
+30770.963 parser: Starting at byte offset 0
+30770.963 parser: Sending 490 bytes
+30770.963 parser: m-mute-target[dut]
+30772.611 parser: m-unmute-target[dut]
+30772.611 parser: m-unmute-target[io]
+30772.611 parser: m-unmute-target[parser]
+30772.611 parser: m-bloadp-done
+30772.611 parser: Binary load took 1.648 sec, or 2.378 kb/sec
+30772.611 parser: m-ready-finished[bloadp]
+30772.611 sequencer: m-sequencing-i[16]-command[io dut infer 800000 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[523518]-total_ms[789200]
+30772.611 parser: Command "io dut infer 800000 1"
+30772.611 parser: m-ready-finished[io]
+30772.627 io: m-dut-passthrough(infer 800000 1)
+30772.635 io: m-ready
+30772.636 emon: m-lap-us-34235000
+30772.664 io: [dut]: m-warmup-start-1
+30772.680 io: [dut]: m-warmup-done
+30772.697 io: [dut]: m-infer-start-800000
+30786.618 emon: m-lap-us-48207000
+30786.631 io: [dut]: m-infer-done
+30786.729 io: [dut]: m-results-[0.000,0.000,0.000,0.000,0.000,0.000,1.000,0.000,0.000,0.000,0.000,0.000]
+30786.729 io: [dut]: m-ready
+30786.729 sequencer: m-sequencing-i[17]-command[bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000003_Up_8.bin"]-ack[/parser: m-ready/]-ms[7840]-acc[523517]-total_ms[789200]
+30786.729 parser: Command "bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000003_Up_8.bin""
+30786.730 parser: File size is 490, loading...
+30786.730 parser: Starting at byte offset 0
+30786.730 parser: Sending 490 bytes
+30786.730 parser: m-mute-target[dut]
+30788.367 parser: m-unmute-target[dut]
+30788.367 parser: m-unmute-target[io]
+30788.367 parser: m-unmute-target[parser]
+30788.367 parser: m-bloadp-done
+30788.368 parser: Binary load took 1.637 sec, or 2.394 kb/sec
+30788.368 parser: m-ready-finished[bloadp]
+30788.368 sequencer: m-sequencing-i[18]-command[io dut infer 800000 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[531357]-total_ms[789200]
+30788.368 parser: Command "io dut infer 800000 1"
+30788.368 parser: m-ready-finished[io]
+30788.384 io: m-dut-passthrough(infer 800000 1)
+30788.392 io: m-ready
+30788.392 emon: m-lap-us-49991001
+30788.420 io: [dut]: m-warmup-start-1
+30788.437 io: [dut]: m-warmup-done
+30788.453 io: [dut]: m-infer-start-800000
+30802.375 emon: m-lap-us-63964000
+30802.387 io: [dut]: m-infer-done
+30802.485 io: [dut]: m-results-[0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,1.000,0.000,0.000,0.000]
+30802.486 io: [dut]: m-ready
+30802.486 sequencer: m-sequencing-i[19]-command[bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000004_On_5.bin"]-ack[/parser: m-ready/]-ms[7840]-acc[531356]-total_ms[789200]
+30802.486 parser: Command "bloadp "C:\Users\bhawks\eembc\runner\benchmarks\ulp-mlperf\datasets\kws01\tst_000004_On_5.bin""
+30802.486 parser: File size is 490, loading...
+30802.490 parser: Starting at byte offset 0
+30802.490 parser: Sending 490 bytes
+30802.490 parser: m-mute-target[dut]
+30804.132 parser: m-unmute-target[dut]
+30804.132 parser: m-unmute-target[io]
+30804.132 parser: m-unmute-target[parser]
+30804.132 parser: m-bloadp-done
+30804.132 parser: Binary load took 1.642 sec, or 2.387 kb/sec
+30804.132 parser: m-ready-finished[bloadp]
+30804.132 sequencer: m-sequencing-i[20]-command[io dut infer 800000 1]-ack[/dut.?: m-ready/]-ms[-1]-acc[539196]-total_ms[789200]
+30804.132 parser: Command "io dut infer 800000 1"
+30804.132 parser: m-ready-finished[io]
+30804.148 io: m-dut-passthrough(infer 800000 1)
+30804.156 io: m-ready
+30804.165 emon: m-lap-us-65755996
+30804.185 io: [dut]: m-warmup-start-1
+30804.201 io: [dut]: m-warmup-done
+30804.218 io: [dut]: m-infer-start-800000
+30818.132 emon: m-lap-us-79727996
+30818.152 io: [dut]: m-infer-done
+30818.250 io: [dut]: m-results-[0.000,0.000,0.000,0.000,0.000,1.000,0.000,0.000,0.000,0.000,0.000,0.000]
+30818.250 io: [dut]: m-ready
+30818.250 sequencer: m-sequencing-i[21]-command[echo tail 1000]-ack[/echo-message\[tail\]/]-ms[50000]-acc[539195]-total_ms[789200]
+30818.250 parser: Command "echo tail 1000"
+30818.250 parser: Echoing message in 1000 ms...
+30818.250 parser: m-ready-finished[echo]
+30819.254 parser: m-echo-message[tail]
+30819.254 sequencer: m-sequencing-i[22]-command[emon trace off]-ack[/emon: m-ready/]-ms[-1]-acc[589195]-total_ms[789200]
+30819.254 parser: Command "emon trace off"
+30819.280 emon: m-regfile-fn[trace1-energy.bin]-type[emon]-name[js110]
+30819.281 emon: m-regfile-fn[trace1-timestamps.json]-type[etime]-name[js110]
+30819.281 emon: m-[Dropped 0 packets out of 1283584, 0%]
+30819.281 emon: m-trace[off]
+30819.281 emon: m-ready
+30819.281 parser: m-ready-finished[emon]
+30819.282 sequencer: m-sequencing-i[23]-command[emon timer off]-ack[/emon: m-ready/]-ms[50000]-acc[589194]-total_ms[789200]
+30819.282 parser: Command "emon timer off"
+30819.282 emon: m-timer[off]
+30819.282 emon: m-ready
+30819.282 parser: m-ready-finished[emon]
+30819.282 sequencer: m-sequencing-i[24]-command[io disable-timer]-ack[/io: m-ready/]-ms[50000]-acc[639194]-total_ms[789200]
+30819.283 parser: Command "io disable-timer"
+30819.283 parser: m-ready-finished[io]
+30819.290 io: m-timer-disabled
+30819.291 io: m-ready
+30819.291 sequencer: m-sequencing-i[25]-command[emon voltage]-ack[/emon: m-ready/]-ms[50000]-acc[689194]-total_ms[789200]
+30819.291 parser: Command "emon voltage"
+30819.291 emon: m-voltage-mv[4950]
+30819.291 emon: m-ready
+30819.291 parser: m-ready-finished[emon]
+30819.291 sequencer: m-sequencing-i[26]-command[emon power off]-ack[/emon: m-ready/]-ms[50000]-acc[739194]-total_ms[789200]
+30819.292 parser: Command "emon power off"
+30819.292 emon: m-power[off]
+30819.293 emon: m-ready
+30819.293 parser: m-ready-finished[emon]
+30819.293 sequencer: m-sequencer-stop
+30819.296 session: m-session-stop-id[20220301181341]
+30819.297 session: Saved this run to session ID 20220301181341

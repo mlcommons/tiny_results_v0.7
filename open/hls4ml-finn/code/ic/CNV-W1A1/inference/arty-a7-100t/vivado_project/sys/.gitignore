@@ -1,0 +1,8 @@
+finn_*_project
+NA
+*.jou
+*.log
+*.str
+.Xil
+finn_cnv_w1a1_design_wrapper.v
+finn_cnv_w1a1_ocm_design_wrapper.v

@@ -1,0 +1,5 @@
+git+https://github.com/fastmachinelearning/qonnx@9f9eff95227cc57aadc6eafcbd44b7acda89f067#qonnx
+matplotlib
+tensorflow==2.6.2
+tensorflow-datasets
+pydub

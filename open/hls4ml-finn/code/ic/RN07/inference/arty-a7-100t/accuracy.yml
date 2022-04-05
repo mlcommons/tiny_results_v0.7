@@ -1,0 +1,118 @@
+save_dir: ../../training/trained_model
+
+convert:
+  ApplyPatches: 1
+  RemoveSoftmax: 1
+  OutputDir: vivado_project_accuracy
+  XilinxPart: xc7a100tcsg324-1
+  Backend: VivadoAccelerator
+  IOType: io_stream
+  Interface: axi_master
+  Driver: c
+  InputType: ap_uint<8>
+  OutputType: float
+  Board: arty-a7-100t
+  Precision: ap_fixed<12,7>
+  ReuseFactor: 16384
+  Trace: 0
+  Build: 1
+  EEMBC_power: 0
+  FIFO_opt: 0
+  FIFO_opt_json: ../max_depth_rf16384.json
+  MergedRelu: 1
+  ClockPeriod: 6.67
+  Strategy: Resource
+  Override:
+    input_1:
+      Precision: ap_ufixed<8,0>
+    q_conv2d_batchnorm:
+      accum_t: ap_fixed<17,7>
+      Precision:
+        weight: ap_fixed<8,3>
+        bias: ap_fixed<8,3>
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+      ConvImplementation: 'LineBuffer'
+    q_conv2d_batchnorm_linear:
+      Precision:
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+    q_activation:
+      Precision:
+        default: ap_fixed<12,7>
+        result: ap_fixed<9,3,AP_RND,AP_SAT>
+    q_conv2d_batchnorm_1:
+      accum_t: ap_fixed<17,7>
+      Precision:
+        weight: ap_fixed<8,3>
+        bias: ap_fixed<8,3>
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+      ConvImplementation: 'LineBuffer'
+    q_conv2d_batchnorm_1_linear:
+      Precision:
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+    q_activation_1:
+      Precision:
+        default: ap_fixed<12,7>
+        result: ap_fixed<9,3,AP_RND,AP_SAT>
+    q_conv2d_batchnorm_2:
+      accum_t: ap_fixed<17,7>
+      Precision:
+        weight: ap_fixed<8,3>
+        bias: ap_fixed<8,3>
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+      ConvImplementation: 'LineBuffer'
+    q_conv2d_batchnorm_2_linear:
+      Precision:
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+    q_activation_2:
+      Precision:
+        default: ap_fixed<12,7>
+        result: ap_fixed<9,3,AP_RND,AP_SAT>
+    q_conv2d_batchnorm_3:
+      accum_t: ap_fixed<17,7>
+      Precision:
+        weight: ap_fixed<8,3>
+        bias: ap_fixed<8,3>
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+      ConvImplementation: 'LineBuffer'
+    q_conv2d_batchnorm_3_linear:
+      Precision:
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+    q_activation_3:
+      Precision:
+        default: ap_fixed<12,7>
+        result: ap_fixed<9,3,AP_RND,AP_SAT>
+    q_conv2d_batchnorm_4:
+      accum_t: ap_fixed<17,7>
+      Precision:
+        weight: ap_fixed<8,3>
+        bias: ap_fixed<8,3>
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+      ConvImplementation: 'LineBuffer'
+    q_conv2d_batchnorm_4_linear:
+      Precision:
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+    q_activation_5:
+      Precision:
+        default: ap_fixed<12,7>
+        result: ap_fixed<9,3,AP_RND,AP_SAT>
+    q_dense:
+      accum_t: ap_fixed<17,7>
+      Precision:
+        weight: ap_fixed<8,3>
+        bias: ap_fixed<8,3>
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>
+    q_dense_linear:
+      Precision:
+        result: ap_fixed<12,7>
+        default: ap_fixed<12,7>

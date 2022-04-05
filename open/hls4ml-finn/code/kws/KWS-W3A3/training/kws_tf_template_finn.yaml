@@ -1,0 +1,86 @@
+name: kws_template_finn
+checkpoint_storage:
+  type: shared_fs
+  host_path: /proj/xlabs_t3/users/hendrikb
+environment:
+  image: determinedai/environments:cuda-10.1-pytorch-1.7-tf-2.4-gpu-0.9.0
+
+bind_mounts:
+  - host_path: /scratch/users/hendrikb/tf_speech_commands
+    container_path: /scratch/users/hendrikb/tf_speech_commands
+    read_only: true
+
+max_restarts: 2
+
+labels:
+  - tf_preprocessing
+  - KWS
+
+data:
+  # Select what pre-processor should be used, torchaudio ("torchaudio") or TensorFlow ("tf") are available.
+  dataset_preprocessor: tf
+
+  # ToDo: Adjust to the final config TinyML config, which is currently tbd.
+  # TensorFlow dataset parameters
+  # As set by: https://github.com/mlcommons/tiny_results_v0.5/blob/f3577af43d4b980ce358b405d27d6c79747f2e65/closed/reference/code/training/keyword_spotting/keras_model.py
+  # This reflects the defaults or otherwise hard-coded parameters.
+  tf_bg_path: /scratch/users/hendrikb/tf_speech_commands/SpeechCommands/speech_commands/0.0.2/_background_noise_
+  tf_data_dir: /scratch/users/hendrikb/tf_speech_commands/
+  tf_feature_type: mfcc
+  tf_sample_rate: 16000
+  tf_background_frequency: 0.8
+  tf_background_volume_range_: 0.1
+  tf_dct_coefficient_count: 10
+  tf_clip_duration_ms: 1000
+  tf_window_size_ms: 30.0
+  tf_window_stride_ms: 20.0
+  tf_num_train_samples: -1
+  tf_num_val_samples: -1
+  tf_num_test_samples: -1
+
+  # torchaudio dataset parameters
+  speech_commands_version: "speech_commands_v0.02"
+  docker_dataset_dir: /scratch/users/hendrikb/google_speech_commands
+  # From main config.yaml of Guiseppe
+  wanted_words: yes,no,up,down,left,right,on,off,stop,go
+  silence_label: '_silence_'
+  silence_index: 10
+  unknown_word_label: '_unknown_'
+  unknown_word_index: 11
+  background_noise_dir_name: '_background_noise_'
+  background_frequency: 0.8
+  background_volume: 0.1
+  random_seed: 123456
+  silence_percentage: 10
+  unknown_percentage: 10
+  validation_percentage: 10
+  testing_percentage: 10
+  rebalance: False
+
+  # TinyML config from here: https://github.com/mlcommons/tiny/blob/777e14486f5c66d69ed2628dd574e66f6bc7e74f/v0.5/training/keyword_spotting/keras_model.py#L17
+  # Combined with here: https://github.com/mlcommons/tiny/blob/777e14486f5c66d69ed2628dd574e66f6bc7e74f/v0.5/training/keyword_spotting/kws_util.py#L8
+  # General comments: https://github.com/mlcommons/tiny/tree/master/v0.5/training/keyword_spotting
+  # From preprocess_config/arm.ymal from Guiseppe
+  'preprocess_config_sample_rate': 16000
+  'preprocess_config_desired_samples': 16000
+  'preprocess_config_label_count': 12
+  'preprocess_config_time_shift_samples': 1600
+  #'preprocess_config_window_size_samples': 640
+  'preprocess_config_window_size_samples': 480  # TinyML Config
+  # ToDo: Update torchaudio and revisit this issue
+  # This is the original setting and the TinyML Config,
+  # however this produces 51 instead of 49 outputs.
+  # Updating torchaudio and passing "mel_kwargs['center'] = False" to the featurizer might help.
+  #'preprocess_config_window_stride_samples': 320
+  'preprocess_config_window_stride_samples': 330
+  #'preprocess_config_spectrogram_length': 51
+  'preprocess_config_spectrogram_length': 49  # TinyML Config
+  'preprocess_config_n_fft': 1024
+  'preprocess_config_f_min': 20
+  'preprocess_config_f_max': 4000
+  'preprocess_config_n_mels': 40
+  'preprocess_config_n_mfcc': 10
+  'preprocess_config_perturb': True
+  'preprocess_config_pad_spectrogram': False
+  'preprocess_config_spec_augment': True
+  'preprocess_config_spec_cutout': True

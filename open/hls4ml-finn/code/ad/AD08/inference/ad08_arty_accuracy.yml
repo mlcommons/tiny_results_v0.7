@@ -1,0 +1,18 @@
+convert:
+  Build: True
+  FIFO_opt: False
+  vivado_path: '/tools/Xilinx/Vivado/2019.1/bin:'
+  model_file: ../training/trained_model/model.h5
+  hls_config: hls4ml_config.yml
+  board_name: arty-a7-100t
+  fpga_part: xc7a100tcsg324-1
+  tb_data_dir: processed_data/64input_test_bench_data.npy
+  x_npy_dir: processed_data/64input_test_data.npy
+  y_npy_dir: processed_data/64input_test_data_ground_truths.npy
+  output_dir: arty-a7-100t/vivado_project
+  clock_period: 10
+  backend: VivadoAccelerator
+  io_type: io_stream
+  interface: axi_master
+  driver: c
+  EEMBC_power: 0

@@ -1,0 +1,7 @@
+finn_*_platform
+finn_*_standalone
+finn_*_standalone_bsp
+RemoteSystemsTempFiles
+SDK.log
+.metadata
+.sdk

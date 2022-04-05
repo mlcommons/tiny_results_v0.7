@@ -1,0 +1,29 @@
+00255.403 ulp-mlperf: Performance results for window 2:
+00255.403 ulp-mlperf:   # Inferences :         8000
+00255.403 ulp-mlperf:   Runtime      :       12.094 sec.
+00255.403 ulp-mlperf:   Throughput   :      661.473 inf./sec.
+00255.403 ulp-mlperf: Runtime requirements have been met.
+00255.403 ulp-mlperf: Performance results for window 4:
+00255.403 ulp-mlperf:   # Inferences :         8000
+00255.403 ulp-mlperf:   Runtime      :       12.094 sec.
+00255.403 ulp-mlperf:   Throughput   :      661.473 inf./sec.
+00255.403 ulp-mlperf: Runtime requirements have been met.
+00255.403 ulp-mlperf: Performance results for window 6:
+00255.404 ulp-mlperf:   # Inferences :         8000
+00255.404 ulp-mlperf:   Runtime      :       12.094 sec.
+00255.404 ulp-mlperf:   Throughput   :      661.473 inf./sec.
+00255.404 ulp-mlperf: Runtime requirements have been met.
+00255.404 ulp-mlperf: Performance results for window 8:
+00255.404 ulp-mlperf:   # Inferences :         8000
+00255.404 ulp-mlperf:   Runtime      :       12.094 sec.
+00255.404 ulp-mlperf:   Throughput   :      661.473 inf./sec.
+00255.404 ulp-mlperf: Runtime requirements have been met.
+00255.404 ulp-mlperf: Performance results for window 10:
+00255.404 ulp-mlperf:   # Inferences :         8000
+00255.404 ulp-mlperf:   Runtime      :       12.094 sec.
+00255.404 ulp-mlperf:   Throughput   :      661.473 inf./sec.
+00255.404 ulp-mlperf: Runtime requirements have been met.
+00255.404 ulp-mlperf: ---------------------------------------------------------
+00255.404 ulp-mlperf: Median throughput is 661.473 inf./sec.
+00255.404 ulp-mlperf: ---------------------------------------------------------
+00255.404 ulp-mlperf: Cannot compute accuracy metrics in single-run mode.

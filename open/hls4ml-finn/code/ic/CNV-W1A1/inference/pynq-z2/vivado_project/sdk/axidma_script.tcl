@@ -1,0 +1,1 @@
+common/axidma_script.tcl

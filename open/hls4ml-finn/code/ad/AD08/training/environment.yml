@@ -1,0 +1,25 @@
+name: tiny
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip
+  - networkx=2.5=py_0
+  - pip:
+    - jupyter==1.0.0
+    - pydot==1.4.2
+    - graphviz==0.19.1
+    - git+https://github.com/hls4ml-finn-mlperftiny/hls4ml.git@fifo_depth_opt#egg=hls4ml[profiling]
+    - matplotlib==3.5.1
+    - numpy==1.21.5
+    - PyYAML==6.0
+    - scikit-learn==1.0.2
+    - tensorflow==2.8.0
+    - tqdm==4.62.3
+    - git+https://github.com/julesmuhizi/qkeras.git@qdense_batchnorm
+    - keras-flops==0.1.2
+    - git+https://github.com/kentaroy47/keras-Opcounter
+    - keras-tuner==1.1.0
+    - setgpu==0.0.7
+    - mplhep==0.3.21
+    - librosa==0.8.0

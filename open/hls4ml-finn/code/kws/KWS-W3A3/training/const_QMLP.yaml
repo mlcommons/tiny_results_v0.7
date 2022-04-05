@@ -1,0 +1,69 @@
+name: KWS QMLP const dev experiment
+
+labels:
+  - MLP
+  - quantized
+  - ADAM
+  - all layers quantized
+  - all W3A3
+  - usigned activations
+  - non-narrow activations
+  - 0.1 weight scale (ext. set)
+  - scaling_impl-parameter
+  - scaling_per_output_channel (except last)
+  - LR 0.05
+  - const parameters
+  - 1000 epochs
+  - no bias
+  - weighted loss function
+  - adjusted weight loss function
+  - fixed loss adjustment
+
+profiling:
+  enabled: False
+
+hyperparameters:
+  # General parameters
+  num_classes: 12
+  learning_rate: 0.0005
+  global_batch_size: 512
+  loss_function: CrossEntropyLoss
+  weight_loss_function: True
+  label_suppression_unknown: 3.6
+  LR_scheduler: CosineAnnealingLR
+  optimizer: Adam
+  nn_to_train: QMLP
+
+  # Quantization parameters
+  # Inputs outputs
+  Q_in_bits: 8
+  Q_in_learned: False
+  Q_out_bits: 3
+  # Layers
+  Q_L1_weight_bits: 3
+  Q_L2_weight_bits: 3
+  Q_L3_weight_bits: 3
+  Q_L1_act_bits: 3
+  Q_L2_act_bits: 3
+  Q_L3_act_bits: 3
+  # Weight scaling
+  Q_weight_scaling: 0.1
+
+  # MLP parameters
+  MLP_num_out_features_1: 256
+  MLP_num_out_features_2: 256
+  MLP_num_out_features_3: 256
+  MLP_dropout: 0.1
+
+records_per_epoch: 85511
+min_validation_period:
+  epochs: 1
+min_checkpoint_period:
+  epochs: 10
+searcher:
+  name: single
+  metric: validation_loss
+  smaller_is_better: True
+  max_length:
+    epochs: 1000
+entrypoint: train:KWSTrial

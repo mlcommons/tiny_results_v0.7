@@ -1,0 +1,24 @@
+name: tiny-mlperf-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - jupyter
+    - pydot
+    - graphviz
+    - git+https://github.com/hls4ml-finn-mlperftiny/hls4ml.git@fifo_depth_opt#egg=hls4ml[profiling]
+    - matplotlib
+    - numpy
+    - PyYAML
+    - scikit-learn
+    - tensorflow
+    - tqdm
+    - git+https://github.com/google/qkeras#egg=qkeras
+    - keras-flops
+    - git+https://github.com/kentaroy47/keras-Opcounter
+    - keras-tuner
+    - setgpu
+    - mplhep
+    
