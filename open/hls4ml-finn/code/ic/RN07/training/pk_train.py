@@ -200,11 +200,11 @@ def main(args):
     
     #get predict probabilities
     y_pred_proba = model.predict_on_batch(X_test)
-    print(y_pred_proba)
+    #print(y_pred_proba)
     
     #binarize output
     y_test_bin = label_binarize(y_test, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-    print(y_test_bin)
+    #print(y_test_bin)
     n_classes = y_test_bin.shape[1] 
     
     #creating ROC curve
@@ -213,10 +213,11 @@ def main(args):
     roc_auc = dict()
 
     colors = ["red", "orange", "yellow", "lime", "cyan", "teal", "blue", "mediumorchid", "hotpink", "saddlebrown"]
+    labels = ["Charmander", "Ditto", "Eevee", "Gengar", "Jigglypuff", "Mew", "Pikachu", "Psyduck", "Squirtle", "Weedle"]
     
     for i in range(n_classes):
       fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_pred_proba[:, i])
-      plt.plot(fpr[i], tpr[i], color=colors[i], lw=2)
+      plt.plot(fpr[i], tpr[i], color=colors[i], lw=2, label=labels[i])
       #print('AUC for Class {}: {}'.format(i+1, auc(fpr[i], tpr[i])))
     
     plt.plot([0, 1], [0, 1], color='black', lw=2, linestyle='--')
@@ -224,6 +225,7 @@ def main(args):
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
+    plt.legend()
     plt.title('Receiver Operating Characteristic Curves')
     plt.savefig('foo.png')
 
