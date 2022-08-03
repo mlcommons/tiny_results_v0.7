@@ -14,7 +14,8 @@ import tensorflow_datasets as tfds
 def get_pokemon_dataset():
     #getting data
 #    directory = "/home/users/sayurirh/tutorial2/open/hls4ml-finn/code/ic/RN07/training/pokemondata/TEN-PokemonData"
-    directory = "/home/users/tianafrench/hls4ml-tutorial-pynq/open/hls4ml-finn/code/ic/RN07/training/pokemon-data/TEN-PokemonData"
+ #   directory = "/home/users/tianafrench/hls4ml-tutorial-pynq/open/hls4ml-finn/code/ic/RN07/training/pokemon-data/TEN-PokemonData"
+    directory = "/home/users/tianafrench/pokemondemo/pokemon-demo/open/hls4ml-finn/code/ic/RN07/training/TEN-PokemonData"
     dataset = tf.keras.utils.image_dataset_from_directory(
         directory,
         labels="inferred",
@@ -67,16 +68,54 @@ def get_pokemon_dataset():
     y_train = np.array(y_train)
     
         #validation
+    X_val = None
+    y_val = None
+    for image, label in tfds.as_numpy(val_ds):
+        if X_val is None:
+            X_val = list(image)
+            y_val = list(label)
+        else:
+            X_val = X_val + list(image)
+            y_val = y_val + list(label)
+    X_val = np.array(X_val)
+    y_val = np.array(y_val)
+    
+    return X_train, y_train, X_val, y_val
+
+def get_pokemon_testSet():
+    #getting data
+#    directory = "/home/users/sayurirh/tutorial2/open/hls4ml-finn/code/ic/RN07/training/pokemondata/TEN-PokemonData"
+    TEST_directory = "/home/users/tianafrench/pokemondemo/pokemon-demo/open/hls4ml-finn/code/ic/RN07/training/TEST-PokemonData"
+    TEST_dataset = tf.keras.utils.image_dataset_from_directory(
+        TEST_directory,
+        labels="inferred",
+        label_mode="int",
+        class_names=None,
+        color_mode="rgb",
+        batch_size=32,
+        image_size=(32, 32),
+        shuffle=True,
+        seed=None,
+        validation_split=None,
+        subset=None,
+        interpolation="bilinear",
+        follow_links=False,
+        crop_to_aspect_ratio=False,
+    )
+
     X_test = None
     y_test = None
-    for image, label in tfds.as_numpy(val_ds):
+    for image, label in tfds.as_numpy(TEST_dataset):
         if X_test is None:
             X_test = list(image)
             y_test = list(label)
         else:
             X_test = X_test + list(image)
-            y_test = y_test + list(label)
+            y_test = y_test + list(image)
     X_test = np.array(X_test)
     y_test = np.array(y_test)
     
-    return X_train, y_train, X_test, y_test
+    return X_test, y_test
+
+
+

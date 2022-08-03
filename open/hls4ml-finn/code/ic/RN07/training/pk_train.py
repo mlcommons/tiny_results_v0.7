@@ -27,6 +27,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import label_binarize
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import roc_auc_score
+import sklearn.metrics as metrics
 
 
 def random_crop(x):
@@ -82,14 +83,14 @@ def main(args):
     lr_decay = config['fit']['compile']['lr_decay']
 
     # load dataset
-    X_train, y_train, X_test, y_test = pk.get_pokemon_dataset()
-    X_train, X_test = X_train/256., X_test/256.
+    X_train, y_train, X_val, y_val = pk.get_pokemon_dataset()
+    X_train, X_val = X_train/256., X_val/256.
 
     y_train = tf.keras.utils.to_categorical(y_train, num_classes)
-    y_test = tf.keras.utils.to_categorical(y_test, num_classes)
+    y_val = tf.keras.utils.to_categorical(y_val, num_classes)
     if loss == 'squared_hinge':
         y_train = y_train * 2 - 1  # -1 or 1 for hinge loss
-        y_test = y_test * 2 - 1
+        y_val = y_val * 2 - 1
 
     # define data generator
     datagen = ImageDataGenerator(
@@ -178,36 +179,38 @@ def main(args):
     history = model.fit(datagen.flow(X_train, y_train, batch_size=batch_size),
                         steps_per_epoch=X_train.shape[0] // batch_size,
                         epochs=num_epochs,
-                        validation_data=(X_test, y_test),
+                        validation_data=(X_val, y_val),
                         callbacks=callbacks,
                         verbose=verbose)
 
     # restore "best" model
     model.load_weights(model_file_path)
+    print("Trained Model:")
+    print(model)
 
     # get predictions
-    y_pred = model.predict(X_test)
+    y_pred = model.predict(X_val)
 
 
     # evaluate with test dataset and share same prediction results
-    evaluation = model.evaluate(X_test, y_test)
+    evaluation = model.evaluate(X_val, y_val)
 
-    auc = roc_auc_score(y_test, y_pred, average='weighted', multi_class='ovr')
+    auc = roc_auc_score(y_val, y_pred, average='weighted', multi_class='ovr')
 
     print('Model test accuracy = %.3f' % evaluation[1])
     print('Model test weighted average AUC = %.3f' % auc)
     
     
     #get predict probabilities
-    y_pred_proba = model.predict_on_batch(X_test)
+    y_pred_proba = model.predict_on_batch(X_val)
     #print(y_pred_proba)
     
     #binarize output
-    y_test_bin = label_binarize(y_test, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    y_val_bin = label_binarize(y_val, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     #print(y_test_bin)
-    n_classes = y_test_bin.shape[1] 
+    n_classes = y_val_bin.shape[1] 
     
-    #creating ROC curve
+    #creating ROC curve for train/val
     fpr = dict()
     tpr = dict()
     roc_auc = dict()
@@ -216,7 +219,7 @@ def main(args):
     labels = ["Charmander", "Ditto", "Eevee", "Gengar", "Jigglypuff", "Mew", "Pikachu", "Psyduck", "Squirtle", "Weedle"]
     
     for i in range(n_classes):
-      fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_pred_proba[:, i])
+      fpr[i], tpr[i], _ = roc_curve(y_val_bin[:, i], y_pred_proba[:, i])
       plt.plot(fpr[i], tpr[i], color=colors[i], lw=2, label=labels[i])
       #print('AUC for Class {}: {}'.format(i+1, auc(fpr[i], tpr[i])))
     
@@ -226,8 +229,54 @@ def main(args):
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
     plt.legend()
-    plt.title('Receiver Operating Characteristic Curves')
-    plt.savefig('foo.png')
+    plt.title('Receiver Operating Characteristic Curves for Training Sets')
+    plt.savefig('foo_train.png')
+    
+    #creating ROC curve for test
+        #load test data
+    X_test, y_test = pk.get_pokemon_testSet()
+    X_test = X_test/256.
+
+    y_test = tf.keras.utils.to_categorical(y_test, num_classes)
+    if loss == 'squared_hinge':
+        y_test = y_test * 2 - 1
+    
+        #evaluating the model
+#    print("Evaluating the model on the test set:", model.evaluate(X_test, y_test))
+    y_test_bin = label_binarize(y_test, classes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    n_classes = y_test_bin.shape[1] 
+    y_pred_proba_test = model.predict_on_batch(X_test)
+    np.argmax(y_pred_proba_test, axis=-1)
+        
+    # Compute ROC curve and ROC area for each class
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    for i in range(n_classes):
+        fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_pred_proba_test[:, i])
+        roc_auc[i] = metrics.auc(fpr[i], tpr[i])
+  
+    plt.figure()
+    lw = 2
+    plt.plot(
+        fpr[2],
+        tpr[2],
+        color="darkorange",
+        lw=lw,
+        label="ROC curve (area = %0.2f)" % roc_auc[2],
+    )    
+          
+        #plotting ROC curve for testing
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.legend()
+    plt.title('Receiver Operating Characteristic Curves for Testing set')
+    plt.savefig('foo_test.png')
+    
+    #save the model
+    model.save(model_file_path, save_format='h5')
 
 
 
