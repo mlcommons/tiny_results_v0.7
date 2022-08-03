@@ -14,13 +14,26 @@ import argparse
 import yaml
 
 #%matplotlib inline
+from IPython import get_ipython
+#get_ipython().run_line_magic('matplotlib', 'inline')
+
 seed = 0
 np.random.seed(seed)
 import tensorflow as tf
 tf.random.set_seed(seed)
 import os
-#os.environ['PATH'] = '/opt/Xilinx/Vivado/2019.2/bin:' + os.environ['PATH']
+os.environ['PATH'] = '/opt/Xilinx/Vivado/2019.2/bin:' + os.environ['PATH']
 #from ast import literal_eval
+
+def print_dict(d, indent=0):
+    align=20
+    for key, value in d.items():
+        print('  ' * indent + str(key), end='')
+        if isinstance(value, dict):
+            print()
+            print_dict(value, indent+1)
+        else:
+            print(':' + ' ' * (20 - len(key) - 2 * indent) + str(value))
 
 def hls4ml_main(args):
     
@@ -48,9 +61,12 @@ def hls4ml_main(args):
 
     #making hls4ml config and model
     config = hls4ml.utils.config_from_keras_model(model, granularity='model')
+    config['SkipOptimizers'] = ['relu_merge']
+    config['Model']['MergedRelu'] = 0
     print("-----------------------------------")
     print("Configuration")
-    plotting.print_dict(config)
+    #plotting.print_dict(config)
+    print_dict(config)
     print("-----------------------------------")
     hls_model = hls4ml.converters.convert_from_keras_model(model,
                                                            hls_config=config,
