@@ -1,0 +1,19 @@
+Backend: Vivado
+Board: null
+ClockPeriod: 5
+HLSConfig:
+  Model:
+    MergedRelu: 0
+    Precision: ap_fixed<16,6>
+    ReuseFactor: 1
+    Strategy: Latency
+  SkipOptimizers:
+  - relu_merge
+IOType: io_parallel
+InputData: null
+KerasModel: !keras_model 'model_1/hls4ml_prj/keras_model.h5'
+OutputDir: model_1/hls4ml_prj
+OutputPredictions: null
+ProjectName: myproject
+Stamp: ee65D564
+XilinxPart: xcu250-figd2104-2L-e
